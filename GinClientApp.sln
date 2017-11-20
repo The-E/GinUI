@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2008
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GinClientApp", "GinClientApp\GinClientApp.csproj", "{07DCE841-1345-46EC-AD5A-289D4B77B73E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GinClientLibrary", "GinClientLibrary\GinClientLibrary.csproj", "{BC992C0B-8187-4CCA-8827-617A4A85575D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{07DCE841-1345-46EC-AD5A-289D4B77B73E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07DCE841-1345-46EC-AD5A-289D4B77B73E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07DCE841-1345-46EC-AD5A-289D4B77B73E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07DCE841-1345-46EC-AD5A-289D4B77B73E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC992C0B-8187-4CCA-8827-617A4A85575D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC992C0B-8187-4CCA-8827-617A4A85575D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC992C0B-8187-4CCA-8827-617A4A85575D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC992C0B-8187-4CCA-8827-617A4A85575D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3B35A38F-2208-4F58-AB55-0E67DBDC6229}
+	EndGlobalSection
+EndGlobal
