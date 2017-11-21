@@ -14,6 +14,8 @@ namespace GinClient
     {
         public string URL { get; set; }
         public string Name { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
 
         public enum FileStatus
         {
@@ -48,6 +50,7 @@ namespace GinClient
             var cli = new Cli("cmd.exe");
             var cmd = "gin annex info " + filePath + " --json";
             var output = cli.Execute(cmd);
+            output.ThrowIfError();
 
             AnnexFileInfo fileInfo = JsonConvert.DeserializeObject<AnnexFileInfo>(output.ToString());
 
@@ -59,10 +62,16 @@ namespace GinClient
             var cli = new Cli("cmd.exe");
             var cmd = "gin annex get " + filePath + " --json";
             var output = cli.Execute(cmd);
+            output.ThrowIfError();
 
             AnnexGet result = JsonConvert.DeserializeObject<AnnexGet>(output.ToString());
 
             return result.success;
+        }
+
+        public bool Login()
+        {
+            return true;
         }
     }
 
