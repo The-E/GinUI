@@ -16,6 +16,7 @@ namespace GinClient
         public string Name { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
+        public DirectoryInfo PhysicalDirectory { get; set; }
 
         public enum FileStatus
         {
