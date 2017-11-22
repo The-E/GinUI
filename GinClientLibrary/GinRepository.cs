@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
@@ -48,26 +49,8 @@ namespace GinClient
 
         public FileStatus GetFileStatus(string filePath)
         {
-            System.Diagnostics.Process process = new System.Diagnostics.Process();
-            System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-            startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-            startInfo.FileName = "cmd.exe";
-            startInfo.WorkingDirectory = Directory.GetParent(filePath).FullName;
-            startInfo.Arguments = "/c gin annex info " + filePath + " --json";
-            startInfo.CreateNoWindow = true;
-            startInfo.RedirectStandardOutput = true;
-            startInfo.RedirectStandardError = true;
-
-            startInfo.UseShellExecute = false;
-            process.StartInfo = startInfo;
-            process.OutputDataReceived += Process_OutputDataReceived;
-            _output.Clear();
-            process.Start();
-            process.BeginOutputReadLine();
-            var error = process.StandardError.ReadToEnd();
-            process.WaitForExit();
-
-            var output = _output.ToString();
+            string error;
+            var output = GetCommandLineOutput("cmd.exe", "/c gin annex info " + filePath + " --json", Directory.GetParent(filePath).FullName, out error);
             try
             {
                 if (!string.IsNullOrEmpty(output))
@@ -85,52 +68,21 @@ namespace GinClient
             }
         }
 
-        private void Process_OutputDataReceived(object sender, System.Diagnostics.DataReceivedEventArgs e)
-        {
-            if (!string.IsNullOrEmpty(e.Data))
-            {
-                _output.Append(e.Data);
-            }
-        }
-
         public bool RetrieveFile(string filePath)
         {
-            System.Diagnostics.Process process = new System.Diagnostics.Process();
-            System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-            startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-            startInfo.FileName = "cmd.exe";
-            startInfo.WorkingDirectory = Directory.GetParent(filePath).FullName;
-            var filename = Path.GetFileName(filePath);
-            startInfo.Arguments = "/C gin get-content " + filename + "--json";
-            startInfo.CreateNoWindow = true;
-            startInfo.RedirectStandardOutput = true;
-            startInfo.RedirectStandardError = true;
-            startInfo.UseShellExecute = false;
+            var directoryName = Directory.GetParent(filePath).FullName;
+            string filename = Directory.GetFiles(directoryName).Single(s => string.Compare(s.ToUpperInvariant(), filePath.ToUpperInvariant()) == 0);
+            filename = Path.GetFileName(filename);
 
-            process.StartInfo = startInfo;
-            process.OutputDataReceived += Process_OutputDataReceived;
-            _output.Clear();
-            process.Start();
-            process.BeginOutputReadLine();
-            var error = process.StandardError.ReadToEnd();
-            process.WaitForExit();
-
-            var output = _output.ToString();
+            string error;
+            var output = GetCommandLineOutput("cmd.exe", "/C gin get-content " + filename + " --json", directoryName, out error);
             _output.Clear();
 
-            try
-            {
-                if (string.IsNullOrEmpty(output))
-                    return false;
-
-                AnnexGet result = JsonConvert.DeserializeObject<AnnexGet>(output.ToString());
-
-                return result.success;
-            }
-            catch
-            {
+            if (!string.IsNullOrEmpty(error))
                 return false;
-            }
+            else //gin currently returns an empty string on  success
+                return true;
+          
         }
 
         public bool Login()
@@ -144,6 +96,45 @@ namespace GinClient
 
             return true;
         }
+
+        #region Helpers
+        private void Process_OutputDataReceived(object sender, System.Diagnostics.DataReceivedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(e.Data))
+            {
+                _output.Append(e.Data);
+            }
+        }
+
+        private string GetCommandLineOutput(string program, string commandline, string workingDirectory, out string error)
+        {
+            var process = new Process()
+            {
+                StartInfo = new ProcessStartInfo()
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    FileName = program,
+                    WorkingDirectory = workingDirectory,
+                    Arguments = commandline,
+                    CreateNoWindow = true,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false
+                }
+            };
+
+            process.OutputDataReceived += Process_OutputDataReceived;
+            _output.Clear();
+            process.Start();
+            process.BeginOutputReadLine();
+            error = process.StandardError.ReadToEnd();
+            process.WaitForExit();
+
+            var output = _output.ToString();
+            _output.Clear();
+            return output;
+        }
+        #endregion
     }
 
 }
