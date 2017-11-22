@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CliWrap;
 using Newtonsoft.Json;
 
 namespace GinClient
@@ -20,7 +19,8 @@ namespace GinClient
         public enum FileStatus
         {
             InAnnex,
-            OnDisk
+            OnDisk,
+            Unknown
         }
 
         #region Annex return values
@@ -44,29 +44,93 @@ namespace GinClient
         }
         #endregion
 
+        private static StringBuilder _output = new StringBuilder("");
+
         public FileStatus GetFileStatus(string filePath)
         {
+            System.Diagnostics.Process process = new System.Diagnostics.Process();
+            System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+            startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+            startInfo.FileName = "cmd.exe";
+            startInfo.WorkingDirectory = Directory.GetParent(filePath).FullName;
+            startInfo.Arguments = "/c gin annex info " + filePath + " --json";
+            startInfo.CreateNoWindow = true;
+            startInfo.RedirectStandardOutput = true;
+            startInfo.RedirectStandardError = true;
 
-            var cli = new Cli("cmd.exe");
-            var cmd = "gin annex info " + filePath + " --json";
-            var output = cli.Execute(cmd);
-            output.ThrowIfError();
+            startInfo.UseShellExecute = false;
+            process.StartInfo = startInfo;
+            process.OutputDataReceived += Process_OutputDataReceived;
+            _output.Clear();
+            process.Start();
+            process.BeginOutputReadLine();
+            var error = process.StandardError.ReadToEnd();
+            process.WaitForExit();
 
-            AnnexFileInfo fileInfo = JsonConvert.DeserializeObject<AnnexFileInfo>(output.ToString());
+            var output = _output.ToString();
+            try
+            {
+                if (!string.IsNullOrEmpty(output))
+                {
+                    AnnexFileInfo fileInfo = JsonConvert.DeserializeObject<AnnexFileInfo>(output);
 
-            return fileInfo.present ? FileStatus.OnDisk : FileStatus.InAnnex;
+                    return fileInfo.present ? FileStatus.OnDisk : FileStatus.InAnnex;
+                }
+
+                return FileStatus.Unknown;
+            }
+            catch
+            {
+                return FileStatus.Unknown;
+            }
+        }
+
+        private void Process_OutputDataReceived(object sender, System.Diagnostics.DataReceivedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(e.Data))
+            {
+                _output.Append(e.Data);
+            }
         }
 
         public bool RetrieveFile(string filePath)
         {
-            var cli = new Cli("cmd.exe");
-            var cmd = "gin annex get " + filePath + " --json";
-            var output = cli.Execute(cmd);
-            output.ThrowIfError();
+            System.Diagnostics.Process process = new System.Diagnostics.Process();
+            System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+            startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+            startInfo.FileName = "cmd.exe";
+            startInfo.WorkingDirectory = Directory.GetParent(filePath).FullName;
+            var filename = Path.GetFileName(filePath);
+            startInfo.Arguments = "/C gin get-content " + filename + "--json";
+            startInfo.CreateNoWindow = true;
+            startInfo.RedirectStandardOutput = true;
+            startInfo.RedirectStandardError = true;
+            startInfo.UseShellExecute = false;
 
-            AnnexGet result = JsonConvert.DeserializeObject<AnnexGet>(output.ToString());
+            process.StartInfo = startInfo;
+            process.OutputDataReceived += Process_OutputDataReceived;
+            _output.Clear();
+            process.Start();
+            process.BeginOutputReadLine();
+            var error = process.StandardError.ReadToEnd();
+            process.WaitForExit();
 
-            return result.success;
+            var output = _output.ToString();
+            _output.Clear();
+
+            try
+            {
+                if (string.IsNullOrEmpty(output))
+                    return false;
+
+                AnnexGet result = JsonConvert.DeserializeObject<AnnexGet>(output.ToString());
+
+                return result.success;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public bool Login()
@@ -76,6 +140,7 @@ namespace GinClient
             //"content-type: application/json" and "Authorization: Basic <base64 encoded $USERNAME:$PASSWORD>"
             //default host gin.g-node.org
             //request returns a token that needs to be saved and attached to future requests
+            //default path %userprofile%\.config\gin\, will be changed to %appdata%\gnode\gin\
 
             return true;
         }

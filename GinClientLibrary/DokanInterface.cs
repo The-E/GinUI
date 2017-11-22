@@ -100,7 +100,7 @@ namespace GinClient
         #region Helpers
         private string GetPath(string fileName)
         {
-            return PhysicalDirectory.FullName + Path.PathSeparator + fileName;
+            return PhysicalDirectory.FullName + fileName;
         }
 
         private IList<FileInformation> FindFilesHelper(string fileName, string searchPattern)
@@ -252,6 +252,15 @@ namespace GinClient
 
                         if (pathExists)
                         {
+                            //If the file is an annexed and the driver definitely wants to open it, retrieve it.
+                            if (fileisAnnexed && !pathIsDirectory)
+                            {
+                                info.TryResetTimeout(3000); //Annex operations take time; 
+                                OnFileOperationStarted(new FileOperationEventArgs() { Success = false, File = fileName });
+                                var success = Repository.RetrieveFile(filePath);
+                                OnFileOperationCompleted(new FileOperationEventArgs() { Success = success, File = fileName });
+                            }
+
                             // check if driver only wants to read attributes, security info, or open directory
                             if (readWriteAttributes || pathIsDirectory)
                             {
@@ -268,16 +277,6 @@ namespace GinClient
                                 return Trace(nameof(CreateFile), fileName, info, access, share, mode, options,
                                     attributes, DokanResult.Success);
                             }
-
-                            //If the file is an annexed and the driver definitely wants to open it, retrieve it.
-                            if (fileisAnnexed)
-                            {
-                                info.TryResetTimeout(3000); //Annex operations take time; 
-                                OnFileOperationStarted(new FileOperationEventArgs() { Success = false, File = fileName });
-                                var success = Repository.RetrieveFile(filePath);
-                                OnFileOperationCompleted(new FileOperationEventArgs() { Success = success, File = fileName });
-                            }
-
                         }
                         else
                         {
@@ -450,7 +449,7 @@ namespace GinClient
 
         public NtStatus GetVolumeInformation(out string volumeLabel, out FileSystemFeatures features, out string fileSystemName, DokanFileInfo info)
         {
-            volumeLabel = Mountpoint.FullName + Path.PathSeparator + Repository.Name;
+            volumeLabel = Mountpoint.FullName + Path.DirectorySeparatorChar + Repository.Name;
             fileSystemName = "NTFS";
             features = FileSystemFeatures.CasePreservedNames | FileSystemFeatures.CaseSensitiveSearch |
                        FileSystemFeatures.PersistentAcls | FileSystemFeatures.SupportsRemoteStorage |
