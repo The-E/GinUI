@@ -71,6 +71,12 @@ namespace GinClient
 
         public bool Login()
         {
+            //if you wanna do the POST request in the Windows client separately, you can just 
+            //POST to /api/v1/users/$USERNAME/tokens with data {"name":"gin-cli"} and header 
+            //"content-type: application/json" and "Authorization: Basic <base64 encoded $USERNAME:$PASSWORD>"
+            //default host gin.g-node.org
+            //request returns a token that needs to be saved and attached to future requests
+
             return true;
         }
     }
