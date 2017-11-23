@@ -43,12 +43,12 @@ namespace GinClientApp
 
             GinRepository repo = new GinRepository();
             repo.Name = "Test";
-            DirectoryInfo physicalDirectory = new DirectoryInfo(@"C:\Users\fwoltermann\Desktop\gin-cli-builds");
-            DirectoryInfo mountPoint = new DirectoryInfo(@"C:\Users\fwoltermann\Desktop\ginui-test\" + repo.Name);
+            repo.PhysicalDirectory = new DirectoryInfo(@"C:\Users\fwoltermann\Desktop\gin-cli-builds"); ;
+            repo.Mountpoint = new DirectoryInfo(@"C:\Users\fwoltermann\Desktop\ginui-test\" + repo.Name);
+            repo.ReadRepoStatus();
 
-            _dk = new DokanInterface(repo, physicalDirectory, mountPoint);
+            _dk = new DokanInterface(repo);
             _dk.Initialize();
-
         }
 
         private void _trayIcon_DoubleClick(object sender, EventArgs e)

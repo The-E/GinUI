@@ -15,21 +15,19 @@ namespace GinClient
     public class DokanInterface : IDokanOperations
     {
         #region Constructor/Destructor and setup
-        public DokanInterface(GinRepository repo, DirectoryInfo physicalDir, DirectoryInfo mountPoint)
+        public DokanInterface(GinRepository repo)
         {
             InitLogging();
 
             Repository = repo;
-            PhysicalDirectory = physicalDir;
-            Mountpoint = mountPoint;
         }
 
         public void Initialize()
         {
-            if (!Directory.Exists(Mountpoint.FullName))
-                Directory.CreateDirectory(Mountpoint.FullName);
+            if (!Directory.Exists(Repository.Mountpoint.FullName))
+                Directory.CreateDirectory(Repository.Mountpoint.FullName);
 
-            this.Mount(Mountpoint.FullName, DokanOptions.DebugMode);
+            this.Mount(Repository.Mountpoint.FullName, DokanOptions.DebugMode);
         }
         #endregion
 
@@ -69,8 +67,6 @@ namespace GinClient
 
         #region GIN data
         public GinRepository Repository { get; private set; }
-        public DirectoryInfo PhysicalDirectory { get; private set; }
-        public DirectoryInfo Mountpoint { get; private set; }
         #endregion
 
         #region Events
@@ -100,7 +96,7 @@ namespace GinClient
         #region Helpers
         private string GetPath(string fileName)
         {
-            return PhysicalDirectory.FullName + fileName;
+            return Repository.PhysicalDirectory.FullName + fileName;
         }
 
         private IList<FileInformation> FindFilesHelper(string fileName, string searchPattern)
@@ -137,7 +133,7 @@ namespace GinClient
         {
             if (info.Context != null)
                 Console.WriteLine(DokanFormat($"{nameof(Cleanup)}('{fileName}', {info} - entering"));
-
+            
             (info.Context as FileStream)?.Dispose();
             info.Context = null;
 
@@ -238,9 +234,10 @@ namespace GinClient
 
                 try
                 {
-                    pathExists = (Directory.Exists(filePath) || File.Exists(filePath));
-                    pathIsDirectory = File.GetAttributes(filePath).HasFlag(FileAttributes.Directory);
-                    fileisAnnexed = Repository.GetFileStatus(filePath) == GinRepository.FileStatus.InAnnex;
+                    pathIsDirectory = Directory.Exists(filePath);
+                    pathExists = (pathIsDirectory || File.Exists(filePath));
+                    var fileStatus = Repository.GetFileStatus(filePath);
+                    fileisAnnexed = (fileStatus == GinRepository.FileStatus.InAnnex) || (fileStatus == GinRepository.FileStatus.InAnnexModified);
                 }
                 catch (IOException)
                 {
@@ -401,7 +398,7 @@ namespace GinClient
 
         public NtStatus GetDiskFreeSpace(out long freeBytesAvailable, out long totalNumberOfBytes, out long totalNumberOfFreeBytes, DokanFileInfo info)
         {
-            var dinfo = DriveInfo.GetDrives().Single(di => string.Equals(di.RootDirectory.Name, Path.GetPathRoot(PhysicalDirectory + "\\"), StringComparison.OrdinalIgnoreCase));
+            var dinfo = DriveInfo.GetDrives().Single(di => string.Equals(di.RootDirectory.Name, Path.GetPathRoot(Repository.PhysicalDirectory + "\\"), StringComparison.OrdinalIgnoreCase));
 
             freeBytesAvailable = dinfo.TotalFreeSpace;
             totalNumberOfBytes = dinfo.TotalSize;
@@ -449,7 +446,7 @@ namespace GinClient
 
         public NtStatus GetVolumeInformation(out string volumeLabel, out FileSystemFeatures features, out string fileSystemName, DokanFileInfo info)
         {
-            volumeLabel = Mountpoint.FullName + Path.DirectorySeparatorChar + Repository.Name;
+            volumeLabel = Repository.Mountpoint.FullName + Path.DirectorySeparatorChar + Repository.Name;
             fileSystemName = "NTFS";
             features = FileSystemFeatures.CasePreservedNames | FileSystemFeatures.CaseSensitiveSearch |
                        FileSystemFeatures.PersistentAcls | FileSystemFeatures.SupportsRemoteStorage |

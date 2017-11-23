@@ -17,12 +17,16 @@ namespace GinClient
         public string Username { get; set; }
         public string Password { get; set; }
         public DirectoryInfo PhysicalDirectory { get; set; }
+        public DirectoryInfo Mountpoint { get; set; }
 
         public enum FileStatus
         {
             InAnnex,
+            InAnnexModified,
             OnDisk,
-            Unknown
+            OnDiskModified,
+            Unknown,
+            Directory
         }
 
         #region Annex return values
@@ -47,9 +51,95 @@ namespace GinClient
         #endregion
 
         private static StringBuilder _output = new StringBuilder("");
+        
+        public Dictionary<string, FileStatus> StatusCache {
+            get
+            {
+                if (_scache == null)
+                    _scache = new Dictionary<string, FileStatus>();
+                return _scache;
+            }
+        }
+
+        private Dictionary<string, FileStatus> _scache;
+
+        /// <summary>
+        /// Retrieve the status of every file in this repository
+        /// Possible statuses are: 
+        /// -In Annex
+        /// -On Disk
+        /// -On Disk, modified
+        /// -Unknown (this includes files not yet added to the gin working tree)
+        /// </summary>
+        public void ReadRepoStatus()
+        {
+            string error = "";
+            var output = GetCommandLineOutput("cmd.exe", "/c gin ls", PhysicalDirectory.FullName, out error);
+
+            //The output is currently human-readable plaintext, need to parse that.
+
+            var lines = output.Split(new char[] { '\r', '\n', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+
+            FileStatus status = FileStatus.Unknown;
+            foreach (var line in lines)
+            {
+                if (line.CompareTo("Synced:") == 0)
+                {
+                    status = FileStatus.OnDisk;
+                    continue;
+                }
+                else if (line.CompareTo("No local content:") == 0) {
+                    status = FileStatus.InAnnex;
+                    continue;
+                }
+                else if (line.CompareTo("Locally modified (unsaved):") == 0) {
+                    status = FileStatus.OnDiskModified;
+                    continue;
+                }
+                else if (line.CompareTo("Locally modified (not uploaded):") == 0) {
+                    status = FileStatus.OnDiskModified;
+                    continue;
+                }
+                else if (line.CompareTo("Remotely modified (not downloaded):") == 0) {
+                    status = FileStatus.InAnnexModified;
+                    continue;
+                }
+                else if (line.CompareTo("Unlocked for editing:") == 0) {
+                    status = FileStatus.OnDisk;
+                    continue;
+                }
+                else if (line.CompareTo("Removed:") == 0) {
+                    status = FileStatus.Unknown;
+                    continue;
+                }
+                else if (line.CompareTo("Untracked:") == 0) {
+                    status = FileStatus.Unknown;
+                    continue;
+                }
+                else if (line.CompareTo("Unknown:") == 0) {
+                    status = FileStatus.Unknown;
+                    continue;
+                }
+
+                var fullPath = Path.GetFullPath(PhysicalDirectory.FullName + Path.DirectorySeparatorChar + line);
+
+                if (!StatusCache.ContainsKey(fullPath))
+                    StatusCache.Add(fullPath, status);
+                else
+                    StatusCache[fullPath] = status;
+            }
+        }
 
         public FileStatus GetFileStatus(string filePath)
         {
+            if (StatusCache.ContainsKey(filePath))
+            {
+                return StatusCache[filePath];
+            }
+
+            if (Directory.Exists(filePath))
+                return FileStatus.Directory;
+
             string error;
             var output = GetCommandLineOutput("cmd.exe", "/c gin annex info " + filePath + " --json", Directory.GetParent(filePath).FullName, out error);
             try
@@ -79,6 +169,8 @@ namespace GinClient
             var output = GetCommandLineOutput("cmd.exe", "/C gin get-content " + filename + " --json", directoryName, out error);
             _output.Clear();
 
+            ReadRepoStatus();
+
             if (!string.IsNullOrEmpty(error))
                 return false;
             else //gin currently returns an empty string on  success
@@ -103,37 +195,40 @@ namespace GinClient
         {
             if (!string.IsNullOrEmpty(e.Data))
             {
-                _output.Append(e.Data);
+                _output.AppendLine(e.Data);
             }
         }
 
+        private Object thisLock = new Object();
         private string GetCommandLineOutput(string program, string commandline, string workingDirectory, out string error)
         {
-            var process = new Process()
-            {
-                StartInfo = new ProcessStartInfo()
+            lock (thisLock) {
+                var process = new Process()
                 {
-                    WindowStyle = ProcessWindowStyle.Hidden,
-                    FileName = program,
-                    WorkingDirectory = workingDirectory,
-                    Arguments = commandline,
-                    CreateNoWindow = true,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false
-                }
-            };
+                    StartInfo = new ProcessStartInfo()
+                    {
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        FileName = program,
+                        WorkingDirectory = workingDirectory,
+                        Arguments = commandline,
+                        CreateNoWindow = true,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false
+                    }
+                };
 
-            process.OutputDataReceived += Process_OutputDataReceived;
-            _output.Clear();
-            process.Start();
-            process.BeginOutputReadLine();
-            error = process.StandardError.ReadToEnd();
-            process.WaitForExit();
+                process.OutputDataReceived += Process_OutputDataReceived;
+                _output.Clear();
+                process.Start();
+                process.BeginOutputReadLine();
+                error = process.StandardError.ReadToEnd();
+                process.WaitForExit();
 
-            var output = _output.ToString();
-            _output.Clear();
-            return output;
+                var output = _output.ToString();
+                _output.Clear();
+                return output;
+            }
         }
         #endregion
     }
