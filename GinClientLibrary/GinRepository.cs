@@ -140,6 +140,14 @@ namespace GinClient
             if (Directory.Exists(filePath))
                 return FileStatus.Directory;
 
+
+            //Windows will sometimes try to inspect the contents of a zip file; we need to catch this here and return the filestatus of the zip
+            string parentDirectory = Directory.GetParent(filePath).FullName;
+            if (parentDirectory.EndsWith(".zip", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return GetFileStatus(parentDirectory);
+            }
+
             string error;
             var output = GetCommandLineOutput("cmd.exe", "/c gin annex info " + filePath + " --json", Directory.GetParent(filePath).FullName, out error);
             try

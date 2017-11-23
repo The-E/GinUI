@@ -47,7 +47,7 @@ namespace GinClientApp
             repo.Mountpoint = new DirectoryInfo(@"C:\Users\fwoltermann\Desktop\ginui-test\" + repo.Name);
             repo.ReadRepoStatus();
 
-            _dk = new DokanInterface(repo);
+            _dk = new DokanInterface(repo, false);
             _dk.Initialize();
         }
 

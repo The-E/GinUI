@@ -15,11 +15,12 @@ namespace GinClient
     public class DokanInterface : IDokanOperations
     {
         #region Constructor/Destructor and setup
-        public DokanInterface(GinRepository repo)
+        public DokanInterface(GinRepository repo, bool enableLogging = true)
         {
             InitLogging();
 
             Repository = repo;
+            _doLogging = enableLogging;
         }
 
         public void Initialize()
@@ -33,14 +34,17 @@ namespace GinClient
 
         #region Logging Infrastructure methods
 
+        private bool _doLogging;
         private NtStatus Trace(string method, string fileName, DokanFileInfo info, NtStatus result, params object[] parameters)
         {
-            var extraParameters = parameters != null && parameters.Length > 0
-                ? ", " + string.Join(", ", parameters.Select(x => string.Format(DefaultFormatProvider, "{0}", x)))
-                : string.Empty;
+            if (_doLogging)
+            {
+                var extraParameters = parameters != null && parameters.Length > 0
+                    ? ", " + string.Join(", ", parameters.Select(x => string.Format(DefaultFormatProvider, "{0}", x)))
+                    : string.Empty;
 
-            EventLog.WriteEntry(logSource, DokanFormat($"{method}('{fileName}', {info}{extraParameters}) -> {result}"));
-
+                EventLog.WriteEntry(logSource, DokanFormat($"{method}('{fileName}', {info}{extraParameters}) -> {result}"));
+            }
             return result;
         }
 
@@ -48,10 +52,12 @@ namespace GinClient
             FileAccess access, FileShare share, FileMode mode, FileOptions options, FileAttributes attributes,
             NtStatus result)
         {
-            EventLog.WriteEntry(logSource,
-                DokanFormat(
-                    $"{method}('{fileName}', {info}, [{access}], [{share}], [{mode}], [{options}], [{attributes}]) -> {result}"));
-
+            if (_doLogging)
+            {
+                EventLog.WriteEntry(logSource,
+                    DokanFormat(
+                        $"{method}('{fileName}', {info}, [{access}], [{share}], [{mode}], [{options}], [{attributes}]) -> {result}"));
+            }
             return result;
         }
 
@@ -131,7 +137,7 @@ namespace GinClient
 
         public void Cleanup(string fileName, DokanFileInfo info)
         {
-            if (info.Context != null)
+            if (info.Context != null && _doLogging)
                 Console.WriteLine(DokanFormat($"{nameof(Cleanup)}('{fileName}', {info} - entering"));
             
             (info.Context as FileStream)?.Dispose();
@@ -154,7 +160,7 @@ namespace GinClient
 
         public void CloseFile(string fileName, DokanFileInfo info)
         {
-            if (info.Context != null)
+            if (info.Context != null && _doLogging)
                 Console.WriteLine(DokanFormat($"{nameof(CloseFile)}('{fileName}', {info} - entering"));
 
             (info.Context as FileStream)?.Dispose();
@@ -266,7 +272,7 @@ namespace GinClient
                                     attributes, DokanResult.Success);
                             }
 
-                            //If the file is an annexed and the driver definitely wants to open it, retrieve it.
+                            //If the file is annexed and the driver definitely wants to open it, retrieve it.
                             if (fileisAnnexed)
                             {
                                 bool a = info.TryResetTimeout(30000); //Annex operations take time; 
@@ -310,6 +316,13 @@ namespace GinClient
                 }
                 catch (UnauthorizedAccessException) // don't have access rights
                 {
+                    if (info.Context is FileStream fileStream)
+                    {
+                        // returning AccessDenied cleanup and close won't be called
+                        fileStream.Dispose();
+                        info.Context = null;
+                    }
+
                     return Trace(nameof(CreateFile), fileName, info, access, share, mode, options, attributes,
                         DokanResult.AccessDenied);
                 }
