@@ -39,8 +39,7 @@ namespace GinClientApp
             };
 
             _trayIcon.DoubleClick += _trayIcon_DoubleClick;
-
-
+           
             GinRepository repo = new GinRepository(
                 new DirectoryInfo(@"C:\Users\fwoltermann\Desktop\gin-cli-builds"), 
                 new DirectoryInfo(@"C:\Users\fwoltermann\Desktop\ginui-test\Test\"), 
@@ -55,9 +54,20 @@ namespace GinClientApp
             repo.Mount();            
         }
 
+        private void _trayIcon_BalloonTipClosed(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void _trayIcon_BalloonTipShown(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
         private void Repo_FileOperationCompleted(object sender, DokanInterface.FileOperationEventArgs e)
         {
         }
+        
 
         private void Repo_FileOperationStarted(object sender, DokanInterface.FileOperationEventArgs e)
         {
@@ -71,7 +81,7 @@ namespace GinClientApp
 
         private void _trayIcon_DoubleClick(object sender, EventArgs e)
         {
-            
+            Exit(this, null);
         }
 
         void Exit(object sender, EventArgs e)
