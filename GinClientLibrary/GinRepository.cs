@@ -7,17 +7,96 @@ using System.Text;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using static GinClient.DokanInterface;
 
 namespace GinClient
 {
-    public class GinRepository
+    public class GinRepository : IDisposable
     {
-        public string URL { get; set; }
-        public string Name { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public DirectoryInfo PhysicalDirectory { get; set; }
-        public DirectoryInfo Mountpoint { get; set; }
+        #region Properties
+        /// <summary>
+        /// The repository's GIN url
+        /// </summary>
+        public string URL { get; private set; }
+        /// <summary>
+        /// Name of the Repository, i.e. "Experiment data"
+        /// </summary>
+        public string Name { get; private set; }
+        /// <summary>
+        /// GIN Login info
+        /// </summary>
+        public string Username { get; private set; }
+        /// <summary>
+        /// GIN Login info
+        /// </summary>
+        public string Password { get; private set; }
+        /// <summary>
+        /// Path to a directory containing the actual files
+        /// </summary>
+        public DirectoryInfo PhysicalDirectory { get; private set; }
+        /// <summary>
+        /// Path where the Repo will be mounted
+        /// </summary>
+        public DirectoryInfo Mountpoint { get; private set; }
+        /// <summary>
+        /// A Dokan driver interface
+        /// </summary>
+        private DokanInterface DokanInterface { get; set; }
+        #endregion
+
+        public GinRepository(DirectoryInfo physicalDirectory, DirectoryInfo mountpoint, string name, string url, string username, string password)
+        {
+            PhysicalDirectory = physicalDirectory;
+            Mountpoint = mountpoint;
+            Name = name;
+            URL = url;
+            Username = username;
+            Password = password;
+            DokanInterface = new DokanInterface(this, false);
+            DokanInterface.FileOperationStarted += DokanInterface_FileOperationStarted;
+            DokanInterface.FileOperationCompleted += DokanInterface_FileOperationCompleted;
+        }
+
+        #region Dokan Interface Events
+
+        public event FileOperationStartedHandler FileOperationStarted;
+        public delegate void FileOperationStartedHandler(object sender, FileOperationEventArgs e);
+        protected virtual void OnFileOperationStarted(FileOperationEventArgs e)
+        {
+            FileOperationStarted?.Invoke(this, e);
+        }
+
+        public event FileOperationCompleteHandler FileOperationCompleted;
+        public delegate void FileOperationCompleteHandler(object sender, FileOperationEventArgs e);
+        protected virtual void OnFileOperationCompleted(FileOperationEventArgs e)
+        {
+            
+            FileOperationCompleted?.Invoke(this, e);
+        }
+
+        private void DokanInterface_FileOperationCompleted(object sender, DokanInterface.FileOperationEventArgs e)
+        {
+            OnFileOperationStarted(e);
+        }
+
+        private void DokanInterface_FileOperationStarted(object sender, DokanInterface.FileOperationEventArgs e)
+        {
+            OnFileOperationCompleted(e);
+        }
+        #endregion
+
+        public void Initialize()
+        {
+            if (!Directory.Exists(Mountpoint.FullName))
+                Directory.CreateDirectory(Mountpoint.FullName);
+
+            ReadRepoStatus();
+        }
+
+        public void Mount()
+        {
+            DokanInterface.Initialize();
+        }
 
         public enum FileStatus
         {
@@ -243,6 +322,41 @@ namespace GinClient
                 return output;
             }
         }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects).
+                }
+
+                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // TODO: set large fields to null.
+
+                disposedValue = true;
+            }
+        }
+
+        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
+        // ~GinRepository() {
+        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+        //   Dispose(false);
+        // }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+            // TODO: uncomment the following line if the finalizer is overridden above.
+            // GC.SuppressFinalize(this);
+        }
+        #endregion
         #endregion
     }
 

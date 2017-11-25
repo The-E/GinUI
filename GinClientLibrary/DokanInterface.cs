@@ -25,9 +25,6 @@ namespace GinClient
 
         public void Initialize()
         {
-            if (!Directory.Exists(Repository.Mountpoint.FullName))
-                Directory.CreateDirectory(Repository.Mountpoint.FullName);
-
             this.Mount(Repository.Mountpoint.FullName, DokanOptions.DebugMode);
         }
         #endregion

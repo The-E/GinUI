@@ -41,14 +41,32 @@ namespace GinClientApp
             _trayIcon.DoubleClick += _trayIcon_DoubleClick;
 
 
-            GinRepository repo = new GinRepository();
-            repo.Name = "Test";
-            repo.PhysicalDirectory = new DirectoryInfo(@"C:\Users\fwoltermann\Desktop\gin-cli-builds"); ;
-            repo.Mountpoint = new DirectoryInfo(@"C:\Users\fwoltermann\Desktop\ginui-test\" + repo.Name);
-            repo.ReadRepoStatus();
+            GinRepository repo = new GinRepository(
+                new DirectoryInfo(@"C:\Users\fwoltermann\Desktop\gin-cli-builds"), 
+                new DirectoryInfo(@"C:\Users\fwoltermann\Desktop\ginui-test\Test\"), 
+                "Test", 
+                "", 
+                "", 
+                "");
 
-            _dk = new DokanInterface(repo, false);
-            _dk.Initialize();
+            repo.FileOperationStarted += Repo_FileOperationStarted;
+            repo.FileOperationCompleted += Repo_FileOperationCompleted;
+            repo.Initialize();
+            repo.Mount();            
+        }
+
+        private void Repo_FileOperationCompleted(object sender, DokanInterface.FileOperationEventArgs e)
+        {
+        }
+
+        private void Repo_FileOperationStarted(object sender, DokanInterface.FileOperationEventArgs e)
+        {
+            using (var repo = (GinRepository)sender)
+            {
+                _trayIcon.BalloonTipTitle = "GIN Repository activity in progress";
+                _trayIcon.BalloonTipText = "Retrieving " + Path.GetFileName(e.File) + " from repository " + repo.Name;
+                _trayIcon.ShowBalloonTip(5000);
+            }
         }
 
         private void _trayIcon_DoubleClick(object sender, EventArgs e)
