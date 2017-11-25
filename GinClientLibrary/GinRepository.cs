@@ -143,20 +143,25 @@ namespace GinClient
 
             //Windows will sometimes try to inspect the contents of a zip file; we need to catch this here and return the filestatus of the zip
             string parentDirectory = Directory.GetParent(filePath).FullName;
-            if (parentDirectory.EndsWith(".zip", StringComparison.InvariantCultureIgnoreCase))
+            if (parentDirectory.ToLower().Contains(".zip"))
             {
                 return GetFileStatus(parentDirectory);
             }
 
-            string error;
-            var output = GetCommandLineOutput("cmd.exe", "/c gin annex info " + filePath + " --json", Directory.GetParent(filePath).FullName, out error);
+            string error = "";
+            var output = GetCommandLineOutput("cmd.exe", "/c gin annex info " + filePath + " --json", parentDirectory, out error);
             try
             {
                 if (!string.IsNullOrEmpty(output))
                 {
                     AnnexFileInfo fileInfo = JsonConvert.DeserializeObject<AnnexFileInfo>(output);
 
-                    return fileInfo.present ? FileStatus.OnDisk : FileStatus.InAnnex;
+                    var fstatus = fileInfo.present ? FileStatus.OnDisk : FileStatus.InAnnex;
+
+                    if (!StatusCache.ContainsKey(filePath))
+                        StatusCache.Add(filePath, fstatus);
+
+                    return fstatus;
                 }
 
                 return FileStatus.Unknown;
