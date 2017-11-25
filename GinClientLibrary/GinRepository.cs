@@ -8,6 +8,8 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using static GinClient.DokanInterface;
+using System.Threading;
+using System.Security.Permissions;
 
 namespace GinClient
 {
@@ -93,9 +95,11 @@ namespace GinClient
             ReadRepoStatus();
         }
 
+        private Thread _thread;
         public void Mount()
         {
-            DokanInterface.Initialize();
+            _thread = new Thread(DokanInterface.Initialize);
+            _thread.Start();
         }
 
         public enum FileStatus
@@ -326,21 +330,24 @@ namespace GinClient
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
 
+        
+
         protected virtual void Dispose(bool disposing)
-        {
+        {           
             if (!disposedValue)
             {
                 if (disposing)
                 {
-                    // TODO: dispose managed state (managed objects).
+                    var res = Dokan.RemoveMountPoint(Mountpoint.FullName);
+                    _thread.Abort();
                 }
-
-                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // TODO: set large fields to null.
-
-                disposedValue = true;
             }
-        }
+
+            // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
+            // TODO: set large fields to null.
+
+            disposedValue = true;
+        } 
 
         // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
         // ~GinRepository() {

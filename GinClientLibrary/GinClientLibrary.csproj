@@ -50,6 +50,7 @@
     <Compile Include="GinRepository.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RepositoryManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

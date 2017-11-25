@@ -1,8 +1,10 @@
 ﻿using GinClient;
+using GinClientLibrary;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -26,6 +28,9 @@ namespace GinClientApp
     {
         private NotifyIcon _trayIcon;
         private DokanInterface _dk;
+        private GinRepository _repo;
+        private RepositoryManager _repoman;
+        private Thread _repomanThread;
 
         public GinApplicationContext()
         {
@@ -39,20 +44,20 @@ namespace GinClientApp
             };
 
             _trayIcon.DoubleClick += _trayIcon_DoubleClick;
-           
-            GinRepository repo = new GinRepository(
-                new DirectoryInfo(@"C:\Users\fwoltermann\Desktop\gin-cli-builds"), 
-                new DirectoryInfo(@"C:\Users\fwoltermann\Desktop\ginui-test\Test\"), 
-                "Test", 
-                "", 
-                "", 
-                "");
 
-            repo.FileOperationStarted += Repo_FileOperationStarted;
-            repo.FileOperationCompleted += Repo_FileOperationCompleted;
-            repo.Initialize();
-            repo.Mount();            
+            _repoman = RepositoryManager.Instance;
+            _repoman.AddRepository(
+               new DirectoryInfo(@"C:\Users\fwoltermann\Desktop\gin-cli-builds"),
+               new DirectoryInfo(@"C:\Users\fwoltermann\Desktop\ginui-test\Test\"),
+               "Test",
+               "",
+               "",
+               "");
+
+            _repomanThread = new Thread(_repoman.MountAllRepositories);
+            _repomanThread.Start();
         }
+        
 
         private void _trayIcon_BalloonTipClosed(object sender, EventArgs e)
         {
@@ -88,7 +93,8 @@ namespace GinClientApp
         {
             // Hide tray icon, otherwise it will remain shown until user mouses over it
             _trayIcon.Visible = false;
-
+            _repoman.UnmountAllRepositories();
+            _repomanThread.Abort();
             Application.Exit();
         }
     }

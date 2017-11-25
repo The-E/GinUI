@@ -25,7 +25,12 @@ namespace GinClient
 
         public void Initialize()
         {
-            this.Mount(Repository.Mountpoint.FullName, DokanOptions.DebugMode);
+            try
+            {
+               this.Mount(Repository.Mountpoint.FullName, DokanOptions.DebugMode | DokanOptions.StderrOutput);
+            }
+            catch (Exception e)
+            { }
         }
         #endregion
 
