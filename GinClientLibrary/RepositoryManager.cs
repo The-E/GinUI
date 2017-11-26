@@ -85,12 +85,12 @@ namespace GinClientLibrary
 
         private void Repo_FileOperationCompleted(object sender, DokanInterface.FileOperationEventArgs e)
         {
-            throw new NotImplementedException();
+            
         }
 
         private void Repo_FileOperationStarted(object sender, DokanInterface.FileOperationEventArgs e)
         {
-            throw new NotImplementedException();
+            
         }
     }
 }
