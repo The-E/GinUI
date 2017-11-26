@@ -338,7 +338,7 @@ namespace GinClient
             {
                 if (disposing)
                 {
-                    var res = Dokan.RemoveMountPoint(Mountpoint.FullName);
+                    var res = Dokan.RemoveMountPoint(Mountpoint.FullName.Trim('\\'));
                     _thread.Abort();
                 }
             }

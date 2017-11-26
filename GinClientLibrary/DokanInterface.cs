@@ -27,7 +27,7 @@ namespace GinClient
         {
             try
             {
-               this.Mount(Repository.Mountpoint.FullName, DokanOptions.DebugMode | DokanOptions.StderrOutput);
+               this.Mount(Repository.Mountpoint.FullName.Trim('\\'), DokanOptions.DebugMode | DokanOptions.StderrOutput);
             }
             catch (Exception e)
             { }
