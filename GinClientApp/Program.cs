@@ -1,4 +1,5 @@
-﻿using GinClientLibrary;
+﻿using GinClientApp.GinClientService;
+using GinClientLibrary;
 using System;
 using System.IO;
 using System.Threading;
@@ -23,10 +24,9 @@ namespace GinClientApp
     public class GinApplicationContext : ApplicationContext
     {
         private NotifyIcon _trayIcon;
-        private DokanInterface _dk;
-        private GinRepository _repo;
-        private RepositoryManager _repoman;
-        private Thread _repomanThread;
+        
+
+        private GinClientServiceClient _client;
 
         public GinApplicationContext()
         {
@@ -41,17 +41,13 @@ namespace GinClientApp
 
             _trayIcon.DoubleClick += _trayIcon_DoubleClick;
 
-            _repoman = RepositoryManager.Instance;
-            _repoman.AddRepository(
-               new DirectoryInfo(@"C:\Users\fwoltermann\Desktop\gin-cli-builds"),
-               new DirectoryInfo(@"C:\Users\fwoltermann\Desktop\ginui-test\Test\"),
+            _client = new GinClientServiceClient();
+            _client.AddRepository(
+               @"C:\Users\fwoltermann\Desktop\gin-cli-builds",
+               @"C:\Users\fwoltermann\Desktop\ginui-test\Test\",
                "Test",
-               "",
-               "",
-               "");
-
-            _repomanThread = new Thread(_repoman.MountAllRepositories);
-            _repomanThread.Start();
+               ""
+               );
         }
         
 
@@ -89,8 +85,7 @@ namespace GinClientApp
         {
             // Hide tray icon, otherwise it will remain shown until user mouses over it
             _trayIcon.Visible = false;
-            _repoman.UnmountAllRepositories();
-            _repomanThread.Abort();
+            _client.Close();
             Application.Exit();
         }
     }

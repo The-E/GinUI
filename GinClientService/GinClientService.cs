@@ -16,7 +16,7 @@ namespace GinClientService
 
         bool IGinClientService.AddRepository(string physicalDirectory, string mountpoint, string name, string url)
         {
-            RepositoryManager.Instance.AddRepository(new DirectoryInfo(physicalDirectory), new DirectoryInfo(mountpoint), name, url, RepositoryManager.Instance.GetUserNameForUrl(url), RepositoryManager.Instance.GetPasswordForUrl(url));
+            RepositoryManager.Instance.AddRepository(new DirectoryInfo(physicalDirectory), new DirectoryInfo(mountpoint), name, url);
             return true;
         }
 

@@ -43,14 +43,12 @@ namespace GinClientLibrary
         private DokanInterface DokanInterface { get; }
         #endregion
 
-        public GinRepository(DirectoryInfo physicalDirectory, DirectoryInfo mountpoint, string name, string url, string username, string password)
+        public GinRepository(DirectoryInfo physicalDirectory, DirectoryInfo mountpoint, string name, string url)
         {
             PhysicalDirectory = physicalDirectory;
             Mountpoint = mountpoint;
             Name = name;
             URL = url;
-            Username = username;
-            Password = password;
             DokanInterface = new DokanInterface(this, false);
             DokanInterface.FileOperationStarted += DokanInterface_FileOperationStarted;
             DokanInterface.FileOperationCompleted += DokanInterface_FileOperationCompleted;
