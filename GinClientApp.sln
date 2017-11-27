@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GinClientLibrary", "GinClie
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Installer", "Installer\Installer.wixproj", "{217CC61D-991F-4854-B39C-CF6A22990BB9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GinClientService", "GinClientService\GinClientService.csproj", "{8687E754-5DC6-4B69-80A2-9F6BD2E6340F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,14 @@ Global
 		{217CC61D-991F-4854-B39C-CF6A22990BB9}.Release|Any CPU.ActiveCfg = Release|x86
 		{217CC61D-991F-4854-B39C-CF6A22990BB9}.Release|x86.ActiveCfg = Release|x86
 		{217CC61D-991F-4854-B39C-CF6A22990BB9}.Release|x86.Build.0 = Release|x86
+		{8687E754-5DC6-4B69-80A2-9F6BD2E6340F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8687E754-5DC6-4B69-80A2-9F6BD2E6340F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8687E754-5DC6-4B69-80A2-9F6BD2E6340F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8687E754-5DC6-4B69-80A2-9F6BD2E6340F}.Debug|x86.Build.0 = Debug|Any CPU
+		{8687E754-5DC6-4B69-80A2-9F6BD2E6340F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8687E754-5DC6-4B69-80A2-9F6BD2E6340F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8687E754-5DC6-4B69-80A2-9F6BD2E6340F}.Release|x86.ActiveCfg = Release|Any CPU
+		{8687E754-5DC6-4B69-80A2-9F6BD2E6340F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
