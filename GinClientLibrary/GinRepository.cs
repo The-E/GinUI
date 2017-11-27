@@ -7,38 +7,47 @@ using System.Text;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using static GinClient.DokanInterface;
+using static GinClientLibrary.DokanInterface;
 using System.Threading;
 using System.Security.Permissions;
+using System.Runtime.Serialization;
 
-namespace GinClient
+namespace GinClientLibrary
 {
+
+    [DataContract]
     public class GinRepository : IDisposable
     {
         #region Properties
         /// <summary>
         /// The repository's GIN url
         /// </summary>
+        [DataMember]
         public string URL { get; private set; }
         /// <summary>
         /// Name of the Repository, i.e. "Experiment data"
         /// </summary>
+        [DataMember]
         public string Name { get; private set; }
         /// <summary>
         /// GIN Login info
         /// </summary>
+        [DataMember]
         public string Username { get; private set; }
         /// <summary>
         /// GIN Login info
         /// </summary>
+        [DataMember]
         public string Password { get; private set; }
         /// <summary>
         /// Path to a directory containing the actual files
         /// </summary>
+        [DataMember]
         public DirectoryInfo PhysicalDirectory { get; private set; }
         /// <summary>
         /// Path where the Repo will be mounted
         /// </summary>
+        [DataMember]
         public DirectoryInfo Mountpoint { get; private set; }
         /// <summary>
         /// A Dokan driver interface

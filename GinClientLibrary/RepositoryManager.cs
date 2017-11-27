@@ -1,5 +1,4 @@
 ﻿using DokanNet;
-using GinClient;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -31,6 +30,21 @@ namespace GinClientLibrary
             }
         }
 
+        public bool AddCredentials(string url, string username, string password)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetPasswordForUrl(string url)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetUserNameForUrl(string url)
+        {
+            throw new NotImplementedException();
+        }
+
         List<GinRepository> _repositories;
         public List<GinRepository> Repositories {
             get {
@@ -44,11 +58,31 @@ namespace GinClientLibrary
         public void MountAllRepositories()
         {
             foreach (var repo in Repositories)
+                MountRepository(repo);
+        }
+
+        void MountRepository(GinRepository repo)
+        {
+            if (!_repothreads.ContainsKey(repo))
             {
                 var thread = new Thread(repo.Mount);
                 thread.Start();
 
                 _repothreads.Add(repo, thread);
+            }
+        }
+
+        public bool UpdateRepository(string repoName, GinRepository data)
+        {
+            lock (this)
+            {
+                var repo = Repositories.Single(r => string.Compare(r.Name, repoName) == 0);
+                UnmountRepository(repo);
+                Repositories.Remove(repo);
+                Repositories.Add(data);
+                MountRepository(data);
+
+                return true;
             }
         }
 

@@ -1,31 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.ServiceModel;
-using System.Text;
+using GinClientLibrary;
+using System.IO;
 
 namespace GinClientService
 {
-    // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "Service1" in both code and config file together.
     public class GinClientService : IGinClientService
     {
-        public string GetData(int value)
+        public GinClientService()
         {
-            return string.Format("You entered: {0}", value);
+            RepositoryManager.Instance.MountAllRepositories();
         }
 
-        public CompositeType GetDataUsingDataContract(CompositeType composite)
+        bool IGinClientService.AddCredentials(string url, string username, string password)
         {
-            if (composite == null)
-            {
-                throw new ArgumentNullException("composite");
-            }
-            if (composite.BoolValue)
-            {
-                composite.StringValue += "Suffix";
-            }
-            return composite;
+            return RepositoryManager.Instance.AddCredentials(url, username, password);
+        }
+
+        bool IGinClientService.AddRepository(string physicalDirectory, string mountpoint, string name, string url)
+        {
+            RepositoryManager.Instance.AddRepository(new DirectoryInfo(physicalDirectory), new DirectoryInfo(mountpoint), name, url, RepositoryManager.Instance.GetUserNameForUrl(url), RepositoryManager.Instance.GetPasswordForUrl(url));
+            return true;
+        }
+
+        List<GinRepository> IGinClientService.GetRepositoryList()
+        {
+            return RepositoryManager.Instance.Repositories;
+        }
+
+        bool IGinClientService.UnmmountAllRepositories()
+        {
+            RepositoryManager.Instance.UnmountAllRepositories();
+            return true;
+        }
+
+        bool IGinClientService.UnmountRepository(string repoName)
+        {
+            RepositoryManager.Instance.UnmountRepository(RepositoryManager.Instance.Repositories.Single(r => string.Compare(r.Name, repoName, true) == 0));
+            return true;
+        }
+
+        bool IGinClientService.UpdateRepository(string repoName, GinRepository data)
+        {
+            return RepositoryManager.Instance.UpdateRepository(repoName, data);
         }
     }
 }

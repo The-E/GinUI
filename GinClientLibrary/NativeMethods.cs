@@ -1,7 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
 
-namespace GinClient
+namespace GinClientLibrary
 {
     public static class NativeMethods
     {

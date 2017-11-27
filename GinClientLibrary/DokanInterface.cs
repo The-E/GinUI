@@ -10,7 +10,7 @@ using DokanNet;
 using static DokanNet.FormatProviders;
 using FileAccess = DokanNet.FileAccess;
 
-namespace GinClient
+namespace GinClientLibrary
 {
     public class DokanInterface : IDokanOperations
     {
