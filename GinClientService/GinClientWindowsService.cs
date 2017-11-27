@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.ServiceModel;
+﻿using System.ServiceModel;
 using System.ServiceProcess;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GinClientService
 {
@@ -24,10 +19,10 @@ namespace GinClientService
 
         protected override void OnStart(string[] args)
         {
-            if (serviceHost != null)
-            {
-                serviceHost.Close();
-            }
+            //TODO: Remove before release!
+            System.Diagnostics.Debugger.Launch();
+
+            serviceHost?.Close();
 
             // Create a ServiceHost for the CalculatorService type and 
             // provide the base address.
@@ -40,11 +35,9 @@ namespace GinClientService
 
         protected override void OnStop()
         {
-            if (serviceHost != null)
-            {
-                serviceHost.Close();
-                serviceHost = null;
-            }
+            if (serviceHost == null) return;
+            serviceHost.Close();
+            serviceHost = null;
         }
     }
 }

@@ -7,10 +7,7 @@ namespace GinClientService
 {
     public class GinClientService : IGinClientService
     {
-        public GinClientService()
-        {
-            RepositoryManager.Instance.MountAllRepositories();
-        }
+        public GinClientService() => RepositoryManager.Instance.MountAllRepositories();
 
         bool IGinClientService.AddCredentials(string url, string username, string password)
         {
