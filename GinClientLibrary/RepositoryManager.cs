@@ -30,9 +30,41 @@ namespace GinClientLibrary
             }
         }
 
+        private struct GinServer
+        {
+            public string URL;
+            public string Username;
+            public string Password;
+        }
+
+        private List<GinServer> _servers = new List<GinServer>();
+
         public bool AddCredentials(string url, string username, string password)
         {
-            throw new NotImplementedException();
+            bool serverExists = false;
+
+            foreach (var server in _servers)
+            {
+                if (serverExists)
+                    continue;
+                serverExists = string.Compare(server.URL, url, true) == 0;   
+                
+                if (serverExists)
+                {
+                    var serv = _servers[_servers.IndexOf(server)];
+                    serv.URL = url;
+                    serv.Password = password;
+                    serv.Username = username;
+                }
+            }
+
+            if (!serverExists)
+            {
+                var newServer = new GinServer() { URL = url, Username = username, Password = password };
+                _servers.Add(newServer);
+            }
+
+            return true;
         }
 
         public string GetPasswordForUrl(string url)

@@ -30,16 +30,6 @@ namespace GinClientLibrary
         [DataMember]
         public string Name { get; private set; }
         /// <summary>
-        /// GIN Login info
-        /// </summary>
-        [DataMember]
-        public string Username { get; private set; }
-        /// <summary>
-        /// GIN Login info
-        /// </summary>
-        [DataMember]
-        public string Password { get; private set; }
-        /// <summary>
         /// Path to a directory containing the actual files
         /// </summary>
         [DataMember]
