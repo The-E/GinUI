@@ -3,9 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace GinClientLibrary
 {
@@ -114,6 +112,7 @@ namespace GinClientLibrary
             _repo.FileOperationCompleted += Repo_FileOperationCompleted;
             _repo.Initialize();
 
+            MountRepository(_repo);
             Repositories.Add(_repo);
         }
 

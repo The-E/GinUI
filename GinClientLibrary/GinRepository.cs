@@ -5,11 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using static GinClientLibrary.DokanInterface;
 using System.Threading;
-using System.Security.Permissions;
 using System.Runtime.Serialization;
 
 namespace GinClientLibrary
@@ -52,7 +50,7 @@ namespace GinClientLibrary
         /// <summary>
         /// A Dokan driver interface
         /// </summary>
-        private DokanInterface DokanInterface { get; set; }
+        private DokanInterface DokanInterface { get; }
         #endregion
 
         public GinRepository(DirectoryInfo physicalDirectory, DirectoryInfo mountpoint, string name, string url, string username, string password)
@@ -85,15 +83,10 @@ namespace GinClientLibrary
             FileOperationCompleted?.Invoke(this, e);
         }
 
-        private void DokanInterface_FileOperationCompleted(object sender, DokanInterface.FileOperationEventArgs e)
-        {
-            OnFileOperationStarted(e);
-        }
+        private void DokanInterface_FileOperationCompleted(object sender, DokanInterface.FileOperationEventArgs e) => OnFileOperationStarted(e);
 
-        private void DokanInterface_FileOperationStarted(object sender, DokanInterface.FileOperationEventArgs e)
-        {
-            OnFileOperationCompleted(e);
-        }
+        private void DokanInterface_FileOperationStarted(object sender, DokanInterface.FileOperationEventArgs e) => OnFileOperationCompleted(e);
+
         #endregion
 
         public void Initialize()
@@ -144,14 +137,7 @@ namespace GinClientLibrary
 
         private static StringBuilder _output = new StringBuilder("");
         
-        public Dictionary<string, FileStatus> StatusCache {
-            get
-            {
-                if (_scache == null)
-                    _scache = new Dictionary<string, FileStatus>();
-                return _scache;
-            }
-        }
+        public Dictionary<string, FileStatus> StatusCache => _scache ?? (_scache = new Dictionary<string, FileStatus>());
 
         private Dictionary<string, FileStatus> _scache;
 
@@ -165,50 +151,49 @@ namespace GinClientLibrary
         /// </summary>
         public void ReadRepoStatus()
         {
-            string error = "";
-            var output = GetCommandLineOutput("cmd.exe", "/c gin ls", PhysicalDirectory.FullName, out error);
+            var output = GetCommandLineOutput("cmd.exe", "/c gin ls", PhysicalDirectory.FullName, out string error);
 
             //The output is currently human-readable plaintext, need to parse that.
 
             var lines = output.Split(new char[] { '\r', '\n', '\t' }, StringSplitOptions.RemoveEmptyEntries);
 
-            FileStatus status = FileStatus.Unknown;
+            var status = FileStatus.Unknown;
             foreach (var line in lines)
             {
-                if (line.CompareTo("Synced:") == 0)
+                if (string.Compare(line, "Synced:", StringComparison.Ordinal) == 0)
                 {
                     status = FileStatus.OnDisk;
                     continue;
                 }
-                else if (line.CompareTo("No local content:") == 0) {
+                if (string.Compare(line, "No local content:", StringComparison.Ordinal) == 0) {
                     status = FileStatus.InAnnex;
                     continue;
                 }
-                else if (line.CompareTo("Locally modified (unsaved):") == 0) {
+                if (string.Compare(line, "Locally modified (unsaved):", StringComparison.Ordinal) == 0) {
                     status = FileStatus.OnDiskModified;
                     continue;
                 }
-                else if (line.CompareTo("Locally modified (not uploaded):") == 0) {
+                if (string.Compare(line, "Locally modified (not uploaded):", StringComparison.Ordinal) == 0) {
                     status = FileStatus.OnDiskModified;
                     continue;
                 }
-                else if (line.CompareTo("Remotely modified (not downloaded):") == 0) {
+                if (string.Compare(line, "Remotely modified (not downloaded):", StringComparison.Ordinal) == 0) {
                     status = FileStatus.InAnnexModified;
                     continue;
                 }
-                else if (line.CompareTo("Unlocked for editing:") == 0) {
+                if (string.Compare(line, "Unlocked for editing:", StringComparison.Ordinal) == 0) {
                     status = FileStatus.OnDisk;
                     continue;
                 }
-                else if (line.CompareTo("Removed:") == 0) {
+                if (string.Compare(line, "Removed:", StringComparison.Ordinal) == 0) {
                     status = FileStatus.Unknown;
                     continue;
                 }
-                else if (line.CompareTo("Untracked:") == 0) {
+                if (string.Compare(line, "Untracked:", StringComparison.Ordinal) == 0) {
                     status = FileStatus.Unknown;
                     continue;
                 }
-                else if (line.CompareTo("Unknown:") == 0) {
+                if (string.Compare(line, "Unknown:", StringComparison.Ordinal) == 0) {
                     status = FileStatus.Unknown;
                     continue;
                 }
@@ -246,7 +231,7 @@ namespace GinClientLibrary
             {
                 if (!string.IsNullOrEmpty(output))
                 {
-                    AnnexFileInfo fileInfo = JsonConvert.DeserializeObject<AnnexFileInfo>(output);
+                    var fileInfo = JsonConvert.DeserializeObject<AnnexFileInfo>(output);
 
                     var fstatus = fileInfo.present ? FileStatus.OnDisk : FileStatus.InAnnex;
 
@@ -270,17 +255,15 @@ namespace GinClientLibrary
             string filename = Directory.GetFiles(directoryName).Single(s => string.Compare(s.ToUpperInvariant(), filePath.ToUpperInvariant()) == 0);
             filename = Path.GetFileName(filename);
 
-            string error;
-            var output = GetCommandLineOutput("cmd.exe", "/C gin get-content " + filename + " --json", directoryName, out error);
-            _output.Clear();
+            var output = GetCommandLineOutput("cmd.exe", "/C gin get-content " + filename + " --json", directoryName, out var error);
+            lock (_thisLock)
+            {
+                _output.Clear();
+            }
 
             ReadRepoStatus();
 
-            if (!string.IsNullOrEmpty(error))
-                return false;
-            else //gin currently returns an empty string on  success
-                return true;
-          
+            return string.IsNullOrEmpty(error);
         }
 
         public bool Login()
@@ -304,10 +287,10 @@ namespace GinClientLibrary
             }
         }
 
-        private Object thisLock = new Object();
+        private readonly object _thisLock = new object();
         private string GetCommandLineOutput(string program, string commandline, string workingDirectory, out string error)
         {
-            lock (thisLock) {
+            lock (_thisLock) {
                 var process = new Process()
                 {
                     StartInfo = new ProcessStartInfo()
@@ -337,13 +320,13 @@ namespace GinClientLibrary
         }
 
         #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
+        private bool _disposedValue = false; // To detect redundant calls
 
         
 
         protected virtual void Dispose(bool disposing)
         {           
-            if (!disposedValue)
+            if (!_disposedValue)
             {
                 if (disposing)
                 {
@@ -355,7 +338,7 @@ namespace GinClientLibrary
             // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
             // TODO: set large fields to null.
 
-            disposedValue = true;
+            _disposedValue = true;
         } 
 
         // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
