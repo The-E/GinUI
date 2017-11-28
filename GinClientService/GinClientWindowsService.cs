@@ -1,11 +1,13 @@
-﻿using System.ServiceModel;
+﻿using System.Diagnostics;
+using System.ServiceModel;
 using System.ServiceProcess;
 
 namespace GinClientService
 {
     public class GinClientWindowsService : ServiceBase
     {
-        private ServiceHost _serviceHost = null;
+        private ServiceHost _serviceHost;
+
         public GinClientWindowsService()
         {
             // Name the Windows Service
@@ -14,13 +16,13 @@ namespace GinClientService
 
         public static void Main()
         {
-            ServiceBase.Run(new GinClientWindowsService());
+            Run(new GinClientWindowsService());
         }
 
         protected override void OnStart(string[] args)
         {
             //TODO: Remove before release!
-            System.Diagnostics.Debugger.Launch();
+            Debugger.Launch();
 
             _serviceHost?.Close();
 

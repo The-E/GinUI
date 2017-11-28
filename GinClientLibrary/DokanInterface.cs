@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Security.AccessControl;
 using System.Runtime.InteropServices;
-using System.Globalization;
-using System.Diagnostics;
+using System.Security.AccessControl;
 using DokanNet;
 using static DokanNet.FormatProviders;
 using FileAccess = DokanNet.FileAccess;
@@ -14,7 +14,14 @@ namespace GinClientLibrary
 {
     public class DokanInterface : IDokanOperations
     {
+        #region GIN data
+
+        public GinRepository Repository { get; }
+
+        #endregion
+
         #region Constructor/Destructor and setup
+
         public DokanInterface(GinRepository repo, bool enableLogging = true)
         {
             InitLogging();
@@ -27,17 +34,22 @@ namespace GinClientLibrary
         {
             try
             {
-               this.Mount(Repository.Mountpoint.FullName.Trim('\\'), DokanOptions.DebugMode | DokanOptions.StderrOutput);
+                this.Mount(Repository.Mountpoint.FullName.Trim('\\'),
+                    DokanOptions.DebugMode | DokanOptions.StderrOutput);
             }
             catch (Exception e)
-            { }
+            {
+            }
         }
+
         #endregion
 
         #region Logging Infrastructure methods
 
-        private bool _doLogging;
-        private NtStatus Trace(string method, string fileName, DokanFileInfo info, NtStatus result, params object[] parameters)
+        private readonly bool _doLogging;
+
+        private NtStatus Trace(string method, string fileName, DokanFileInfo info, NtStatus result,
+            params object[] parameters)
         {
             if (_doLogging)
             {
@@ -45,7 +57,8 @@ namespace GinClientLibrary
                     ? ", " + string.Join(", ", parameters.Select(x => string.Format(DefaultFormatProvider, "{0}", x)))
                     : string.Empty;
 
-                EventLog.WriteEntry(logSource, DokanFormat($"{method}('{fileName}', {info}{extraParameters}) -> {result}"));
+                EventLog.WriteEntry(logSource,
+                    DokanFormat($"{method}('{fileName}', {info}{extraParameters}) -> {result}"));
             }
             return result;
         }
@@ -55,15 +68,14 @@ namespace GinClientLibrary
             NtStatus result)
         {
             if (_doLogging)
-            {
                 EventLog.WriteEntry(logSource,
                     DokanFormat(
                         $"{method}('{fileName}', {info}, [{access}], [{share}], [{mode}], [{options}], [{attributes}]) -> {result}"));
-            }
             return result;
         }
 
-        static string logSource = "GIN Client Filter Driver Component";
+        private static readonly string logSource = "GIN Client Filter Driver Component";
+
         private void InitLogging()
         {
             var logCategory = "Application";
@@ -71,10 +83,7 @@ namespace GinClientLibrary
             if (!EventLog.SourceExists(logSource))
                 EventLog.CreateEventSource(logSource, logCategory);
         }
-        #endregion
 
-        #region GIN data
-        public GinRepository Repository { get; private set; }
         #endregion
 
         #region Events
@@ -86,14 +95,18 @@ namespace GinClientLibrary
         }
 
         public event FileOperationStartedHandler FileOperationStarted;
+
         public delegate void FileOperationStartedHandler(object sender, FileOperationEventArgs e);
+
         protected virtual void OnFileOperationStarted(FileOperationEventArgs e)
         {
             FileOperationStarted?.Invoke(this, e);
         }
 
         public event FileOperationCompleteHandler FileOperationCompleted;
+
         public delegate void FileOperationCompleteHandler(object sender, FileOperationEventArgs e);
+
         protected virtual void OnFileOperationCompleted(FileOperationEventArgs e)
         {
             FileOperationCompleted?.Invoke(this, e);
@@ -102,6 +115,7 @@ namespace GinClientLibrary
         #endregion
 
         #region Helpers
+
         private string GetPath(string fileName)
         {
             return Repository.PhysicalDirectory.FullName + fileName;
@@ -124,14 +138,15 @@ namespace GinClientLibrary
 
             return files;
         }
+
         #endregion
 
         #region Dokany interface implementation
 
         private const FileAccess DataAccess = FileAccess.ReadData | FileAccess.WriteData | FileAccess.AppendData |
-                                      FileAccess.Execute |
-                                      FileAccess.GenericExecute | FileAccess.GenericWrite |
-                                      FileAccess.GenericRead;
+                                              FileAccess.Execute |
+                                              FileAccess.GenericExecute | FileAccess.GenericWrite |
+                                              FileAccess.GenericRead;
 
         private const FileAccess DataWriteAccess = FileAccess.WriteData | FileAccess.AppendData |
                                                    FileAccess.Delete |
@@ -141,21 +156,15 @@ namespace GinClientLibrary
         {
             if (info.Context != null && _doLogging)
                 Console.WriteLine(DokanFormat($"{nameof(Cleanup)}('{fileName}', {info} - entering"));
-            
+
             (info.Context as FileStream)?.Dispose();
             info.Context = null;
 
             if (info.DeleteOnClose)
-            {
                 if (info.IsDirectory)
-                {
                     Directory.Delete(GetPath(fileName));
-                }
                 else
-                {
                     File.Delete(GetPath(fileName));
-                }
-            }
 
             Trace(nameof(Cleanup), fileName, info, NtStatus.Success);
         }
@@ -172,7 +181,8 @@ namespace GinClientLibrary
             Trace(nameof(CloseFile), fileName, info, NtStatus.Success);
         }
 
-        public NtStatus CreateFile(string fileName, FileAccess access, FileShare share, FileMode mode, FileOptions options, FileAttributes attributes, DokanFileInfo info)
+        public NtStatus CreateFile(string fileName, FileAccess access, FileShare share, FileMode mode,
+            FileOptions options, FileAttributes attributes, DokanFileInfo info)
         {
             var result = NtStatus.Success;
 
@@ -243,9 +253,10 @@ namespace GinClientLibrary
                 try
                 {
                     pathIsDirectory = Directory.Exists(filePath);
-                    pathExists = (pathIsDirectory || File.Exists(filePath));
+                    pathExists = pathIsDirectory || File.Exists(filePath);
                     var fileStatus = Repository.GetFileStatus(filePath);
-                    fileisAnnexed = (fileStatus == GinRepository.FileStatus.InAnnex) || (fileStatus == GinRepository.FileStatus.InAnnexModified);
+                    fileisAnnexed = fileStatus == GinRepository.FileStatus.InAnnex ||
+                                    fileStatus == GinRepository.FileStatus.InAnnexModified;
                 }
                 catch (IOException)
                 {
@@ -277,10 +288,11 @@ namespace GinClientLibrary
                             //If the file is annexed and the driver definitely wants to open it, retrieve it.
                             if (fileisAnnexed)
                             {
-                                bool a = info.TryResetTimeout(30000); //Annex operations take time; 
-                                OnFileOperationStarted(new FileOperationEventArgs() { Success = false, File = fileName });
+                                var a = info.TryResetTimeout(30000); //Annex operations take time; 
+                                OnFileOperationStarted(new FileOperationEventArgs {Success = false, File = fileName});
                                 var success = Repository.RetrieveFile(filePath);
-                                OnFileOperationCompleted(new FileOperationEventArgs() { Success = success, File = fileName });
+                                OnFileOperationCompleted(
+                                    new FileOperationEventArgs {Success = success, File = fileName});
                             }
                         }
                         else
@@ -335,7 +347,7 @@ namespace GinClientLibrary
                 }
                 catch (Exception ex)
                 {
-                    var hr = (uint)Marshal.GetHRForException(ex);
+                    var hr = (uint) Marshal.GetHRForException(ex);
                     switch (hr)
                     {
                         case 0x80070020: //Sharing violation
@@ -385,7 +397,8 @@ namespace GinClientLibrary
             return Trace(nameof(FindFiles), fileName, info, DokanResult.Success);
         }
 
-        public NtStatus FindFilesWithPattern(string fileName, string searchPattern, out IList<FileInformation> files, DokanFileInfo info)
+        public NtStatus FindFilesWithPattern(string fileName, string searchPattern, out IList<FileInformation> files,
+            DokanFileInfo info)
         {
             files = FindFilesHelper(fileName, searchPattern);
 
@@ -402,7 +415,7 @@ namespace GinClientLibrary
         {
             try
             {
-                ((FileStream)(info.Context)).Flush();
+                ((FileStream) info.Context).Flush();
                 return Trace(nameof(FlushFileBuffers), fileName, info, DokanResult.Success);
             }
             catch (IOException)
@@ -411,15 +424,17 @@ namespace GinClientLibrary
             }
         }
 
-        public NtStatus GetDiskFreeSpace(out long freeBytesAvailable, out long totalNumberOfBytes, out long totalNumberOfFreeBytes, DokanFileInfo info)
+        public NtStatus GetDiskFreeSpace(out long freeBytesAvailable, out long totalNumberOfBytes,
+            out long totalNumberOfFreeBytes, DokanFileInfo info)
         {
-            var dinfo = DriveInfo.GetDrives().Single(di => string.Equals(di.RootDirectory.Name, Path.GetPathRoot(Repository.PhysicalDirectory + "\\"), StringComparison.OrdinalIgnoreCase));
+            var dinfo = DriveInfo.GetDrives().Single(di => string.Equals(di.RootDirectory.Name,
+                Path.GetPathRoot(Repository.PhysicalDirectory + "\\"), StringComparison.OrdinalIgnoreCase));
 
             freeBytesAvailable = dinfo.TotalFreeSpace;
             totalNumberOfBytes = dinfo.TotalSize;
             totalNumberOfFreeBytes = dinfo.AvailableFreeSpace;
-            return Trace(nameof(GetDiskFreeSpace), null, info, DokanResult.Success, "out " + freeBytesAvailable.ToString(),
-                "out " + totalNumberOfBytes.ToString(), "out " + totalNumberOfFreeBytes.ToString());
+            return Trace(nameof(GetDiskFreeSpace), null, info, DokanResult.Success, "out " + freeBytesAvailable,
+                "out " + totalNumberOfBytes, "out " + totalNumberOfFreeBytes);
         }
 
         public NtStatus GetFileInformation(string fileName, out FileInformation fileInfo, DokanFileInfo info)
@@ -437,18 +452,19 @@ namespace GinClientLibrary
                 CreationTime = finfo.CreationTime,
                 LastAccessTime = finfo.LastAccessTime,
                 LastWriteTime = finfo.LastWriteTime,
-                Length = (finfo as FileInfo)?.Length ?? 0,
+                Length = (finfo as FileInfo)?.Length ?? 0
             };
 
             return Trace(nameof(GetFileInformation), fileName, info, DokanResult.Success);
         }
 
-        public NtStatus GetFileSecurity(string fileName, out FileSystemSecurity security, AccessControlSections sections, DokanFileInfo info)
+        public NtStatus GetFileSecurity(string fileName, out FileSystemSecurity security,
+            AccessControlSections sections, DokanFileInfo info)
         {
             try
             {
                 security = info.IsDirectory
-                    ? (FileSystemSecurity)Directory.GetAccessControl(GetPath(fileName))
+                    ? (FileSystemSecurity) Directory.GetAccessControl(GetPath(fileName))
                     : File.GetAccessControl(GetPath(fileName));
                 return Trace(nameof(GetFileSecurity), fileName, info, DokanResult.Success, sections.ToString());
             }
@@ -459,7 +475,8 @@ namespace GinClientLibrary
             }
         }
 
-        public NtStatus GetVolumeInformation(out string volumeLabel, out FileSystemFeatures features, out string fileSystemName, DokanFileInfo info)
+        public NtStatus GetVolumeInformation(out string volumeLabel, out FileSystemFeatures features,
+            out string fileSystemName, DokanFileInfo info)
         {
             volumeLabel = Repository.Mountpoint.FullName + Path.DirectorySeparatorChar + Repository.Name;
             fileSystemName = "NTFS";
@@ -468,14 +485,14 @@ namespace GinClientLibrary
                        FileSystemFeatures.UnicodeOnDisk;
 
             return Trace(nameof(GetVolumeInformation), null, info, DokanResult.Success, "out " + volumeLabel,
-                "out " + features.ToString(), "out " + fileSystemName);
+                "out " + features, "out " + fileSystemName);
         }
 
         public NtStatus LockFile(string fileName, long offset, long length, DokanFileInfo info)
         {
             try
             {
-                ((FileStream)(info.Context)).Lock(offset, length);
+                ((FileStream) info.Context).Lock(offset, length);
                 return Trace(nameof(LockFile), fileName, info, DokanResult.Success,
                     offset.ToString(CultureInfo.InvariantCulture), length.ToString(CultureInfo.InvariantCulture));
             }
@@ -519,7 +536,7 @@ namespace GinClientLibrary
                     bytesRead = stream.Read(buffer, 0, buffer.Length);
                 }
             }
-            return Trace(nameof(ReadFile), fileName, info, NtStatus.Success, "out " + bytesRead.ToString(),
+            return Trace(nameof(ReadFile), fileName, info, NtStatus.Success, "out " + bytesRead,
                 offset.ToString(CultureInfo.InvariantCulture));
         }
 
@@ -527,7 +544,7 @@ namespace GinClientLibrary
         {
             try
             {
-                ((FileStream)(info.Context)).SetLength(length);
+                ((FileStream) info.Context).SetLength(length);
                 return Trace(nameof(SetAllocationSize), fileName, info, DokanResult.Success,
                     length.ToString(CultureInfo.InvariantCulture));
             }
@@ -542,7 +559,7 @@ namespace GinClientLibrary
         {
             try
             {
-                ((FileStream)(info.Context)).SetLength(length);
+                ((FileStream) info.Context).SetLength(length);
                 return Trace(nameof(SetEndOfFile), fileName, info, DokanResult.Success,
                     length.ToString(CultureInfo.InvariantCulture));
             }
@@ -562,30 +579,30 @@ namespace GinClientLibrary
             }
             catch (UnauthorizedAccessException)
             {
-                return Trace(nameof(SetFileAttributes), fileName, info, DokanResult.AccessDenied, attributes.ToString());
+                return Trace(nameof(SetFileAttributes), fileName, info, DokanResult.AccessDenied,
+                    attributes.ToString());
             }
             catch (FileNotFoundException)
             {
-                return Trace(nameof(SetFileAttributes), fileName, info, DokanResult.FileNotFound, attributes.ToString());
+                return Trace(nameof(SetFileAttributes), fileName, info, DokanResult.FileNotFound,
+                    attributes.ToString());
             }
             catch (DirectoryNotFoundException)
             {
-                return Trace(nameof(SetFileAttributes), fileName, info, DokanResult.PathNotFound, attributes.ToString());
+                return Trace(nameof(SetFileAttributes), fileName, info, DokanResult.PathNotFound,
+                    attributes.ToString());
             }
         }
 
-        public NtStatus SetFileSecurity(string fileName, FileSystemSecurity security, AccessControlSections sections, DokanFileInfo info)
+        public NtStatus SetFileSecurity(string fileName, FileSystemSecurity security, AccessControlSections sections,
+            DokanFileInfo info)
         {
             try
             {
                 if (info.IsDirectory)
-                {
-                    Directory.SetAccessControl(GetPath(fileName), (DirectorySecurity)security);
-                }
+                    Directory.SetAccessControl(GetPath(fileName), (DirectorySecurity) security);
                 else
-                {
-                    File.SetAccessControl(GetPath(fileName), (FileSecurity)security);
-                }
+                    File.SetAccessControl(GetPath(fileName), (FileSecurity) security);
                 return Trace(nameof(SetFileSecurity), fileName, info, DokanResult.Success, sections.ToString());
             }
             catch (UnauthorizedAccessException)
@@ -594,7 +611,8 @@ namespace GinClientLibrary
             }
         }
 
-        public NtStatus SetFileTime(string fileName, DateTime? creationTime, DateTime? lastAccessTime, DateTime? lastWriteTime, DokanFileInfo info)
+        public NtStatus SetFileTime(string fileName, DateTime? creationTime, DateTime? lastAccessTime,
+            DateTime? lastWriteTime, DokanFileInfo info)
         {
             try
             {
@@ -624,12 +642,14 @@ namespace GinClientLibrary
             }
             catch (UnauthorizedAccessException)
             {
-                return Trace(nameof(SetFileTime), fileName, info, DokanResult.AccessDenied, creationTime, lastAccessTime,
+                return Trace(nameof(SetFileTime), fileName, info, DokanResult.AccessDenied, creationTime,
+                    lastAccessTime,
                     lastWriteTime);
             }
             catch (FileNotFoundException)
             {
-                return Trace(nameof(SetFileTime), fileName, info, DokanResult.FileNotFound, creationTime, lastAccessTime,
+                return Trace(nameof(SetFileTime), fileName, info, DokanResult.FileNotFound, creationTime,
+                    lastAccessTime,
                     lastWriteTime);
             }
         }
@@ -638,7 +658,7 @@ namespace GinClientLibrary
         {
             try
             {
-                ((FileStream)(info.Context)).Unlock(offset, length);
+                ((FileStream) info.Context).Unlock(offset, length);
                 return Trace(nameof(UnlockFile), fileName, info, DokanResult.Success,
                     offset.ToString(CultureInfo.InvariantCulture), length.ToString(CultureInfo.InvariantCulture));
             }
@@ -677,10 +697,10 @@ namespace GinClientLibrary
                 }
                 bytesWritten = buffer.Length;
             }
-            return Trace(nameof(WriteFile), fileName, info, DokanResult.Success, "out " + bytesWritten.ToString(),
+            return Trace(nameof(WriteFile), fileName, info, DokanResult.Success, "out " + bytesWritten,
                 offset.ToString(CultureInfo.InvariantCulture));
         }
-        #endregion
 
+        #endregion
     }
 }

@@ -1,19 +1,19 @@
-﻿using GinClientApp.GinClientService;
-using GinClientLibrary;
-using System;
+﻿using System;
+using System.Drawing;
 using System.IO;
-using System.Threading;
 using System.Windows.Forms;
+using GinClientApp.GinClientService;
+using GinClientLibrary;
 
 namespace GinClientApp
 {
-    static class Program
+    internal static class Program
     {
         /// <summary>
-        /// The main entry point for the application.
+        ///     The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -23,33 +23,32 @@ namespace GinClientApp
 
     public class GinApplicationContext : ApplicationContext
     {
-        private NotifyIcon _trayIcon;
-        
-
-        private GinClientServiceClient _client;
+        private readonly GinClientServiceClient _client;
+        private readonly NotifyIcon _trayIcon;
 
         public GinApplicationContext()
         {
-            _trayIcon = new NotifyIcon()
+            _trayIcon = new NotifyIcon
             {
-                ContextMenu = new ContextMenu(new MenuItem[] {
+                ContextMenu = new ContextMenu(new[]
+                {
                     new MenuItem("Exit", Exit)
                 }),
                 Visible = true,
-                Icon = new System.Drawing.Icon("gin_icon.ico")
+                Icon = new Icon("gin_icon.ico")
             };
 
             _trayIcon.DoubleClick += _trayIcon_DoubleClick;
 
             _client = new GinClientServiceClient();
             _client.AddRepository(
-               @"C:\Users\fwoltermann\Desktop\gin-cli-builds",
-               @"C:\Users\fwoltermann\Desktop\ginui-test\Test\",
-               "Test",
-               ""
-               );
+                @"C:\Users\fwoltermann\Desktop\gin-cli-builds",
+                @"C:\Users\fwoltermann\Desktop\ginui-test\Test\",
+                "Test",
+                ""
+            );
         }
-        
+
 
         private void _trayIcon_BalloonTipClosed(object sender, EventArgs e)
         {
@@ -81,7 +80,7 @@ namespace GinClientApp
             Exit(this, null);
         }
 
-        void Exit(object sender, EventArgs e)
+        private void Exit(object sender, EventArgs e)
         {
             // Hide tray icon, otherwise it will remain shown until user mouses over it
             _trayIcon.Visible = false;

@@ -1,5 +1,4 @@
-﻿using DokanNet;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,45 +7,57 @@ using System.Threading;
 namespace GinClientLibrary
 {
     /// <summary>
-    /// Manages all repositories. Responsible for mounting and unmounting.
+    ///     Manages all repositories. Responsible for mounting and unmounting.
     /// </summary>
     public class RepositoryManager
     {
+        public delegate void
+            FileRetrievalCompletedHandler(object sender, GinRepository repo, string file, bool success);
+
+        public delegate void FileRetrievalStartedHandler(object sender, GinRepository repo, string file);
+
         private static RepositoryManager _instance;
 
-        private RepositoryManager() { }
+        private List<GinRepository> _repositories;
+
+        private readonly Dictionary<GinRepository, Thread> _repothreads = new Dictionary<GinRepository, Thread>();
+
+        private readonly List<GinServer> _servers = new List<GinServer>();
+
+        private RepositoryManager()
+        {
+        }
 
         public static RepositoryManager Instance
         {
             get
             {
                 if (_instance == null)
-                {
                     _instance = new RepositoryManager();
-                }
                 return _instance;
             }
         }
 
-        private struct GinServer
+        public List<GinRepository> Repositories
         {
-            public string URL;
-            public string Username;
-            public string Password;
+            get
+            {
+                if (_repositories == null)
+                    _repositories = new List<GinRepository>();
+                return _repositories;
+            }
         }
-
-        private List<GinServer> _servers = new List<GinServer>();
 
         public bool AddCredentials(string url, string username, string password)
         {
-            bool serverExists = false;
+            var serverExists = false;
 
             foreach (var server in _servers)
             {
                 if (serverExists)
                     continue;
-                serverExists = string.Compare(server.URL, url, true) == 0;   
-                
+                serverExists = string.Compare(server.URL, url, true) == 0;
+
                 if (serverExists)
                 {
                     var serv = _servers[_servers.IndexOf(server)];
@@ -58,7 +69,7 @@ namespace GinClientLibrary
 
             if (!serverExists)
             {
-                var newServer = new GinServer() { URL = url, Username = username, Password = password };
+                var newServer = new GinServer {URL = url, Username = username, Password = password};
                 _servers.Add(newServer);
             }
 
@@ -75,23 +86,13 @@ namespace GinClientLibrary
             throw new NotImplementedException();
         }
 
-        List<GinRepository> _repositories;
-        public List<GinRepository> Repositories {
-            get {
-                if (_repositories == null)
-                    _repositories = new List<GinRepository>();
-                return _repositories;
-            }
-        }
-
-        Dictionary<GinRepository, Thread> _repothreads = new Dictionary<GinRepository, Thread>();
         public void MountAllRepositories()
         {
             foreach (var repo in Repositories)
                 MountRepository(repo);
         }
 
-        void MountRepository(GinRepository repo)
+        private void MountRepository(GinRepository repo)
         {
             if (!_repothreads.ContainsKey(repo))
             {
@@ -148,15 +149,12 @@ namespace GinClientLibrary
 
         public event FileRetrievalStartedHandler FileRetrievalStarted;
 
-        public delegate void FileRetrievalStartedHandler(object sender, GinRepository repo, string file);
-
         protected void OnFileRetrievalStarted(DokanInterface.FileOperationEventArgs e, GinRepository sender)
         {
             FileRetrievalStarted?.Invoke(this, sender, e.File);
         }
 
         public event FileRetrievalCompletedHandler FileRetrievalCompleted;
-        public delegate void FileRetrievalCompletedHandler(object sender, GinRepository repo, string file, bool success);
 
         protected void OnFileRetrievalCompleted(DokanInterface.FileOperationEventArgs e, GinRepository sender)
         {
@@ -165,12 +163,18 @@ namespace GinClientLibrary
 
         private void Repo_FileOperationCompleted(object sender, DokanInterface.FileOperationEventArgs e)
         {
-            
         }
 
         private void Repo_FileOperationStarted(object sender, DokanInterface.FileOperationEventArgs e)
         {
-            OnFileRetrievalStarted(e, (GinRepository)sender);
+            OnFileRetrievalStarted(e, (GinRepository) sender);
+        }
+
+        private struct GinServer
+        {
+            public string URL;
+            public string Username;
+            public string Password;
         }
     }
 }

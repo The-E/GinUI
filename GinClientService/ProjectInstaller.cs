@@ -9,17 +9,23 @@ namespace GinClientService
     [RunInstaller(true)]
     public class ProjectInstaller : Installer
     {
-        private ServiceProcessInstaller process;
-        private ServiceInstaller service;
+        private readonly ServiceProcessInstaller _process;
+        private readonly ServiceInstaller _service;
 
         public ProjectInstaller()
         {
-            process = new ServiceProcessInstaller();
-            process.Account = ServiceAccount.LocalSystem;
-            service = new ServiceInstaller();
-            service.ServiceName = "GinClientService";
-            Installers.Add(process);
-            Installers.Add(service);
+            _process = new ServiceProcessInstaller
+            {
+                Account = ServiceAccount.LocalSystem
+            };
+            _service = new ServiceInstaller
+            {
+                ServiceName = "GinClientService",
+                StartType = ServiceStartMode.Boot,
+            };
+            
+            Installers.Add(_process);
+            Installers.Add(_service);
         }
     }
 }
