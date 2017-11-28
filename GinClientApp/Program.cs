@@ -21,7 +21,8 @@ namespace GinClientApp
         }
     }
 
-    public class GinApplicationContext : ApplicationContext
+
+    public class GinApplicationContext : ApplicationContext, IGinClientServiceCallback
     {
         private readonly GinClientServiceClient _client;
         private readonly NotifyIcon _trayIcon;
@@ -40,13 +41,23 @@ namespace GinClientApp
 
             _trayIcon.DoubleClick += _trayIcon_DoubleClick;
 
-            _client = new GinClientServiceClient();
+            _client = new GinClientServiceClient(new System.ServiceModel.InstanceContext(this));
             _client.AddRepository(
                 @"C:\Users\fwoltermann\Desktop\gin-cli-builds",
                 @"C:\Users\fwoltermann\Desktop\ginui-test\Test\",
                 "Test",
                 ""
             );
+        }
+
+        void IGinClientServiceCallback.FileOperationFinished(string filename, string repository, bool success)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IGinClientServiceCallback.FileOperationStarted(string filename, string repository)
+        {
+            throw new NotImplementedException();
         }
 
 

@@ -12,7 +12,7 @@ namespace GinClientApp.GinClientService {
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="GinClientService.IGinClientService")]
+    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="GinClientService.IGinClientService", CallbackContract=typeof(GinClientApp.GinClientService.IGinClientServiceCallback))]
     public interface IGinClientService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/AddRepository", ReplyAction="http://tempuri.org/IGinClientService/AddRepositoryResponse")]
@@ -53,30 +53,41 @@ namespace GinClientApp.GinClientService {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    public interface IGinClientServiceCallback {
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/FileOperationStarted", ReplyAction="http://tempuri.org/IGinClientService/FileOperationStartedResponse")]
+        void FileOperationStarted(string filename, string repository);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/FileOperationFinished", ReplyAction="http://tempuri.org/IGinClientService/FileOperationFinishedResponse")]
+        void FileOperationFinished(string filename, string repository, bool success);
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     public interface IGinClientServiceChannel : GinClientApp.GinClientService.IGinClientService, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class GinClientServiceClient : System.ServiceModel.ClientBase<GinClientApp.GinClientService.IGinClientService>, GinClientApp.GinClientService.IGinClientService {
+    public partial class GinClientServiceClient : System.ServiceModel.DuplexClientBase<GinClientApp.GinClientService.IGinClientService>, GinClientApp.GinClientService.IGinClientService {
         
-        public GinClientServiceClient() {
+        public GinClientServiceClient(System.ServiceModel.InstanceContext callbackInstance) : 
+                base(callbackInstance) {
         }
         
-        public GinClientServiceClient(string endpointConfigurationName) : 
-                base(endpointConfigurationName) {
+        public GinClientServiceClient(System.ServiceModel.InstanceContext callbackInstance, string endpointConfigurationName) : 
+                base(callbackInstance, endpointConfigurationName) {
         }
         
-        public GinClientServiceClient(string endpointConfigurationName, string remoteAddress) : 
-                base(endpointConfigurationName, remoteAddress) {
+        public GinClientServiceClient(System.ServiceModel.InstanceContext callbackInstance, string endpointConfigurationName, string remoteAddress) : 
+                base(callbackInstance, endpointConfigurationName, remoteAddress) {
         }
         
-        public GinClientServiceClient(string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) : 
-                base(endpointConfigurationName, remoteAddress) {
+        public GinClientServiceClient(System.ServiceModel.InstanceContext callbackInstance, string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) : 
+                base(callbackInstance, endpointConfigurationName, remoteAddress) {
         }
         
-        public GinClientServiceClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
-                base(binding, remoteAddress) {
+        public GinClientServiceClient(System.ServiceModel.InstanceContext callbackInstance, System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
+                base(callbackInstance, binding, remoteAddress) {
         }
         
         public bool AddRepository(string physicalDirectory, string mountpoint, string name, string url) {
