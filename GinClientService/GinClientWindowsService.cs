@@ -5,7 +5,7 @@ namespace GinClientService
 {
     public class GinClientWindowsService : ServiceBase
     {
-        public ServiceHost serviceHost = null;
+        private ServiceHost _serviceHost = null;
         public GinClientWindowsService()
         {
             // Name the Windows Service
@@ -22,22 +22,22 @@ namespace GinClientService
             //TODO: Remove before release!
             System.Diagnostics.Debugger.Launch();
 
-            serviceHost?.Close();
+            _serviceHost?.Close();
 
             // Create a ServiceHost for the CalculatorService type and 
             // provide the base address.
-            serviceHost = new ServiceHost(typeof(GinClientService));
+            _serviceHost = new ServiceHost(typeof(GinClientService));
 
             // Open the ServiceHostBase to create listeners and start 
             // listening for messages.
-            serviceHost.Open();
+            _serviceHost.Open();
         }
 
         protected override void OnStop()
         {
-            if (serviceHost == null) return;
-            serviceHost.Close();
-            serviceHost = null;
+            if (_serviceHost == null) return;
+            _serviceHost.Close();
+            _serviceHost = null;
         }
     }
 }

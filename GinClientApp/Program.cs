@@ -64,16 +64,16 @@ namespace GinClientApp
         private void Repo_FileOperationCompleted(object sender, DokanInterface.FileOperationEventArgs e)
         {
         }
-        
+
 
         private void Repo_FileOperationStarted(object sender, DokanInterface.FileOperationEventArgs e)
         {
-            using (var repo = (GinRepository)sender)
-            {
-                _trayIcon.BalloonTipTitle = "GIN Repository activity in progress";
-                _trayIcon.BalloonTipText = "Retrieving " + Path.GetFileName(e.File) + " from repository " + repo.Name;
-                _trayIcon.ShowBalloonTip(5000);
-            }
+            var repo = (GinRepository) sender;
+
+            _trayIcon.BalloonTipTitle = @"GIN Repository activity in progress";
+            _trayIcon.BalloonTipText =
+                $"Retrieving {Path.GetFileName(e.File)} from repository {repo.Name}";
+            _trayIcon.ShowBalloonTip(5000);
         }
 
         private void _trayIcon_DoubleClick(object sender, EventArgs e)
@@ -85,6 +85,7 @@ namespace GinClientApp
         {
             // Hide tray icon, otherwise it will remain shown until user mouses over it
             _trayIcon.Visible = false;
+            _client.UnmmountAllRepositories();
             _client.Close();
             Application.Exit();
         }

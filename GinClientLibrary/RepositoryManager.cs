@@ -146,6 +146,23 @@ namespace GinClientLibrary
             Repositories.Add(_repo);
         }
 
+        public event FileRetrievalStartedHandler FileRetrievalStarted;
+
+        public delegate void FileRetrievalStartedHandler(object sender, GinRepository repo, string file);
+
+        protected void OnFileRetrievalStarted(DokanInterface.FileOperationEventArgs e, GinRepository sender)
+        {
+            FileRetrievalStarted?.Invoke(this, sender, e.File);
+        }
+
+        public event FileRetrievalCompletedHandler FileRetrievalCompleted;
+        public delegate void FileRetrievalCompletedHandler(object sender, GinRepository repo, string file, bool success);
+
+        protected void OnFileRetrievalCompleted(DokanInterface.FileOperationEventArgs e, GinRepository sender)
+        {
+            FileRetrievalCompleted?.Invoke(this, sender, e.File, e.Success);
+        }
+
         private void Repo_FileOperationCompleted(object sender, DokanInterface.FileOperationEventArgs e)
         {
             
@@ -153,7 +170,7 @@ namespace GinClientLibrary
 
         private void Repo_FileOperationStarted(object sender, DokanInterface.FileOperationEventArgs e)
         {
-            
+            OnFileRetrievalStarted(e, (GinRepository)sender);
         }
     }
 }

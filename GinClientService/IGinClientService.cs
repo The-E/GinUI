@@ -4,7 +4,7 @@ using GinClientLibrary;
 
 namespace GinClientService
 {
-    [ServiceContract]
+    [ServiceContract(CallbackContract = typeof(IGinClientCallback))]
     public interface IGinClientService
     {
         [OperationContract]
@@ -24,5 +24,14 @@ namespace GinClientService
 
         [OperationContract]
         bool UpdateRepository(string repoName, GinRepository data);
+    }
+
+    public interface IGinClientCallback
+    {
+        [OperationContract]
+        void FileOperationStarted(string filename, string repository);
+
+        [OperationContract]
+        void FileOperationFinished(string filename, string repository, bool success);
     }
 }

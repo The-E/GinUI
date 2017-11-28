@@ -2,12 +2,24 @@
 using System.Linq;
 using GinClientLibrary;
 using System.IO;
+using System.ServiceModel;
 
 namespace GinClientService
 {
     public class GinClientService : IGinClientService
     {
-        public GinClientService() => RepositoryManager.Instance.MountAllRepositories();
+        private IGinClientCallback _callback = null;
+
+        public GinClientService()
+        {
+            RepositoryManager.Instance.MountAllRepositories();
+            _callback = OperationContext.Current.GetCallbackChannel<IGinClientCallback>();
+
+            RepositoryManager.Instance.FileRetrievalStarted +=
+                (sender, repo, file) => _callback.FileOperationStarted(file, repo.Name);
+            RepositoryManager.Instance.FileRetrievalCompleted += 
+                (sender, repo, file, success) => _callback.FileOperationFinished(file, repo.Name, success);
+        }
 
         bool IGinClientService.AddCredentials(string url, string username, string password)
         {
