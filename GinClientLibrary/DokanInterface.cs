@@ -12,16 +12,27 @@ using FileAccess = DokanNet.FileAccess;
 
 namespace GinClientLibrary
 {
+    /// <summary>
+    /// Implements the IDokanOperations interface. See https://github.com/dokan-dev/dokan-dotnet for reference.
+    /// This code is largely based on the "Mirror" sample provided there.
+    /// </summary>
     public class DokanInterface : IDokanOperations
     {
         #region GIN data
 
+        /// <summary>
+        /// The GinRepository linked to this Dokan Interface. Provided mostly for convenience.
+        /// </summary>
         public GinRepository Repository { get; }
 
         #endregion
 
         #region Constructor/Destructor and setup
-
+        /// <summary>
+        /// Create a new Dokan Interface. 
+        /// </summary>
+        /// <param name="repo"></param> The repository this is supporting
+        /// <param name="enableLogging"></param> If set to true, log messages will be written to the Application event log
         public DokanInterface(GinRepository repo, bool enableLogging = true)
         {
             InitLogging();
@@ -30,6 +41,17 @@ namespace GinClientLibrary
             _doLogging = enableLogging;
         }
 
+        public class DokanInterfaceException : Exception
+        {
+            public DokanInterfaceException(Exception inner, string message) : base(message, inner)
+            {
+            }
+        }
+
+        /// <summary>
+        /// Mounts the repository and starts mirroring
+        /// </summary>
+        /// <exception cref="DokanInterfaceException">Thrown if the mount fails</exception>
         public void Initialize()
         {
             try
@@ -39,6 +61,7 @@ namespace GinClientLibrary
             }
             catch (Exception e)
             {
+                throw new DokanInterfaceException(e, "Dokan Interface Error: " + e.Message);
             }
         }
 
@@ -94,6 +117,9 @@ namespace GinClientLibrary
             public string File { get; set; }
         }
 
+        /// <summary>
+        /// Event is triggered everytime the driver retrieves a remote file
+        /// </summary>
         public event FileOperationStartedHandler FileOperationStarted;
 
         public delegate void FileOperationStartedHandler(object sender, FileOperationEventArgs e);
@@ -103,6 +129,9 @@ namespace GinClientLibrary
             FileOperationStarted?.Invoke(this, e);
         }
 
+        /// <summary>
+        /// Triggered once a retrieval operation completes
+        /// </summary>
         public event FileOperationCompleteHandler FileOperationCompleted;
 
         public delegate void FileOperationCompleteHandler(object sender, FileOperationEventArgs e);
@@ -115,7 +144,11 @@ namespace GinClientLibrary
         #endregion
 
         #region Helpers
-
+        /// <summary>
+        /// Translates a filename from the virtual filesystem to the actual one
+        /// </summary>
+        /// <param name="fileName">The filename, relative to the mountpoint</param>
+        /// <returns></returns>
         private string GetPath(string fileName)
         {
             return Repository.PhysicalDirectory.FullName + fileName;

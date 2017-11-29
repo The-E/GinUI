@@ -63,6 +63,7 @@ namespace GinClientLibrary
         ///     Retrieve the status of every file in this repository
         ///     Possible statuses are:
         ///     -In Annex
+        ///     -In Annex, modified remotely
         ///     -On Disk
         ///     -On Disk, modified
         ///     -Unknown (this includes files not yet added to the gin working tree)
@@ -135,40 +136,42 @@ namespace GinClientLibrary
 
         public FileStatus GetFileStatus(string filePath)
         {
-            if (StatusCache.ContainsKey(filePath))
-                return StatusCache[filePath];
-
-            if (Directory.Exists(filePath))
-                return FileStatus.Directory;
-
-
-            //Windows will sometimes try to inspect the contents of a zip file; we need to catch this here and return the filestatus of the zip
-            var parentDirectory = Directory.GetParent(filePath).FullName;
-            if (parentDirectory.ToLower().Contains(".zip"))
-                return GetFileStatus(parentDirectory);
-
-            var error = "";
-            var output = GetCommandLineOutput("cmd.exe", "/c gin annex info " + filePath + " --json", parentDirectory,
-                out error);
-            try
+            lock (this)
             {
-                if (!string.IsNullOrEmpty(output))
+                if (StatusCache.ContainsKey(filePath))
+                    return StatusCache[filePath];
+
+                if (Directory.Exists(filePath))
+                    return FileStatus.Directory;
+
+                //Windows will sometimes try to inspect the contents of a zip file; we need to catch this here and return the filestatus of the zip
+                var parentDirectory = Directory.GetParent(filePath).FullName;
+                if (parentDirectory.ToLower().Contains(".zip"))
+                    return GetFileStatus(parentDirectory);
+
+                var output = GetCommandLineOutput("cmd.exe", "/c gin annex info " + filePath + " --json",
+                    parentDirectory,
+                    out string error);
+                try
                 {
-                    var fileInfo = JsonConvert.DeserializeObject<AnnexFileInfo>(output);
+                    if (!string.IsNullOrEmpty(output))
+                    {
+                        var fileInfo = JsonConvert.DeserializeObject<AnnexFileInfo>(output);
 
-                    var fstatus = fileInfo.present ? FileStatus.OnDisk : FileStatus.InAnnex;
+                        var fstatus = fileInfo.present ? FileStatus.OnDisk : FileStatus.InAnnex;
 
-                    if (!StatusCache.ContainsKey(filePath))
-                        StatusCache.Add(filePath, fstatus);
+                        if (!StatusCache.ContainsKey(filePath))
+                            StatusCache.Add(filePath, fstatus);
 
-                    return fstatus;
+                        return fstatus;
+                    }
+
+                    return FileStatus.Unknown;
                 }
-
-                return FileStatus.Unknown;
-            }
-            catch
-            {
-                return FileStatus.Unknown;
+                catch
+                {
+                    return FileStatus.Unknown;
+                }
             }
         }
 
@@ -176,7 +179,7 @@ namespace GinClientLibrary
         {
             var directoryName = Directory.GetParent(filePath).FullName;
             var filename = Directory.GetFiles(directoryName)
-                .Single(s => string.Compare(s.ToUpperInvariant(), filePath.ToUpperInvariant()) == 0);
+                .Single(s => string.CompareOrdinal(s.ToUpperInvariant(), filePath.ToUpperInvariant()) == 0);
             filename = Path.GetFileName(filename);
 
             var output = GetCommandLineOutput("cmd.exe", "/C gin get-content " + filename + " --json", directoryName,
@@ -301,6 +304,14 @@ namespace GinClientLibrary
 
         private readonly object _thisLock = new object();
 
+        /// <summary>
+        /// Execute a commandline program and capture its output
+        /// </summary>
+        /// <param name="program">The program to execute, e.g. cmd.exe</param>
+        /// <param name="commandline">Any commandline arguments</param>
+        /// <param name="workingDirectory">The working directory</param>
+        /// <param name="error">stderr output</param>
+        /// <returns>Any return values of the command</returns>
         private string GetCommandLineOutput(string program, string commandline, string workingDirectory,
             out string error)
         {
@@ -333,6 +344,7 @@ namespace GinClientLibrary
                 return output;
             }
         }
+        #endregion
 
         #region IDisposable Support
 
@@ -354,22 +366,19 @@ namespace GinClientLibrary
             _disposedValue = true;
         }
 
-        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
-        // ~GinRepository() {
-        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-        //   Dispose(false);
-        // }
+        ~GinRepository()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(false);
+        }
 
         // This code added to correctly implement the disposable pattern.
         public void Dispose()
         {
             // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
             Dispose(true);
-            // TODO: uncomment the following line if the finalizer is overridden above.
-            // GC.SuppressFinalize(this);
+            GC.SuppressFinalize(this);
         }
-
-        #endregion
 
         #endregion
     }
