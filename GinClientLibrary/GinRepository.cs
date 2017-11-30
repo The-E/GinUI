@@ -58,10 +58,14 @@ namespace GinClientLibrary
 
             _fsWatcher.EnableRaisingEvents = true;
         }
+
         private void ResetRepoStatus()
         {
-            _scache.Clear();
-            ReadRepoStatus();
+            lock (this)
+            {
+                _scache.Clear();
+                ReadRepoStatus();
+            }
         }
 
         private void FsWatcherOnRenamed(object sender, RenamedEventArgs renamedEventArgs)
