@@ -18,6 +18,11 @@ namespace GinClientLibrary
     /// </summary>
     public class DokanInterface : IDokanOperations
     {
+        public static bool TestDokanAvailability()
+        {
+            return true;
+        }
+
         #region GIN data
 
         /// <summary>

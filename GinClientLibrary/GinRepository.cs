@@ -27,6 +27,8 @@ namespace GinClientLibrary
 
         private static readonly StringBuilder _output = new StringBuilder("");
 
+        private FileSystemWatcher _fsWatcher;
+
         private Dictionary<string, FileStatus> _scache;
 
         private Thread _thread;
@@ -40,7 +42,48 @@ namespace GinClientLibrary
             DokanInterface = new DokanInterface(this, false);
             DokanInterface.FileOperationStarted += DokanInterface_FileOperationStarted;
             DokanInterface.FileOperationCompleted += DokanInterface_FileOperationCompleted;
+
+            _fsWatcher = new FileSystemWatcher(physicalDirectory.FullName)
+            {
+                NotifyFilter = NotifyFilters.Size | NotifyFilters.Size | NotifyFilters.FileName |
+                               NotifyFilters.Attributes,
+                IncludeSubdirectories = true,
+                Filter = "*.*"
+            };
+
+            _fsWatcher.Changed += FsWatcherOnChanged;
+            _fsWatcher.Created += FsWatcherOnCreated;
+            _fsWatcher.Deleted += FsWatcherOnDeleted;
+            _fsWatcher.Renamed += FsWatcherOnRenamed;
+
+            _fsWatcher.EnableRaisingEvents = true;
         }
+        private void ResetRepoStatus()
+        {
+            _scache.Clear();
+            ReadRepoStatus();
+        }
+
+        private void FsWatcherOnRenamed(object sender, RenamedEventArgs renamedEventArgs)
+        {
+            ResetRepoStatus();
+        }
+
+        private void FsWatcherOnDeleted(object sender, FileSystemEventArgs fileSystemEventArgs)
+        {
+            ResetRepoStatus();
+        }
+
+        private void FsWatcherOnChanged(object sender, FileSystemEventArgs fileSystemEventArgs)
+        {
+            ResetRepoStatus();
+        }
+
+        private void FsWatcherOnCreated(object sender, FileSystemEventArgs fileSystemEventArgs)
+        {
+            ResetRepoStatus();
+        }
+        
 
         public Dictionary<string, FileStatus> StatusCache =>
             _scache ?? (_scache = new Dictionary<string, FileStatus>());
@@ -151,7 +194,7 @@ namespace GinClientLibrary
 
                 var output = GetCommandLineOutput("cmd.exe", "/c gin annex info " + filePath + " --json",
                     parentDirectory,
-                    out string error);
+                    out var error);
                 try
                 {
                     if (!string.IsNullOrEmpty(output))
@@ -305,7 +348,7 @@ namespace GinClientLibrary
         private readonly object _thisLock = new object();
 
         /// <summary>
-        /// Execute a commandline program and capture its output
+        ///     Execute a commandline program and capture its output
         /// </summary>
         /// <param name="program">The program to execute, e.g. cmd.exe</param>
         /// <param name="commandline">Any commandline arguments</param>
@@ -344,6 +387,7 @@ namespace GinClientLibrary
                 return output;
             }
         }
+
         #endregion
 
         #region IDisposable Support
