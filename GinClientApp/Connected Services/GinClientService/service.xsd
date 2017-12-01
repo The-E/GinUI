@@ -151,6 +151,7 @@
         <xs:element minOccurs="0" name="repository" nillable="true" type="xs:string" />
         <xs:element minOccurs="0" name="progress" type="xs:int" />
         <xs:element minOccurs="0" name="speed" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="state" nillable="true" type="xs:string" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

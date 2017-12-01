@@ -74,7 +74,7 @@ namespace GinClientApp.GinClientService {
         void FileOperationFinished(string filename, string repository, bool success);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/FileOperationProgress", ReplyAction="http://tempuri.org/IGinClientService/FileOperationProgressResponse")]
-        void FileOperationProgress(string filename, string repository, int progress, string speed);
+        void FileOperationProgress(string filename, string repository, int progress, string speed, string state);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]

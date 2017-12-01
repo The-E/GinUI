@@ -9,6 +9,7 @@ using System.Security.AccessControl;
 using DokanNet;
 using static DokanNet.FormatProviders;
 using FileAccess = DokanNet.FileAccess;
+using System.Threading;
 
 namespace GinClientLibrary
 {
@@ -66,7 +67,7 @@ namespace GinClientLibrary
             }
             catch (Exception e)
             {
-                throw new DokanInterfaceException(e, "Dokan Interface Error: " + e.Message);
+                //throw new DokanInterfaceException(e, "Dokan Interface Error: " + e.Message);
             }
         }
 

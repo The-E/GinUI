@@ -20,7 +20,7 @@ namespace GinClientLibrary
 
         private List<GinRepository> _repositories;
 
-        private readonly Dictionary<GinRepository, Thread> _repothreads = new Dictionary<GinRepository, Thread>();
+        //private readonly Dictionary<GinRepository, Thread> _repothreads = new Dictionary<GinRepository, Thread>();
 
         private readonly List<GinServer> _servers = new List<GinServer>();
 
@@ -99,13 +99,13 @@ namespace GinClientLibrary
 
         private void MountRepository(GinRepository repo)
         {
-            if (!_repothreads.ContainsKey(repo))
-            {
+            //if (!_repothreads.ContainsKey(repo))
+            //{
                 var thread = new Thread(repo.Mount);
                 thread.Start();
 
-                _repothreads.Add(repo, thread);
-            }
+                //_repothreads.Add(repo, thread);
+            //}
         }
 
         public bool UpdateRepository(string repoName, GinRepository data)
@@ -125,7 +125,7 @@ namespace GinClientLibrary
         public void UnmountRepository(GinRepository repo)
         {
             repo.Dispose();
-            _repothreads[repo].Abort();
+            //_repothreads[repo].Abort();
         }
 
         public void UnmountAllRepositories()
@@ -147,9 +147,10 @@ namespace GinClientLibrary
             _repo.FileOperationStarted += Repo_FileOperationStarted;
             _repo.FileOperationCompleted += Repo_FileOperationCompleted;
             _repo.FileOperationProgress += _repo_FileOperationProgress;
+            MountRepository(_repo);
             _repo.Initialize();
 
-            MountRepository(_repo);
+           
             Repositories.Add(_repo);
         }
 

@@ -33,8 +33,6 @@ namespace GinClientLibrary
 
         private Dictionary<string, FileStatus> _scache;
 
-        private Thread _thread;
-
         public GinRepository(DirectoryInfo physicalDirectory, DirectoryInfo mountpoint, string name, string url)
         {
             PhysicalDirectory = physicalDirectory;
@@ -58,14 +56,17 @@ namespace GinClientLibrary
             _fsWatcher.Deleted += FsWatcherOnDeleted;
             _fsWatcher.Renamed += FsWatcherOnRenamed;
 
-            _fsWatcher.EnableRaisingEvents = true;
+            _fsWatcher.EnableRaisingEvents = false;
         }
 
         private void ResetRepoStatus()
         {
             lock (this)
             {
-                _scache.Clear();
+                if (_scache == null)
+                    _scache = new Dictionary<string, FileStatus>();
+                else 
+                    _scache.Clear();
                 ReadRepoStatus();
             }
         }
@@ -104,8 +105,7 @@ namespace GinClientLibrary
 
         public void Mount()
         {
-            _thread = new Thread(DokanInterface.Initialize);
-            _thread.Start();
+            DokanInterface.Initialize();
         }
 
         internal struct filestatus
@@ -147,61 +147,50 @@ namespace GinClientLibrary
         /// </summary>
         public void ReadRepoStatus()
         {
-            var output = GetCommandLineOutput("cmd.exe", "/c gin ls --json", PhysicalDirectory.FullName, out var error);
-
-            var statusCollection = JsonConvert.DeserializeObject<List<filestatus>>(output);
-
-            foreach (var fstatus in statusCollection)
+            lock (this)
             {
-                var filePath = PhysicalDirectory.FullName + Path.DirectorySeparatorChar + fstatus.filename;
-                var status = TranslateFileStatus(fstatus.status);
+                var output = GetCommandLineOutput("cmd.exe", "/c gin.exe ls --json", PhysicalDirectory.FullName, out var error);
 
-                if (!StatusCache.ContainsKey(filePath))
-                    StatusCache.Add(filePath, status);
-                else
-                    StatusCache[filePath] = status;
+                var statusCollection = JsonConvert.DeserializeObject<List<filestatus>>(output);
+
+                foreach (var fstatus in statusCollection)
+                {
+                    var filePath = Path.GetFullPath(PhysicalDirectory.FullName + Path.DirectorySeparatorChar + fstatus.filename);
+                    var status = TranslateFileStatus(fstatus.status);
+
+                    if (!StatusCache.ContainsKey(filePath))
+                        StatusCache.Add(filePath, status);
+                    else
+                        StatusCache[filePath] = status;
+                }
             }
-            
         }
 
         public FileStatus GetFileStatus(string filePath)
         {
             lock (this)
             {
-                if (StatusCache.ContainsKey(filePath))
-                    return StatusCache[filePath];
-
                 if (Directory.Exists(filePath))
                     return FileStatus.Directory;
 
+                if (!File.Exists(filePath))
+                    return FileStatus.Unknown;
+
+                //Need to normalize the path here
+                GetActualFilename(filePath, out string directoryName, out string filename);
+
+                filePath = directoryName + Path.DirectorySeparatorChar + filename;
+
+                if (StatusCache.ContainsKey(filePath))
+                    return StatusCache[filePath];
+
+                
                 //Windows will sometimes try to inspect the contents of a zip file; we need to catch this here and return the filestatus of the zip
                 var parentDirectory = Directory.GetParent(filePath).FullName;
                 if (parentDirectory.ToLower().Contains(".zip"))
                     return GetFileStatus(parentDirectory);
 
-                var output = GetCommandLineOutput("cmd.exe", "/c gin annex info " + filePath + " --json",
-                    parentDirectory,
-                    out var error);
-                try
-                {
-                    if (!string.IsNullOrEmpty(output))
-                    {
-                        var fileInfo = JsonConvert.DeserializeObject<AnnexFileInfo>(output);
-
-                        var fstatus = fileInfo.present ? FileStatus.OnDisk : FileStatus.InAnnex;
-
-                        if (!StatusCache.ContainsKey(filePath))
-                            StatusCache.Add(filePath, fstatus);
-
-                        return fstatus;
-                    }
-
-                    return FileStatus.Unknown;
-                }
-                catch
-                {
-                    return FileStatus.Unknown;
-                }
+                return FileStatus.Unknown;
             }
         }
 
@@ -211,12 +200,9 @@ namespace GinClientLibrary
 
             lock (_thisLock)
             {
-                var output = GetCommandLineOutput("cmd.exe", "/C gin get-content " + filename /*+ " -json"*/, directoryName,
+                GetCommandLineOutputEvent("cmd.exe", "/C gin get-content " + filename + " --json", directoryName,
                 out var error);
-
-                _output.Clear();
-
-
+                
                 ReadRepoStatus();
 
                 return string.IsNullOrEmpty(error);
@@ -234,7 +220,6 @@ namespace GinClientLibrary
                 out var error);
 
                 _output.Clear();
-
 
                 ReadRepoStatus();
 
@@ -456,7 +441,6 @@ namespace GinClientLibrary
                 if (disposing)
                 {
                     var res = Dokan.RemoveMountPoint(Mountpoint.FullName.Trim('\\'));
-                    _thread.Abort();
                 }
 
             // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
