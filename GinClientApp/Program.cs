@@ -52,43 +52,19 @@ namespace GinClientApp
 
         void IGinClientServiceCallback.FileOperationFinished(string filename, string repository, bool success)
         {
-            throw new NotImplementedException();
         }
 
         void IGinClientServiceCallback.FileOperationStarted(string filename, string repository)
         {
-            throw new NotImplementedException();
-        }
-
-
-        private void _trayIcon_BalloonTipClosed(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void _trayIcon_BalloonTipShown(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void Repo_FileOperationCompleted(object sender, DokanInterface.FileOperationEventArgs e)
-        {
-        }
-
-
-        private void Repo_FileOperationStarted(object sender, DokanInterface.FileOperationEventArgs e)
-        {
-            var repo = (GinRepository) sender;
-
             _trayIcon.BalloonTipTitle = @"GIN Repository activity in progress";
             _trayIcon.BalloonTipText =
-                $"Retrieving {Path.GetFileName(e.File)} from repository {repo.Name}";
+                $"Retrieving {Path.GetFileName(filename)} from repository {repository}";
             _trayIcon.ShowBalloonTip(5000);
         }
-
+        
         private void _trayIcon_DoubleClick(object sender, EventArgs e)
         {
-            Exit(this, null);
+            //TODO: Implement a management interface
         }
 
         private void Exit(object sender, EventArgs e)
@@ -98,6 +74,11 @@ namespace GinClientApp
             _client.UnmmountAllRepositories();
             _client.Close();
             Application.Exit();
+        }
+
+        void IGinClientServiceCallback.FileOperationProgress(string filename, string repository, int progress, string speed)
+        {
+            throw new NotImplementedException();
         }
     }
 }

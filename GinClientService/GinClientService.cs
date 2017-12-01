@@ -19,6 +19,8 @@ namespace GinClientService
                 (sender, repo, file) => _callback.FileOperationStarted(file, repo.Name);
             RepositoryManager.Instance.FileRetrievalCompleted +=
                 (sender, repo, file, success) => _callback.FileOperationFinished(file, repo.Name, success);
+            RepositoryManager.Instance.FileOperationProgress +=
+                (filename, repo, progress, speed) => _callback.FileOperationProgress(filename, repo.Name, progress, speed);
         }
 
         bool IGinClientService.AddCredentials(string url, string username, string password)
@@ -38,6 +40,20 @@ namespace GinClientService
             return RepositoryManager.Instance.Repositories;
         }
 
+        bool IGinClientService.RetrieveFile(string repoName, string filepath)
+        {
+            var repo = RepositoryManager.Instance.GetRepoByName(repoName);
+
+            return repo.RetrieveFile(filepath);
+        }
+
+        bool IGinClientService.StashFile(string repoName, string filepath)
+        {
+            var repo = RepositoryManager.Instance.GetRepoByName(repoName);
+
+            return repo.RemoveFile(filepath);
+        }
+
         bool IGinClientService.UnmmountAllRepositories()
         {
             RepositoryManager.Instance.UnmountAllRepositories();
@@ -47,7 +63,7 @@ namespace GinClientService
         bool IGinClientService.UnmountRepository(string repoName)
         {
             RepositoryManager.Instance.UnmountRepository(
-                RepositoryManager.Instance.Repositories.Single(r => string.Compare(r.Name, repoName, true) == 0));
+                RepositoryManager.Instance.GetRepoByName(repoName));
             return true;
         }
 

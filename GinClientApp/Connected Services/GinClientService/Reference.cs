@@ -50,6 +50,18 @@ namespace GinClientApp.GinClientService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/UpdateRepository", ReplyAction="http://tempuri.org/IGinClientService/UpdateRepositoryResponse")]
         System.Threading.Tasks.Task<bool> UpdateRepositoryAsync(string repoName, GinClientLibrary.GinRepository data);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/RetrieveFile", ReplyAction="http://tempuri.org/IGinClientService/RetrieveFileResponse")]
+        bool RetrieveFile(string repoName, string filepath);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/RetrieveFile", ReplyAction="http://tempuri.org/IGinClientService/RetrieveFileResponse")]
+        System.Threading.Tasks.Task<bool> RetrieveFileAsync(string repoName, string filepath);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/StashFile", ReplyAction="http://tempuri.org/IGinClientService/StashFileResponse")]
+        bool StashFile(string repoName, string filepath);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/StashFile", ReplyAction="http://tempuri.org/IGinClientService/StashFileResponse")]
+        System.Threading.Tasks.Task<bool> StashFileAsync(string repoName, string filepath);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -60,6 +72,9 @@ namespace GinClientApp.GinClientService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/FileOperationFinished", ReplyAction="http://tempuri.org/IGinClientService/FileOperationFinishedResponse")]
         void FileOperationFinished(string filename, string repository, bool success);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/FileOperationProgress", ReplyAction="http://tempuri.org/IGinClientService/FileOperationProgressResponse")]
+        void FileOperationProgress(string filename, string repository, int progress, string speed);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -136,6 +151,22 @@ namespace GinClientApp.GinClientService {
         
         public System.Threading.Tasks.Task<bool> UpdateRepositoryAsync(string repoName, GinClientLibrary.GinRepository data) {
             return base.Channel.UpdateRepositoryAsync(repoName, data);
+        }
+        
+        public bool RetrieveFile(string repoName, string filepath) {
+            return base.Channel.RetrieveFile(repoName, filepath);
+        }
+        
+        public System.Threading.Tasks.Task<bool> RetrieveFileAsync(string repoName, string filepath) {
+            return base.Channel.RetrieveFileAsync(repoName, filepath);
+        }
+        
+        public bool StashFile(string repoName, string filepath) {
+            return base.Channel.StashFile(repoName, filepath);
+        }
+        
+        public System.Threading.Tasks.Task<bool> StashFileAsync(string repoName, string filepath) {
+            return base.Channel.StashFileAsync(repoName, filepath);
         }
     }
 }
