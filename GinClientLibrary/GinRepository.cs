@@ -73,7 +73,7 @@ namespace GinClientLibrary
 
             //The output is currently human-readable plaintext, need to parse that.
 
-            var lines = output.Split(new[] {'\r', '\n', '\t'}, StringSplitOptions.RemoveEmptyEntries);
+            var lines = output.Split(new[] { '\r', '\n', '\t' }, StringSplitOptions.RemoveEmptyEntries);
 
             var status = FileStatus.Unknown;
             foreach (var line in lines)
@@ -174,21 +174,39 @@ namespace GinClientLibrary
 
         public bool RetrieveFile(string filePath)
         {
-            var directoryName = Directory.GetParent(filePath).FullName;
-            var filename = Directory.GetFiles(directoryName)
-                .Single(s => string.Compare(s.ToUpperInvariant(), filePath.ToUpperInvariant()) == 0);
-            filename = Path.GetFileName(filename);
+            GetActualFilename(filePath, out string directoryName, out string filename);
 
-            var output = GetCommandLineOutput("cmd.exe", "/C gin get-content " + filename + " --json", directoryName,
-                out var error);
             lock (_thisLock)
             {
+                var output = GetCommandLineOutput("cmd.exe", "/C gin get-content " + filename /*+ " -json"*/, directoryName,
+                out var error);
+
                 _output.Clear();
+
+
+                ReadRepoStatus();
+
+                return string.IsNullOrEmpty(error);
             }
+        }
 
-            ReadRepoStatus();
 
-            return string.IsNullOrEmpty(error);
+        public bool RemoveFile(string filePath)
+        {
+            GetActualFilename(filePath, out string directoryName, out string filename);
+
+            lock (_thisLock)
+            {
+                var output = GetCommandLineOutput("cmd.exe", "/C gin remove-content " + filename /*+ " -json"*/, directoryName,
+                out var error);
+
+                _output.Clear();
+
+
+                ReadRepoStatus();
+
+                return string.IsNullOrEmpty(error);
+            }
         }
 
         public bool Login()
@@ -293,10 +311,24 @@ namespace GinClientLibrary
 
         #region Helpers
 
+        private void GetActualFilename(string filePath, out string directoryName, out string filename)
+        {
+            directoryName = Directory.GetParent(filePath).FullName;
+            filename = Directory.GetFiles(directoryName)
+                .Single(s => string.Compare(s.ToUpperInvariant(), filePath.ToUpperInvariant()) == 0);
+            filename = Path.GetFileName(filename);
+        }
+
         private void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
             if (!string.IsNullOrEmpty(e.Data))
                 _output.AppendLine(e.Data);
+        }
+
+        private void Process_OutputDataReceivedThroughput(object sender, DataReceivedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(e.Data))
+                OnCmdLineOutput(this, e.Data);
         }
 
         private readonly object _thisLock = new object();
@@ -332,6 +364,42 @@ namespace GinClientLibrary
                 _output.Clear();
                 return output;
             }
+        }
+
+        private void GetCommandLineOutputEvent(string program, string commandline, string workingDirectory, out string error)
+        {
+            lock (_thisLock)
+            {
+                var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        FileName = program,
+                        WorkingDirectory = workingDirectory,
+                        Arguments = commandline,
+                        CreateNoWindow = true,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false
+                    }
+                };
+
+                process.OutputDataReceived += Process_OutputDataReceivedThroughput;
+                _output.Clear();
+                process.Start();
+                process.BeginOutputReadLine();
+                error = process.StandardError.ReadToEnd();
+                process.WaitForExit();
+
+            }
+        }
+
+        public event CmdLineOutputHandler FileOperationProgress;
+        public delegate void CmdLineOutputHandler(object sender, string message);
+        protected virtual void OnCmdLineOutput(object sender, string message)
+        {
+            FileOperationProgress?.Invoke(sender, message);
         }
 
         #region IDisposable Support

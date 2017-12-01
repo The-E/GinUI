@@ -38,6 +38,11 @@ namespace GinClientLibrary
             }
         }
 
+        public GinRepository GetRepoByName(string name)
+        {
+            return Repositories.Single(r => string.Compare(r.Name, name, true) == 0);
+        }
+
         public List<GinRepository> Repositories
         {
             get
@@ -141,10 +146,20 @@ namespace GinClientLibrary
 
             _repo.FileOperationStarted += Repo_FileOperationStarted;
             _repo.FileOperationCompleted += Repo_FileOperationCompleted;
+            _repo.FileOperationProgress += _repo_FileOperationProgress;
             _repo.Initialize();
 
             MountRepository(_repo);
             Repositories.Add(_repo);
+        }
+
+        public event FileOperationProgressHandler FileOperationProgress;
+        public delegate void FileOperationProgressHandler(string filename, GinRepository repository, int progress, string speed);
+
+        private void _repo_FileOperationProgress(object sender, string message)
+        {
+            //TODO: Parse the message, filter out filename, repo, progress, speed, run the event
+            FileOperationProgress?.Invoke("FILENAME", (GinRepository)sender, 0, "SPEED");
         }
 
         public event FileRetrievalStartedHandler FileRetrievalStarted;

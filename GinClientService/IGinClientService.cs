@@ -24,6 +24,12 @@ namespace GinClientService
 
         [OperationContract]
         bool UpdateRepository(string repoName, GinRepository data);
+
+        [OperationContract]
+        bool RetrieveFile(string repoName, string filepath);
+
+        [OperationContract]
+        bool StashFile(string repoName, string filepath);
     }
 
     public interface IGinClientCallback
@@ -33,5 +39,8 @@ namespace GinClientService
 
         [OperationContract]
         void FileOperationFinished(string filename, string repository, bool success);
+
+        [OperationContract]
+        void FileOperationProgress(string filename, string repository, int progress, string speed);
     }
 }
