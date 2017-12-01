@@ -87,6 +87,36 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  <xs:element name="RetrieveFile">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="repoName" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="filepath" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RetrieveFileResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="RetrieveFileResult" type="xs:boolean" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="StashFile">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="repoName" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="filepath" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="StashFileResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="StashFileResult" type="xs:boolean" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
   <xs:element name="FileOperationStarted">
     <xs:complexType>
       <xs:sequence>
@@ -110,6 +140,21 @@
     </xs:complexType>
   </xs:element>
   <xs:element name="FileOperationFinishedResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FileOperationProgress">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="filename" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="repository" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="progress" type="xs:int" />
+        <xs:element minOccurs="0" name="speed" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FileOperationProgressResponse">
     <xs:complexType>
       <xs:sequence />
     </xs:complexType>

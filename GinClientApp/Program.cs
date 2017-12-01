@@ -75,5 +75,10 @@ namespace GinClientApp
             _client.Close();
             Application.Exit();
         }
+
+        void IGinClientServiceCallback.FileOperationProgress(string filename, string repository, int progress, string speed)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
