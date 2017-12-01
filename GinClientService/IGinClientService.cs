@@ -41,6 +41,6 @@ namespace GinClientService
         void FileOperationFinished(string filename, string repository, bool success);
 
         [OperationContract]
-        void FileOperationProgress(string filename, string repository, int progress, string speed);
+        void FileOperationProgress(string filename, string repository, int progress, string speed, string state);
     }
 }

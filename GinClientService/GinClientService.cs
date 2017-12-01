@@ -20,7 +20,7 @@ namespace GinClientService
             RepositoryManager.Instance.FileRetrievalCompleted +=
                 (sender, repo, file, success) => _callback.FileOperationFinished(file, repo.Name, success);
             RepositoryManager.Instance.FileOperationProgress +=
-                (filename, repo, progress, speed) => _callback.FileOperationProgress(filename, repo.Name, progress, speed);
+                (filename, repo, progress, speed, state) => _callback.FileOperationProgress(filename, repo.Name, progress, speed, state);
         }
 
         bool IGinClientService.AddCredentials(string url, string username, string password)

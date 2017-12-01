@@ -22,7 +22,9 @@ namespace GinClientLibrary
             OnDisk,
             OnDiskModified,
             Unknown,
-            Directory
+            Directory,
+            Unlocked,
+            Removed
         }
 
         private static readonly StringBuilder _output = new StringBuilder("");
@@ -106,6 +108,34 @@ namespace GinClientLibrary
             _thread.Start();
         }
 
+        internal struct filestatus
+        {
+            public string filename { get; set; }
+            public string status { get; set; }
+        }
+
+        private FileStatus TranslateFileStatus(string status)
+        {
+            if (string.Compare(status, "OK") == 0)
+                return FileStatus.OnDisk;
+            if (string.Compare(status, "NC") == 0)
+                return FileStatus.InAnnex;
+            if (string.Compare(status, "MD") == 0)
+                return FileStatus.InAnnexModified;
+            if (string.Compare(status, "LC") == 0)
+                return FileStatus.OnDiskModified;
+            if (string.Compare(status, "RC") == 0)
+                return FileStatus.InAnnexModified;
+            if (string.Compare(status, "UL") == 0)
+                return FileStatus.Unlocked;
+            if (string.Compare(status, "RM") == 0)
+                return FileStatus.Removed;
+            if (string.Compare(status, "??") == 0)
+                return FileStatus.Unknown;
+
+            return FileStatus.Unknown;
+        }
+
         /// <summary>
         ///     Retrieve the status of every file in this repository
         ///     Possible statuses are:
@@ -117,68 +147,21 @@ namespace GinClientLibrary
         /// </summary>
         public void ReadRepoStatus()
         {
-            var output = GetCommandLineOutput("cmd.exe", "/c gin ls", PhysicalDirectory.FullName, out var error);
+            var output = GetCommandLineOutput("cmd.exe", "/c gin ls --json", PhysicalDirectory.FullName, out var error);
 
-            //The output is currently human-readable plaintext, need to parse that.
+            var statusCollection = JsonConvert.DeserializeObject<List<filestatus>>(output);
 
-            var lines = output.Split(new[] { '\r', '\n', '\t' }, StringSplitOptions.RemoveEmptyEntries);
-
-            var status = FileStatus.Unknown;
-            foreach (var line in lines)
+            foreach (var fstatus in statusCollection)
             {
-                if (string.Compare(line, "Synced:", StringComparison.Ordinal) == 0)
-                {
-                    status = FileStatus.OnDisk;
-                    continue;
-                }
-                if (string.Compare(line, "No local content:", StringComparison.Ordinal) == 0)
-                {
-                    status = FileStatus.InAnnex;
-                    continue;
-                }
-                if (string.Compare(line, "Locally modified (unsaved):", StringComparison.Ordinal) == 0)
-                {
-                    status = FileStatus.OnDiskModified;
-                    continue;
-                }
-                if (string.Compare(line, "Locally modified (not uploaded):", StringComparison.Ordinal) == 0)
-                {
-                    status = FileStatus.OnDiskModified;
-                    continue;
-                }
-                if (string.Compare(line, "Remotely modified (not downloaded):", StringComparison.Ordinal) == 0)
-                {
-                    status = FileStatus.InAnnexModified;
-                    continue;
-                }
-                if (string.Compare(line, "Unlocked for editing:", StringComparison.Ordinal) == 0)
-                {
-                    status = FileStatus.OnDisk;
-                    continue;
-                }
-                if (string.Compare(line, "Removed:", StringComparison.Ordinal) == 0)
-                {
-                    status = FileStatus.Unknown;
-                    continue;
-                }
-                if (string.Compare(line, "Untracked:", StringComparison.Ordinal) == 0)
-                {
-                    status = FileStatus.Unknown;
-                    continue;
-                }
-                if (string.Compare(line, "Unknown:", StringComparison.Ordinal) == 0)
-                {
-                    status = FileStatus.Unknown;
-                    continue;
-                }
+                var filePath = PhysicalDirectory.FullName + Path.DirectorySeparatorChar + fstatus.filename;
+                var status = TranslateFileStatus(fstatus.status);
 
-                var fullPath = Path.GetFullPath(PhysicalDirectory.FullName + Path.DirectorySeparatorChar + line);
-
-                if (!StatusCache.ContainsKey(fullPath))
-                    StatusCache.Add(fullPath, status);
+                if (!StatusCache.ContainsKey(filePath))
+                    StatusCache.Add(filePath, status);
                 else
-                    StatusCache[fullPath] = status;
+                    StatusCache[filePath] = status;
             }
+            
         }
 
         public FileStatus GetFileStatus(string filePath)
@@ -459,6 +442,8 @@ namespace GinClientLibrary
         {
             FileOperationProgress?.Invoke(sender, message);
         }
+
+        #endregion
 
         #region IDisposable Support
 

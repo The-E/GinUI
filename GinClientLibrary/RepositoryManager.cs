@@ -154,12 +154,38 @@ namespace GinClientLibrary
         }
 
         public event FileOperationProgressHandler FileOperationProgress;
-        public delegate void FileOperationProgressHandler(string filename, GinRepository repository, int progress, string speed);
+        public delegate void FileOperationProgressHandler(string filename, GinRepository repository, int progress, string speed, string state);
+
+
+        //{"filename":"gin-cli-0.12dev.deb","state":"Downloading","progress":"","rate":"","err":""}
+        private struct fileOpProgress
+        {
+            public string filename { get; set; }
+            public string state { get; set; }
+            public string progress { get; set; }
+            public string rate { get; set; }
+            public string err { get; set; }
+
+            public int GetProgress()
+            {
+                if (!string.IsNullOrEmpty(progress))
+                    return int.Parse(progress.Trim('%'));
+
+                return 0;
+            }
+        }
 
         private void _repo_FileOperationProgress(object sender, string message)
         {
-            //TODO: Parse the message, filter out filename, repo, progress, speed, run the event
-            FileOperationProgress?.Invoke("FILENAME", (GinRepository)sender, 0, "SPEED");
+            try
+            {
+                var progress = Newtonsoft.Json.JsonConvert.DeserializeObject<fileOpProgress>(message);
+                FileOperationProgress?.Invoke(progress.filename, (GinRepository) sender, progress.GetProgress(),
+                    progress.rate, progress.state);
+            }
+            catch (Exception e)
+            {
+            }
         }
 
         public event FileRetrievalStartedHandler FileRetrievalStarted;
