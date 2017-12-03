@@ -158,10 +158,10 @@ namespace GinClientLibrary
                     var filePath = Path.GetFullPath(PhysicalDirectory.FullName + Path.DirectorySeparatorChar + fstatus.filename);
                     var status = TranslateFileStatus(fstatus.status);
 
-                    if (!StatusCache.ContainsKey(filePath))
-                        StatusCache.Add(filePath, status);
+                    if (!StatusCache.ContainsKey(filePath.ToLowerInvariant()))
+                        StatusCache.Add(filePath.ToLowerInvariant(), status);
                     else
-                        StatusCache[filePath] = status;
+                        StatusCache[filePath.ToLowerInvariant()] = status;
                 }
             }
         }
@@ -181,8 +181,8 @@ namespace GinClientLibrary
 
                 filePath = directoryName + Path.DirectorySeparatorChar + filename;
 
-                if (StatusCache.ContainsKey(filePath))
-                    return StatusCache[filePath];
+                if (StatusCache.ContainsKey(filePath.ToLowerInvariant()))
+                    return StatusCache[filePath.ToLowerInvariant()];
 
                 
                 //Windows will sometimes try to inspect the contents of a zip file; we need to catch this here and return the filestatus of the zip
@@ -198,10 +198,12 @@ namespace GinClientLibrary
         {
             GetActualFilename(filePath, out string directoryName, out string filename);
 
-            lock (_thisLock)
+            lock (this)
             {
-                GetCommandLineOutputEvent("cmd.exe", "/C gin get-content " + filename + " --json", directoryName,
+                GetCommandLineOutputEvent("cmd.exe", "/c gin.exe get-content " + filename + " --json", directoryName,
                 out var error);
+
+                //var res = GetCommandLineOutput("cmd.exe", "/c gin.exe get-content " + filename, directoryName, out string error);
                 
                 ReadRepoStatus();
 
@@ -214,9 +216,9 @@ namespace GinClientLibrary
         {
             GetActualFilename(filePath, out string directoryName, out string filename);
 
-            lock (_thisLock)
+            lock (this)
             {
-                var output = GetCommandLineOutput("cmd.exe", "/C gin remove-content " + filename /*+ " -json"*/, directoryName,
+                var output = GetCommandLineOutput("cmd.exe", "/C gin.exe remove-content " + filename /*+ " -json"*/, directoryName,
                 out var error);
 
                 _output.Clear();
@@ -294,12 +296,12 @@ namespace GinClientLibrary
 
         private void DokanInterface_FileOperationCompleted(object sender, FileOperationEventArgs e)
         {
-            OnFileOperationStarted(e);
+            OnFileOperationCompleted(e);
         }
 
         private void DokanInterface_FileOperationStarted(object sender, FileOperationEventArgs e)
         {
-            OnFileOperationCompleted(e);
+            OnFileOperationStarted(e);
         }
 
         #endregion

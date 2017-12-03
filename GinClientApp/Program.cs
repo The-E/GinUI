@@ -52,7 +52,7 @@ namespace GinClientApp
 
         void IGinClientServiceCallback.FileOperationFinished(string filename, string repository, bool success)
         {
-            progressDisplay.RemoveFileTransfer(filename);
+            //progressDisplay.RemoveFileTransfer(filename);
         }
 
         ProgressDisplay progressDisplay;
@@ -64,11 +64,11 @@ namespace GinClientApp
                 $"Retrieving {Path.GetFileName(filename)} from repository {repository}";
             _trayIcon.ShowBalloonTip(5000);
 
-            if (progressDisplay == null)
-                progressDisplay = new ProgressDisplay();
+            //if (progressDisplay == null)
+            //    progressDisplay = new ProgressDisplay();
 
-            progressDisplay.AddFileTransfer(filename);
-            progressDisplay.Show();
+            //progressDisplay.AddFileTransfer(filename);
+            //progressDisplay.Show();
         }
         
         private void _trayIcon_DoubleClick(object sender, EventArgs e)
@@ -87,10 +87,12 @@ namespace GinClientApp
         
         void IGinClientServiceCallback.FileOperationProgress(string filename, string repository, int progress, string speed, string state)
         {
-            if (progressDisplay != null)
-            {
-                progressDisplay.SetProgressBarState(filename, state, progress, speed);
-            }
+            Console.WriteLine(string.Format("Filename: {0}, Repo: {1}, Progress: {2}, Speed: {3}, State: {4}", filename, repository, progress, speed, state));
+
+            //if (progressDisplay != null)
+            //{
+            //    progressDisplay.SetProgressBarState(filename, state, progress, speed);
+            //}
         }
     }
 }

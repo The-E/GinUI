@@ -205,6 +205,7 @@ namespace GinClientLibrary
 
         private void Repo_FileOperationCompleted(object sender, DokanInterface.FileOperationEventArgs e)
         {
+            OnFileRetrievalCompleted(e, (GinRepository)sender);
         }
 
         private void Repo_FileOperationStarted(object sender, DokanInterface.FileOperationEventArgs e)
