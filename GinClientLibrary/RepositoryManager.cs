@@ -35,25 +35,9 @@ namespace GinClientLibrary
         {
         }
 
-        public static RepositoryManager Instance
-        {
-            get
-            {
-                if (_instance == null)
-                    _instance = new RepositoryManager();
-                return _instance;
-            }
-        }
+        public static RepositoryManager Instance => _instance ?? (_instance = new RepositoryManager());
 
-        public List<GinRepository> Repositories
-        {
-            get
-            {
-                if (_repositories == null)
-                    _repositories = new List<GinRepository>();
-                return _repositories;
-            }
-        }
+        public List<GinRepository> Repositories => _repositories ?? (_repositories = new List<GinRepository>());
 
         public GinRepository GetRepoByName(string name)
         {

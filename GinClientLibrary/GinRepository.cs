@@ -117,7 +117,14 @@ namespace GinClientLibrary
 
         public void Mount()
         {
-            DokanInterface.Initialize();
+            try
+            {
+                DokanInterface.Initialize();
+            }
+            catch (DokanInterfaceException e)
+            {
+                OnFileOperationError(e.Message);
+            }
         }
 
         private FileStatus TranslateFileStatus(string status)
