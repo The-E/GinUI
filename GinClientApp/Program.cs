@@ -83,6 +83,11 @@ namespace GinClientApp
             //}
         }
 
+        void IGinClientServiceCallback.GinServiceError(string message)
+        {
+            MessageBox.Show(message, "GIN Service Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
         private void _trayIcon_DoubleClick(object sender, EventArgs e)
         {
             //TODO: Implement a management interface
