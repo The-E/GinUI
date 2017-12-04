@@ -87,6 +87,8 @@ namespace GinClientApp
         {
             _client.UnmmountAllRepositories();
 
+            if (_repositories.Length == 0) return;
+
             foreach (var repo in _repositories)
             {
                 _client.AddRepository(repo.PhysicalDirectory.FullName, repo.Mountpoint.FullName, repo.Name, repo.Commandline);
@@ -94,8 +96,13 @@ namespace GinClientApp
             
             string saveFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
                               @"\gnode\GinWindowsClient\SavedRepositories.json";
+
+            if (!Directory.Exists(Path.GetDirectoryName(saveFile)))
+                Directory.CreateDirectory(Path.GetDirectoryName(saveFile));
+
             if (File.Exists(saveFile))
                 File.Delete(saveFile);
+            
 
             var fs = File.CreateText(saveFile);
             fs.Write(JsonConvert.SerializeObject(_repositories));
@@ -125,6 +132,18 @@ namespace GinClientApp
             if (_selectedRepository == null) return;
 
             _selectedRepository.Commandline = txtGinCommandline.Text;
+        }
+
+        private void btnAddNew_Click(object sender, EventArgs e)
+        {
+            //TODO: Make this do something. Possible solution: Pop up that asks for a gin get commandline and generates a name based on that
+            //TODO: Then make the user enter the other required info
+            //TODO: Also, implement sanity checking for entered data.
+        }
+
+        private void btnRemove_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

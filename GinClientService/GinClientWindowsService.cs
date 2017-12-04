@@ -22,7 +22,7 @@ namespace GinClientService
         protected override void OnStart(string[] args)
         {
             //TODO: Remove before release!
-            Debugger.Launch();
+            //Debugger.Launch();
 
             _serviceHost?.Close();
 

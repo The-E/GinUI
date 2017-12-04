@@ -37,6 +37,7 @@ namespace GinClientApp
 
         public GinApplicationContext()
         {
+            _client = new GinClientServiceClient(new InstanceContext(this));
             var saveFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
                                @"\gnode\GinWindowsClient\SavedRepositories.json";
 
@@ -66,14 +67,6 @@ namespace GinClientApp
             };
 
             _trayIcon.DoubleClick += _trayIcon_DoubleClick;
-
-            _client = new GinClientServiceClient(new InstanceContext(this));
-            _client.AddRepository(
-                @"C:\Users\fwoltermann\Desktop\gin-cli-builds",
-                @"C:\Users\fwoltermann\Desktop\ginui-test\Test\",
-                "Test",
-                ""
-            );
         }
 
         private MenuItem[] BuildContextMenu()

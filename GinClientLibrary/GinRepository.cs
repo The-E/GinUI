@@ -259,6 +259,16 @@ namespace GinClientLibrary
             return true;
         }
 
+        //TODO: Implement this
+        /// <summary>
+        ///     Creates a new reopository folder from scratch
+        /// </summary>
+        /// <returns></returns>
+        public bool Create()
+        {
+            return true;
+        }
+
         internal struct filestatus
         {
             public string filename { get; set; }
@@ -266,7 +276,7 @@ namespace GinClientLibrary
         }
 
         #region Properties
-        
+
         /// <summary>
         ///     Name of the Repository, i.e. "Experiment data"
         /// </summary>
@@ -295,6 +305,7 @@ namespace GinClientLibrary
         /// </summary>
         [DataMember]
         public string Commandline { get; set; }
+
         /// <summary>
         ///     The server address, i.e. gin.g-node.org
         /// </summary>
