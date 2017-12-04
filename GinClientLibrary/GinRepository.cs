@@ -344,29 +344,6 @@ namespace GinClientLibrary
 
         #endregion
 
-        #region Annex return values
-
-        private struct AnnexFileInfo
-        {
-            public string key;
-            public bool present;
-            public string file;
-            public string command;
-            public string size;
-            public bool success;
-        }
-
-        private struct AnnexGet
-        {
-            public string key;
-            public string file;
-            public string command;
-            public string note;
-            public bool success;
-        }
-
-        #endregion
-
         #region Helpers
 
         private void GetActualFilename(string filePath, out string directoryName, out string filename)
