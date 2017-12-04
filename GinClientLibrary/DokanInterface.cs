@@ -9,36 +9,38 @@ using System.Security.AccessControl;
 using DokanNet;
 using static DokanNet.FormatProviders;
 using FileAccess = DokanNet.FileAccess;
-using System.Threading;
 
 namespace GinClientLibrary
 {
     /// <summary>
-    /// Implements the IDokanOperations interface. See https://github.com/dokan-dev/dokan-dotnet for reference.
-    /// This code is largely based on the "Mirror" sample provided there.
+    ///     Implements the IDokanOperations interface. See https://github.com/dokan-dev/dokan-dotnet for reference.
+    ///     This code is largely based on the "Mirror" sample provided there.
     /// </summary>
     public class DokanInterface : IDokanOperations
     {
-        public static bool TestDokanAvailability()
-        {
-            return true;
-        }
-
         #region GIN data
 
         /// <summary>
-        /// The GinRepository linked to this Dokan Interface. Provided mostly for convenience.
+        ///     The GinRepository linked to this Dokan Interface. Provided mostly for convenience.
         /// </summary>
         public GinRepository Repository { get; }
 
         #endregion
 
+        public static bool TestDokanAvailability()
+        {
+            return true;
+        }
+
         #region Constructor/Destructor and setup
+
         /// <summary>
-        /// Create a new Dokan Interface. 
+        ///     Create a new Dokan Interface.
         /// </summary>
-        /// <param name="repo"></param> The repository this is supporting
-        /// <param name="enableLogging"></param> If set to true, log messages will be written to the Application event log
+        /// <param name="repo"></param>
+        /// The repository this is supporting
+        /// <param name="enableLogging"></param>
+        /// If set to true, log messages will be written to the Application event log
         public DokanInterface(GinRepository repo, bool enableLogging = true)
         {
             InitLogging();
@@ -55,20 +57,14 @@ namespace GinClientLibrary
         }
 
         /// <summary>
-        /// Mounts the repository and starts mirroring
+        ///     Mounts the repository and starts mirroring
         /// </summary>
         /// <exception cref="DokanInterfaceException">Thrown if the mount fails</exception>
         public void Initialize()
         {
-            try
-            {
-                this.Mount(Repository.Mountpoint.FullName.Trim('\\'),
-                    DokanOptions.DebugMode | DokanOptions.StderrOutput);
-            }
-            catch (Exception e)
-            {
-                //throw new DokanInterfaceException(e, "Dokan Interface Error: " + e.Message);
-            }
+            this.Mount(Repository.Mountpoint.FullName.Trim('\\'),
+                DokanOptions.DebugMode | DokanOptions.StderrOutput);
+
         }
 
         #endregion
@@ -124,7 +120,7 @@ namespace GinClientLibrary
         }
 
         /// <summary>
-        /// Event is triggered everytime the driver retrieves a remote file
+        ///     Event is triggered everytime the driver retrieves a remote file
         /// </summary>
         public event FileOperationStartedHandler FileOperationStarted;
 
@@ -136,7 +132,7 @@ namespace GinClientLibrary
         }
 
         /// <summary>
-        /// Triggered once a retrieval operation completes
+        ///     Triggered once a retrieval operation completes
         /// </summary>
         public event FileOperationCompleteHandler FileOperationCompleted;
 
@@ -150,8 +146,9 @@ namespace GinClientLibrary
         #endregion
 
         #region Helpers
+
         /// <summary>
-        /// Translates a filename from the virtual filesystem to the actual one
+        ///     Translates a filename from the virtual filesystem to the actual one
         /// </summary>
         /// <param name="fileName">The filename, relative to the mountpoint</param>
         /// <returns></returns>

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using System.ServiceModel;
 using System.Windows.Forms;
 using GinClientApp.GinClientService;
-using GinClientLibrary;
 
 namespace GinClientApp
 {
@@ -27,6 +27,8 @@ namespace GinClientApp
         private readonly GinClientServiceClient _client;
         private readonly NotifyIcon _trayIcon;
 
+        private ProgressDisplay progressDisplay;
+
         public GinApplicationContext()
         {
             _trayIcon = new NotifyIcon
@@ -41,7 +43,7 @@ namespace GinClientApp
 
             _trayIcon.DoubleClick += _trayIcon_DoubleClick;
 
-            _client = new GinClientServiceClient(new System.ServiceModel.InstanceContext(this));
+            _client = new GinClientServiceClient(new InstanceContext(this));
             _client.AddRepository(
                 @"C:\Users\fwoltermann\Desktop\gin-cli-builds",
                 @"C:\Users\fwoltermann\Desktop\ginui-test\Test\",
@@ -54,8 +56,6 @@ namespace GinClientApp
         {
             //progressDisplay.RemoveFileTransfer(filename);
         }
-
-        ProgressDisplay progressDisplay;
 
         void IGinClientServiceCallback.FileOperationStarted(string filename, string repository)
         {
@@ -70,7 +70,19 @@ namespace GinClientApp
             //progressDisplay.AddFileTransfer(filename);
             //progressDisplay.Show();
         }
-        
+
+        void IGinClientServiceCallback.FileOperationProgress(string filename, string repository, int progress,
+            string speed, string state)
+        {
+            Console.WriteLine("Filename: {0}, Repo: {1}, Progress: {2}, Speed: {3}, State: {4}", filename, repository,
+                progress, speed, state);
+
+            //if (progressDisplay != null)
+            //{
+            //    progressDisplay.SetProgressBarState(filename, state, progress, speed);
+            //}
+        }
+
         private void _trayIcon_DoubleClick(object sender, EventArgs e)
         {
             //TODO: Implement a management interface
@@ -83,16 +95,6 @@ namespace GinClientApp
             _client.UnmmountAllRepositories();
             _client.Close();
             Application.Exit();
-        }
-        
-        void IGinClientServiceCallback.FileOperationProgress(string filename, string repository, int progress, string speed, string state)
-        {
-            Console.WriteLine(string.Format("Filename: {0}, Repo: {1}, Progress: {2}, Speed: {3}, State: {4}", filename, repository, progress, speed, state));
-
-            //if (progressDisplay != null)
-            //{
-            //    progressDisplay.SetProgressBarState(filename, state, progress, speed);
-            //}
         }
     }
 }

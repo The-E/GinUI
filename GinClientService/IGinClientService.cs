@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.ServiceModel;
 using GinClientLibrary;
 
@@ -30,8 +31,12 @@ namespace GinClientService
 
         [OperationContract]
         bool StashFile(string repoName, string filepath);
+
+        [OperationContract]
+        void DownloadUpdateInfo(string repoName);
     }
 
+    [SuppressMessage("ReSharper", "OperationContractWithoutServiceContract")]
     public interface IGinClientCallback
     {
         [OperationContract]
@@ -42,5 +47,8 @@ namespace GinClientService
 
         [OperationContract]
         void FileOperationProgress(string filename, string repository, int progress, string speed, string state);
+
+        [OperationContract]
+        void GinServiceError(string message);
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using Newtonsoft.Json;
 
 namespace GinClientLibrary
 {
@@ -11,46 +12,36 @@ namespace GinClientLibrary
     /// </summary>
     public class RepositoryManager
     {
+        public delegate void FileOperationProgressHandler(string filename, GinRepository repository, int progress,
+            string speed, string state);
+
         public delegate void
             FileRetrievalCompletedHandler(object sender, GinRepository repo, string file, bool success);
 
         public delegate void FileRetrievalStartedHandler(object sender, GinRepository repo, string file);
 
-        private static RepositoryManager _instance;
+        public delegate void RepositoryOperationErrorHandler(object sender,
+            GinRepository.FileOperationErrorEventArgs message);
 
-        private List<GinRepository> _repositories;
+        private static RepositoryManager _instance;
 
         //private readonly Dictionary<GinRepository, Thread> _repothreads = new Dictionary<GinRepository, Thread>();
 
         private readonly List<GinServer> _servers = new List<GinServer>();
 
+        private List<GinRepository> _repositories;
+
         private RepositoryManager()
         {
         }
 
-        public static RepositoryManager Instance
-        {
-            get
-            {
-                if (_instance == null)
-                    _instance = new RepositoryManager();
-                return _instance;
-            }
-        }
+        public static RepositoryManager Instance => _instance ?? (_instance = new RepositoryManager());
+
+        public List<GinRepository> Repositories => _repositories ?? (_repositories = new List<GinRepository>());
 
         public GinRepository GetRepoByName(string name)
         {
             return Repositories.Single(r => string.Compare(r.Name, name, true) == 0);
-        }
-
-        public List<GinRepository> Repositories
-        {
-            get
-            {
-                if (_repositories == null)
-                    _repositories = new List<GinRepository>();
-                return _repositories;
-            }
         }
 
         public bool AddCredentials(string url, string username, string password)
@@ -101,10 +92,10 @@ namespace GinClientLibrary
         {
             //if (!_repothreads.ContainsKey(repo))
             //{
-                var thread = new Thread(repo.Mount);
-                thread.Start();
+            var thread = new Thread(repo.Mount);
+            thread.Start();
 
-                //_repothreads.Add(repo, thread);
+            //_repothreads.Add(repo, thread);
             //}
         }
 
@@ -147,40 +138,27 @@ namespace GinClientLibrary
             _repo.FileOperationStarted += Repo_FileOperationStarted;
             _repo.FileOperationCompleted += Repo_FileOperationCompleted;
             _repo.FileOperationProgress += _repo_FileOperationProgress;
+            _repo.FileOperationError += RepoOnFileOperationError;
             MountRepository(_repo);
             _repo.Initialize();
 
-           
+
             Repositories.Add(_repo);
         }
 
-        public event FileOperationProgressHandler FileOperationProgress;
-        public delegate void FileOperationProgressHandler(string filename, GinRepository repository, int progress, string speed, string state);
-
-
-        //{"filename":"gin-cli-0.12dev.deb","state":"Downloading","progress":"","rate":"","err":""}
-        private struct fileOpProgress
+        private void RepoOnFileOperationError(object sender,
+            GinRepository.FileOperationErrorEventArgs fileOperationErrorEventArgs)
         {
-            public string filename { get; set; }
-            public string state { get; set; }
-            public string progress { get; set; }
-            public string rate { get; set; }
-            public string err { get; set; }
-
-            public int GetProgress()
-            {
-                if (!string.IsNullOrEmpty(progress))
-                    return int.Parse(progress.Trim('%'));
-
-                return 0;
-            }
+            OnRepositoryOperationError((GinRepository) sender, fileOperationErrorEventArgs);
         }
+
+        public event FileOperationProgressHandler FileOperationProgress;
 
         private void _repo_FileOperationProgress(object sender, string message)
         {
             try
             {
-                var progress = Newtonsoft.Json.JsonConvert.DeserializeObject<fileOpProgress>(message);
+                var progress = JsonConvert.DeserializeObject<fileOpProgress>(message);
                 FileOperationProgress?.Invoke(progress.filename, (GinRepository) sender, progress.GetProgress(),
                     progress.rate, progress.state);
             }
@@ -205,12 +183,39 @@ namespace GinClientLibrary
 
         private void Repo_FileOperationCompleted(object sender, DokanInterface.FileOperationEventArgs e)
         {
-            OnFileRetrievalCompleted(e, (GinRepository)sender);
+            OnFileRetrievalCompleted(e, (GinRepository) sender);
         }
 
         private void Repo_FileOperationStarted(object sender, DokanInterface.FileOperationEventArgs e)
         {
             OnFileRetrievalStarted(e, (GinRepository) sender);
+        }
+
+        public event RepositoryOperationErrorHandler RepositoryOperationError;
+
+        protected void OnRepositoryOperationError(GinRepository sender,
+            GinRepository.FileOperationErrorEventArgs message)
+        {
+            RepositoryOperationError?.Invoke(sender, message);
+        }
+
+
+        //{"filename":"gin-cli-0.12dev.deb","state":"Downloading","progress":"","rate":"","err":""}
+        private struct fileOpProgress
+        {
+            public string filename { get; set; }
+            public string state { get; set; }
+            public string progress { get; set; }
+            public string rate { get; set; }
+            public string err { get; set; }
+
+            public int GetProgress()
+            {
+                if (!string.IsNullOrEmpty(progress))
+                    return int.Parse(progress.Trim('%'));
+
+                return 0;
+            }
         }
 
         private struct GinServer
