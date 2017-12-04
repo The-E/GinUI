@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Threading;
 using DokanNet;
 using Newtonsoft.Json;
 using static GinClientLibrary.DokanInterface;
@@ -29,7 +28,7 @@ namespace GinClientLibrary
 
         private static readonly StringBuilder _output = new StringBuilder("");
 
-        private FileSystemWatcher _fsWatcher;
+        private readonly FileSystemWatcher _fsWatcher;
 
         private Dictionary<string, FileStatus> _scache;
 
@@ -59,13 +58,30 @@ namespace GinClientLibrary
             _fsWatcher.EnableRaisingEvents = false;
         }
 
+
+        public Dictionary<string, FileStatus> StatusCache =>
+            _scache ?? (_scache = new Dictionary<string, FileStatus>());
+
+        public void DownloadUpdateInfo()
+        {
+            //During download, we need to unmount the repository, since gin can and will make drastic changes
+            Dokan.RemoveMountPoint(Mountpoint.FullName.Trim('\\'));
+
+            GetCommandLineOutput("cmd.exe", "/C gin.exe download", PhysicalDirectory.FullName, out var error);
+
+            if (string.IsNullOrEmpty(error))
+                Mount();
+            else
+                OnFileOperationError(error);
+        }
+
         private void ResetRepoStatus()
         {
             lock (this)
             {
                 if (_scache == null)
                     _scache = new Dictionary<string, FileStatus>();
-                else 
+                else
                     _scache.Clear();
                 ReadRepoStatus();
             }
@@ -90,10 +106,6 @@ namespace GinClientLibrary
         {
             ResetRepoStatus();
         }
-        
-
-        public Dictionary<string, FileStatus> StatusCache =>
-            _scache ?? (_scache = new Dictionary<string, FileStatus>());
 
         public void Initialize()
         {
@@ -106,12 +118,6 @@ namespace GinClientLibrary
         public void Mount()
         {
             DokanInterface.Initialize();
-        }
-
-        internal struct filestatus
-        {
-            public string filename { get; set; }
-            public string status { get; set; }
         }
 
         private FileStatus TranslateFileStatus(string status)
@@ -149,13 +155,15 @@ namespace GinClientLibrary
         {
             lock (this)
             {
-                var output = GetCommandLineOutput("cmd.exe", "/c gin.exe ls --json", PhysicalDirectory.FullName, out var error);
+                var output = GetCommandLineOutput("cmd.exe", "/c gin.exe ls --json", PhysicalDirectory.FullName,
+                    out var error);
 
                 var statusCollection = JsonConvert.DeserializeObject<List<filestatus>>(output);
 
                 foreach (var fstatus in statusCollection)
                 {
-                    var filePath = Path.GetFullPath(PhysicalDirectory.FullName + Path.DirectorySeparatorChar + fstatus.filename);
+                    var filePath =
+                        Path.GetFullPath(PhysicalDirectory.FullName + Path.DirectorySeparatorChar + fstatus.filename);
                     var status = TranslateFileStatus(fstatus.status);
 
                     if (!StatusCache.ContainsKey(filePath.ToLowerInvariant()))
@@ -177,14 +185,14 @@ namespace GinClientLibrary
                     return FileStatus.Unknown;
 
                 //Need to normalize the path here
-                GetActualFilename(filePath, out string directoryName, out string filename);
+                GetActualFilename(filePath, out var directoryName, out var filename);
 
                 filePath = directoryName + Path.DirectorySeparatorChar + filename;
 
                 if (StatusCache.ContainsKey(filePath.ToLowerInvariant()))
                     return StatusCache[filePath.ToLowerInvariant()];
 
-                
+
                 //Windows will sometimes try to inspect the contents of a zip file; we need to catch this here and return the filestatus of the zip
                 var parentDirectory = Directory.GetParent(filePath).FullName;
                 if (parentDirectory.ToLower().Contains(".zip"))
@@ -196,15 +204,15 @@ namespace GinClientLibrary
 
         public bool RetrieveFile(string filePath)
         {
-            GetActualFilename(filePath, out string directoryName, out string filename);
+            GetActualFilename(filePath, out var directoryName, out var filename);
 
             lock (this)
             {
                 GetCommandLineOutputEvent("cmd.exe", "/c gin.exe get-content " + filename + " --json", directoryName,
-                out var error);
+                    out var error);
 
                 //var res = GetCommandLineOutput("cmd.exe", "/c gin.exe get-content " + filename, directoryName, out string error);
-                
+
                 ReadRepoStatus();
 
                 return string.IsNullOrEmpty(error);
@@ -214,12 +222,13 @@ namespace GinClientLibrary
 
         public bool RemoveFile(string filePath)
         {
-            GetActualFilename(filePath, out string directoryName, out string filename);
+            GetActualFilename(filePath, out var directoryName, out var filename);
 
             lock (this)
             {
-                var output = GetCommandLineOutput("cmd.exe", "/C gin.exe remove-content " + filename /*+ " -json"*/, directoryName,
-                out var error);
+                var output = GetCommandLineOutput("cmd.exe", "/C gin.exe remove-content " + filename /*+ " -json"*/,
+                    directoryName,
+                    out var error);
 
                 _output.Clear();
 
@@ -239,6 +248,12 @@ namespace GinClientLibrary
             //default path %userprofile%\.config\gin\, will be changed to %appdata%\gnode\gin\
 
             return true;
+        }
+
+        internal struct filestatus
+        {
+            public string filename { get; set; }
+            public string status { get; set; }
         }
 
         #region Properties
@@ -302,6 +317,22 @@ namespace GinClientLibrary
         private void DokanInterface_FileOperationStarted(object sender, FileOperationEventArgs e)
         {
             OnFileOperationStarted(e);
+        }
+
+        public class FileOperationErrorEventArgs : EventArgs
+        {
+            public string RepositoryName { get; set; }
+            public string Message { get; set; }
+        }
+
+        public event FileOperationErrorHandler FileOperationError;
+
+        public delegate void FileOperationErrorHandler(object sender, FileOperationErrorEventArgs e);
+
+        protected virtual void OnFileOperationError(string message)
+        {
+            FileOperationError?.Invoke(this,
+                new FileOperationErrorEventArgs {RepositoryName = Name, Message = message});
         }
 
         #endregion
@@ -394,7 +425,8 @@ namespace GinClientLibrary
             }
         }
 
-        private void GetCommandLineOutputEvent(string program, string commandline, string workingDirectory, out string error)
+        private void GetCommandLineOutputEvent(string program, string commandline, string workingDirectory,
+            out string error)
         {
             lock (_thisLock)
             {
@@ -419,12 +451,13 @@ namespace GinClientLibrary
                 process.BeginOutputReadLine();
                 error = process.StandardError.ReadToEnd();
                 process.WaitForExit();
-
             }
         }
 
         public event CmdLineOutputHandler FileOperationProgress;
+
         public delegate void CmdLineOutputHandler(object sender, string message);
+
         protected virtual void OnCmdLineOutput(object sender, string message)
         {
             FileOperationProgress?.Invoke(sender, message);

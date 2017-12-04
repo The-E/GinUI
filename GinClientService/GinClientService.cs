@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.ServiceModel;
 using GinClientLibrary;
 
@@ -8,19 +7,21 @@ namespace GinClientService
 {
     public class GinClientService : IGinClientService
     {
-        private readonly IGinClientCallback _callback;
-
         public GinClientService()
         {
             RepositoryManager.Instance.MountAllRepositories();
-            _callback = OperationContext.Current.GetCallbackChannel<IGinClientCallback>();
+            var callback = OperationContext.Current.GetCallbackChannel<IGinClientCallback>();
 
             RepositoryManager.Instance.FileRetrievalStarted +=
-                (sender, repo, file) => _callback.FileOperationStarted(file, repo.Name);
+                (sender, repo, file) => callback.FileOperationStarted(file, repo.Name);
             RepositoryManager.Instance.FileRetrievalCompleted +=
-                (sender, repo, file, success) => _callback.FileOperationFinished(file, repo.Name, success);
+                (sender, repo, file, success) => callback.FileOperationFinished(file, repo.Name, success);
             RepositoryManager.Instance.FileOperationProgress +=
-                (filename, repo, progress, speed, state) => _callback.FileOperationProgress(filename, repo.Name, progress, speed, state);
+                (filename, repo, progress, speed, state) =>
+                    callback.FileOperationProgress(filename, repo.Name, progress, speed, state);
+            RepositoryManager.Instance.RepositoryOperationError += (sender, message) =>
+                callback.GinServiceError("Error while performing GIN action on Repository " + message.RepositoryName +
+                                         ": " + message.Message);
         }
 
         bool IGinClientService.AddCredentials(string url, string username, string password)
@@ -33,6 +34,13 @@ namespace GinClientService
             RepositoryManager.Instance.AddRepository(new DirectoryInfo(physicalDirectory),
                 new DirectoryInfo(mountpoint), name, url);
             return true;
+        }
+
+        void IGinClientService.DownloadUpdateInfo(string repoName)
+        {
+            var repo = RepositoryManager.Instance.GetRepoByName(repoName);
+
+            repo.DownloadUpdateInfo();
         }
 
         List<GinRepository> IGinClientService.GetRepositoryList()
