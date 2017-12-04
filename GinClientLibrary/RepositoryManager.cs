@@ -127,23 +127,22 @@ namespace GinClientLibrary
             Repositories.Clear();
         }
 
-        public void AddRepository(DirectoryInfo physicalDirectory, DirectoryInfo mountpoint, string name, string url)
+        public void AddRepository(DirectoryInfo physicalDirectory, DirectoryInfo mountpoint, string name, string commandline)
         {
-            var _repo = new GinRepository(
+            var repo = new GinRepository(
                 physicalDirectory,
                 mountpoint,
                 name,
-                url);
+                commandline);
 
-            _repo.FileOperationStarted += Repo_FileOperationStarted;
-            _repo.FileOperationCompleted += Repo_FileOperationCompleted;
-            _repo.FileOperationProgress += _repo_FileOperationProgress;
-            _repo.FileOperationError += RepoOnFileOperationError;
-            MountRepository(_repo);
-            _repo.Initialize();
+            repo.FileOperationStarted += Repo_FileOperationStarted;
+            repo.FileOperationCompleted += Repo_FileOperationCompleted;
+            repo.FileOperationProgress += _repo_FileOperationProgress;
+            repo.FileOperationError += RepoOnFileOperationError;
+            MountRepository(repo);
+            repo.Initialize();
 
-
-            Repositories.Add(_repo);
+            Repositories.Add(repo);
         }
 
         private void RepoOnFileOperationError(object sender,

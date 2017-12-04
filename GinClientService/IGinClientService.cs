@@ -9,7 +9,7 @@ namespace GinClientService
     public interface IGinClientService
     {
         [OperationContract]
-        bool AddRepository(string physicalDirectory, string mountpoint, string name, string url);
+        bool AddRepository(string physicalDirectory, string mountpoint, string name, string commandline);
 
         [OperationContract]
         bool UnmountRepository(string repoName);

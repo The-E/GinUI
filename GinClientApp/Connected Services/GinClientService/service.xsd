@@ -7,7 +7,7 @@
         <xs:element minOccurs="0" name="physicalDirectory" nillable="true" type="xs:string" />
         <xs:element minOccurs="0" name="mountpoint" nillable="true" type="xs:string" />
         <xs:element minOccurs="0" name="name" nillable="true" type="xs:string" />
-        <xs:element minOccurs="0" name="url" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="commandline" nillable="true" type="xs:string" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -117,6 +117,18 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  <xs:element name="DownloadUpdateInfo">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="repoName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DownloadUpdateInfoResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
   <xs:element name="FileOperationStarted">
     <xs:complexType>
       <xs:sequence>
@@ -156,6 +168,18 @@
     </xs:complexType>
   </xs:element>
   <xs:element name="FileOperationProgressResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GinServiceError">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="message" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GinServiceErrorResponse">
     <xs:complexType>
       <xs:sequence />
     </xs:complexType>

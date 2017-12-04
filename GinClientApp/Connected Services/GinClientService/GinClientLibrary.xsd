@@ -9,10 +9,11 @@
   <xs:element name="ArrayOfGinRepository" nillable="true" type="tns:ArrayOfGinRepository" />
   <xs:complexType name="GinRepository">
     <xs:sequence>
+      <xs:element minOccurs="0" name="Commandline" nillable="true" type="xs:string" />
       <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/System.IO" minOccurs="0" name="Mountpoint" nillable="true" type="q1:DirectoryInfo" />
       <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
       <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/System.IO" minOccurs="0" name="PhysicalDirectory" nillable="true" type="q2:DirectoryInfo" />
-      <xs:element minOccurs="0" name="URL" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ServerAddress" nillable="true" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
   <xs:element name="GinRepository" nillable="true" type="tns:GinRepository" />

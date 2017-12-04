@@ -32,19 +32,19 @@ namespace GinClientLibrary
 
         private Dictionary<string, FileStatus> _scache;
 
-        public GinRepository(DirectoryInfo physicalDirectory, DirectoryInfo mountpoint, string name, string url)
+        public GinRepository(DirectoryInfo physicalDirectory, DirectoryInfo mountpoint, string name, string commandline)
         {
             PhysicalDirectory = physicalDirectory;
             Mountpoint = mountpoint;
             Name = name;
-            URL = url;
+            Commandline = commandline;
             DokanInterface = new DokanInterface(this, false);
             DokanInterface.FileOperationStarted += DokanInterface_FileOperationStarted;
             DokanInterface.FileOperationCompleted += DokanInterface_FileOperationCompleted;
 
             _fsWatcher = new FileSystemWatcher(physicalDirectory.FullName)
             {
-                NotifyFilter = NotifyFilters.Size | NotifyFilters.Size | NotifyFilters.FileName |
+                NotifyFilter = NotifyFilters.Size | NotifyFilters.FileName |
                                NotifyFilters.Attributes,
                 IncludeSubdirectories = true,
                 Filter = "*.*"
@@ -264,35 +264,40 @@ namespace GinClientLibrary
         }
 
         #region Properties
-
-        /// <summary>
-        ///     The repository's GIN url
-        /// </summary>
-        [DataMember]
-        public string URL { get; private set; }
-
+        
         /// <summary>
         ///     Name of the Repository, i.e. "Experiment data"
         /// </summary>
         [DataMember]
-        public string Name { get; private set; }
+        public string Name { get; set; }
 
         /// <summary>
         ///     Path to a directory containing the actual files
         /// </summary>
         [DataMember]
-        public DirectoryInfo PhysicalDirectory { get; private set; }
+        public DirectoryInfo PhysicalDirectory { get; set; }
 
         /// <summary>
         ///     Path where the Repo will be mounted
         /// </summary>
         [DataMember]
-        public DirectoryInfo Mountpoint { get; private set; }
+        public DirectoryInfo Mountpoint { get; set; }
 
         /// <summary>
         ///     A Dokan driver interface
         /// </summary>
         private DokanInterface DokanInterface { get; }
+
+        /// <summary>
+        ///     The gin commandline used for checkouts, i.e. "gin get achilleas/gin-cli-builds"
+        /// </summary>
+        [DataMember]
+        public string Commandline { get; set; }
+        /// <summary>
+        ///     The server address, i.e. gin.g-node.org
+        /// </summary>
+        [DataMember]
+        public string ServerAddress { get; set; }
 
         #endregion
 
@@ -460,6 +465,7 @@ namespace GinClientLibrary
                 if (disposing)
                 {
                     var res = Dokan.RemoveMountPoint(Mountpoint.FullName.Trim('\\'));
+                    _fsWatcher.Dispose();
                 }
 
             // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.

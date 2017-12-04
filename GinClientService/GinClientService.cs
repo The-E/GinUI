@@ -29,10 +29,10 @@ namespace GinClientService
             return RepositoryManager.Instance.AddCredentials(url, username, password);
         }
 
-        bool IGinClientService.AddRepository(string physicalDirectory, string mountpoint, string name, string url)
+        bool IGinClientService.AddRepository(string physicalDirectory, string mountpoint, string name, string commandline)
         {
             RepositoryManager.Instance.AddRepository(new DirectoryInfo(physicalDirectory),
-                new DirectoryInfo(mountpoint), name, url);
+                new DirectoryInfo(mountpoint), name, commandline);
             return true;
         }
 

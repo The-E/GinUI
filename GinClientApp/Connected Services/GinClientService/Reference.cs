@@ -16,10 +16,10 @@ namespace GinClientApp.GinClientService {
     public interface IGinClientService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/AddRepository", ReplyAction="http://tempuri.org/IGinClientService/AddRepositoryResponse")]
-        bool AddRepository(string physicalDirectory, string mountpoint, string name, string url);
+        bool AddRepository(string physicalDirectory, string mountpoint, string name, string commandline);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/AddRepository", ReplyAction="http://tempuri.org/IGinClientService/AddRepositoryResponse")]
-        System.Threading.Tasks.Task<bool> AddRepositoryAsync(string physicalDirectory, string mountpoint, string name, string url);
+        System.Threading.Tasks.Task<bool> AddRepositoryAsync(string physicalDirectory, string mountpoint, string name, string commandline);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/UnmountRepository", ReplyAction="http://tempuri.org/IGinClientService/UnmountRepositoryResponse")]
         bool UnmountRepository(string repoName);
@@ -62,6 +62,12 @@ namespace GinClientApp.GinClientService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/StashFile", ReplyAction="http://tempuri.org/IGinClientService/StashFileResponse")]
         System.Threading.Tasks.Task<bool> StashFileAsync(string repoName, string filepath);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/DownloadUpdateInfo", ReplyAction="http://tempuri.org/IGinClientService/DownloadUpdateInfoResponse")]
+        void DownloadUpdateInfo(string repoName);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/DownloadUpdateInfo", ReplyAction="http://tempuri.org/IGinClientService/DownloadUpdateInfoResponse")]
+        System.Threading.Tasks.Task DownloadUpdateInfoAsync(string repoName);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -75,6 +81,9 @@ namespace GinClientApp.GinClientService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/FileOperationProgress", ReplyAction="http://tempuri.org/IGinClientService/FileOperationProgressResponse")]
         void FileOperationProgress(string filename, string repository, int progress, string speed, string state);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/GinServiceError", ReplyAction="http://tempuri.org/IGinClientService/GinServiceErrorResponse")]
+        void GinServiceError(string message);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -105,12 +114,12 @@ namespace GinClientApp.GinClientService {
                 base(callbackInstance, binding, remoteAddress) {
         }
         
-        public bool AddRepository(string physicalDirectory, string mountpoint, string name, string url) {
-            return base.Channel.AddRepository(physicalDirectory, mountpoint, name, url);
+        public bool AddRepository(string physicalDirectory, string mountpoint, string name, string commandline) {
+            return base.Channel.AddRepository(physicalDirectory, mountpoint, name, commandline);
         }
         
-        public System.Threading.Tasks.Task<bool> AddRepositoryAsync(string physicalDirectory, string mountpoint, string name, string url) {
-            return base.Channel.AddRepositoryAsync(physicalDirectory, mountpoint, name, url);
+        public System.Threading.Tasks.Task<bool> AddRepositoryAsync(string physicalDirectory, string mountpoint, string name, string commandline) {
+            return base.Channel.AddRepositoryAsync(physicalDirectory, mountpoint, name, commandline);
         }
         
         public bool UnmountRepository(string repoName) {
@@ -167,6 +176,14 @@ namespace GinClientApp.GinClientService {
         
         public System.Threading.Tasks.Task<bool> StashFileAsync(string repoName, string filepath) {
             return base.Channel.StashFileAsync(repoName, filepath);
+        }
+        
+        public void DownloadUpdateInfo(string repoName) {
+            base.Channel.DownloadUpdateInfo(repoName);
+        }
+        
+        public System.Threading.Tasks.Task DownloadUpdateInfoAsync(string repoName) {
+            return base.Channel.DownloadUpdateInfoAsync(repoName);
         }
     }
 }

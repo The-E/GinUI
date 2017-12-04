@@ -44,6 +44,9 @@
     <Reference Include="Microsoft.WindowsAPICodePack.ShellExtensions, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.WindowsAPICodePack-Shell.1.1.0.0\lib\Microsoft.WindowsAPICodePack.ShellExtensions.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -86,6 +89,12 @@
       <DependentUpon>ProgressDisplay.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RepoManagement.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RepoManagement.Designer.cs">
+      <DependentUpon>RepoManagement.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="FileTransferProgress.resx">
       <DependentUpon>FileTransferProgress.cs</DependentUpon>
     </EmbeddedResource>
@@ -104,6 +113,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="RepoManagement.resx">
+      <DependentUpon>RepoManagement.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Connected Services\GinClientService\GinClientLibrary.xsd">
       <SubType>Designer</SubType>
     </None>
