@@ -22,11 +22,11 @@ namespace GinClientService
         protected override void OnStart(string[] args)
         {
             //TODO: Remove before release!
-            //Debugger.Launch();
+            Debugger.Launch();
 
             _serviceHost?.Close();
 
-            // Create a ServiceHost for the CalculatorService type and 
+            // CreateDirectories a ServiceHost for the CalculatorService type and 
             // provide the base address.
             _serviceHost = new ServiceHost(typeof(GinClientService));
 

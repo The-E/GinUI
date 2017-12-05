@@ -52,6 +52,30 @@ namespace GinClientLibrary
             return Repositories.Single(r => string.Compare(r.Name, name, true) == 0);
         }
 
+        public void Logout()
+        {
+            lock (this)
+            {
+                var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        FileName = "cmd.exe",
+                        WorkingDirectory = @"C:\",
+                        Arguments = "/C gin.exe logout",
+                        CreateNoWindow = true,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        RedirectStandardInput = true,
+                        UseShellExecute = false
+                    }
+                };
+                
+                process.Start();
+            }
+        }
+
         public bool Login(string username, string password)
         {
             //if you wanna do the POST request in the Windows client separately, you can just 
@@ -85,11 +109,9 @@ namespace GinClientLibrary
                 _output.Clear();
                 process.Start();
                 process.BeginOutputReadLine();
-                var error = process.StandardError.ReadToEnd();
-                while (!_output.ToString().Contains("Password"))
-                {
-                }
                 process.StandardInput.WriteLine(password);
+                var error = process.StandardError.ReadToEnd();
+                
                 process.WaitForExit();
 
                 if (!string.IsNullOrEmpty(error))
@@ -195,9 +217,10 @@ namespace GinClientLibrary
 
             repo.FileOperationStarted += Repo_FileOperationStarted;
             repo.FileOperationCompleted += Repo_FileOperationCompleted;
-            repo.FileOperationProgress += _repo_FileOperationProgress;
+            repo.FileOperationProgress += Repo_FileOperationProgress;
             repo.FileOperationError += RepoOnFileOperationError;
             MountRepository(repo);
+            repo.CreateDirectories();
             repo.Initialize();
 
             Repositories.Add(repo);
@@ -211,7 +234,7 @@ namespace GinClientLibrary
 
         public event FileOperationProgressHandler FileOperationProgress;
 
-        private void _repo_FileOperationProgress(object sender, string message)
+        private void Repo_FileOperationProgress(object sender, string message)
         {
             try
             {

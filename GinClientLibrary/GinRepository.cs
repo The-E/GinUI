@@ -27,8 +27,7 @@ namespace GinClientLibrary
         }
 
         private static readonly StringBuilder _output = new StringBuilder("");
-
-        private readonly FileSystemWatcher _fsWatcher;
+        
 
         private Dictionary<string, FileStatus> _scache;
 
@@ -41,21 +40,7 @@ namespace GinClientLibrary
             DokanInterface = new DokanInterface(this, false);
             DokanInterface.FileOperationStarted += DokanInterface_FileOperationStarted;
             DokanInterface.FileOperationCompleted += DokanInterface_FileOperationCompleted;
-
-            _fsWatcher = new FileSystemWatcher(physicalDirectory.FullName)
-            {
-                NotifyFilter = NotifyFilters.Size | NotifyFilters.FileName |
-                               NotifyFilters.Attributes,
-                IncludeSubdirectories = true,
-                Filter = "*.*"
-            };
-
-            _fsWatcher.Changed += FsWatcherOnChanged;
-            _fsWatcher.Created += FsWatcherOnCreated;
-            _fsWatcher.Deleted += FsWatcherOnDeleted;
-            _fsWatcher.Renamed += FsWatcherOnRenamed;
-
-            _fsWatcher.EnableRaisingEvents = false;
+            
         }
 
 
@@ -247,11 +232,16 @@ namespace GinClientLibrary
 
         //TODO: Implement this
         /// <summary>
-        ///     Creates a new reopository folder from scratch
+        ///     Creates a new repository folder from scratch
         /// </summary>
         /// <returns></returns>
-        public bool Create()
+        public bool CreateDirectories()
         {
+            if (!Directory.Exists(PhysicalDirectory.FullName))
+                Directory.CreateDirectory(PhysicalDirectory.FullName);
+            if (!Directory.Exists(Mountpoint.FullName))
+                Directory.CreateDirectory(Mountpoint.FullName);
+
             return true;
         }
 
@@ -464,7 +454,6 @@ namespace GinClientLibrary
                 if (disposing)
                 {
                     var res = Dokan.RemoveMountPoint(Mountpoint.FullName.Trim('\\'));
-                    _fsWatcher.Dispose();
                 }
 
             // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.

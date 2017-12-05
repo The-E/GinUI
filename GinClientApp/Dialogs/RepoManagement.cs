@@ -1,13 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using GinClientApp.Dialogs;
 using GinClientApp.GinClientService;
@@ -59,6 +53,7 @@ namespace GinClientApp
             txtRepoName.Text = _selectedRepository.Name;
             txtGinCommandline.Text = _selectedRepository.Commandline;
             txtMountpoint.Text = _selectedRepository.Mountpoint.FullName;
+            txtPhysdir.Text = _selectedRepository.PhysicalDirectory.FullName;
             _suppressEvents = false;
             EnableControls();
         }
