@@ -182,8 +182,7 @@ namespace GinClientLibrary
             {
                 GetCommandLineOutputEvent("cmd.exe", "/c gin.exe get-content " + filename + " --json", directoryName,
                     out var error);
-
-                //var res = GetCommandLineOutput("cmd.exe", "/c gin.exe get-content " + filename, directoryName, out string error);
+                
 
                 ReadRepoStatus();
 
