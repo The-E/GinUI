@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.ServiceModel;
 using System.ServiceProcess;
+using GinClientLibrary;
 
 namespace GinClientService
 {
@@ -37,6 +38,8 @@ namespace GinClientService
 
         protected override void OnStop()
         {
+            RepositoryManager.Instance.Logout();
+
             if (_serviceHost == null) return;
             _serviceHost.Close();
             _serviceHost = null;

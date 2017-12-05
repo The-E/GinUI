@@ -93,7 +93,7 @@ namespace GinClientLibrary
                         WindowStyle = ProcessWindowStyle.Hidden,
                         FileName = "cmd.exe",
                         WorkingDirectory = @"C:\",
-                        Arguments = "/C gin.exe login " + username,
+                        Arguments = @"/C gin.exe login " + username,
                         CreateNoWindow = true,
                         RedirectStandardOutput = true,
                         RedirectStandardError = true,
@@ -121,16 +121,6 @@ namespace GinClientLibrary
             return true;
         }
         
-
-        public string GetPasswordForUrl(string url)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string GetUserNameForUrl(string url)
-        {
-            throw new NotImplementedException();
-        }
 
         public void MountAllRepositories()
         {
@@ -190,8 +180,8 @@ namespace GinClientLibrary
             repo.FileOperationCompleted += Repo_FileOperationCompleted;
             repo.FileOperationProgress += Repo_FileOperationProgress;
             repo.FileOperationError += RepoOnFileOperationError;
-            MountRepository(repo);
             repo.CreateDirectories();
+            MountRepository(repo);
             repo.Initialize();
 
             Repositories.Add(repo);
@@ -268,6 +258,5 @@ namespace GinClientLibrary
                 return 0;
             }
         }
-        
     }
 }

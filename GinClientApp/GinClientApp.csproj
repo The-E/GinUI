@@ -86,7 +86,6 @@
     <Compile Include="Dialogs\GetUserCredentials.Designer.cs">
       <DependentUpon>GetUserCredentials.cs</DependentUpon>
     </Compile>
-    <Compile Include="Extensions\DirectoryInfoExtension.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
