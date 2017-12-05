@@ -41,9 +41,10 @@ namespace GinClientService
             repo.DownloadUpdateInfo();
         }
 
-        GinRepositoryData[] IGinClientService.GetRepositoryList()
+        string IGinClientService.GetRepositoryList()
         {
-            return RepositoryManager.Instance.Repositories.Select(repo => repo as GinRepositoryData).ToArray();
+            var result = RepositoryManager.Instance.Repositories.Select(repo => repo as GinRepositoryData).ToArray();
+            return JsonConvert
         }
 
         bool IGinClientService.Login(string username, string password)

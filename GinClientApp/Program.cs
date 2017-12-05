@@ -40,6 +40,9 @@ namespace GinClientApp
             try
             {
                 _client = new GinClientServiceClient(new InstanceContext(this));
+
+                if (_client.InnerChannel.State == CommunicationState.Faulted)
+                    throw new Exception();
             }
             catch
             {
@@ -140,7 +143,7 @@ namespace GinClientApp
         {
             var menuitems = new List<MenuItem>();
 
-            var repositories = _client.GetRepositoryList();
+            var repositories = JsonConvert.DeserializeObject<GinRepositoryData[]>(_client.GetRepositoryList());
 
             foreach (var repo in repositories)
             {

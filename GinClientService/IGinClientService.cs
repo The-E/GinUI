@@ -24,7 +24,7 @@ namespace GinClientService
         bool Login(string username, string password);
 
         [OperationContract]
-        GinRepositoryData[] GetRepositoryList();
+        string GetRepositoryList();
 
         [OperationContract]
         bool UpdateRepository(string repoName, GinRepositoryData data);

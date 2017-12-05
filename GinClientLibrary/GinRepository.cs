@@ -12,6 +12,7 @@ using static GinClientLibrary.DokanInterface;
 
 namespace GinClientLibrary
 {
+    [DataContract]
     public class GinRepository : GinRepositoryData, IDisposable
     {
         /// <summary>
@@ -86,7 +87,7 @@ namespace GinClientLibrary
             {
                 DokanInterface.Initialize();
             }
-            catch (DokanInterfaceException e)
+            catch (Exception e)
             {
                 OnFileOperationError(e.Message);
             }
