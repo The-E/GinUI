@@ -196,7 +196,12 @@ namespace GinClientLibrary
         public void UnmountRepository(GinRepository repo)
         {
             repo.Dispose();
-            //_repothreads[repo].Abort();
+        }
+
+        public void DeleteRepository(GinRepository repo)
+        {
+            UnmountRepository(repo);
+            repo.DeleteRepository();
         }
 
         public void UnmountAllRepositories()

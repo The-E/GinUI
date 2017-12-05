@@ -27,6 +27,12 @@ namespace GinClientApp.GinClientService {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/UnmountRepository", ReplyAction="http://tempuri.org/IGinClientService/UnmountRepositoryResponse")]
         System.Threading.Tasks.Task<bool> UnmountRepositoryAsync(string repoName);
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/DeleteRepository", ReplyAction="http://tempuri.org/IGinClientService/DeleteRepositoryResponse")]
+        void DeleteRepository(string repoName);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/DeleteRepository", ReplyAction="http://tempuri.org/IGinClientService/DeleteRepositoryResponse")]
+        System.Threading.Tasks.Task DeleteRepositoryAsync(string repoName);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/UnmmountAllRepositories", ReplyAction="http://tempuri.org/IGinClientService/UnmmountAllRepositoriesResponse")]
         bool UnmmountAllRepositories();
         
@@ -128,6 +134,14 @@ namespace GinClientApp.GinClientService {
         
         public System.Threading.Tasks.Task<bool> UnmountRepositoryAsync(string repoName) {
             return base.Channel.UnmountRepositoryAsync(repoName);
+        }
+        
+        public void DeleteRepository(string repoName) {
+            base.Channel.DeleteRepository(repoName);
+        }
+        
+        public System.Threading.Tasks.Task DeleteRepositoryAsync(string repoName) {
+            return base.Channel.DeleteRepositoryAsync(repoName);
         }
         
         public bool UnmmountAllRepositories() {

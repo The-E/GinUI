@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DokanInterface.cs" />
+    <Compile Include="Extensions\DirectoryInfoExtension.cs" />
     <Compile Include="GinRepository.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

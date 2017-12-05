@@ -15,6 +15,9 @@ namespace GinClientService
         bool UnmountRepository(string repoName);
 
         [OperationContract]
+        void DeleteRepository(string repoName);
+
+        [OperationContract]
         bool UnmmountAllRepositories();
 
         [OperationContract]

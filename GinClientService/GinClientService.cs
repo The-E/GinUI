@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.ServiceModel;
 using GinClientLibrary;
@@ -75,6 +76,19 @@ namespace GinClientService
                 RepositoryManager.Instance.GetRepoByName(repoName));
             return true;
         }
+
+        void IGinClientService.DeleteRepository(string repoName)
+        {
+            try
+            {
+                var repo = RepositoryManager.Instance.GetRepoByName(repoName);
+                RepositoryManager.Instance.DeleteRepository(repo);
+            }
+            catch (Exception e)
+            {
+            }
+        }
+
 
         bool IGinClientService.UpdateRepository(string repoName, GinRepository data)
         {

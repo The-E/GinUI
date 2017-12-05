@@ -62,7 +62,7 @@ namespace GinClientApp
         {
             foreach (var ctrl in Controls)
             {
-                if (ctrl == txtMountpoint || ctrl == txtPhysdir) continue;
+                if (ctrl == txtMountpoint || ctrl == txtPhysdir || ctrl == txtRepoName) continue;
 
                 ((Control) ctrl).Enabled = true;
             }
@@ -107,10 +107,19 @@ namespace GinClientApp
 
         private void txtRepoName_TextChanged(object sender, EventArgs e)
         {
-            if (_suppressEvents) return;
-            if (_selectedRepository == null) return;
+            //if (_suppressEvents) return;
+            //if (_selectedRepository == null) return;
 
-            _selectedRepository.Name = txtRepoName.Text;
+            //_repositories.Remove(_selectedRepository);
+            //_selectedRepository.Name = txtRepoName.Text;
+            //_repositories.Add(_selectedRepository);
+
+            //lvwRepositories.Items.Clear();
+
+            //foreach (var repo in _repositories)
+            //{
+            //    lvwRepositories.Items.Add(repo.Name);
+            //}
         }
 
         private void txtGinCommandline_TextChanged(object sender, EventArgs e)
@@ -131,35 +140,67 @@ namespace GinClientApp
                 var cmdline = getcmdlinedlg.Commandline;
 
                 var elems = cmdline.Split(' ');
-                if (elems.Length == 3)
-                {
-                    var repoAddress = elems[2];
-                    var repoName = repoAddress.Split('/')[1];
-                    var repoPhysAddress = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
-                                          @"\gnode\GinWindowsClient\Repositories\" + repoName;
-                    var repoMountpoint = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) +
-                                         @"\Gin Repositories\" + repoName;
+                if (elems.Length != 3) return; //TODO Error handling here
+                var repoAddress = elems[2];
+                var repoName = repoAddress.Split('/')[1];
+                var repoPhysAddress = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
+                                      @"\gnode\GinWindowsClient\Repositories\" + repoName;
+                var repoMountpoint = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) +
+                                     @"\Gin Repositories\" + repoName;
 
-                    var newRepo = new GinRepository(new DirectoryInfo(repoPhysAddress),
-                        new DirectoryInfo(repoMountpoint), repoName, cmdline);
+                var newRepo = new GinRepository(new DirectoryInfo(repoPhysAddress),
+                    new DirectoryInfo(repoMountpoint), repoName, cmdline);
 
-                    _repositories.Add(newRepo);
+                _repositories.Add(newRepo);
 
-                    lvwRepositories.Items.Clear();
-                    foreach (var repo in _repositories)
-                        lvwRepositories.Items.Add(repo.Name);
-                }
-
+                lvwRepositories.Items.Clear();
+                foreach (var repo in _repositories)
+                    lvwRepositories.Items.Add(repo.Name);
             }
-
-            //TODO: Make this do something. Possible solution: Pop up that asks for a gin get commandline and generates a name based on that
-            //TODO: Then make the user enter the other required info
-            //TODO: Also, implement sanity checking for entered data.
         }
 
         private void btnRemove_Click(object sender, EventArgs e)
         {
+            if (_selectedRepository == null) return;
 
+            var res = MessageBox.Show("This will delete the selected Repository and all associated data. Continue?",
+                "Gin Client", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            if (res != DialogResult.Yes) return;
+
+            _client.DeleteRepository(_selectedRepository.Name);
+            _repositories.Remove(_selectedRepository);
+            lvwRepositories.Items.Clear();
+
+            foreach (var repo in _repositories)
+                lvwRepositories.Items.Add(repo.Name);
+        }
+
+        private string PickDirectory(string defaultDir)
+        {
+            var dirPick = new FolderBrowserDialog();
+            dirPick.SelectedPath = defaultDir;
+            dirPick.ShowNewFolderButton = true;
+
+            return dirPick.ShowDialog() == DialogResult.OK ? dirPick.SelectedPath : defaultDir;
+        }
+
+        private void btnPickMountPnt_Click(object sender, EventArgs e)
+        {
+            var newDir = PickDirectory(txtMountpoint.Text);
+
+            if (string.Compare(newDir, txtMountpoint.Text) == 0) return;
+
+            txtMountpoint.Text = newDir;
+        }
+
+        private void btnPickPhysDir_Click(object sender, EventArgs e)
+        {
+            var newDir = PickDirectory(txtPhysdir.Text);
+
+            if (string.Compare(newDir, txtPhysdir.Text) == 0) return;
+
+            txtPhysdir.Text = newDir;
         }
     }
 }

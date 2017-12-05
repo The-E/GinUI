@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using DokanNet;
+using GinClientApp.Extensions;
 using Newtonsoft.Json;
 using static GinClientLibrary.DokanInterface;
 
@@ -235,14 +236,24 @@ namespace GinClientLibrary
         ///     Creates a new repository folder from scratch
         /// </summary>
         /// <returns></returns>
-        public bool CreateDirectories()
+        public void CreateDirectories()
         {
             if (!Directory.Exists(PhysicalDirectory.FullName))
                 Directory.CreateDirectory(PhysicalDirectory.FullName);
             if (!Directory.Exists(Mountpoint.FullName))
                 Directory.CreateDirectory(Mountpoint.FullName);
 
-            return true;
+            if (PhysicalDirectory.IsEmpty())
+                GetCommandLineOutput("cmd.exe", Commandline, PhysicalDirectory.FullName, out string error);
+        }
+
+        public void DeleteRepository()
+        {
+            PhysicalDirectory.Empty();
+            Mountpoint.Empty();
+
+            Directory.Delete(PhysicalDirectory.FullName);
+            Directory.Delete(Mountpoint.FullName);
         }
 
         internal struct filestatus

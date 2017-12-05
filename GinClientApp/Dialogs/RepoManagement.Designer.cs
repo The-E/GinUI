@@ -41,12 +41,15 @@
             this.label5 = new System.Windows.Forms.Label();
             this.txtPhysdir = new System.Windows.Forms.TextBox();
             this.btnPickPhysDir = new System.Windows.Forms.Button();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // lvwRepositories
             // 
             this.lvwRepositories.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.lvwRepositories.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1});
             this.lvwRepositories.Location = new System.Drawing.Point(13, 13);
             this.lvwRepositories.Name = "lvwRepositories";
             this.lvwRepositories.Size = new System.Drawing.Size(209, 320);
@@ -146,6 +149,7 @@
             this.btnPickMountPnt.TabIndex = 12;
             this.btnPickMountPnt.Text = "...";
             this.btnPickMountPnt.UseVisualStyleBackColor = true;
+            this.btnPickMountPnt.Click += new System.EventHandler(this.btnPickMountPnt_Click);
             // 
             // label5
             // 
@@ -176,6 +180,7 @@
             this.btnPickPhysDir.TabIndex = 15;
             this.btnPickPhysDir.Text = "...";
             this.btnPickPhysDir.UseVisualStyleBackColor = true;
+            this.btnPickPhysDir.Click += new System.EventHandler(this.btnPickPhysDir_Click);
             // 
             // RepoManagement
             // 
@@ -219,5 +224,6 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox txtPhysdir;
         private System.Windows.Forms.Button btnPickPhysDir;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
     }
 }
