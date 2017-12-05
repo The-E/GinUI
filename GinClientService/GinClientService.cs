@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.ServiceModel;
 using GinClientLibrary;
+using Newtonsoft.Json;
 
 namespace GinClientService
 {
@@ -44,7 +45,7 @@ namespace GinClientService
         string IGinClientService.GetRepositoryList()
         {
             var result = RepositoryManager.Instance.Repositories.Select(repo => repo as GinRepositoryData).ToArray();
-            return JsonConvert
+            return JsonConvert.SerializeObject(result);
         }
 
         bool IGinClientService.Login(string username, string password)

@@ -46,10 +46,10 @@ namespace GinClientApp.GinClientService {
         System.Threading.Tasks.Task<bool> LoginAsync(string username, string password);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/GetRepositoryList", ReplyAction="http://tempuri.org/IGinClientService/GetRepositoryListResponse")]
-        GinClientLibrary.GinRepositoryData[] GetRepositoryList();
+        string GetRepositoryList();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/GetRepositoryList", ReplyAction="http://tempuri.org/IGinClientService/GetRepositoryListResponse")]
-        System.Threading.Tasks.Task<GinClientLibrary.GinRepositoryData[]> GetRepositoryListAsync();
+        System.Threading.Tasks.Task<string> GetRepositoryListAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/UpdateRepository", ReplyAction="http://tempuri.org/IGinClientService/UpdateRepositoryResponse")]
         bool UpdateRepository(string repoName, GinClientLibrary.GinRepositoryData data);
@@ -160,11 +160,11 @@ namespace GinClientApp.GinClientService {
             return base.Channel.LoginAsync(username, password);
         }
         
-        public GinClientLibrary.GinRepositoryData[] GetRepositoryList() {
+        public string GetRepositoryList() {
             return base.Channel.GetRepositoryList();
         }
         
-        public System.Threading.Tasks.Task<GinClientLibrary.GinRepositoryData[]> GetRepositoryListAsync() {
+        public System.Threading.Tasks.Task<string> GetRepositoryListAsync() {
             return base.Channel.GetRepositoryListAsync();
         }
         

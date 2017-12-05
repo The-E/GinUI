@@ -25,7 +25,7 @@ namespace GinClientApp
 
         private void RepoManagement_Load(object sender, EventArgs e)
         {
-            _repositories = new List<GinRepositoryData>(_client.GetRepositoryList());
+            _repositories = new List<GinRepositoryData>(JsonConvert.DeserializeObject<GinRepositoryData[]>(_client.GetRepositoryList()));
 
             foreach (var repo in _repositories)
                 lvwRepositories.Items.Add(repo.Name);
