@@ -24,10 +24,10 @@ namespace GinClientService
         bool Login(string username, string password);
 
         [OperationContract]
-        List<GinRepository> GetRepositoryList();
+        List<GinRepositoryData> GetRepositoryList();
 
         [OperationContract]
-        bool UpdateRepository(string repoName, GinRepository data);
+        bool UpdateRepository(string repoName, GinRepositoryData data);
 
         [OperationContract]
         bool RetrieveFile(string repoName, string filepath);

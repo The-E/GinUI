@@ -12,9 +12,13 @@ using static GinClientLibrary.DokanInterface;
 
 namespace GinClientLibrary
 {
-    [DataContract]
-    public class GinRepository : IDisposable
+    public class GinRepository : GinRepositoryData, IDisposable
     {
+        /// <summary>
+        ///     A Dokan driver interface
+        /// </summary>
+        private DokanInterface DokanInterface { get; }
+
         public enum FileStatus
         {
             InAnnex,
@@ -44,6 +48,13 @@ namespace GinClientLibrary
             
         }
 
+        public GinRepository(GinRepositoryData data)
+        {
+            Mountpoint = data.Mountpoint;
+            PhysicalDirectory = data.PhysicalDirectory;
+            Name = data.Name;
+            Commandline = data.Commandline;
+        }
 
         public Dictionary<string, FileStatus> StatusCache =>
             _scache ?? (_scache = new Dictionary<string, FileStatus>());
@@ -59,38 +70,6 @@ namespace GinClientLibrary
                 Mount();
             else
                 OnFileOperationError(error);
-        }
-
-        private void ResetRepoStatus()
-        {
-            lock (this)
-            {
-                if (_scache == null)
-                    _scache = new Dictionary<string, FileStatus>();
-                else
-                    _scache.Clear();
-                ReadRepoStatus();
-            }
-        }
-
-        private void FsWatcherOnRenamed(object sender, RenamedEventArgs renamedEventArgs)
-        {
-            ResetRepoStatus();
-        }
-
-        private void FsWatcherOnDeleted(object sender, FileSystemEventArgs fileSystemEventArgs)
-        {
-            ResetRepoStatus();
-        }
-
-        private void FsWatcherOnChanged(object sender, FileSystemEventArgs fileSystemEventArgs)
-        {
-            ResetRepoStatus();
-        }
-
-        private void FsWatcherOnCreated(object sender, FileSystemEventArgs fileSystemEventArgs)
-        {
-            ResetRepoStatus();
         }
 
         public void Initialize()
@@ -264,41 +243,6 @@ namespace GinClientLibrary
 
         #region Properties
 
-        /// <summary>
-        ///     Name of the Repository, i.e. "Experiment data"
-        /// </summary>
-        [DataMember]
-        public string Name { get; set; }
-
-        /// <summary>
-        ///     Path to a directory containing the actual files
-        /// </summary>
-        [DataMember]
-        public DirectoryInfo PhysicalDirectory { get; set; }
-
-        /// <summary>
-        ///     Path where the Repo will be mounted
-        /// </summary>
-        [DataMember]
-        public DirectoryInfo Mountpoint { get; set; }
-
-        /// <summary>
-        ///     A Dokan driver interface
-        /// </summary>
-        private DokanInterface DokanInterface { get; }
-
-        /// <summary>
-        ///     The gin commandline used for checkouts, i.e. "gin get achilleas/gin-cli-builds"
-        /// </summary>
-        [DataMember]
-        public string Commandline { get; set; }
-
-        /// <summary>
-        ///     The server address, i.e. gin.g-node.org
-        /// </summary>
-        [DataMember]
-        public string ServerAddress { get; set; }
-
         #endregion
 
         #region Dokan Interface Events
@@ -457,7 +401,6 @@ namespace GinClientLibrary
         #region IDisposable Support
 
         private bool _disposedValue; // To detect redundant calls
-
 
         protected virtual void Dispose(bool disposing)
         {

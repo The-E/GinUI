@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.ServiceModel;
 using GinClientLibrary;
 
@@ -40,9 +41,9 @@ namespace GinClientService
             repo.DownloadUpdateInfo();
         }
 
-        List<GinRepository> IGinClientService.GetRepositoryList()
+        List<GinRepositoryData> IGinClientService.GetRepositoryList()
         {
-            return RepositoryManager.Instance.Repositories;
+            return RepositoryManager.Instance.Repositories.Select(repo => repo as GinRepositoryData).ToList();
         }
 
         bool IGinClientService.Login(string username, string password)
@@ -90,7 +91,7 @@ namespace GinClientService
         }
 
 
-        bool IGinClientService.UpdateRepository(string repoName, GinRepository data)
+        bool IGinClientService.UpdateRepository(string repoName, GinRepositoryData data)
         {
             return RepositoryManager.Instance.UpdateRepository(repoName, data);
         }

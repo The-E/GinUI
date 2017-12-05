@@ -46,16 +46,16 @@ namespace GinClientApp.GinClientService {
         System.Threading.Tasks.Task<bool> LoginAsync(string username, string password);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/GetRepositoryList", ReplyAction="http://tempuri.org/IGinClientService/GetRepositoryListResponse")]
-        GinClientLibrary.GinRepository[] GetRepositoryList();
+        GinClientLibrary.GinRepositoryData[] GetRepositoryList();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/GetRepositoryList", ReplyAction="http://tempuri.org/IGinClientService/GetRepositoryListResponse")]
-        System.Threading.Tasks.Task<GinClientLibrary.GinRepository[]> GetRepositoryListAsync();
+        System.Threading.Tasks.Task<GinClientLibrary.GinRepositoryData[]> GetRepositoryListAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/UpdateRepository", ReplyAction="http://tempuri.org/IGinClientService/UpdateRepositoryResponse")]
-        bool UpdateRepository(string repoName, GinClientLibrary.GinRepository data);
+        bool UpdateRepository(string repoName, GinClientLibrary.GinRepositoryData data);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/UpdateRepository", ReplyAction="http://tempuri.org/IGinClientService/UpdateRepositoryResponse")]
-        System.Threading.Tasks.Task<bool> UpdateRepositoryAsync(string repoName, GinClientLibrary.GinRepository data);
+        System.Threading.Tasks.Task<bool> UpdateRepositoryAsync(string repoName, GinClientLibrary.GinRepositoryData data);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/RetrieveFile", ReplyAction="http://tempuri.org/IGinClientService/RetrieveFileResponse")]
         bool RetrieveFile(string repoName, string filepath);
@@ -160,19 +160,19 @@ namespace GinClientApp.GinClientService {
             return base.Channel.LoginAsync(username, password);
         }
         
-        public GinClientLibrary.GinRepository[] GetRepositoryList() {
+        public GinClientLibrary.GinRepositoryData[] GetRepositoryList() {
             return base.Channel.GetRepositoryList();
         }
         
-        public System.Threading.Tasks.Task<GinClientLibrary.GinRepository[]> GetRepositoryListAsync() {
+        public System.Threading.Tasks.Task<GinClientLibrary.GinRepositoryData[]> GetRepositoryListAsync() {
             return base.Channel.GetRepositoryListAsync();
         }
         
-        public bool UpdateRepository(string repoName, GinClientLibrary.GinRepository data) {
+        public bool UpdateRepository(string repoName, GinClientLibrary.GinRepositoryData data) {
             return base.Channel.UpdateRepository(repoName, data);
         }
         
-        public System.Threading.Tasks.Task<bool> UpdateRepositoryAsync(string repoName, GinClientLibrary.GinRepository data) {
+        public System.Threading.Tasks.Task<bool> UpdateRepositoryAsync(string repoName, GinClientLibrary.GinRepositoryData data) {
             return base.Channel.UpdateRepositoryAsync(repoName, data);
         }
         

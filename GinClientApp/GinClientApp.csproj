@@ -150,6 +150,7 @@
     </None>
     <None Include="packages.config" />
     <None Include="Properties\DataSources\GinClientLibrary.GinRepository.datasource" />
+    <None Include="Properties\DataSources\GinClientLibrary.GinRepositoryData.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

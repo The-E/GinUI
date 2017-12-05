@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using DokanNet;
 using Newtonsoft.Json;
 
 namespace GinClientLibrary
@@ -14,22 +15,18 @@ namespace GinClientLibrary
     /// </summary>
     public class RepositoryManager
     {
-        public delegate void FileOperationProgressHandler(string filename, GinRepository repository, int progress,
+        public delegate void FileOperationProgressHandler(string filename, GinRepositoryData repository, int progress,
             string speed, string state);
 
         public delegate void
-            FileRetrievalCompletedHandler(object sender, GinRepository repo, string file, bool success);
+            FileRetrievalCompletedHandler(object sender, GinRepositoryData repo, string file, bool success);
 
-        public delegate void FileRetrievalStartedHandler(object sender, GinRepository repo, string file);
+        public delegate void FileRetrievalStartedHandler(object sender, GinRepositoryData repo, string file);
 
         public delegate void RepositoryOperationErrorHandler(object sender,
             GinRepository.FileOperationErrorEventArgs message);
 
         private static RepositoryManager _instance;
-
-        //private readonly Dictionary<GinRepository, Thread> _repothreads = new Dictionary<GinRepository, Thread>();
-
-        private readonly List<GinServer> _servers = new List<GinServer>();
 
         private List<GinRepository> _repositories;
         private static readonly StringBuilder _output = new StringBuilder("");
@@ -123,34 +120,7 @@ namespace GinClientLibrary
 
             return true;
         }
-
-        public bool AddCredentials(string url, string username, string password)
-        {
-            var serverExists = false;
-
-            foreach (var server in _servers)
-            {
-                if (serverExists)
-                    continue;
-                serverExists = string.Compare(server.URL, url, true) == 0;
-
-                if (serverExists)
-                {
-                    var serv = _servers[_servers.IndexOf(server)];
-                    serv.URL = url;
-                    serv.Password = password;
-                    serv.Username = username;
-                }
-            }
-
-            if (!serverExists)
-            {
-                var newServer = new GinServer {URL = url, Username = username, Password = password};
-                _servers.Add(newServer);
-            }
-
-            return true;
-        }
+        
 
         public string GetPasswordForUrl(string url)
         {
@@ -170,24 +140,20 @@ namespace GinClientLibrary
 
         private void MountRepository(GinRepository repo)
         {
-            //if (!_repothreads.ContainsKey(repo))
-            //{
             var thread = new Thread(repo.Mount);
             thread.Start();
-
-            //_repothreads.Add(repo, thread);
-            //}
         }
 
-        public bool UpdateRepository(string repoName, GinRepository data)
+        public bool UpdateRepository(string repoName, GinRepositoryData data)
         {
             lock (this)
             {
                 var repo = Repositories.Single(r => string.Compare(r.Name, repoName) == 0);
                 UnmountRepository(repo);
                 Repositories.Remove(repo);
-                Repositories.Add(data);
-                MountRepository(data);
+                repo = new GinRepository(data);
+                Repositories.Add(repo);
+                MountRepository(repo);
 
                 return true;
             }
@@ -195,7 +161,7 @@ namespace GinClientLibrary
 
         public void UnmountRepository(GinRepository repo)
         {
-            repo.Dispose();
+            Dokan.RemoveMountPoint(repo.Mountpoint.FullName.Trim('\\'));
         }
 
         public void DeleteRepository(GinRepository repo)
@@ -302,12 +268,6 @@ namespace GinClientLibrary
                 return 0;
             }
         }
-
-        private struct GinServer
-        {
-            public string URL;
-            public string Username;
-            public string Password;
-        }
+        
     }
 }
