@@ -16,10 +16,10 @@ namespace GinClientApp.GinClientService {
     public interface IGinClientService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/AddRepository", ReplyAction="http://tempuri.org/IGinClientService/AddRepositoryResponse")]
-        bool AddRepository(string physicalDirectory, string mountpoint, string name, string url);
+        bool AddRepository(string physicalDirectory, string mountpoint, string name, string commandline);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/AddRepository", ReplyAction="http://tempuri.org/IGinClientService/AddRepositoryResponse")]
-        System.Threading.Tasks.Task<bool> AddRepositoryAsync(string physicalDirectory, string mountpoint, string name, string url);
+        System.Threading.Tasks.Task<bool> AddRepositoryAsync(string physicalDirectory, string mountpoint, string name, string commandline);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/UnmountRepository", ReplyAction="http://tempuri.org/IGinClientService/UnmountRepositoryResponse")]
         bool UnmountRepository(string repoName);
@@ -27,17 +27,23 @@ namespace GinClientApp.GinClientService {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/UnmountRepository", ReplyAction="http://tempuri.org/IGinClientService/UnmountRepositoryResponse")]
         System.Threading.Tasks.Task<bool> UnmountRepositoryAsync(string repoName);
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/DeleteRepository", ReplyAction="http://tempuri.org/IGinClientService/DeleteRepositoryResponse")]
+        void DeleteRepository(string repoName);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/DeleteRepository", ReplyAction="http://tempuri.org/IGinClientService/DeleteRepositoryResponse")]
+        System.Threading.Tasks.Task DeleteRepositoryAsync(string repoName);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/UnmmountAllRepositories", ReplyAction="http://tempuri.org/IGinClientService/UnmmountAllRepositoriesResponse")]
         bool UnmmountAllRepositories();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/UnmmountAllRepositories", ReplyAction="http://tempuri.org/IGinClientService/UnmmountAllRepositoriesResponse")]
         System.Threading.Tasks.Task<bool> UnmmountAllRepositoriesAsync();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/AddCredentials", ReplyAction="http://tempuri.org/IGinClientService/AddCredentialsResponse")]
-        bool AddCredentials(string url, string username, string password);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/Login", ReplyAction="http://tempuri.org/IGinClientService/LoginResponse")]
+        bool Login(string username, string password);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/AddCredentials", ReplyAction="http://tempuri.org/IGinClientService/AddCredentialsResponse")]
-        System.Threading.Tasks.Task<bool> AddCredentialsAsync(string url, string username, string password);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/Login", ReplyAction="http://tempuri.org/IGinClientService/LoginResponse")]
+        System.Threading.Tasks.Task<bool> LoginAsync(string username, string password);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/GetRepositoryList", ReplyAction="http://tempuri.org/IGinClientService/GetRepositoryListResponse")]
         GinClientLibrary.GinRepository[] GetRepositoryList();
@@ -114,12 +120,12 @@ namespace GinClientApp.GinClientService {
                 base(callbackInstance, binding, remoteAddress) {
         }
         
-        public bool AddRepository(string physicalDirectory, string mountpoint, string name, string url) {
-            return base.Channel.AddRepository(physicalDirectory, mountpoint, name, url);
+        public bool AddRepository(string physicalDirectory, string mountpoint, string name, string commandline) {
+            return base.Channel.AddRepository(physicalDirectory, mountpoint, name, commandline);
         }
         
-        public System.Threading.Tasks.Task<bool> AddRepositoryAsync(string physicalDirectory, string mountpoint, string name, string url) {
-            return base.Channel.AddRepositoryAsync(physicalDirectory, mountpoint, name, url);
+        public System.Threading.Tasks.Task<bool> AddRepositoryAsync(string physicalDirectory, string mountpoint, string name, string commandline) {
+            return base.Channel.AddRepositoryAsync(physicalDirectory, mountpoint, name, commandline);
         }
         
         public bool UnmountRepository(string repoName) {
@@ -130,6 +136,14 @@ namespace GinClientApp.GinClientService {
             return base.Channel.UnmountRepositoryAsync(repoName);
         }
         
+        public void DeleteRepository(string repoName) {
+            base.Channel.DeleteRepository(repoName);
+        }
+        
+        public System.Threading.Tasks.Task DeleteRepositoryAsync(string repoName) {
+            return base.Channel.DeleteRepositoryAsync(repoName);
+        }
+        
         public bool UnmmountAllRepositories() {
             return base.Channel.UnmmountAllRepositories();
         }
@@ -138,12 +152,12 @@ namespace GinClientApp.GinClientService {
             return base.Channel.UnmmountAllRepositoriesAsync();
         }
         
-        public bool AddCredentials(string url, string username, string password) {
-            return base.Channel.AddCredentials(url, username, password);
+        public bool Login(string username, string password) {
+            return base.Channel.Login(username, password);
         }
         
-        public System.Threading.Tasks.Task<bool> AddCredentialsAsync(string url, string username, string password) {
-            return base.Channel.AddCredentialsAsync(url, username, password);
+        public System.Threading.Tasks.Task<bool> LoginAsync(string username, string password) {
+            return base.Channel.LoginAsync(username, password);
         }
         
         public GinClientLibrary.GinRepository[] GetRepositoryList() {

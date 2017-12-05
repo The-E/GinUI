@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using DokanNet;
+using GinClientLibrary.Extensions;
 using Newtonsoft.Json;
 using static GinClientLibrary.DokanInterface;
 
@@ -27,35 +28,20 @@ namespace GinClientLibrary
         }
 
         private static readonly StringBuilder _output = new StringBuilder("");
-
-        private readonly FileSystemWatcher _fsWatcher;
+        
 
         private Dictionary<string, FileStatus> _scache;
 
-        public GinRepository(DirectoryInfo physicalDirectory, DirectoryInfo mountpoint, string name, string url)
+        public GinRepository(DirectoryInfo physicalDirectory, DirectoryInfo mountpoint, string name, string commandline)
         {
             PhysicalDirectory = physicalDirectory;
             Mountpoint = mountpoint;
             Name = name;
-            URL = url;
+            Commandline = commandline;
             DokanInterface = new DokanInterface(this, false);
             DokanInterface.FileOperationStarted += DokanInterface_FileOperationStarted;
             DokanInterface.FileOperationCompleted += DokanInterface_FileOperationCompleted;
-
-            _fsWatcher = new FileSystemWatcher(physicalDirectory.FullName)
-            {
-                NotifyFilter = NotifyFilters.Size | NotifyFilters.Size | NotifyFilters.FileName |
-                               NotifyFilters.Attributes,
-                IncludeSubdirectories = true,
-                Filter = "*.*"
-            };
-
-            _fsWatcher.Changed += FsWatcherOnChanged;
-            _fsWatcher.Created += FsWatcherOnCreated;
-            _fsWatcher.Deleted += FsWatcherOnDeleted;
-            _fsWatcher.Renamed += FsWatcherOnRenamed;
-
-            _fsWatcher.EnableRaisingEvents = false;
+            
         }
 
 
@@ -245,18 +231,29 @@ namespace GinClientLibrary
             }
         }
 
-        public bool Login()
+        //TODO: Implement this
+        /// <summary>
+        ///     Creates a new repository folder from scratch
+        /// </summary>
+        /// <returns></returns>
+        public void CreateDirectories()
         {
-            //if you wanna do the POST request in the Windows client separately, you can just 
-            //POST to /api/v1/users/$USERNAME/tokens with data {"name":"gin-cli"} and header 
-            //"content-type: application/json" and "Authorization: Basic <base64 encoded $USERNAME:$PASSWORD>"
-            //default host gin.g-node.org
-            //request returns a token that needs to be saved and attached to future requests
-            //default path %userprofile%\.config\gin\, will be changed to %appdata%\gnode\gin\
+            if (!Directory.Exists(PhysicalDirectory.Parent.FullName))
+                Directory.CreateDirectory(PhysicalDirectory.Parent.FullName);
+            if (!Directory.Exists(Mountpoint.FullName))
+                Directory.CreateDirectory(Mountpoint.FullName);
 
-            //Also note: In a service context, %userprofile% evaluates to C:\Windows\system32\config\systemprofile\; %AppData% to C:\Windows\system32\config\systemprofile\Appdata\Roaming
+            if (PhysicalDirectory.IsEmpty())
+                GetCommandLineOutput("cmd.exe", "/C gin.exe get " + Commandline, PhysicalDirectory.Parent.FullName, out string error);
+        }
 
-            return true;
+        public void DeleteRepository()
+        {
+            PhysicalDirectory.Empty();
+            Mountpoint.Empty();
+
+            Directory.Delete(PhysicalDirectory.FullName);
+            Directory.Delete(Mountpoint.FullName);
         }
 
         internal struct filestatus
@@ -268,33 +265,39 @@ namespace GinClientLibrary
         #region Properties
 
         /// <summary>
-        ///     The repository's GIN url
-        /// </summary>
-        [DataMember]
-        public string URL { get; private set; }
-
-        /// <summary>
         ///     Name of the Repository, i.e. "Experiment data"
         /// </summary>
         [DataMember]
-        public string Name { get; private set; }
+        public string Name { get; set; }
 
         /// <summary>
         ///     Path to a directory containing the actual files
         /// </summary>
         [DataMember]
-        public DirectoryInfo PhysicalDirectory { get; private set; }
+        public DirectoryInfo PhysicalDirectory { get; set; }
 
         /// <summary>
         ///     Path where the Repo will be mounted
         /// </summary>
         [DataMember]
-        public DirectoryInfo Mountpoint { get; private set; }
+        public DirectoryInfo Mountpoint { get; set; }
 
         /// <summary>
         ///     A Dokan driver interface
         /// </summary>
         private DokanInterface DokanInterface { get; }
+
+        /// <summary>
+        ///     The gin commandline used for checkouts, i.e. "achilleas/gin-cli-builds"
+        /// </summary>
+        [DataMember]
+        public string Commandline { get; set; }
+
+        /// <summary>
+        ///     The server address, i.e. gin.g-node.org
+        /// </summary>
+        [DataMember]
+        public string ServerAddress { get; set; }
 
         #endregion
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.ServiceModel;
 using GinClientLibrary;
@@ -23,16 +24,12 @@ namespace GinClientService
                 callback.GinServiceError("Error while performing GIN action on Repository " + message.RepositoryName +
                                          ": " + message.Message);
         }
+        
 
-        bool IGinClientService.AddCredentials(string url, string username, string password)
-        {
-            return RepositoryManager.Instance.AddCredentials(url, username, password);
-        }
-
-        bool IGinClientService.AddRepository(string physicalDirectory, string mountpoint, string name, string url)
+        bool IGinClientService.AddRepository(string physicalDirectory, string mountpoint, string name, string commandline)
         {
             RepositoryManager.Instance.AddRepository(new DirectoryInfo(physicalDirectory),
-                new DirectoryInfo(mountpoint), name, url);
+                new DirectoryInfo(mountpoint), name, commandline);
             return true;
         }
 
@@ -46,6 +43,11 @@ namespace GinClientService
         List<GinRepository> IGinClientService.GetRepositoryList()
         {
             return RepositoryManager.Instance.Repositories;
+        }
+
+        bool IGinClientService.Login(string username, string password)
+        {
+            return RepositoryManager.Instance.Login(username, password);
         }
 
         bool IGinClientService.RetrieveFile(string repoName, string filepath)
@@ -74,6 +76,19 @@ namespace GinClientService
                 RepositoryManager.Instance.GetRepoByName(repoName));
             return true;
         }
+
+        void IGinClientService.DeleteRepository(string repoName)
+        {
+            try
+            {
+                var repo = RepositoryManager.Instance.GetRepoByName(repoName);
+                RepositoryManager.Instance.DeleteRepository(repo);
+            }
+            catch (Exception e)
+            {
+            }
+        }
+
 
         bool IGinClientService.UpdateRepository(string repoName, GinRepository data)
         {

@@ -1,9 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.ServiceModel;
+using System.Windows.Controls;
 using System.Windows.Forms;
 using GinClientApp.GinClientService;
+using GinClientLibrary;
+using Newtonsoft.Json;
+using ContextMenu = System.Windows.Forms.ContextMenu;
+using MenuItem = System.Windows.Forms.MenuItem;
 
 namespace GinClientApp
 {
@@ -31,25 +37,146 @@ namespace GinClientApp
 
         public GinApplicationContext()
         {
+            try
+            {
+                _client = new GinClientServiceClient(new InstanceContext(this));
+            }
+            catch
+            {
+                MessageBox.Show("Error while trying to access Gin Client Service", "Gin CLient Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            var saveFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
+                               @"\gnode\GinWindowsClient";
+            if (!Directory.Exists(saveFilePath))
+                Directory.CreateDirectory(saveFilePath);
+
+            #region Login
+            bool loggedIn = false;
+            if (File.Exists(saveFilePath + @"\Credentials.json"))
+            {
+                try
+                {
+                    var text = File.OpenText(saveFilePath + @"\Credentials.json").ReadToEnd();
+                    var credentials = JsonConvert.DeserializeObject<UserCredentials>(text);
+
+                    if (!_client.Login(credentials.Username, credentials.Password))
+                    {
+                        MessageBox.Show("Error while trying to log in to GIN", "Gin Client Error",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else
+                    {
+                        loggedIn = true;
+                    }
+                }
+                catch (Exception e)
+                {
+                    loggedIn = false;
+                }
+            }
+            else
+            {
+                var loginDlg = new GetUserCredentials(_client);
+                var loginResult = loginDlg.ShowDialog();
+
+                if (loginResult == DialogResult.OK)
+                {
+                    var credentials =
+                        new UserCredentials() {Username = loginDlg.Username, Password = loginDlg.Password };
+
+                    var fstream = File.CreateText(saveFilePath + @"\Credentials.json");
+                    fstream.Write(JsonConvert.SerializeObject(credentials));
+                    fstream.Flush();
+                    fstream.Close();
+
+                    loggedIn = true;
+                }
+            }
+
+            if (!loggedIn)
+                Exit(null, new EventArgs());
+            #endregion
+
+            #region Set up repositories
+
+            if (File.Exists(saveFilePath + @"\SavedRepositories.json"))
+            {
+                try
+                {
+                    var text = File.OpenText(saveFilePath + @"\SavedRepositories.json").ReadToEnd();
+                    var repos = JsonConvert.DeserializeObject<GinRepository[]>(text);
+
+                    foreach (var repo in repos)
+                    {
+                        _client.AddRepository(repo.PhysicalDirectory.FullName, repo.Mountpoint.FullName, repo.Name,
+                            repo.Commandline);
+                    }
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
+            else
+            {
+                ManageRepositoriesMenuItemHandler(null, EventArgs.Empty);
+            }
+
+            #endregion
+
             _trayIcon = new NotifyIcon
             {
-                ContextMenu = new ContextMenu(new[]
-                {
-                    new MenuItem("Exit", Exit)
-                }),
+                ContextMenu = new ContextMenu(BuildContextMenu()),
                 Visible = true,
                 Icon = new Icon("gin_icon.ico")
             };
 
             _trayIcon.DoubleClick += _trayIcon_DoubleClick;
+        }
 
-            _client = new GinClientServiceClient(new InstanceContext(this));
-            _client.AddRepository(
-                @"C:\Users\fwoltermann\Desktop\gin-cli-builds",
-                @"C:\Users\fwoltermann\Desktop\ginui-test\Test\",
-                "Test",
-                ""
-            );
+        private MenuItem[] BuildContextMenu()
+        {
+            var menuitems = new List<MenuItem>();
+
+            var repositories = _client.GetRepositoryList();
+
+            foreach (var repo in repositories)
+            {
+                var mitem = new MenuItem(repo.Name);
+                mitem.Tag = repo;
+                mitem.MenuItems.Add("Edit", EditRepoMenuItemHandler);
+                mitem.MenuItems.Add("Unmount", UnmountRepoMenuItemHandler);
+
+                menuitems.Add(mitem);
+            }
+
+            if (repositories.Length != 0)
+                menuitems.Add(new MenuItem("-"));
+
+            menuitems.Add(new MenuItem("Manage Repositories", ManageRepositoriesMenuItemHandler));
+
+            menuitems.Add(new MenuItem("Exit", Exit));
+
+            return menuitems.ToArray();
+        }
+
+        private void ManageRepositoriesMenuItemHandler(object sender, EventArgs e)
+        {
+            var repomanager = new RepoManagement(_client);
+            repomanager.Closed += (o, args) => { _trayIcon.ContextMenu = new ContextMenu(BuildContextMenu()); };
+            repomanager.ShowDialog();
+        }
+
+        private void UnmountRepoMenuItemHandler(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void EditRepoMenuItemHandler(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         void IGinClientServiceCallback.FileOperationFinished(string filename, string repository, bool success)
@@ -100,6 +227,12 @@ namespace GinClientApp
             _client.UnmmountAllRepositories();
             _client.Close();
             Application.Exit();
+        }
+
+        struct UserCredentials
+        {
+            public string Username { get; set; }
+            public string Password { get; set; }
         }
     }
 }

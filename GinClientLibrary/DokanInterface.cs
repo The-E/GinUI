@@ -35,7 +35,7 @@ namespace GinClientLibrary
         #region Constructor/Destructor and setup
 
         /// <summary>
-        ///     Create a new Dokan Interface.
+        ///     CreateDirectories a new Dokan Interface.
         /// </summary>
         /// <param name="repo"></param>
         /// The repository this is supporting

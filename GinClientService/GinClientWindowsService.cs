@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.ServiceModel;
 using System.ServiceProcess;
+using GinClientLibrary;
 
 namespace GinClientService
 {
@@ -26,7 +27,7 @@ namespace GinClientService
 
             _serviceHost?.Close();
 
-            // Create a ServiceHost for the CalculatorService type and 
+            // CreateDirectories a ServiceHost for the CalculatorService type and 
             // provide the base address.
             _serviceHost = new ServiceHost(typeof(GinClientService));
 
@@ -37,6 +38,8 @@ namespace GinClientService
 
         protected override void OnStop()
         {
+            RepositoryManager.Instance.Logout();
+
             if (_serviceHost == null) return;
             _serviceHost.Close();
             _serviceHost = null;

@@ -36,13 +36,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.WindowsAPICodePack-Core.1.1.0.0\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
+      <HintPath>..\packages\Microsoft.WindowsAPICodePack-Core.1.1.0.2\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.WindowsAPICodePack-Shell.1.1.0.0\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAPICodePack.ShellExtensions, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.WindowsAPICodePack-Shell.1.1.0.0\lib\Microsoft.WindowsAPICodePack.ShellExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -65,11 +68,23 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
-    <Compile Include="FileTransferProgress.cs">
+    <Compile Include="Custom Controls\FileTransferProgress.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="FileTransferProgress.Designer.cs">
+    <Compile Include="Custom Controls\FileTransferProgress.Designer.cs">
       <DependentUpon>FileTransferProgress.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\GetGINCmdline.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\GetGINCmdline.Designer.cs">
+      <DependentUpon>GetGINCmdline.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\GetUserCredentials.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\GetUserCredentials.Designer.cs">
+      <DependentUpon>GetUserCredentials.cs</DependentUpon>
     </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -79,20 +94,32 @@
     </Compile>
     <Compile Include="NativeMethods.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="ProgressDisplay.cs">
+    <Compile Include="Dialogs\ProgressDisplay.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ProgressDisplay.Designer.cs">
+    <Compile Include="Dialogs\ProgressDisplay.Designer.cs">
       <DependentUpon>ProgressDisplay.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="FileTransferProgress.resx">
+    <Compile Include="Dialogs\RepoManagement.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\RepoManagement.Designer.cs">
+      <DependentUpon>RepoManagement.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Custom Controls\FileTransferProgress.resx">
       <DependentUpon>FileTransferProgress.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\GetGINCmdline.resx">
+      <DependentUpon>GetGINCmdline.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\GetUserCredentials.resx">
+      <DependentUpon>GetUserCredentials.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ProgressDisplay.resx">
+    <EmbeddedResource Include="Dialogs\ProgressDisplay.resx">
       <DependentUpon>ProgressDisplay.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -104,6 +131,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Dialogs\RepoManagement.resx">
+      <DependentUpon>RepoManagement.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Connected Services\GinClientService\GinClientLibrary.xsd">
       <SubType>Designer</SubType>
     </None>
