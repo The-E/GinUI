@@ -68,16 +68,16 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
-    <Compile Include="FileTransferProgress.cs">
+    <Compile Include="Custom Controls\FileTransferProgress.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="FileTransferProgress.Designer.cs">
+    <Compile Include="Custom Controls\FileTransferProgress.Designer.cs">
       <DependentUpon>FileTransferProgress.cs</DependentUpon>
     </Compile>
-    <Compile Include="GetUserCredentials.cs">
+    <Compile Include="Dialogs\GetUserCredentials.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GetUserCredentials.Designer.cs">
+    <Compile Include="Dialogs\GetUserCredentials.Designer.cs">
       <DependentUpon>GetUserCredentials.cs</DependentUpon>
     </Compile>
     <Compile Include="MainForm.cs">
@@ -88,29 +88,29 @@
     </Compile>
     <Compile Include="NativeMethods.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="ProgressDisplay.cs">
+    <Compile Include="Dialogs\ProgressDisplay.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ProgressDisplay.Designer.cs">
+    <Compile Include="Dialogs\ProgressDisplay.Designer.cs">
       <DependentUpon>ProgressDisplay.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RepoManagement.cs">
+    <Compile Include="Dialogs\RepoManagement.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="RepoManagement.Designer.cs">
+    <Compile Include="Dialogs\RepoManagement.Designer.cs">
       <DependentUpon>RepoManagement.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="FileTransferProgress.resx">
+    <EmbeddedResource Include="Custom Controls\FileTransferProgress.resx">
       <DependentUpon>FileTransferProgress.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GetUserCredentials.resx">
+    <EmbeddedResource Include="Dialogs\GetUserCredentials.resx">
       <DependentUpon>GetUserCredentials.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ProgressDisplay.resx">
+    <EmbeddedResource Include="Dialogs\ProgressDisplay.resx">
       <DependentUpon>ProgressDisplay.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -122,7 +122,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="RepoManagement.resx">
+    <EmbeddedResource Include="Dialogs\RepoManagement.resx">
       <DependentUpon>RepoManagement.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Connected Services\GinClientService\GinClientLibrary.xsd">
