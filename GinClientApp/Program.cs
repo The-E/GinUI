@@ -50,7 +50,7 @@ namespace GinClientApp
             var saveFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
                                @"\gnode\GinWindowsClient";
 
-            //Try to log in
+            #region Login
             bool loggedIn = false;
             if (File.Exists(saveFilePath + @"\Credentials.json"))
             {
@@ -95,6 +95,9 @@ namespace GinClientApp
 
             if (!loggedIn)
                 Exit(null, new EventArgs());
+            #endregion
+
+            #region Set up repositories
 
             if (File.Exists(saveFilePath + @"\SavedRepositories.json"))
             {
@@ -105,7 +108,8 @@ namespace GinClientApp
 
                     foreach (var repo in repos)
                     {
-                        _client.AddRepository(repo.PhysicalDirectory.FullName, repo.Mountpoint.FullName, repo.Name, repo.Commandline);
+                        _client.AddRepository(repo.PhysicalDirectory.FullName, repo.Mountpoint.FullName, repo.Name,
+                            repo.Commandline);
                     }
                 }
                 catch (Exception e)
@@ -113,6 +117,12 @@ namespace GinClientApp
 
                 }
             }
+            else
+            {
+                ManageRepositoriesMenuItemHandler(null, EventArgs.Empty);
+            }
+
+            #endregion
 
             _trayIcon = new NotifyIcon
             {
@@ -154,7 +164,7 @@ namespace GinClientApp
         {
             var repomanager = new RepoManagement(_client);
             repomanager.Closed += (o, args) => { _trayIcon.ContextMenu = new ContextMenu(BuildContextMenu()); };
-            repomanager.Show();
+            repomanager.ShowDialog();
         }
 
         private void UnmountRepoMenuItemHandler(object sender, EventArgs e)
