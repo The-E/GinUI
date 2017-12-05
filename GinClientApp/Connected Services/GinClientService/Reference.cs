@@ -33,11 +33,11 @@ namespace GinClientApp.GinClientService {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/UnmmountAllRepositories", ReplyAction="http://tempuri.org/IGinClientService/UnmmountAllRepositoriesResponse")]
         System.Threading.Tasks.Task<bool> UnmmountAllRepositoriesAsync();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/AddCredentials", ReplyAction="http://tempuri.org/IGinClientService/AddCredentialsResponse")]
-        bool AddCredentials(string url, string username, string password);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/Login", ReplyAction="http://tempuri.org/IGinClientService/LoginResponse")]
+        bool Login(string username, string password);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/AddCredentials", ReplyAction="http://tempuri.org/IGinClientService/AddCredentialsResponse")]
-        System.Threading.Tasks.Task<bool> AddCredentialsAsync(string url, string username, string password);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/Login", ReplyAction="http://tempuri.org/IGinClientService/LoginResponse")]
+        System.Threading.Tasks.Task<bool> LoginAsync(string username, string password);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/GetRepositoryList", ReplyAction="http://tempuri.org/IGinClientService/GetRepositoryListResponse")]
         GinClientLibrary.GinRepository[] GetRepositoryList();
@@ -138,12 +138,12 @@ namespace GinClientApp.GinClientService {
             return base.Channel.UnmmountAllRepositoriesAsync();
         }
         
-        public bool AddCredentials(string url, string username, string password) {
-            return base.Channel.AddCredentials(url, username, password);
+        public bool Login(string username, string password) {
+            return base.Channel.Login(username, password);
         }
         
-        public System.Threading.Tasks.Task<bool> AddCredentialsAsync(string url, string username, string password) {
-            return base.Channel.AddCredentialsAsync(url, username, password);
+        public System.Threading.Tasks.Task<bool> LoginAsync(string username, string password) {
+            return base.Channel.LoginAsync(username, password);
         }
         
         public GinClientLibrary.GinRepository[] GetRepositoryList() {

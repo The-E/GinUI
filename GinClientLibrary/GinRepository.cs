@@ -245,20 +245,6 @@ namespace GinClientLibrary
             }
         }
 
-        public bool Login()
-        {
-            //if you wanna do the POST request in the Windows client separately, you can just 
-            //POST to /api/v1/users/$USERNAME/tokens with data {"name":"gin-cli"} and header 
-            //"content-type: application/json" and "Authorization: Basic <base64 encoded $USERNAME:$PASSWORD>"
-            //default host gin.g-node.org
-            //request returns a token that needs to be saved and attached to future requests
-            //default path %userprofile%\.config\gin\, will be changed to %appdata%\gnode\gin\
-
-            //Also note: In a service context, %userprofile% evaluates to C:\Windows\system32\config\systemprofile\; %AppData% to C:\Windows\system32\config\systemprofile\Appdata\Roaming
-
-            return true;
-        }
-
         //TODO: Implement this
         /// <summary>
         ///     Creates a new reopository folder from scratch

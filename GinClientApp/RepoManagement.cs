@@ -57,7 +57,6 @@ namespace GinClientApp
             _selectedRepository = _repositories.Single(r => string.Compare(r.Name, repoName.Text) == 0);
             txtRepoName.Text = _selectedRepository.Name;
             txtGinCommandline.Text = _selectedRepository.Commandline;
-            txtServerAddress.Text = _selectedRepository.ServerAddress;
             txtMountpoint.Text = _selectedRepository.Mountpoint.FullName;
             _suppressEvents = false;
             EnableControls();
@@ -116,14 +115,6 @@ namespace GinClientApp
             if (_selectedRepository == null) return;
 
             _selectedRepository.Name = txtRepoName.Text;
-        }
-
-        private void txtServerAddress_TextChanged(object sender, EventArgs e)
-        {
-            if (_suppressEvents) return;
-            if (_selectedRepository == null) return;
-
-            _selectedRepository.ServerAddress = txtServerAddress.Text;
         }
 
         private void txtGinCommandline_TextChanged(object sender, EventArgs e)

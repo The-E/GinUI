@@ -23,11 +23,7 @@ namespace GinClientService
                 callback.GinServiceError("Error while performing GIN action on Repository " + message.RepositoryName +
                                          ": " + message.Message);
         }
-
-        bool IGinClientService.AddCredentials(string url, string username, string password)
-        {
-            return RepositoryManager.Instance.AddCredentials(url, username, password);
-        }
+        
 
         bool IGinClientService.AddRepository(string physicalDirectory, string mountpoint, string name, string commandline)
         {
@@ -46,6 +42,11 @@ namespace GinClientService
         List<GinRepository> IGinClientService.GetRepositoryList()
         {
             return RepositoryManager.Instance.Repositories;
+        }
+
+        bool IGinClientService.Login(string username, string password)
+        {
+            return RepositoryManager.Instance.Login(username, password);
         }
 
         bool IGinClientService.RetrieveFile(string repoName, string filepath)

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using Newtonsoft.Json;
 
@@ -30,6 +32,12 @@ namespace GinClientLibrary
         private readonly List<GinServer> _servers = new List<GinServer>();
 
         private List<GinRepository> _repositories;
+        private static readonly StringBuilder _output = new StringBuilder("");
+        private void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(e.Data))
+                _output.AppendLine(e.Data);
+        }
 
         private RepositoryManager()
         {
@@ -42,6 +50,56 @@ namespace GinClientLibrary
         public GinRepository GetRepoByName(string name)
         {
             return Repositories.Single(r => string.Compare(r.Name, name, true) == 0);
+        }
+
+        public bool Login(string username, string password)
+        {
+            //if you wanna do the POST request in the Windows client separately, you can just 
+            //POST to /api/v1/users/$USERNAME/tokens with data {"name":"gin-cli"} and header 
+            //"content-type: application/json" and "Authorization: Basic <base64 encoded $USERNAME:$PASSWORD>"
+            //default host gin.g-node.org
+            //request returns a token that needs to be saved and attached to future requests
+            //default path %userprofile%\.config\gin\, will be changed to %appdata%\gnode\gin\
+
+            //Also note: In a service context, %userprofile% evaluates to C:\Windows\system32\config\systemprofile\; %AppData% to C:\Windows\system32\config\systemprofile\Appdata\Roaming
+
+            lock (this)
+            {
+                var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        FileName = "cmd.exe",
+                        WorkingDirectory = @"C:\",
+                        Arguments = "/C gin.exe login " + username,
+                        CreateNoWindow = true,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        RedirectStandardInput = true,
+                        UseShellExecute = false
+                    }
+                };
+
+                process.OutputDataReceived += Process_OutputDataReceived;
+                _output.Clear();
+                process.Start();
+                process.BeginOutputReadLine();
+                var error = process.StandardError.ReadToEnd();
+                while (!_output.ToString().Contains("Password"))
+                {
+                }
+                process.StandardInput.WriteLine(password);
+                process.WaitForExit();
+
+                if (!string.IsNullOrEmpty(error))
+                {
+                    RepositoryManager.Instance.OnRepositoryOperationError(null, new GinRepository.FileOperationErrorEventArgs() { RepositoryName = "RepositoryManager", Message = error });
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         public bool AddCredentials(string url, string username, string password)
@@ -192,7 +250,7 @@ namespace GinClientLibrary
 
         public event RepositoryOperationErrorHandler RepositoryOperationError;
 
-        protected void OnRepositoryOperationError(GinRepository sender,
+        public void OnRepositoryOperationError(GinRepository sender,
             GinRepository.FileOperationErrorEventArgs message)
         {
             RepositoryOperationError?.Invoke(sender, message);

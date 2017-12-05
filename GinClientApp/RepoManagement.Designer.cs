@@ -33,8 +33,6 @@
             this.btnRemove = new System.Windows.Forms.Button();
             this.txtRepoName = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.txtServerAddress = new System.Windows.Forms.TextBox();
             this.txtGinCommandline = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -98,33 +96,12 @@
             this.label1.TabIndex = 4;
             this.label1.Text = "Name:";
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Enabled = false;
-            this.label2.Location = new System.Drawing.Point(228, 41);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(41, 13);
-            this.label2.TabIndex = 5;
-            this.label2.Text = "Server:";
-            // 
-            // txtServerAddress
-            // 
-            this.txtServerAddress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtServerAddress.Enabled = false;
-            this.txtServerAddress.Location = new System.Drawing.Point(343, 38);
-            this.txtServerAddress.Name = "txtServerAddress";
-            this.txtServerAddress.Size = new System.Drawing.Size(168, 20);
-            this.txtServerAddress.TabIndex = 6;
-            this.txtServerAddress.TextChanged += new System.EventHandler(this.txtServerAddress_TextChanged);
-            // 
             // txtGinCommandline
             // 
             this.txtGinCommandline.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtGinCommandline.Enabled = false;
-            this.txtGinCommandline.Location = new System.Drawing.Point(343, 64);
+            this.txtGinCommandline.Location = new System.Drawing.Point(343, 38);
             this.txtGinCommandline.Name = "txtGinCommandline";
             this.txtGinCommandline.Size = new System.Drawing.Size(168, 20);
             this.txtGinCommandline.TabIndex = 7;
@@ -133,7 +110,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(228, 67);
+            this.label3.Location = new System.Drawing.Point(228, 41);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(92, 13);
             this.label3.TabIndex = 8;
@@ -143,7 +120,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(228, 93);
+            this.label4.Location = new System.Drawing.Point(228, 67);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(63, 13);
             this.label4.TabIndex = 10;
@@ -154,7 +131,7 @@
             this.txtMountpoint.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtMountpoint.Enabled = false;
-            this.txtMountpoint.Location = new System.Drawing.Point(343, 90);
+            this.txtMountpoint.Location = new System.Drawing.Point(343, 64);
             this.txtMountpoint.Name = "txtMountpoint";
             this.txtMountpoint.Size = new System.Drawing.Size(134, 20);
             this.txtMountpoint.TabIndex = 11;
@@ -163,7 +140,7 @@
             // 
             this.btnPickMountPnt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnPickMountPnt.Enabled = false;
-            this.btnPickMountPnt.Location = new System.Drawing.Point(483, 88);
+            this.btnPickMountPnt.Location = new System.Drawing.Point(483, 62);
             this.btnPickMountPnt.Name = "btnPickMountPnt";
             this.btnPickMountPnt.Size = new System.Drawing.Size(28, 23);
             this.btnPickMountPnt.TabIndex = 12;
@@ -173,7 +150,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(228, 120);
+            this.label5.Location = new System.Drawing.Point(228, 94);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(94, 13);
             this.label5.TabIndex = 13;
@@ -184,7 +161,7 @@
             this.txtPhysdir.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtPhysdir.Enabled = false;
-            this.txtPhysdir.Location = new System.Drawing.Point(343, 117);
+            this.txtPhysdir.Location = new System.Drawing.Point(343, 91);
             this.txtPhysdir.Name = "txtPhysdir";
             this.txtPhysdir.Size = new System.Drawing.Size(134, 20);
             this.txtPhysdir.TabIndex = 14;
@@ -193,7 +170,7 @@
             // 
             this.btnPickPhysDir.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnPickPhysDir.Enabled = false;
-            this.btnPickPhysDir.Location = new System.Drawing.Point(483, 115);
+            this.btnPickPhysDir.Location = new System.Drawing.Point(483, 89);
             this.btnPickPhysDir.Name = "btnPickPhysDir";
             this.btnPickPhysDir.Size = new System.Drawing.Size(28, 23);
             this.btnPickPhysDir.TabIndex = 15;
@@ -213,8 +190,6 @@
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.txtGinCommandline);
-            this.Controls.Add(this.txtServerAddress);
-            this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtRepoName);
             this.Controls.Add(this.btnRemove);
@@ -236,8 +211,6 @@
         private System.Windows.Forms.Button btnRemove;
         private System.Windows.Forms.TextBox txtRepoName;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox txtServerAddress;
         private System.Windows.Forms.TextBox txtGinCommandline;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;

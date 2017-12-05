@@ -37,15 +37,70 @@ namespace GinClientApp
 
         public GinApplicationContext()
         {
-            _client = new GinClientServiceClient(new InstanceContext(this));
-            var saveFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
-                               @"\gnode\GinWindowsClient\SavedRepositories.json";
+            try
+            {
+                _client = new GinClientServiceClient(new InstanceContext(this));
+            }
+            catch
+            {
+                MessageBox.Show("Error while trying to access Gin Client Service", "Gin CLient Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 
-            if (File.Exists(saveFilePath))
+            var saveFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
+                               @"\gnode\GinWindowsClient";
+
+            //Try to log in
+            bool loggedIn = false;
+            if (File.Exists(saveFilePath + @"\Credentials.json"))
             {
                 try
                 {
-                    var text = File.OpenText(saveFilePath).ReadToEnd();
+                    var text = File.OpenText(saveFilePath + @"\Credentials.json").ReadToEnd();
+                    var credentials = JsonConvert.DeserializeObject<UserCredentials>(text);
+
+                    if (!_client.Login(credentials.Username, credentials.Password))
+                    {
+                        MessageBox.Show("Error while trying to log in to GIN", "Gin Client Error",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else
+                    {
+                        loggedIn = true;
+                    }
+                }
+                catch (Exception e)
+                {
+                    loggedIn = false;
+                }
+            }
+            else
+            {
+                var loginDlg = new GetUserCredentials(_client);
+                var loginResult = loginDlg.ShowDialog();
+
+                if (loginResult == DialogResult.OK)
+                {
+                    var credentials =
+                        new UserCredentials() {Username = loginDlg.Username, Password = loginDlg.Password };
+
+                    var fstream = File.CreateText(saveFilePath + @"\Credentials.json");
+                    fstream.Write(JsonConvert.SerializeObject(credentials));
+                    fstream.Flush();
+                    fstream.Close();
+
+                    loggedIn = true;
+                }
+            }
+
+            if (!loggedIn)
+                Exit(null, new EventArgs());
+
+            if (File.Exists(saveFilePath + @"\SavedRepositories.json"))
+            {
+                try
+                {
+                    var text = File.OpenText(saveFilePath + @"\SavedRepositories.json").ReadToEnd();
                     var repos = JsonConvert.DeserializeObject<GinRepository[]>(text);
 
                     foreach (var repo in repos)
@@ -160,6 +215,12 @@ namespace GinClientApp
             _client.UnmmountAllRepositories();
             _client.Close();
             Application.Exit();
+        }
+
+        struct UserCredentials
+        {
+            public string Username { get; set; }
+            public string Password { get; set; }
         }
     }
 }

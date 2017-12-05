@@ -241,7 +241,7 @@
       </wsp:All>
     </wsp:ExactlyOne>
   </wsp:Policy>
-  <wsp:Policy wsu:Id="WSDualHttpBinding_IGinClientService_AddCredentials_Input_policy">
+  <wsp:Policy wsu:Id="WSDualHttpBinding_IGinClientService_Login_Input_policy">
     <wsp:ExactlyOne>
       <wsp:All>
         <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
@@ -264,7 +264,7 @@
       </wsp:All>
     </wsp:ExactlyOne>
   </wsp:Policy>
-  <wsp:Policy wsu:Id="WSDualHttpBinding_IGinClientService_AddCredentials_output_policy">
+  <wsp:Policy wsu:Id="WSDualHttpBinding_IGinClientService_Login_output_policy">
     <wsp:ExactlyOne>
       <wsp:All>
         <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
@@ -727,11 +727,11 @@
   <wsdl:message name="IGinClientService_UnmmountAllRepositories_OutputMessage">
     <wsdl:part name="parameters" element="tns:UnmmountAllRepositoriesResponse" />
   </wsdl:message>
-  <wsdl:message name="IGinClientService_AddCredentials_InputMessage">
-    <wsdl:part name="parameters" element="tns:AddCredentials" />
+  <wsdl:message name="IGinClientService_Login_InputMessage">
+    <wsdl:part name="parameters" element="tns:Login" />
   </wsdl:message>
-  <wsdl:message name="IGinClientService_AddCredentials_OutputMessage">
-    <wsdl:part name="parameters" element="tns:AddCredentialsResponse" />
+  <wsdl:message name="IGinClientService_Login_OutputMessage">
+    <wsdl:part name="parameters" element="tns:LoginResponse" />
   </wsdl:message>
   <wsdl:message name="IGinClientService_GetRepositoryList_InputMessage">
     <wsdl:part name="parameters" element="tns:GetRepositoryList" />
@@ -800,9 +800,9 @@
       <wsdl:input wsaw:Action="http://tempuri.org/IGinClientService/UnmmountAllRepositories" message="tns:IGinClientService_UnmmountAllRepositories_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IGinClientService/UnmmountAllRepositoriesResponse" message="tns:IGinClientService_UnmmountAllRepositories_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="AddCredentials">
-      <wsdl:input wsaw:Action="http://tempuri.org/IGinClientService/AddCredentials" message="tns:IGinClientService_AddCredentials_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IGinClientService/AddCredentialsResponse" message="tns:IGinClientService_AddCredentials_OutputMessage" />
+    <wsdl:operation name="Login">
+      <wsdl:input wsaw:Action="http://tempuri.org/IGinClientService/Login" message="tns:IGinClientService_Login_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IGinClientService/LoginResponse" message="tns:IGinClientService_Login_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="GetRepositoryList">
       <wsdl:input wsaw:Action="http://tempuri.org/IGinClientService/GetRepositoryList" message="tns:IGinClientService_GetRepositoryList_InputMessage" />
@@ -877,14 +877,14 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="AddCredentials">
-      <soap12:operation soapAction="http://tempuri.org/IGinClientService/AddCredentials" style="document" />
+    <wsdl:operation name="Login">
+      <soap12:operation soapAction="http://tempuri.org/IGinClientService/Login" style="document" />
       <wsdl:input>
-        <wsp:PolicyReference URI="#WSDualHttpBinding_IGinClientService_AddCredentials_Input_policy" />
+        <wsp:PolicyReference URI="#WSDualHttpBinding_IGinClientService_Login_Input_policy" />
         <soap12:body use="literal" />
       </wsdl:input>
       <wsdl:output>
-        <wsp:PolicyReference URI="#WSDualHttpBinding_IGinClientService_AddCredentials_output_policy" />
+        <wsp:PolicyReference URI="#WSDualHttpBinding_IGinClientService_Login_output_policy" />
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>

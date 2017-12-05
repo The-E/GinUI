@@ -18,7 +18,7 @@ namespace GinClientService
         bool UnmmountAllRepositories();
 
         [OperationContract]
-        bool AddCredentials(string url, string username, string password);
+        bool Login(string username, string password);
 
         [OperationContract]
         List<GinRepository> GetRepositoryList();
