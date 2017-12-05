@@ -14,8 +14,8 @@ namespace GinClientApp
     {
         private readonly GinClientServiceClient _client;
         private List<GinRepository> _repositories;
-        private bool _suppressEvents;
         private GinRepository _selectedRepository;
+        private bool _suppressEvents;
 
         public RepoManagement(GinClientServiceClient client)
         {
@@ -25,7 +25,6 @@ namespace GinClientApp
 
         private void label3_Click(object sender, EventArgs e)
         {
-
         }
 
         private void RepoManagement_Load(object sender, EventArgs e)
@@ -33,9 +32,7 @@ namespace GinClientApp
             _repositories = new List<GinRepository>(_client.GetRepositoryList());
 
             foreach (var repo in _repositories)
-            {
                 lvwRepositories.Items.Add(repo.Name);
-            }
         }
 
         private void lvwRepositories_SelectedIndexChanged(object sender, EventArgs e)
@@ -70,10 +67,10 @@ namespace GinClientApp
 
         private void DisableControls()
         {
-            foreach (var ctrl in Controls )
+            foreach (var ctrl in Controls)
             {
                 if (ctrl == lvwRepositories) continue;
-                
+
                 ((Control) ctrl).Enabled = false;
             }
         }
@@ -85,19 +82,18 @@ namespace GinClientApp
             if (_repositories.Count == 0) return;
 
             foreach (var repo in _repositories)
-            {
-                _client.AddRepository(repo.PhysicalDirectory.FullName, repo.Mountpoint.FullName, repo.Name, repo.Commandline);
-            }
-            
-            string saveFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
-                              @"\gnode\GinWindowsClient\SavedRepositories.json";
+                _client.AddRepository(repo.PhysicalDirectory.FullName, repo.Mountpoint.FullName, repo.Name,
+                    repo.Commandline);
+
+            var saveFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
+                           @"\gnode\GinWindowsClient\SavedRepositories.json";
 
             if (!Directory.Exists(Path.GetDirectoryName(saveFile)))
                 Directory.CreateDirectory(Path.GetDirectoryName(saveFile));
 
             if (File.Exists(saveFile))
                 File.Delete(saveFile);
-            
+
 
             var fs = File.CreateText(saveFile);
             fs.Write(JsonConvert.SerializeObject(_repositories));

@@ -52,7 +52,7 @@
             this.columnHeader1});
             this.lvwRepositories.Location = new System.Drawing.Point(13, 13);
             this.lvwRepositories.Name = "lvwRepositories";
-            this.lvwRepositories.Size = new System.Drawing.Size(209, 320);
+            this.lvwRepositories.Size = new System.Drawing.Size(209, 339);
             this.lvwRepositories.TabIndex = 0;
             this.lvwRepositories.UseCompatibleStateImageBehavior = false;
             this.lvwRepositories.SelectedIndexChanged += new System.EventHandler(this.lvwRepositories_SelectedIndexChanged);
@@ -60,7 +60,7 @@
             // btnAddNew
             // 
             this.btnAddNew.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnAddNew.Location = new System.Drawing.Point(13, 340);
+            this.btnAddNew.Location = new System.Drawing.Point(13, 359);
             this.btnAddNew.Name = "btnAddNew";
             this.btnAddNew.Size = new System.Drawing.Size(75, 23);
             this.btnAddNew.TabIndex = 1;
@@ -71,7 +71,7 @@
             // btnRemove
             // 
             this.btnRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnRemove.Location = new System.Drawing.Point(146, 340);
+            this.btnRemove.Location = new System.Drawing.Point(146, 359);
             this.btnRemove.Name = "btnRemove";
             this.btnRemove.Size = new System.Drawing.Size(75, 23);
             this.btnRemove.TabIndex = 2;
@@ -86,7 +86,7 @@
             this.txtRepoName.Enabled = false;
             this.txtRepoName.Location = new System.Drawing.Point(343, 12);
             this.txtRepoName.Name = "txtRepoName";
-            this.txtRepoName.Size = new System.Drawing.Size(168, 20);
+            this.txtRepoName.Size = new System.Drawing.Size(152, 20);
             this.txtRepoName.TabIndex = 3;
             this.txtRepoName.TextChanged += new System.EventHandler(this.txtRepoName_TextChanged);
             // 
@@ -106,7 +106,7 @@
             this.txtGinCommandline.Enabled = false;
             this.txtGinCommandline.Location = new System.Drawing.Point(343, 38);
             this.txtGinCommandline.Name = "txtGinCommandline";
-            this.txtGinCommandline.Size = new System.Drawing.Size(168, 20);
+            this.txtGinCommandline.Size = new System.Drawing.Size(152, 20);
             this.txtGinCommandline.TabIndex = 7;
             this.txtGinCommandline.TextChanged += new System.EventHandler(this.txtGinCommandline_TextChanged);
             // 
@@ -136,14 +136,14 @@
             this.txtMountpoint.Enabled = false;
             this.txtMountpoint.Location = new System.Drawing.Point(343, 64);
             this.txtMountpoint.Name = "txtMountpoint";
-            this.txtMountpoint.Size = new System.Drawing.Size(134, 20);
+            this.txtMountpoint.Size = new System.Drawing.Size(118, 20);
             this.txtMountpoint.TabIndex = 11;
             // 
             // btnPickMountPnt
             // 
             this.btnPickMountPnt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnPickMountPnt.Enabled = false;
-            this.btnPickMountPnt.Location = new System.Drawing.Point(483, 62);
+            this.btnPickMountPnt.Location = new System.Drawing.Point(467, 62);
             this.btnPickMountPnt.Name = "btnPickMountPnt";
             this.btnPickMountPnt.Size = new System.Drawing.Size(28, 23);
             this.btnPickMountPnt.TabIndex = 12;
@@ -167,14 +167,14 @@
             this.txtPhysdir.Enabled = false;
             this.txtPhysdir.Location = new System.Drawing.Point(343, 91);
             this.txtPhysdir.Name = "txtPhysdir";
-            this.txtPhysdir.Size = new System.Drawing.Size(134, 20);
+            this.txtPhysdir.Size = new System.Drawing.Size(118, 20);
             this.txtPhysdir.TabIndex = 14;
             // 
             // btnPickPhysDir
             // 
             this.btnPickPhysDir.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnPickPhysDir.Enabled = false;
-            this.btnPickPhysDir.Location = new System.Drawing.Point(483, 89);
+            this.btnPickPhysDir.Location = new System.Drawing.Point(467, 89);
             this.btnPickPhysDir.Name = "btnPickPhysDir";
             this.btnPickPhysDir.Size = new System.Drawing.Size(28, 23);
             this.btnPickPhysDir.TabIndex = 15;
@@ -186,7 +186,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(517, 372);
+            this.ClientSize = new System.Drawing.Size(501, 391);
             this.Controls.Add(this.btnPickPhysDir);
             this.Controls.Add(this.txtPhysdir);
             this.Controls.Add(this.label5);
