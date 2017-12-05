@@ -106,7 +106,7 @@ namespace GinClientApp
                 try
                 {
                     var text = File.OpenText(saveFilePath + @"\SavedRepositories.json").ReadToEnd();
-                    var repos = JsonConvert.DeserializeObject<GinRepository[]>(text);
+                    var repos = JsonConvert.DeserializeObject<GinRepositoryData[]>(text);
 
                     foreach (var repo in repos)
                     {
@@ -191,11 +191,11 @@ namespace GinClientApp
                 $"Retrieving {Path.GetFileName(filename)} from repository {repository}";
             _trayIcon.ShowBalloonTip(5000);
 
-            //if (progressDisplay == null)
-            //    progressDisplay = new ProgressDisplay();
+            if (progressDisplay == null)
+                progressDisplay = new ProgressDisplay();
 
-            //progressDisplay.AddFileTransfer(filename);
-            //progressDisplay.Show();
+            progressDisplay.AddFileTransfer(filename);
+            progressDisplay.Show();
         }
 
         void IGinClientServiceCallback.FileOperationProgress(string filename, string repository, int progress,
@@ -204,10 +204,10 @@ namespace GinClientApp
             Console.WriteLine("Filename: {0}, Repo: {1}, Progress: {2}, Speed: {3}, State: {4}", filename, repository,
                 progress, speed, state);
 
-            //if (progressDisplay != null)
-            //{
-            //    progressDisplay.SetProgressBarState(filename, state, progress, speed);
-            //}
+            if (progressDisplay != null)
+            {
+                progressDisplay.SetProgressBarState(filename, state, progress, speed);
+            }
         }
 
         void IGinClientServiceCallback.GinServiceError(string message)

@@ -223,7 +223,7 @@ namespace GinClientLibrary
                 Directory.CreateDirectory(Mountpoint.FullName);
 
             if (PhysicalDirectory.IsEmpty())
-                GetCommandLineOutput("cmd.exe", "/C gin.exe get " + Commandline, PhysicalDirectory.Parent.FullName, out string error);
+                GetCommandLineOutputEvent("cmd.exe", "/C gin.exe get " + Commandline + " --json", PhysicalDirectory.Parent.FullName, out string error);
         }
 
         public void DeleteRepository()
