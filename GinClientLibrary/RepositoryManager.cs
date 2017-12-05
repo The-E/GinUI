@@ -26,11 +26,7 @@ namespace GinClientLibrary
             GinRepository.FileOperationErrorEventArgs message);
 
         private static RepositoryManager _instance;
-
-        //private readonly Dictionary<GinRepository, Thread> _repothreads = new Dictionary<GinRepository, Thread>();
-
-        private readonly List<GinServer> _servers = new List<GinServer>();
-
+        
         private List<GinRepository> _repositories;
         private static readonly StringBuilder _output = new StringBuilder("");
         private void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
@@ -96,7 +92,7 @@ namespace GinClientLibrary
                         WindowStyle = ProcessWindowStyle.Hidden,
                         FileName = "cmd.exe",
                         WorkingDirectory = @"C:\",
-                        Arguments = "/C gin.exe login " + username,
+                        Arguments = @"/C gin.exe login " + username,
                         CreateNoWindow = true,
                         RedirectStandardOutput = true,
                         RedirectStandardError = true,
@@ -123,44 +119,7 @@ namespace GinClientLibrary
 
             return true;
         }
-
-        public bool AddCredentials(string url, string username, string password)
-        {
-            var serverExists = false;
-
-            foreach (var server in _servers)
-            {
-                if (serverExists)
-                    continue;
-                serverExists = string.Compare(server.URL, url, true) == 0;
-
-                if (serverExists)
-                {
-                    var serv = _servers[_servers.IndexOf(server)];
-                    serv.URL = url;
-                    serv.Password = password;
-                    serv.Username = username;
-                }
-            }
-
-            if (!serverExists)
-            {
-                var newServer = new GinServer {URL = url, Username = username, Password = password};
-                _servers.Add(newServer);
-            }
-
-            return true;
-        }
-
-        public string GetPasswordForUrl(string url)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string GetUserNameForUrl(string url)
-        {
-            throw new NotImplementedException();
-        }
+        
 
         public void MountAllRepositories()
         {
@@ -170,13 +129,8 @@ namespace GinClientLibrary
 
         private void MountRepository(GinRepository repo)
         {
-            //if (!_repothreads.ContainsKey(repo))
-            //{
             var thread = new Thread(repo.Mount);
             thread.Start();
-
-            //_repothreads.Add(repo, thread);
-            //}
         }
 
         public bool UpdateRepository(string repoName, GinRepository data)
@@ -224,8 +178,8 @@ namespace GinClientLibrary
             repo.FileOperationCompleted += Repo_FileOperationCompleted;
             repo.FileOperationProgress += Repo_FileOperationProgress;
             repo.FileOperationError += RepoOnFileOperationError;
-            MountRepository(repo);
             repo.CreateDirectories();
+            MountRepository(repo);
             repo.Initialize();
 
             Repositories.Add(repo);
@@ -301,13 +255,6 @@ namespace GinClientLibrary
 
                 return 0;
             }
-        }
-
-        private struct GinServer
-        {
-            public string URL;
-            public string Username;
-            public string Password;
         }
     }
 }

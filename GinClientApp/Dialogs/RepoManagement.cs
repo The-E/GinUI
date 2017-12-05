@@ -149,7 +149,7 @@ namespace GinClientApp
                                      @"\Gin Repositories\" + repoName;
 
                 var newRepo = new GinRepository(new DirectoryInfo(repoPhysAddress),
-                    new DirectoryInfo(repoMountpoint), repoName, cmdline);
+                    new DirectoryInfo(repoMountpoint), repoName, repoAddress);
 
                 _repositories.Add(newRepo);
 

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using DokanNet;
-using GinClientApp.Extensions;
+using GinClientLibrary.Extensions;
 using Newtonsoft.Json;
 using static GinClientLibrary.DokanInterface;
 
@@ -238,13 +238,13 @@ namespace GinClientLibrary
         /// <returns></returns>
         public void CreateDirectories()
         {
-            if (!Directory.Exists(PhysicalDirectory.FullName))
-                Directory.CreateDirectory(PhysicalDirectory.FullName);
+            if (!Directory.Exists(PhysicalDirectory.Parent.FullName))
+                Directory.CreateDirectory(PhysicalDirectory.Parent.FullName);
             if (!Directory.Exists(Mountpoint.FullName))
                 Directory.CreateDirectory(Mountpoint.FullName);
 
             if (PhysicalDirectory.IsEmpty())
-                GetCommandLineOutput("cmd.exe", Commandline, PhysicalDirectory.FullName, out string error);
+                GetCommandLineOutput("cmd.exe", "/C gin.exe get " + Commandline, PhysicalDirectory.Parent.FullName, out string error);
         }
 
         public void DeleteRepository()
@@ -288,7 +288,7 @@ namespace GinClientLibrary
         private DokanInterface DokanInterface { get; }
 
         /// <summary>
-        ///     The gin commandline used for checkouts, i.e. "gin get achilleas/gin-cli-builds"
+        ///     The gin commandline used for checkouts, i.e. "achilleas/gin-cli-builds"
         /// </summary>
         [DataMember]
         public string Commandline { get; set; }
