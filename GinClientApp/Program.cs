@@ -184,7 +184,7 @@ namespace GinClientApp
 
         void IGinClientServiceCallback.FileOperationFinished(string filename, string repository, bool success)
         {
-            //progressDisplay.RemoveFileTransfer(filename);
+            progressDisplay.RemoveFileTransfer(filename);
         }
 
         void IGinClientServiceCallback.FileOperationStarted(string filename, string repository)
@@ -207,10 +207,7 @@ namespace GinClientApp
             Console.WriteLine("Filename: {0}, Repo: {1}, Progress: {2}, Speed: {3}, State: {4}", filename, repository,
                 progress, speed, state);
 
-            if (progressDisplay != null)
-            {
-                progressDisplay.SetProgressBarState(filename, state, progress, speed);
-            }
+            progressDisplay?.SetProgressBarState(filename, state, progress, speed);
         }
 
         void IGinClientServiceCallback.GinServiceError(string message)
