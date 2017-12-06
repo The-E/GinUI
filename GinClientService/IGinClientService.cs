@@ -17,9 +17,10 @@ namespace GinClientService
         /// <param name="mountpoint">A full path to a directory where a mountpoint should be created</param>
         /// <param name="name">The name of this repository</param>
         /// <param name="commandline">The gin get commandline used to initialize this, e.g. "gin get username/repository"</param>
+        /// <param name="performFullCheckout">When true, all files are checked out of the annex, e.g "gin get </param>
         /// <returns>True if repository creation succeeded</returns>
         [OperationContract]
-        bool AddRepository(string physicalDirectory, string mountpoint, string name, string commandline);
+        bool AddRepository(string physicalDirectory, string mountpoint, string name, string commandline, bool performFullCheckout);
 
         /// <summary>
         /// Unmounts a repository.
@@ -105,6 +106,12 @@ namespace GinClientService
         /// <param name="repoName">Name of the repository</param>
         [OperationContract]
         void DownloadUpdateInfo(string repoName);
+
+        /// <summary>
+        /// Updates all repositories
+        /// </summary>
+        [OperationContract]
+        void DownloadUpdateInfo();
     }
 
     [SuppressMessage("ReSharper", "OperationContractWithoutServiceContract")]

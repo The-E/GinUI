@@ -260,7 +260,7 @@ namespace GinClientLibrary
         ///     Creates a new repository folder from scratch
         /// </summary>
         /// <returns></returns>
-        public void CreateDirectories()
+        public void CreateDirectories(bool performFullCheckout)
         {
             if (!Directory.Exists(PhysicalDirectory.Parent.FullName))
                 Directory.CreateDirectory(PhysicalDirectory.Parent.FullName);
@@ -269,6 +269,9 @@ namespace GinClientLibrary
 
             if (PhysicalDirectory.IsEmpty())
                 GetCommandLineOutputEvent("cmd.exe", "/C gin.exe get " + Commandline + " --json", PhysicalDirectory.Parent.FullName, out string error);
+
+            if (performFullCheckout)
+                GetCommandLineOutputEvent("cmd.exe", "/C gin.exe download --content --json", PhysicalDirectory.Parent.FullName, out string error);
         }
 
         public void DeleteRepository()

@@ -28,11 +28,19 @@ namespace GinClientService
         }
         
 
-        bool IGinClientService.AddRepository(string physicalDirectory, string mountpoint, string name, string commandline)
+        bool IGinClientService.AddRepository(string physicalDirectory, string mountpoint, string name, string commandline, bool performFullCheckout)
         {
             RepositoryManager.Instance.AddRepository(new DirectoryInfo(physicalDirectory),
-                new DirectoryInfo(mountpoint), name, commandline);
+                new DirectoryInfo(mountpoint), name, commandline, performFullCheckout);
             return true;
+        }
+
+        void IGinClientService.DownloadUpdateInfo()
+        {
+            foreach (var repo in RepositoryManager.Instance.Repositories)
+            {
+                repo.DownloadUpdateInfo();
+            }
         }
 
         void IGinClientService.DownloadUpdateInfo(string repoName)
