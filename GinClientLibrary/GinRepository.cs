@@ -175,6 +175,11 @@ namespace GinClientLibrary
             }
         }
 
+        /// <summary>
+        ///     Get a file from the remote repository
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
         public bool RetrieveFile(string filePath)
         {
             GetActualFilename(filePath, out var directoryName, out var filename);
@@ -191,7 +196,35 @@ namespace GinClientLibrary
             }
         }
 
+        /// <summary>
+        ///     Upload a file to the remote repository
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public bool UploadFile(string filePath)
+        {
+            GetActualFilename(filePath, out var directoryName, out var filename);
 
+            lock (this)
+            {
+                GetCommandLineOutputEvent("cmd.exe", "/c gin.exe upload " + filename + " --json", directoryName,
+                    out var error);
+
+
+                ReadRepoStatus();
+
+                if (!string.IsNullOrEmpty(error))
+                    OnFileOperationError(error);
+
+                return string.IsNullOrEmpty(error);
+            }
+        }
+
+        /// <summary>
+        ///     Return a file to the annex
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
         public bool RemoveFile(string filePath)
         {
             GetActualFilename(filePath, out var directoryName, out var filename);
@@ -209,8 +242,7 @@ namespace GinClientLibrary
                 return string.IsNullOrEmpty(error);
             }
         }
-
-        //TODO: Implement this
+        
         /// <summary>
         ///     Creates a new repository folder from scratch
         /// </summary>

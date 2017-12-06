@@ -67,6 +67,13 @@ namespace GinClientService
             return repo.RemoveFile(filepath);
         }
 
+        bool IGinClientService.UploadFile(string repoName, string filepath)
+        {
+            var repo = RepositoryManager.Instance.GetRepoByName(repoName);
+
+            return repo.UploadFile(filepath);
+        }
+
         bool IGinClientService.UnmmountAllRepositories()
         {
             RepositoryManager.Instance.UnmountAllRepositories();

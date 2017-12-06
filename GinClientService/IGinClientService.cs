@@ -33,6 +33,9 @@ namespace GinClientService
         bool RetrieveFile(string repoName, string filepath);
 
         [OperationContract]
+        bool UploadFile(string repoName, string filepath);
+
+        [OperationContract]
         bool StashFile(string repoName, string filepath);
 
         [OperationContract]

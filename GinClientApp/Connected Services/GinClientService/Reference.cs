@@ -63,6 +63,12 @@ namespace GinClientApp.GinClientService {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/RetrieveFile", ReplyAction="http://tempuri.org/IGinClientService/RetrieveFileResponse")]
         System.Threading.Tasks.Task<bool> RetrieveFileAsync(string repoName, string filepath);
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/UploadFile", ReplyAction="http://tempuri.org/IGinClientService/UploadFileResponse")]
+        bool UploadFile(string repoName, string filepath);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/UploadFile", ReplyAction="http://tempuri.org/IGinClientService/UploadFileResponse")]
+        System.Threading.Tasks.Task<bool> UploadFileAsync(string repoName, string filepath);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/StashFile", ReplyAction="http://tempuri.org/IGinClientService/StashFileResponse")]
         bool StashFile(string repoName, string filepath);
         
@@ -182,6 +188,14 @@ namespace GinClientApp.GinClientService {
         
         public System.Threading.Tasks.Task<bool> RetrieveFileAsync(string repoName, string filepath) {
             return base.Channel.RetrieveFileAsync(repoName, filepath);
+        }
+        
+        public bool UploadFile(string repoName, string filepath) {
+            return base.Channel.UploadFile(repoName, filepath);
+        }
+        
+        public System.Threading.Tasks.Task<bool> UploadFileAsync(string repoName, string filepath) {
+            return base.Channel.UploadFileAsync(repoName, filepath);
         }
         
         public bool StashFile(string repoName, string filepath) {
