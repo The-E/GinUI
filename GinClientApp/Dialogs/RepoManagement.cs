@@ -16,11 +16,13 @@ namespace GinClientApp
         private List<GinRepositoryData> _repositories;
         private GinRepositoryData _selectedRepository;
         private bool _suppressEvents;
+        private GinApplicationContext.GlobalOptions _options;
 
-        public RepoManagement(GinClientServiceClient client)
+        public RepoManagement(GinClientServiceClient client, GinApplicationContext.GlobalOptions options)
         {
             InitializeComponent();
             _client = client;
+            _options = options;
         }
 
         private void RepoManagement_Load(object sender, EventArgs e)
@@ -79,7 +81,7 @@ namespace GinClientApp
 
             foreach (var repo in _repositories)
                 _client.AddRepository(repo.PhysicalDirectory.FullName, repo.Mountpoint.FullName, repo.Name,
-                    repo.Commandline);
+                    repo.Commandline, _options.RepositoryCheckoutOption == GinApplicationContext.GlobalOptions.CheckoutOption.FullCheckout);
 
             var saveFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
                            @"\gnode\GinWindowsClient\SavedRepositories.json";

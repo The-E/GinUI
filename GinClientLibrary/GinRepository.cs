@@ -183,6 +183,11 @@ namespace GinClientLibrary
             }
         }
 
+        /// <summary>
+        ///     Get a file from the remote repository
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
         public bool RetrieveFile(string filePath)
         {
             GetActualFilename(filePath, out var directoryName, out var filename);
@@ -199,7 +204,35 @@ namespace GinClientLibrary
             }
         }
 
+        /// <summary>
+        ///     Upload a file to the remote repository
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public bool UploadFile(string filePath)
+        {
+            GetActualFilename(filePath, out var directoryName, out var filename);
 
+            lock (this)
+            {
+                GetCommandLineOutputEvent("cmd.exe", "/c gin.exe upload " + filename + " --json", directoryName,
+                    out var error);
+
+
+                ReadRepoStatus();
+
+                if (!string.IsNullOrEmpty(error))
+                    OnFileOperationError(error);
+
+                return string.IsNullOrEmpty(error);
+            }
+        }
+
+        /// <summary>
+        ///     Return a file to the annex
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
         public bool RemoveFile(string filePath)
         {
             GetActualFilename(filePath, out var directoryName, out var filename);
@@ -222,13 +255,12 @@ namespace GinClientLibrary
                 return true;
             }
         }
-
-        //TODO: Implement this
+        
         /// <summary>
         ///     Creates a new repository folder from scratch
         /// </summary>
         /// <returns></returns>
-        public void CreateDirectories()
+        public void CreateDirectories(bool performFullCheckout)
         {
             if (!Directory.Exists(PhysicalDirectory.Parent.FullName))
                 Directory.CreateDirectory(PhysicalDirectory.Parent.FullName);
@@ -237,6 +269,9 @@ namespace GinClientLibrary
 
             if (PhysicalDirectory.IsEmpty())
                 GetCommandLineOutputEvent("cmd.exe", "/C gin.exe get " + Commandline + " --json", PhysicalDirectory.Parent.FullName, out string error);
+
+            if (performFullCheckout)
+                GetCommandLineOutputEvent("cmd.exe", "/C gin.exe download --content --json", PhysicalDirectory.Parent.FullName, out string error);
         }
 
         public void DeleteRepository()

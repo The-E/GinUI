@@ -172,7 +172,7 @@ namespace GinClientLibrary
             Repositories.Clear();
         }
 
-        public void AddRepository(DirectoryInfo physicalDirectory, DirectoryInfo mountpoint, string name, string commandline)
+        public void AddRepository(DirectoryInfo physicalDirectory, DirectoryInfo mountpoint, string name, string commandline, bool performFullCheckout)
         {
             var repo = new GinRepository(
                 physicalDirectory,
@@ -184,7 +184,7 @@ namespace GinClientLibrary
             repo.FileOperationCompleted += Repo_FileOperationCompleted;
             repo.FileOperationProgress += Repo_FileOperationProgress;
             repo.FileOperationError += RepoOnFileOperationError;
-            repo.CreateDirectories();
+            repo.CreateDirectories(performFullCheckout);
             MountRepository(repo);
             repo.Initialize();
 

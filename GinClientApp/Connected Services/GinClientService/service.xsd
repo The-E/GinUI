@@ -8,6 +8,7 @@
         <xs:element minOccurs="0" name="mountpoint" nillable="true" type="xs:string" />
         <xs:element minOccurs="0" name="name" nillable="true" type="xs:string" />
         <xs:element minOccurs="0" name="commandline" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="performFullCheckout" type="xs:boolean" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -127,6 +128,21 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  <xs:element name="UploadFile">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="repoName" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="filepath" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UploadFileResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="UploadFileResult" type="xs:boolean" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
   <xs:element name="StashFile">
     <xs:complexType>
       <xs:sequence>
@@ -150,6 +166,16 @@
     </xs:complexType>
   </xs:element>
   <xs:element name="DownloadUpdateInfoResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DownloadAllUpdateInfo">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DownloadAllUpdateInfoResponse">
     <xs:complexType>
       <xs:sequence />
     </xs:complexType>

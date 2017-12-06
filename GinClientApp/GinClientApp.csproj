@@ -86,6 +86,13 @@
     <Compile Include="Dialogs\GetUserCredentials.Designer.cs">
       <DependentUpon>GetUserCredentials.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\GlobalOptionsDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\GlobalOptionsDlg.Designer.cs">
+      <DependentUpon>GlobalOptionsDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GinApplicationContext.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -115,6 +122,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\GetUserCredentials.resx">
       <DependentUpon>GetUserCredentials.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\GlobalOptionsDlg.resx">
+      <DependentUpon>GlobalOptionsDlg.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
