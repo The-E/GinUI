@@ -27,6 +27,9 @@ namespace GinClientService
         /// <param name="repoName"></param>
         /// <returns></returns>
         [OperationContract]
+        bool MountRepository(string repoName);
+
+        [OperationContract]
         bool UnmountRepository(string repoName);
 
         /// <summary>

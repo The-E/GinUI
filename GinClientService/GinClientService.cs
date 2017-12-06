@@ -104,5 +104,11 @@ namespace GinClientService
         {
             return RepositoryManager.Instance.UpdateRepository(repoName, data);
         }
+
+        bool IGinClientService.MountRepository(string repoName)
+        {
+            RepositoryManager.Instance.MountRepository(RepositoryManager.Instance.GetRepoByName(repoName));
+            return true;
+        }
     }
 }
