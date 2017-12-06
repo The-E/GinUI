@@ -43,6 +43,7 @@ namespace GinClientLibrary
             Mountpoint = mountpoint;
             Name = name;
             Commandline = commandline;
+            Mounted = false;
             DokanInterface = new DokanInterface(this, false);
             DokanInterface.FileOperationStarted += DokanInterface_FileOperationStarted;
             DokanInterface.FileOperationCompleted += DokanInterface_FileOperationCompleted;
@@ -85,6 +86,7 @@ namespace GinClientLibrary
         {
             try
             {
+                Mounted = true;
                 DokanInterface.Initialize();
             }
             catch (Exception e)

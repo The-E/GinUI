@@ -12,6 +12,9 @@ namespace GinClientService
         bool AddRepository(string physicalDirectory, string mountpoint, string name, string commandline);
 
         [OperationContract]
+        bool MountRepository(string repoName);
+
+        [OperationContract]
         bool UnmountRepository(string repoName);
 
         [OperationContract]

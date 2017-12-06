@@ -149,8 +149,9 @@ namespace GinClientApp
             {
                 var mitem = new MenuItem(repo.Name);
                 mitem.Tag = repo;
-                mitem.MenuItems.Add("Edit", EditRepoMenuItemHandler);
+                //mitem.MenuItems.Add("Edit", EditRepoMenuItemHandler);
                 mitem.MenuItems.Add("Unmount", UnmountRepoMenuItemHandler);
+                mitem.MenuItems.Add("Update", UpdateRepoMenuItemHandler);
 
                 menuitems.Add(mitem);
             }
@@ -165,6 +166,13 @@ namespace GinClientApp
             return menuitems.ToArray();
         }
 
+        private void UpdateRepoMenuItemHandler(object sender, EventArgs e)
+        {
+            var repo = (GinRepositoryData)((MenuItem) sender).Parent.Tag;
+
+            _client.DownloadUpdateInfo(repo.Name);
+        }
+
         private void ManageRepositoriesMenuItemHandler(object sender, EventArgs e)
         {
             var repomanager = new RepoManagement(_client);
@@ -174,7 +182,19 @@ namespace GinClientApp
 
         private void UnmountRepoMenuItemHandler(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            
+            var mItem = (MenuItem) sender;
+            var repo = (GinRepositoryData)mItem.Parent.Tag;
+            if (string.CompareOrdinal("Unmount", mItem.Text) == 0)
+            {
+                _client.UnmountRepository(repo.Name);
+                mItem.Text = "Mount";
+            }
+            else
+            {
+                _client.MountRepository(repo.Name);
+                mItem.Text = "Unmount";
+            }
         }
 
         private void EditRepoMenuItemHandler(object sender, EventArgs e)

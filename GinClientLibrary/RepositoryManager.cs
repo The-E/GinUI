@@ -128,10 +128,13 @@ namespace GinClientLibrary
                 MountRepository(repo);
         }
 
-        private void MountRepository(GinRepository repo)
+        public void MountRepository(GinRepository repo)
         {
-            var thread = new Thread(repo.Mount);
-            thread.Start();
+            if (!repo.Mounted)
+            {
+                var thread = new Thread(repo.Mount);
+                thread.Start();
+            }
         }
 
         public bool UpdateRepository(string repoName, GinRepositoryData data)
@@ -152,6 +155,7 @@ namespace GinClientLibrary
         public void UnmountRepository(GinRepository repo)
         {
             Dokan.RemoveMountPoint(repo.Mountpoint.FullName.Trim('\\'));
+            repo.Mounted = false;
         }
 
         public void DeleteRepository(GinRepository repo)

@@ -35,5 +35,8 @@ namespace GinClientLibrary
         /// </summary>
         [DataMember]
         public string Commandline { get; set; }
+
+        [DataMember]
+        public bool Mounted { get; set; }
     }
 }
