@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.WindowsAPICodePack.Taskbar;
 
@@ -21,74 +20,41 @@ namespace GinClientApp
         {
         }
 
-        delegate void AddFileTransferDelegate(string filename);
-        public async void AddFileTransfer(string filename)
+        public void AddFileTransfer(string filename)
         {
-            await Task.Run(() =>
+            lock (this)
             {
-                if (InvokeRequired)
-                {
-                    AddFileTransferDelegate d = AddFileTransfer;
-                    Invoke(d, filename);
-                }
-                else
-                {
-                    lock (this)
-                    {
-                        var progBar = new FileTransferProgress();
-                        progBar.Filename = Path.GetFileName(filename);
-                        progBar.Dock = DockStyle.Bottom;
-                        _progressbars.Add(filename, progBar);
-                        Controls.Add(progBar);
-                    }
-                }
-            });
+                var progBar = new FileTransferProgress();
+                progBar.Filename = Path.GetFileName(filename);
+                progBar.Dock = DockStyle.Bottom;
+                _progressbars.Add(filename, progBar);
+                Controls.Add(progBar);
+            }
         }
 
-        delegate void RemoveFileTransferDelegate(string filename);
-        public async void RemoveFileTransfer(string filename)
+        public void RemoveFileTransfer(string filename)
         {
-            await Task.Run(() =>
+            lock (this)
             {
-                if (InvokeRequired)
+                if (_progressbars.ContainsKey(filename))
                 {
-
-                    RemoveFileTransferDelegate d = RemoveFileTransfer;
-                    Invoke(d, filename);
+                    var progBar = _progressbars[filename];
+                    Controls.Remove(progBar);
+                    _progressbars.Remove(filename);
+                    progBar.Dispose();
                 }
-                else
-                {
-                    lock (this)
-                    {
-                        if (_progressbars.ContainsKey(filename))
-                        {
-                            var progBar = _progressbars[filename];
-                            Controls.Remove(progBar);
-                            _progressbars.Remove(filename);
-                            progBar.Dispose();
-                        }
 
-                        if (_progressbars.Count == 0)
-                            Close();
-                    }
-                }
-            });
+                if (_progressbars.Count == 0)
+                    Close();
+            }
         }
 
-        delegate void SetProgressBarStateDelegate(string filename, string state, int progress, string rate);
-
-        public async void SetProgressBarState(string filename, string state, int progress, string rate)
+        public void SetProgressBarState(string filename, string state, int progress, string rate)
         {
-            await Task.Run(() =>
+            lock (this)
             {
-                if (InvokeRequired)
+                if (_progressbars.ContainsKey(filename))
                 {
-                    SetProgressBarStateDelegate d = SetProgressBarState;
-                    Invoke(d, filename, state, progress, rate);
-                }
-                else
-                {
-                    if (!_progressbars.ContainsKey(filename)) return;
                     var progBar = _progressbars[filename];
 
                     progBar.Progress = progress;
@@ -105,7 +71,7 @@ namespace GinClientApp
                     TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
                     TaskbarManager.Instance.SetProgressValue(totalProgress, 100);
                 }
-            });
+            }
         }
     }
 }

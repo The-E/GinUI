@@ -53,6 +53,11 @@ namespace GinClientService
             return RepositoryManager.Instance.Login(username, password);
         }
 
+        bool IGinClientService.Login(string username, string password)
+        {
+            return RepositoryManager.Instance.Login(username, password);
+        }
+
         bool IGinClientService.RetrieveFile(string repoName, string filepath)
         {
             var repo = RepositoryManager.Instance.GetRepoByName(repoName);
