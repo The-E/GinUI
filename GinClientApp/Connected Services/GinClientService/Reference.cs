@@ -16,10 +16,10 @@ namespace GinClientApp.GinClientService {
     public interface IGinClientService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/AddRepository", ReplyAction="http://tempuri.org/IGinClientService/AddRepositoryResponse")]
-        bool AddRepository(string physicalDirectory, string mountpoint, string name, string commandline);
+        bool AddRepository(string physicalDirectory, string mountpoint, string name, string commandline, bool performFullCheckout);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/AddRepository", ReplyAction="http://tempuri.org/IGinClientService/AddRepositoryResponse")]
-        System.Threading.Tasks.Task<bool> AddRepositoryAsync(string physicalDirectory, string mountpoint, string name, string commandline);
+        System.Threading.Tasks.Task<bool> AddRepositoryAsync(string physicalDirectory, string mountpoint, string name, string commandline, bool performFullCheckout);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/MountRepository", ReplyAction="http://tempuri.org/IGinClientService/MountRepositoryResponse")]
         bool MountRepository(string repoName);
@@ -86,6 +86,12 @@ namespace GinClientApp.GinClientService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/DownloadUpdateInfo", ReplyAction="http://tempuri.org/IGinClientService/DownloadUpdateInfoResponse")]
         System.Threading.Tasks.Task DownloadUpdateInfoAsync(string repoName);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/DownloadAllUpdateInfo", ReplyAction="http://tempuri.org/IGinClientService/DownloadAllUpdateInfoResponse")]
+        void DownloadAllUpdateInfo();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/DownloadAllUpdateInfo", ReplyAction="http://tempuri.org/IGinClientService/DownloadAllUpdateInfoResponse")]
+        System.Threading.Tasks.Task DownloadAllUpdateInfoAsync();
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -132,12 +138,12 @@ namespace GinClientApp.GinClientService {
                 base(callbackInstance, binding, remoteAddress) {
         }
         
-        public bool AddRepository(string physicalDirectory, string mountpoint, string name, string commandline) {
-            return base.Channel.AddRepository(physicalDirectory, mountpoint, name, commandline);
+        public bool AddRepository(string physicalDirectory, string mountpoint, string name, string commandline, bool performFullCheckout) {
+            return base.Channel.AddRepository(physicalDirectory, mountpoint, name, commandline, performFullCheckout);
         }
         
-        public System.Threading.Tasks.Task<bool> AddRepositoryAsync(string physicalDirectory, string mountpoint, string name, string commandline) {
-            return base.Channel.AddRepositoryAsync(physicalDirectory, mountpoint, name, commandline);
+        public System.Threading.Tasks.Task<bool> AddRepositoryAsync(string physicalDirectory, string mountpoint, string name, string commandline, bool performFullCheckout) {
+            return base.Channel.AddRepositoryAsync(physicalDirectory, mountpoint, name, commandline, performFullCheckout);
         }
         
         public bool MountRepository(string repoName) {
@@ -226,6 +232,14 @@ namespace GinClientApp.GinClientService {
         
         public System.Threading.Tasks.Task DownloadUpdateInfoAsync(string repoName) {
             return base.Channel.DownloadUpdateInfoAsync(repoName);
+        }
+        
+        public void DownloadAllUpdateInfo() {
+            base.Channel.DownloadAllUpdateInfo();
+        }
+        
+        public System.Threading.Tasks.Task DownloadAllUpdateInfoAsync() {
+            return base.Channel.DownloadAllUpdateInfoAsync();
         }
     }
 }

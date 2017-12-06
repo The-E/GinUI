@@ -97,7 +97,7 @@ namespace GinClientApp
 
             _updateIntervalTimer = new Timer(_options.RepositoryUpdateInterval * 1000);
             _updateIntervalTimer.AutoReset = true;
-            _updateIntervalTimer.Elapsed += (sender, args) => { _client.DownloadUpdateInfo(); };
+            _updateIntervalTimer.Elapsed += (sender, args) => { _client.DownloadAllUpdateInfo(); };
             _updateIntervalTimer.Start();
             #endregion
 
@@ -160,7 +160,7 @@ namespace GinClientApp
                     foreach (var repo in repos)
                     {
                         _client.AddRepository(repo.PhysicalDirectory.FullName, repo.Mountpoint.FullName, repo.Name,
-                            repo.Commandline);
+                            repo.Commandline, _options.RepositoryCheckoutOption == GlobalOptions.CheckoutOption.FullCheckout);
                     }
                 }
                 catch (Exception e)
@@ -237,7 +237,7 @@ namespace GinClientApp
 
         private void ManageRepositoriesMenuItemHandler(object sender, EventArgs e)
         {
-            var repomanager = new RepoManagement(_client);
+            var repomanager = new RepoManagement(_client, _options);
             repomanager.Closed += (o, args) => { _trayIcon.ContextMenu = new ContextMenu(BuildContextMenu()); };
             repomanager.ShowDialog();
         }

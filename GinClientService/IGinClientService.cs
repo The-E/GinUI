@@ -111,7 +111,7 @@ namespace GinClientService
         /// Updates all repositories
         /// </summary>
         [OperationContract]
-        void DownloadUpdateInfo();
+        void DownloadAllUpdateInfo();
     }
 
     [SuppressMessage("ReSharper", "OperationContractWithoutServiceContract")]

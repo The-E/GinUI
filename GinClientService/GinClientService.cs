@@ -35,7 +35,7 @@ namespace GinClientService
             return true;
         }
 
-        void IGinClientService.DownloadUpdateInfo()
+        void IGinClientService.DownloadAllUpdateInfo()
         {
             foreach (var repo in RepositoryManager.Instance.Repositories)
             {
