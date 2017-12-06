@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using DokanNet;
 using Newtonsoft.Json;
 
 namespace GinClientLibrary
@@ -14,19 +15,19 @@ namespace GinClientLibrary
     /// </summary>
     public class RepositoryManager
     {
-        public delegate void FileOperationProgressHandler(string filename, GinRepository repository, int progress,
+        public delegate void FileOperationProgressHandler(string filename, GinRepositoryData repository, int progress,
             string speed, string state);
 
         public delegate void
-            FileRetrievalCompletedHandler(object sender, GinRepository repo, string file, bool success);
+            FileRetrievalCompletedHandler(object sender, GinRepositoryData repo, string file, bool success);
 
-        public delegate void FileRetrievalStartedHandler(object sender, GinRepository repo, string file);
+        public delegate void FileRetrievalStartedHandler(object sender, GinRepositoryData repo, string file);
 
         public delegate void RepositoryOperationErrorHandler(object sender,
             GinRepository.FileOperationErrorEventArgs message);
 
         private static RepositoryManager _instance;
-        
+
         private List<GinRepository> _repositories;
         private static readonly StringBuilder _output = new StringBuilder("");
         private void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
@@ -127,21 +128,25 @@ namespace GinClientLibrary
                 MountRepository(repo);
         }
 
-        private void MountRepository(GinRepository repo)
+        public void MountRepository(GinRepository repo)
         {
-            var thread = new Thread(repo.Mount);
-            thread.Start();
+            if (!repo.Mounted)
+            {
+                var thread = new Thread(repo.Mount);
+                thread.Start();
+            }
         }
 
-        public bool UpdateRepository(string repoName, GinRepository data)
+        public bool UpdateRepository(string repoName, GinRepositoryData data)
         {
             lock (this)
             {
                 var repo = Repositories.Single(r => string.Compare(r.Name, repoName) == 0);
                 UnmountRepository(repo);
                 Repositories.Remove(repo);
-                Repositories.Add(data);
-                MountRepository(data);
+                repo = new GinRepository(data);
+                Repositories.Add(repo);
+                MountRepository(repo);
 
                 return true;
             }
@@ -149,7 +154,8 @@ namespace GinClientLibrary
 
         public void UnmountRepository(GinRepository repo)
         {
-            repo.Dispose();
+            Dokan.RemoveMountPoint(repo.Mountpoint.FullName.Trim('\\'));
+            repo.Mounted = false;
         }
 
         public void DeleteRepository(GinRepository repo)

@@ -13,8 +13,13 @@ using static GinClientLibrary.DokanInterface;
 namespace GinClientLibrary
 {
     [DataContract]
-    public class GinRepository : IDisposable
+    public class GinRepository : GinRepositoryData, IDisposable
     {
+        /// <summary>
+        ///     A Dokan driver interface
+        /// </summary>
+        private DokanInterface DokanInterface { get; }
+
         public enum FileStatus
         {
             InAnnex,
@@ -27,7 +32,7 @@ namespace GinClientLibrary
             Removed
         }
 
-        private static readonly StringBuilder _output = new StringBuilder("");
+        private static readonly StringBuilder Output = new StringBuilder("");
         
 
         private Dictionary<string, FileStatus> _scache;
@@ -38,12 +43,20 @@ namespace GinClientLibrary
             Mountpoint = mountpoint;
             Name = name;
             Commandline = commandline;
+            Mounted = false;
             DokanInterface = new DokanInterface(this, false);
             DokanInterface.FileOperationStarted += DokanInterface_FileOperationStarted;
             DokanInterface.FileOperationCompleted += DokanInterface_FileOperationCompleted;
             
         }
 
+        public GinRepository(GinRepositoryData data)
+        {
+            Mountpoint = data.Mountpoint;
+            PhysicalDirectory = data.PhysicalDirectory;
+            Name = data.Name;
+            Commandline = data.Commandline;
+        }
 
         public Dictionary<string, FileStatus> StatusCache =>
             _scache ?? (_scache = new Dictionary<string, FileStatus>());
@@ -61,38 +74,6 @@ namespace GinClientLibrary
                 OnFileOperationError(error);
         }
 
-        private void ResetRepoStatus()
-        {
-            lock (this)
-            {
-                if (_scache == null)
-                    _scache = new Dictionary<string, FileStatus>();
-                else
-                    _scache.Clear();
-                ReadRepoStatus();
-            }
-        }
-
-        private void FsWatcherOnRenamed(object sender, RenamedEventArgs renamedEventArgs)
-        {
-            ResetRepoStatus();
-        }
-
-        private void FsWatcherOnDeleted(object sender, FileSystemEventArgs fileSystemEventArgs)
-        {
-            ResetRepoStatus();
-        }
-
-        private void FsWatcherOnChanged(object sender, FileSystemEventArgs fileSystemEventArgs)
-        {
-            ResetRepoStatus();
-        }
-
-        private void FsWatcherOnCreated(object sender, FileSystemEventArgs fileSystemEventArgs)
-        {
-            ResetRepoStatus();
-        }
-
         public void Initialize()
         {
             if (!Directory.Exists(Mountpoint.FullName))
@@ -105,9 +86,10 @@ namespace GinClientLibrary
         {
             try
             {
+                Mounted = true;
                 DokanInterface.Initialize();
             }
-            catch (DokanInterfaceException e)
+            catch (Exception e)
             {
                 OnFileOperationError(e.Message);
             }
@@ -115,21 +97,21 @@ namespace GinClientLibrary
 
         private FileStatus TranslateFileStatus(string status)
         {
-            if (string.Compare(status, "OK") == 0)
+            if (string.CompareOrdinal(status, "OK") == 0)
                 return FileStatus.OnDisk;
-            if (string.Compare(status, "NC") == 0)
+            if (string.CompareOrdinal(status, "NC") == 0)
                 return FileStatus.InAnnex;
-            if (string.Compare(status, "MD") == 0)
+            if (string.CompareOrdinal(status, "MD") == 0)
                 return FileStatus.InAnnexModified;
-            if (string.Compare(status, "LC") == 0)
+            if (string.CompareOrdinal(status, "LC") == 0)
                 return FileStatus.OnDiskModified;
-            if (string.Compare(status, "RC") == 0)
+            if (string.CompareOrdinal(status, "RC") == 0)
                 return FileStatus.InAnnexModified;
-            if (string.Compare(status, "UL") == 0)
+            if (string.CompareOrdinal(status, "UL") == 0)
                 return FileStatus.Unlocked;
-            if (string.Compare(status, "RM") == 0)
+            if (string.CompareOrdinal(status, "RM") == 0)
                 return FileStatus.Removed;
-            if (string.Compare(status, "??") == 0)
+            if (string.CompareOrdinal(status, "??") == 0)
                 return FileStatus.Unknown;
 
             return FileStatus.Unknown;
@@ -144,14 +126,20 @@ namespace GinClientLibrary
         ///     -On Disk, modified
         ///     -Unknown (this includes files not yet added to the gin working tree)
         /// </summary>
-        public void ReadRepoStatus()
+        private void ReadRepoStatus()
         {
             lock (this)
             {
                 var output = GetCommandLineOutput("cmd.exe", "/c gin.exe ls --json", PhysicalDirectory.FullName,
                     out var error);
 
-                var statusCollection = JsonConvert.DeserializeObject<List<filestatus>>(output);
+                if (!string.IsNullOrEmpty(error))
+                {
+                    OnFileOperationError(error);
+                    return;
+                }
+
+                var statusCollection = JsonConvert.DeserializeObject<List<Filestatus>>(output);
 
                 foreach (var fstatus in statusCollection)
                 {
@@ -203,8 +191,7 @@ namespace GinClientLibrary
             {
                 GetCommandLineOutputEvent("cmd.exe", "/c gin.exe get-content " + filename + " --json", directoryName,
                     out var error);
-
-                //var res = GetCommandLineOutput("cmd.exe", "/c gin.exe get-content " + filename, directoryName, out string error);
+                
 
                 ReadRepoStatus();
 
@@ -219,15 +206,20 @@ namespace GinClientLibrary
 
             lock (this)
             {
-                var output = GetCommandLineOutput("cmd.exe", "/C gin.exe remove-content " + filename /*+ " -json"*/,
-                    directoryName,
-                    out var error);
+                GetCommandLineOutput("cmd.exe", "/C gin.exe remove-content " + filename /*+ " -json"*/,
+                    directoryName, out var error);
 
-                _output.Clear();
+                Output.Clear();
 
                 ReadRepoStatus();
 
-                return string.IsNullOrEmpty(error);
+                if (!string.IsNullOrEmpty(error))
+                {
+                    OnFileOperationError(error);
+                    return false;
+                }
+
+                return true;
             }
         }
 
@@ -244,7 +236,7 @@ namespace GinClientLibrary
                 Directory.CreateDirectory(Mountpoint.FullName);
 
             if (PhysicalDirectory.IsEmpty())
-                GetCommandLineOutput("cmd.exe", "/C gin.exe get " + Commandline, PhysicalDirectory.Parent.FullName, out string error);
+                GetCommandLineOutputEvent("cmd.exe", "/C gin.exe get " + Commandline + " --json", PhysicalDirectory.Parent.FullName, out string error);
         }
 
         public void DeleteRepository()
@@ -256,48 +248,13 @@ namespace GinClientLibrary
             Directory.Delete(Mountpoint.FullName);
         }
 
-        internal struct filestatus
+        private struct Filestatus
         {
             public string filename { get; set; }
             public string status { get; set; }
         }
 
         #region Properties
-
-        /// <summary>
-        ///     Name of the Repository, i.e. "Experiment data"
-        /// </summary>
-        [DataMember]
-        public string Name { get; set; }
-
-        /// <summary>
-        ///     Path to a directory containing the actual files
-        /// </summary>
-        [DataMember]
-        public DirectoryInfo PhysicalDirectory { get; set; }
-
-        /// <summary>
-        ///     Path where the Repo will be mounted
-        /// </summary>
-        [DataMember]
-        public DirectoryInfo Mountpoint { get; set; }
-
-        /// <summary>
-        ///     A Dokan driver interface
-        /// </summary>
-        private DokanInterface DokanInterface { get; }
-
-        /// <summary>
-        ///     The gin commandline used for checkouts, i.e. "achilleas/gin-cli-builds"
-        /// </summary>
-        [DataMember]
-        public string Commandline { get; set; }
-
-        /// <summary>
-        ///     The server address, i.e. gin.g-node.org
-        /// </summary>
-        [DataMember]
-        public string ServerAddress { get; set; }
 
         #endregion
 
@@ -355,14 +312,14 @@ namespace GinClientLibrary
         {
             directoryName = Directory.GetParent(filePath).FullName;
             filename = Directory.GetFiles(directoryName)
-                .Single(s => string.Compare(s.ToUpperInvariant(), filePath.ToUpperInvariant()) == 0);
+                .Single(s => string.CompareOrdinal(s.ToUpperInvariant(), filePath.ToUpperInvariant()) == 0);
             filename = Path.GetFileName(filename);
         }
 
         private void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
             if (!string.IsNullOrEmpty(e.Data))
-                _output.AppendLine(e.Data);
+                Output.AppendLine(e.Data);
         }
 
         private void Process_OutputDataReceivedThroughput(object sender, DataReceivedEventArgs e)
@@ -402,14 +359,14 @@ namespace GinClientLibrary
                 };
 
                 process.OutputDataReceived += Process_OutputDataReceived;
-                _output.Clear();
+                Output.Clear();
                 process.Start();
                 process.BeginOutputReadLine();
                 error = process.StandardError.ReadToEnd();
                 process.WaitForExit();
 
-                var output = _output.ToString();
-                _output.Clear();
+                var output = Output.ToString();
+                Output.Clear();
                 return output;
             }
         }
@@ -435,7 +392,7 @@ namespace GinClientLibrary
                 };
 
                 process.OutputDataReceived += Process_OutputDataReceivedThroughput;
-                _output.Clear();
+                Output.Clear();
                 process.Start();
                 process.BeginOutputReadLine();
                 error = process.StandardError.ReadToEnd();
@@ -458,13 +415,12 @@ namespace GinClientLibrary
 
         private bool _disposedValue; // To detect redundant calls
 
-
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposedValue)
                 if (disposing)
                 {
-                    var res = Dokan.RemoveMountPoint(Mountpoint.FullName.Trim('\\'));
+                    Dokan.RemoveMountPoint(Mountpoint.FullName.Trim('\\'));
                 }
 
             // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.

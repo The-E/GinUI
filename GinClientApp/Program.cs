@@ -40,6 +40,9 @@ namespace GinClientApp
             try
             {
                 _client = new GinClientServiceClient(new InstanceContext(this));
+
+                if (_client.InnerChannel.State == CommunicationState.Faulted)
+                    throw new Exception();
             }
             catch
             {
@@ -106,7 +109,7 @@ namespace GinClientApp
                 try
                 {
                     var text = File.OpenText(saveFilePath + @"\SavedRepositories.json").ReadToEnd();
-                    var repos = JsonConvert.DeserializeObject<GinRepository[]>(text);
+                    var repos = JsonConvert.DeserializeObject<GinRepositoryData[]>(text);
 
                     foreach (var repo in repos)
                     {
@@ -140,14 +143,15 @@ namespace GinClientApp
         {
             var menuitems = new List<MenuItem>();
 
-            var repositories = _client.GetRepositoryList();
+            var repositories = JsonConvert.DeserializeObject<GinRepositoryData[]>(_client.GetRepositoryList());
 
             foreach (var repo in repositories)
             {
                 var mitem = new MenuItem(repo.Name);
                 mitem.Tag = repo;
-                mitem.MenuItems.Add("Edit", EditRepoMenuItemHandler);
+                //mitem.MenuItems.Add("Edit", EditRepoMenuItemHandler);
                 mitem.MenuItems.Add("Unmount", UnmountRepoMenuItemHandler);
+                mitem.MenuItems.Add("Update", UpdateRepoMenuItemHandler);
 
                 menuitems.Add(mitem);
             }
@@ -162,6 +166,13 @@ namespace GinClientApp
             return menuitems.ToArray();
         }
 
+        private void UpdateRepoMenuItemHandler(object sender, EventArgs e)
+        {
+            var repo = (GinRepositoryData)((MenuItem) sender).Parent.Tag;
+
+            _client.DownloadUpdateInfo(repo.Name);
+        }
+
         private void ManageRepositoriesMenuItemHandler(object sender, EventArgs e)
         {
             var repomanager = new RepoManagement(_client);
@@ -171,7 +182,19 @@ namespace GinClientApp
 
         private void UnmountRepoMenuItemHandler(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            
+            var mItem = (MenuItem) sender;
+            var repo = (GinRepositoryData)mItem.Parent.Tag;
+            if (string.CompareOrdinal("Unmount", mItem.Text) == 0)
+            {
+                _client.UnmountRepository(repo.Name);
+                mItem.Text = "Mount";
+            }
+            else
+            {
+                _client.MountRepository(repo.Name);
+                mItem.Text = "Unmount";
+            }
         }
 
         private void EditRepoMenuItemHandler(object sender, EventArgs e)
@@ -181,7 +204,7 @@ namespace GinClientApp
 
         void IGinClientServiceCallback.FileOperationFinished(string filename, string repository, bool success)
         {
-            //progressDisplay.RemoveFileTransfer(filename);
+            //progressDisplay?.RemoveFileTransfer(filename);
         }
 
         void IGinClientServiceCallback.FileOperationStarted(string filename, string repository)
@@ -204,15 +227,13 @@ namespace GinClientApp
             Console.WriteLine("Filename: {0}, Repo: {1}, Progress: {2}, Speed: {3}, State: {4}", filename, repository,
                 progress, speed, state);
 
-            //if (progressDisplay != null)
-            //{
-            //    progressDisplay.SetProgressBarState(filename, state, progress, speed);
-            //}
+            //progressDisplay?.SetProgressBarState(filename, state, progress, speed);
         }
 
         void IGinClientServiceCallback.GinServiceError(string message)
         {
             MessageBox.Show(message, "GIN Service Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            Exit(this, EventArgs.Empty);
         }
 
         private void _trayIcon_DoubleClick(object sender, EventArgs e)

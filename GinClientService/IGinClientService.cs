@@ -12,6 +12,9 @@ namespace GinClientService
         bool AddRepository(string physicalDirectory, string mountpoint, string name, string commandline);
 
         [OperationContract]
+        bool MountRepository(string repoName);
+
+        [OperationContract]
         bool UnmountRepository(string repoName);
 
         [OperationContract]
@@ -24,10 +27,10 @@ namespace GinClientService
         bool Login(string username, string password);
 
         [OperationContract]
-        List<GinRepository> GetRepositoryList();
+        string GetRepositoryList();
 
         [OperationContract]
-        bool UpdateRepository(string repoName, GinRepository data);
+        bool UpdateRepository(string repoName, GinRepositoryData data);
 
         [OperationContract]
         bool RetrieveFile(string repoName, string filepath);

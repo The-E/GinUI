@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.ServiceModel;
 using GinClientLibrary;
+using Newtonsoft.Json;
 
 namespace GinClientService
 {
@@ -40,9 +42,15 @@ namespace GinClientService
             repo.DownloadUpdateInfo();
         }
 
-        List<GinRepository> IGinClientService.GetRepositoryList()
+        string IGinClientService.GetRepositoryList()
         {
-            return RepositoryManager.Instance.Repositories;
+            var result = RepositoryManager.Instance.Repositories.Select(repo => repo as GinRepositoryData).ToArray();
+            return JsonConvert.SerializeObject(result);
+        }
+
+        bool IGinClientService.Login(string username, string password)
+        {
+            return RepositoryManager.Instance.Login(username, password);
         }
 
         bool IGinClientService.Login(string username, string password)
@@ -90,9 +98,15 @@ namespace GinClientService
         }
 
 
-        bool IGinClientService.UpdateRepository(string repoName, GinRepository data)
+        bool IGinClientService.UpdateRepository(string repoName, GinRepositoryData data)
         {
             return RepositoryManager.Instance.UpdateRepository(repoName, data);
+        }
+
+        bool IGinClientService.MountRepository(string repoName)
+        {
+            RepositoryManager.Instance.MountRepository(RepositoryManager.Instance.GetRepoByName(repoName));
+            return true;
         }
     }
 }

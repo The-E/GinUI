@@ -13,9 +13,9 @@ namespace GinClientApp
     public partial class RepoManagement : Form
     {
         private readonly GinClientServiceClient _client;
-        private List<GinRepository> _repositories;
+        private List<GinRepositoryData> _repositories;
+        private GinRepositoryData _selectedRepository;
         private bool _suppressEvents;
-        private GinRepository _selectedRepository;
 
         public RepoManagement(GinClientServiceClient client)
         {
@@ -23,19 +23,12 @@ namespace GinClientApp
             _client = client;
         }
 
-        private void label3_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void RepoManagement_Load(object sender, EventArgs e)
         {
-            _repositories = new List<GinRepository>(_client.GetRepositoryList());
+            _repositories = new List<GinRepositoryData>(JsonConvert.DeserializeObject<GinRepositoryData[]>(_client.GetRepositoryList()));
 
             foreach (var repo in _repositories)
-            {
                 lvwRepositories.Items.Add(repo.Name);
-            }
         }
 
         private void lvwRepositories_SelectedIndexChanged(object sender, EventArgs e)
@@ -70,10 +63,10 @@ namespace GinClientApp
 
         private void DisableControls()
         {
-            foreach (var ctrl in Controls )
+            foreach (var ctrl in Controls)
             {
                 if (ctrl == lvwRepositories) continue;
-                
+
                 ((Control) ctrl).Enabled = false;
             }
         }
@@ -85,19 +78,18 @@ namespace GinClientApp
             if (_repositories.Count == 0) return;
 
             foreach (var repo in _repositories)
-            {
-                _client.AddRepository(repo.PhysicalDirectory.FullName, repo.Mountpoint.FullName, repo.Name, repo.Commandline);
-            }
-            
-            string saveFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
-                              @"\gnode\GinWindowsClient\SavedRepositories.json";
+                _client.AddRepository(repo.PhysicalDirectory.FullName, repo.Mountpoint.FullName, repo.Name,
+                    repo.Commandline);
+
+            var saveFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
+                           @"\gnode\GinWindowsClient\SavedRepositories.json";
 
             if (!Directory.Exists(Path.GetDirectoryName(saveFile)))
                 Directory.CreateDirectory(Path.GetDirectoryName(saveFile));
 
             if (File.Exists(saveFile))
                 File.Delete(saveFile);
-            
+
 
             var fs = File.CreateText(saveFile);
             fs.Write(JsonConvert.SerializeObject(_repositories));
@@ -107,19 +99,6 @@ namespace GinClientApp
 
         private void txtRepoName_TextChanged(object sender, EventArgs e)
         {
-            //if (_suppressEvents) return;
-            //if (_selectedRepository == null) return;
-
-            //_repositories.Remove(_selectedRepository);
-            //_selectedRepository.Name = txtRepoName.Text;
-            //_repositories.Add(_selectedRepository);
-
-            //lvwRepositories.Items.Clear();
-
-            //foreach (var repo in _repositories)
-            //{
-            //    lvwRepositories.Items.Add(repo.Name);
-            //}
         }
 
         private void txtGinCommandline_TextChanged(object sender, EventArgs e)
