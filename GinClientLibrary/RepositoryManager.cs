@@ -80,7 +80,7 @@ namespace GinClientLibrary
             //"content-type: application/json" and "Authorization: Basic <base64 encoded $USERNAME:$PASSWORD>"
             //default host gin.g-node.org
             //request returns a token that needs to be saved and attached to future requests
-            //default path %userprofile%\.config\gin\, will be changed to %appdata%\gnode\gin\
+            //default path %userprofile%\.config\gin\, will be changed to %appdata%\g-node\gin\
 
             //Also note: In a service context, %userprofile% evaluates to C:\Windows\system32\config\systemprofile\; %AppData% to C:\Windows\system32\config\systemprofile\Appdata\Roaming
 

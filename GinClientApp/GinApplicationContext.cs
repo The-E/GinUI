@@ -55,7 +55,7 @@ namespace GinClientApp
             }
 
             var saveFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
-                               @"\gnode\GinWindowsClient";
+                               @"\g-node\GinWindowsClient";
             if (!Directory.Exists(saveFilePath))
                 Directory.CreateDirectory(saveFilePath);
 

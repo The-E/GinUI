@@ -84,7 +84,7 @@ namespace GinClientApp
                     repo.Commandline, _options.RepositoryCheckoutOption == GinApplicationContext.GlobalOptions.CheckoutOption.FullCheckout);
 
             var saveFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
-                           @"\gnode\GinWindowsClient\SavedRepositories.json";
+                           @"\g-node\GinWindowsClient\SavedRepositories.json";
 
             if (!Directory.Exists(Path.GetDirectoryName(saveFile)))
                 Directory.CreateDirectory(Path.GetDirectoryName(saveFile));
@@ -125,7 +125,7 @@ namespace GinClientApp
                 var repoAddress = elems[2];
                 var repoName = repoAddress.Split('/')[1];
                 var repoPhysAddress = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
-                                      @"\gnode\GinWindowsClient\Repositories\" + repoName;
+                                      @"\g-node\GinWindowsClient\Repositories\" + repoName;
                 var repoMountpoint = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) +
                                      @"\Gin Repositories\" + repoName;
 
