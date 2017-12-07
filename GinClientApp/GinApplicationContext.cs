@@ -232,7 +232,14 @@ namespace GinClientApp
                 return; //Nothing to upload here
 
             var uploadfiledlg = new UploadFilesDlg(alteredFiles);
-            uploadfiledlg.ShowDialog();
+            var res = uploadfiledlg.ShowDialog();
+
+            if (res == DialogResult.Cancel) return;
+
+            foreach (var file in alteredFiles)
+            {
+                _client.UploadFile(repo.Name, file.Key);
+            }
         }
 
         private void ShowOptionsMenuItemHandler(object sender, EventArgs e)

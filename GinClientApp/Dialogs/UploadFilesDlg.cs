@@ -20,5 +20,13 @@ namespace GinClientApp.Dialogs
 
             _files = alteredFiles;
         }
+
+        private void UploadFilesDlg_Load(object sender, EventArgs e)
+        {
+            foreach (var file in _files)
+            {
+                lvwFiles.Items.Add(new ListViewItem(file.Key));
+            }
+        }
     }
 }

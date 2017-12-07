@@ -132,6 +132,12 @@
     <EmbeddedResource Include="Dialogs\GlobalOptionsDlg.resx">
       <DependentUpon>GlobalOptionsDlg.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\UploadFilesDlg.en.resx">
+      <DependentUpon>UploadFilesDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\UploadFilesDlg.resx">
+      <DependentUpon>UploadFilesDlg.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>

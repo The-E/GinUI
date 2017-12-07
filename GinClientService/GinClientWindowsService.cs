@@ -44,5 +44,14 @@ namespace GinClientService
             _serviceHost.Close();
             _serviceHost = null;
         }
+
+        private void InitializeComponent()
+        {
+            // 
+            // GinClientWindowsService
+            // 
+            this.ServiceName = "Gin Client Service";
+
+        }
     }
 }
