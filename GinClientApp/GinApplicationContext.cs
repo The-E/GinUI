@@ -6,6 +6,7 @@ using System.ServiceModel;
 using System.Windows.Forms;
 using GinClientApp.Dialogs;
 using GinClientApp.GinClientService;
+using GinClientApp.Properties;
 using GinClientLibrary;
 using Newtonsoft.Json;
 using Timer = System.Timers.Timer;
@@ -50,7 +51,7 @@ namespace GinClientApp
             }
             catch
             {
-                MessageBox.Show("Error while trying to access Gin Client Service", "Gin Client Error",
+                MessageBox.Show(Resources.GinApplicationContext_Error_while_trying_to_access_Gin_Client_Service, Resources.GinApplicationContext_Gin_Client_Error,
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
@@ -112,7 +113,7 @@ namespace GinClientApp
 
                     if (!_client.Login(credentials.Username, credentials.Password))
                     {
-                        MessageBox.Show("Error while trying to log in to GIN", "Gin Client Error",
+                        MessageBox.Show("Error while trying to log in to GIN", Resources.GinApplicationContext_Gin_Client_Error,
                             MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     else
@@ -196,8 +197,8 @@ namespace GinClientApp
                 var mitem = new MenuItem(repo.Name);
                 mitem.Tag = repo;
                 //mitem.MenuItems.Add("Edit", EditRepoMenuItemHandler);
-                mitem.MenuItems.Add("Unmount", UnmountRepoMenuItemHandler);
-                mitem.MenuItems.Add("Update", UpdateRepoMenuItemHandler);
+                mitem.MenuItems.Add(Resources.GinApplicationContext_Unmount, UnmountRepoMenuItemHandler);
+                mitem.MenuItems.Add(Resources.GinApplicationContext_Update, UpdateRepoMenuItemHandler);
 
                 menuitems.Add(mitem);
             }
@@ -205,11 +206,11 @@ namespace GinClientApp
             if (repositories.Length != 0)
                 menuitems.Add(new MenuItem("-"));
 
-            menuitems.Add(new MenuItem("Manage Repositories", ManageRepositoriesMenuItemHandler));
+            menuitems.Add(new MenuItem(Resources.GinApplicationContext_Manage_Repositories, ManageRepositoriesMenuItemHandler));
 
-            menuitems.Add(new MenuItem("Options", ShowOptionsMenuItemHandler));
+            menuitems.Add(new MenuItem(Resources.GinApplicationContext_Options, ShowOptionsMenuItemHandler));
 
-            menuitems.Add(new MenuItem("Exit", Exit));
+            menuitems.Add(new MenuItem(Resources.GinApplicationContext_Exit, Exit));
 
             return menuitems.ToArray();
         }
@@ -247,15 +248,15 @@ namespace GinClientApp
             
             var mItem = (MenuItem) sender;
             var repo = (GinRepositoryData)mItem.Parent.Tag;
-            if (string.CompareOrdinal("Unmount", mItem.Text) == 0)
+            if (string.CompareOrdinal(Resources.GinApplicationContext_Unmount, mItem.Text) == 0)
             {
                 _client.UnmountRepository(repo.Name);
-                mItem.Text = "Mount";
+                mItem.Text = Resources.GinApplicationContext_Mount;
             }
             else
             {
                 _client.MountRepository(repo.Name);
-                mItem.Text = "Unmount";
+                mItem.Text = Resources.GinApplicationContext_Unmount;
             }
         }
 
@@ -271,9 +272,9 @@ namespace GinClientApp
 
         void IGinClientServiceCallback.FileOperationStarted(string filename, string repository)
         {
-            _trayIcon.BalloonTipTitle = @"GIN Repository activity in progress";
+            _trayIcon.BalloonTipTitle = Resources.GinApplicationContext_Repository_Activity;
             _trayIcon.BalloonTipText =
-                $"Retrieving {Path.GetFileName(filename)} from repository {repository}";
+                string.Format(Resources.GinApplicationContext_FileOperation_Retrieving, Path.GetFileName(filename), repository);
             _trayIcon.ShowBalloonTip(5000);
 
             //if (progressDisplay == null)
@@ -294,7 +295,7 @@ namespace GinClientApp
 
         void IGinClientServiceCallback.GinServiceError(string message)
         {
-            MessageBox.Show(message, "GIN Service Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(message, Resources.GinApplicationContext_Gin_Service_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             Exit(this, EventArgs.Empty);
         }
 

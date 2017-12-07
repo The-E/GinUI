@@ -8,10 +8,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace GinClientApp.Properties
-{
-
-
+namespace GinClientApp.Properties {
+    using System;
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -19,52 +19,143 @@ namespace GinClientApp.Properties
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources
-    {
-
+    internal class Resources {
+        
         private static global::System.Resources.ResourceManager resourceMan;
-
+        
         private static global::System.Globalization.CultureInfo resourceCulture;
-
+        
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resources()
-        {
+        internal Resources() {
         }
-
+        
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager
-        {
-            get
-            {
-                if ((resourceMan == null))
-                {
+        internal static global::System.Resources.ResourceManager ResourceManager {
+            get {
+                if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("GinClientApp.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
             }
         }
-
+        
         /// <summary>
         ///   Overrides the current thread's CurrentUICulture property for all
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture
-        {
-            get
-            {
+        internal static global::System.Globalization.CultureInfo Culture {
+            get {
                 return resourceCulture;
             }
-            set
-            {
+            set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error while trying to access Gin Client Service.
+        /// </summary>
+        internal static string GinApplicationContext_Error_while_trying_to_access_Gin_Client_Service {
+            get {
+                return ResourceManager.GetString("GinApplicationContext_Error_while_trying_to_access_Gin_Client_Service", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exit.
+        /// </summary>
+        internal static string GinApplicationContext_Exit {
+            get {
+                return ResourceManager.GetString("GinApplicationContext_Exit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retrieving {0} from repository {1}.
+        /// </summary>
+        internal static string GinApplicationContext_FileOperation_Retrieving {
+            get {
+                return ResourceManager.GetString("GinApplicationContext_FileOperation_Retrieving", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gin Client Error.
+        /// </summary>
+        internal static string GinApplicationContext_Gin_Client_Error {
+            get {
+                return ResourceManager.GetString("GinApplicationContext_Gin_Client_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gin Service Error.
+        /// </summary>
+        internal static string GinApplicationContext_Gin_Service_Error {
+            get {
+                return ResourceManager.GetString("GinApplicationContext_Gin_Service_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manage Repositories.
+        /// </summary>
+        internal static string GinApplicationContext_Manage_Repositories {
+            get {
+                return ResourceManager.GetString("GinApplicationContext_Manage_Repositories", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mount.
+        /// </summary>
+        internal static string GinApplicationContext_Mount {
+            get {
+                return ResourceManager.GetString("GinApplicationContext_Mount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Options.
+        /// </summary>
+        internal static string GinApplicationContext_Options {
+            get {
+                return ResourceManager.GetString("GinApplicationContext_Options", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GIN Repository activity in progress.
+        /// </summary>
+        internal static string GinApplicationContext_Repository_Activity {
+            get {
+                return ResourceManager.GetString("GinApplicationContext_Repository_Activity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unmount.
+        /// </summary>
+        internal static string GinApplicationContext_Unmount {
+            get {
+                return ResourceManager.GetString("GinApplicationContext_Unmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update.
+        /// </summary>
+        internal static string GinApplicationContext_Update {
+            get {
+                return ResourceManager.GetString("GinApplicationContext_Update", resourceCulture);
             }
         }
     }
