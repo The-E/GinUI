@@ -52,7 +52,12 @@
             this.columnHeader1});
             this.lvwRepositories.Name = "lvwRepositories";
             this.lvwRepositories.UseCompatibleStateImageBehavior = false;
+            this.lvwRepositories.View = System.Windows.Forms.View.List;
             this.lvwRepositories.SelectedIndexChanged += new System.EventHandler(this.lvwRepositories_SelectedIndexChanged);
+            // 
+            // columnHeader1
+            // 
+            resources.ApplyResources(this.columnHeader1, "columnHeader1");
             // 
             // btnAddNew
             // 
