@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GinClientApp.Dialogs;
 using GinClientApp.GinClientService;
+using GinClientApp.Properties;
 using GinClientLibrary;
 using Newtonsoft.Json;
 
@@ -13,16 +14,19 @@ namespace GinClientApp
     public partial class RepoManagement : Form
     {
         private readonly GinClientServiceClient _client;
+        private readonly GinApplicationContext.UserCredentials _credentials;
         private List<GinRepositoryData> _repositories;
+
         private GinRepositoryData _selectedRepository;
         private bool _suppressEvents;
         private GinApplicationContext.GlobalOptions _options;
 
-        public RepoManagement(GinClientServiceClient client, GinApplicationContext.GlobalOptions options)
+        public RepoManagement(GinClientServiceClient client, GinApplicationContext.GlobalOptions options, GinApplicationContext.UserCredentials credentials)
         {
             InitializeComponent();
             _client = client;
             _options = options;
+            _credentials = credentials;
         }
 
         private void RepoManagement_Load(object sender, EventArgs e)
@@ -182,6 +186,37 @@ namespace GinClientApp
             if (string.Compare(newDir, txtPhysdir.Text) == 0) return;
 
             txtPhysdir.Text = newDir;
+        }
+
+        private void btnCreate_Click(object sender, EventArgs e)
+        {
+            var getNamedlg = new GetRepoNameDlg();
+            var result = getNamedlg.ShowDialog();
+            if (result == DialogResult.Cancel) return;
+
+            if (!_client.CreateNewRepository(getNamedlg.Text))
+            {
+                MessageBox.Show("The chosen name is not available.\nIt is either invalid or in use already.",
+                    Resources.GinApplicationContext_Gin_Service_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                var repoAddress = _credentials.Username + '/' + getNamedlg.Text;
+                var repoName = getNamedlg.Text;
+                var repoPhysAddress = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
+                                      @"\g-node\GinWindowsClient\Repositories\" + repoName;
+                var repoMountpoint = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) +
+                                     @"\Gin Repositories\" + repoName;
+
+                var newRepo = new GinRepository(new DirectoryInfo(repoPhysAddress),
+                    new DirectoryInfo(repoMountpoint), repoName, repoAddress);
+
+                _repositories.Add(newRepo);
+
+                lvwRepositories.Items.Clear();
+                foreach (var repo in _repositories)
+                    lvwRepositories.Items.Add(repo.Name);
+            }
         }
     }
 }

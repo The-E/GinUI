@@ -18,6 +18,7 @@ namespace GinClientApp
     {
         private readonly GinClientServiceClient _client;
         private readonly NotifyIcon _trayIcon;
+        private readonly UserCredentials _credentials;
         private GlobalOptions _options;
         private Timer _updateIntervalTimer;
 
@@ -110,9 +111,9 @@ namespace GinClientApp
                 try
                 {
                     var text = File.OpenText(saveFilePath + @"\Credentials.json").ReadToEnd();
-                    var credentials = JsonConvert.DeserializeObject<UserCredentials>(text);
+                    _credentials = JsonConvert.DeserializeObject<UserCredentials>(text);
 
-                    if (!_client.Login(credentials.Username, credentials.Password))
+                    if (!_client.Login(_credentials.Username, _credentials.Password))
                     {
                         MessageBox.Show("Error while trying to log in to GIN", Resources.GinApplicationContext_Gin_Client_Error,
                             MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -265,7 +266,7 @@ namespace GinClientApp
 
         private void ManageRepositoriesMenuItemHandler(object sender, EventArgs e)
         {
-            var repomanager = new RepoManagement(_client, _options);
+            var repomanager = new RepoManagement(_client, _options, _credentials);
             repomanager.Closed += (o, args) => { _trayIcon.ContextMenu = new ContextMenu(BuildContextMenu()); };
             repomanager.ShowDialog();
         }
@@ -340,7 +341,7 @@ namespace GinClientApp
             Application.Exit();
         }
 
-        struct UserCredentials
+        public struct UserCredentials
         {
             public string Username { get; set; }
             public string Password { get; set; }

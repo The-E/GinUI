@@ -21,6 +21,12 @@ namespace GinClientApp.GinClientService {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/AddRepository", ReplyAction="http://tempuri.org/IGinClientService/AddRepositoryResponse")]
         System.Threading.Tasks.Task<bool> AddRepositoryAsync(string physicalDirectory, string mountpoint, string name, string commandline, bool performFullCheckout);
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/CreateNewRepository", ReplyAction="http://tempuri.org/IGinClientService/CreateNewRepositoryResponse")]
+        bool CreateNewRepository(string repoName);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/CreateNewRepository", ReplyAction="http://tempuri.org/IGinClientService/CreateNewRepositoryResponse")]
+        System.Threading.Tasks.Task<bool> CreateNewRepositoryAsync(string repoName);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/MountRepository", ReplyAction="http://tempuri.org/IGinClientService/MountRepositoryResponse")]
         bool MountRepository(string repoName);
         
@@ -150,6 +156,14 @@ namespace GinClientApp.GinClientService {
         
         public System.Threading.Tasks.Task<bool> AddRepositoryAsync(string physicalDirectory, string mountpoint, string name, string commandline, bool performFullCheckout) {
             return base.Channel.AddRepositoryAsync(physicalDirectory, mountpoint, name, commandline, performFullCheckout);
+        }
+        
+        public bool CreateNewRepository(string repoName) {
+            return base.Channel.CreateNewRepository(repoName);
+        }
+        
+        public System.Threading.Tasks.Task<bool> CreateNewRepositoryAsync(string repoName) {
+            return base.Channel.CreateNewRepositoryAsync(repoName);
         }
         
         public bool MountRepository(string repoName) {

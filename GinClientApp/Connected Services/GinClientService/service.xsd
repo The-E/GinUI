@@ -19,6 +19,20 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  <xs:element name="CreateNewRepository">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="repoName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CreateNewRepositoryResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="CreateNewRepositoryResult" type="xs:boolean" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
   <xs:element name="MountRepository">
     <xs:complexType>
       <xs:sequence>

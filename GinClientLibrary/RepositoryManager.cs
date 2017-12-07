@@ -73,6 +73,35 @@ namespace GinClientLibrary
             }
         }
 
+        public bool CreateNewRepository(string repoName)
+        {
+            //TODO: Coordinate with achilleas to get the gin client to accept a --json parameter to gin repos
+            //TODO: Return false if a repo with that name already exists
+
+            lock (this)
+            {
+                var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        FileName = "cmd.exe",
+                        WorkingDirectory = @"C:\",
+                        Arguments = "/C gin.exe create " + repoName,
+                        CreateNoWindow = true,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        RedirectStandardInput = true,
+                        UseShellExecute = false
+                    }
+                };
+
+                process.Start();
+            }
+
+            return true;
+        }
+
         public bool Login(string username, string password)
         {
             //if you wanna do the POST request in the Windows client separately, you can just 

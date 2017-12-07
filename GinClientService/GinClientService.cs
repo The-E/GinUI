@@ -35,6 +35,11 @@ namespace GinClientService
             return true;
         }
 
+        bool IGinClientService.CreateNewRepository(string repoName)
+        {
+            return RepositoryManager.Instance.CreateNewRepository(repoName);
+        }
+
         void IGinClientService.DownloadAllUpdateInfo()
         {
             foreach (var repo in RepositoryManager.Instance.Repositories)

@@ -23,6 +23,14 @@ namespace GinClientService
         bool AddRepository(string physicalDirectory, string mountpoint, string name, string commandline, bool performFullCheckout);
 
         /// <summary>
+        /// Create a new repository on the remote server
+        /// </summary>
+        /// <param name="repoName"></param>
+        /// <returns></returns>
+        [OperationContract]
+        bool CreateNewRepository(string repoName);
+
+        /// <summary>
         /// Unmounts a repository.
         /// </summary>
         /// <param name="repoName"></param>
