@@ -92,6 +92,12 @@ namespace GinClientApp.GinClientService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/DownloadAllUpdateInfo", ReplyAction="http://tempuri.org/IGinClientService/DownloadAllUpdateInfoResponse")]
         System.Threading.Tasks.Task DownloadAllUpdateInfoAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/GetRepositoryFileInfo", ReplyAction="http://tempuri.org/IGinClientService/GetRepositoryFileInfoResponse")]
+        string GetRepositoryFileInfo(string repoName);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/GetRepositoryFileInfo", ReplyAction="http://tempuri.org/IGinClientService/GetRepositoryFileInfoResponse")]
+        System.Threading.Tasks.Task<string> GetRepositoryFileInfoAsync(string repoName);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -240,6 +246,14 @@ namespace GinClientApp.GinClientService {
         
         public System.Threading.Tasks.Task DownloadAllUpdateInfoAsync() {
             return base.Channel.DownloadAllUpdateInfoAsync();
+        }
+        
+        public string GetRepositoryFileInfo(string repoName) {
+            return base.Channel.GetRepositoryFileInfo(repoName);
+        }
+        
+        public System.Threading.Tasks.Task<string> GetRepositoryFileInfoAsync(string repoName) {
+            return base.Channel.GetRepositoryFileInfoAsync(repoName);
         }
     }
 }

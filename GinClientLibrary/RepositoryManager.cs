@@ -120,7 +120,11 @@ namespace GinClientLibrary
 
             return true;
         }
-        
+
+        public string GetRepositoryFileInfo(GinRepository ginRepository)
+        {
+            return ginRepository.GetStatusCacheJson();
+        }
 
         public void MountAllRepositories()
         {

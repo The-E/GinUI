@@ -150,4 +150,7 @@
   <data name="GinApplicationContext_Gin_Service_Error" xml:space="preserve">
     <value>Gin Service Error</value>
   </data>
+  <data name="GinApplicationContext_Upload" xml:space="preserve">
+    <value>Upload local files</value>
+  </data>
 </root>

@@ -107,6 +107,10 @@ namespace GinClientService
             }
         }
 
+        string IGinClientService.GetRepositoryFileInfo(string repoName)
+        {
+            return RepositoryManager.Instance.GetRepositoryFileInfo(RepositoryManager.Instance.GetRepoByName(repoName));
+        }
 
         bool IGinClientService.UpdateRepository(string repoName, GinRepositoryData data)
         {

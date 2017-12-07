@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.ServiceModel;
 using System.Windows.Forms;
 using GinClientApp.Dialogs;
@@ -197,6 +198,7 @@ namespace GinClientApp
                 var mitem = new MenuItem(repo.Name);
                 mitem.Tag = repo;
                 //mitem.MenuItems.Add("Edit", EditRepoMenuItemHandler);
+                mitem.MenuItems.Add(Resources.GinApplicationContext_Upload, UploadRepoMenuItemHandler);
                 mitem.MenuItems.Add(Resources.GinApplicationContext_Unmount, UnmountRepoMenuItemHandler);
                 mitem.MenuItems.Add(Resources.GinApplicationContext_Update, UpdateRepoMenuItemHandler);
 
@@ -213,6 +215,24 @@ namespace GinClientApp
             menuitems.Add(new MenuItem(Resources.GinApplicationContext_Exit, Exit));
 
             return menuitems.ToArray();
+        }
+
+        private void UploadRepoMenuItemHandler(object sender, EventArgs e)
+        {
+            var repo = (GinRepositoryData)((MenuItem)sender).Parent.Tag;
+            var fstatus = JsonConvert.DeserializeObject <
+                          Dictionary<string, GinRepository.FileStatus>>(_client.GetRepositoryFileInfo(repo.Name));
+
+            var alteredFiles = from kvp in fstatus
+                where kvp.Value == GinRepository.FileStatus.OnDiskModified ||
+                      kvp.Value == GinRepository.FileStatus.Unknown
+                select kvp;
+
+            if (!alteredFiles.Any())
+                return; //Nothing to upload here
+
+            var uploadfiledlg = new UploadFilesDlg(alteredFiles);
+            uploadfiledlg.ShowDialog();
         }
 
         private void ShowOptionsMenuItemHandler(object sender, EventArgs e)

@@ -155,6 +155,12 @@ namespace GinClientLibrary
             }
         }
 
+        public string GetStatusCacheJson()
+        {
+            ReadRepoStatus();
+            return JsonConvert.SerializeObject(StatusCache);
+        }
+
         public FileStatus GetFileStatus(string filePath)
         {
             lock (this)
@@ -479,5 +485,6 @@ namespace GinClientLibrary
         }
 
         #endregion
+
     }
 }

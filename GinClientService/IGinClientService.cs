@@ -112,6 +112,14 @@ namespace GinClientService
         /// </summary>
         [OperationContract]
         void DownloadAllUpdateInfo();
+
+        /// <summary>
+        /// Get a JSON representation of the current status of every file in the repository
+        /// </summary>
+        /// <param name="repoName">Name of the Repository</param>
+        /// <returns>A JSON representation of a Dictionary&lt;string, GinRepository.FileStatus&gt;</returns>
+        [OperationContract]
+        string GetRepositoryFileInfo(string repoName);
     }
 
     [SuppressMessage("ReSharper", "OperationContractWithoutServiceContract")]

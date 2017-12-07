@@ -158,5 +158,14 @@ namespace GinClientApp.Properties {
                 return ResourceManager.GetString("GinApplicationContext_Update", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Upload local files.
+        /// </summary>
+        internal static string GinApplicationContext_Upload {
+            get {
+                return ResourceManager.GetString("GinApplicationContext_Upload", resourceCulture);
+            }
+        }
     }
 }
