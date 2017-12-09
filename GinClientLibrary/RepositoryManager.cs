@@ -205,13 +205,13 @@ namespace GinClientLibrary
             Repositories.Clear();
         }
 
-        public void AddRepository(DirectoryInfo physicalDirectory, DirectoryInfo mountpoint, string name, string commandline, bool performFullCheckout)
+        public void AddRepository(DirectoryInfo physicalDirectory, DirectoryInfo mountpoint, string name, string commandline, bool performFullCheckout, bool createNew)
         {
             var repo = new GinRepository(
                 physicalDirectory,
                 mountpoint,
                 name,
-                commandline);
+                commandline, createNew);
 
             repo.FileOperationStarted += Repo_FileOperationStarted;
             repo.FileOperationCompleted += Repo_FileOperationCompleted;

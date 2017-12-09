@@ -18,9 +18,10 @@ namespace GinClientService
         /// <param name="name">The name of this repository</param>
         /// <param name="commandline">The gin get commandline used to initialize this, e.g. "gin get username/repository"</param>
         /// <param name="performFullCheckout">When true, all files are checked out of the annex, e.g "gin get </param>
+        /// <param name="createNew">When true, this repository will be created new, i.e. through gin create</param>
         /// <returns>True if repository creation succeeded</returns>
         [OperationContract]
-        bool AddRepository(string physicalDirectory, string mountpoint, string name, string commandline, bool performFullCheckout);
+        bool AddRepository(string physicalDirectory, string mountpoint, string name, string commandline, bool performFullCheckout, bool createNew);
 
         /// <summary>
         /// Create a new repository on the remote server

@@ -9,6 +9,7 @@
         <xs:element minOccurs="0" name="name" nillable="true" type="xs:string" />
         <xs:element minOccurs="0" name="commandline" nillable="true" type="xs:string" />
         <xs:element minOccurs="0" name="performFullCheckout" type="xs:boolean" />
+        <xs:element minOccurs="0" name="createNew" type="xs:boolean" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

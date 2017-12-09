@@ -11,6 +11,14 @@ namespace GinClientLibrary
     [DataContract]
     public class GinRepositoryData
     {
+        public GinRepositoryData(DirectoryInfo physicalDirectory, DirectoryInfo mountPoint, string repoName, string repoAddress, bool createNew)
+        {
+            PhysicalDirectory = physicalDirectory;
+            Mountpoint = mountPoint;
+            Name = repoName;
+            Address = repoAddress;
+            CreateNew = createNew;
+        }
 
         /// <summary>
         ///     Name of the Repository, i.e. "Experiment data"
@@ -31,12 +39,21 @@ namespace GinClientLibrary
         public DirectoryInfo Mountpoint { get; set; }
 
         /// <summary>
-        ///     The gin commandline used for checkouts, i.e. "gin get achilleas/gin-cli-builds"
+        ///     The gin commandline address used for checkouts, i.e. "achilleas/gin-cli-builds"
         /// </summary>
         [DataMember]
-        public string Commandline { get; set; }
+        public string Address { get; set; }
 
+        /// <summary>
+        ///     Whether or not this repository is currently mounted
+        /// </summary>
         [DataMember]
         public bool Mounted { get; set; }
+
+        /// <summary>
+        ///     Whether or not this repository is being created from scratch
+        /// </summary>
+        [DataMember]
+        public bool CreateNew { get; set; }
     }
 }

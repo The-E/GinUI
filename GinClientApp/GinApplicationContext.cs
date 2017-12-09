@@ -163,7 +163,7 @@ namespace GinClientApp
                     foreach (var repo in repos)
                     {
                         _client.AddRepository(repo.PhysicalDirectory.FullName, repo.Mountpoint.FullName, repo.Name,
-                            repo.Commandline, _options.RepositoryCheckoutOption == GlobalOptions.CheckoutOption.FullCheckout);
+                            repo.Address, _options.RepositoryCheckoutOption == GlobalOptions.CheckoutOption.FullCheckout);
                     }
                 }
                 catch (Exception e)

@@ -12,7 +12,7 @@ namespace GinClientApp.Dialogs
 {
     public partial class GetRepoNameDlg : Form
     {
-        public string Text { get; set; }
+        public string RepoName { get; set; }
 
         public GetRepoNameDlg()
         {
@@ -26,7 +26,7 @@ namespace GinClientApp.Dialogs
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            Text = textBox1.Text;
+            RepoName = textBox1.Text;
         }
     }
 }

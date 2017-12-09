@@ -129,6 +129,9 @@
     <EmbeddedResource Include="Custom Controls\FileTransferProgress.resx">
       <DependentUpon>FileTransferProgress.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\GetGINCmdline.en.resx">
+      <DependentUpon>GetGINCmdline.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\GetGINCmdline.resx">
       <DependentUpon>GetGINCmdline.cs</DependentUpon>
     </EmbeddedResource>

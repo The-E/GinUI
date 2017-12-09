@@ -16,10 +16,10 @@ namespace GinClientApp.GinClientService {
     public interface IGinClientService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/AddRepository", ReplyAction="http://tempuri.org/IGinClientService/AddRepositoryResponse")]
-        bool AddRepository(string physicalDirectory, string mountpoint, string name, string commandline, bool performFullCheckout);
+        bool AddRepository(string physicalDirectory, string mountpoint, string name, string commandline, bool performFullCheckout, bool createNew);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/AddRepository", ReplyAction="http://tempuri.org/IGinClientService/AddRepositoryResponse")]
-        System.Threading.Tasks.Task<bool> AddRepositoryAsync(string physicalDirectory, string mountpoint, string name, string commandline, bool performFullCheckout);
+        System.Threading.Tasks.Task<bool> AddRepositoryAsync(string physicalDirectory, string mountpoint, string name, string commandline, bool performFullCheckout, bool createNew);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/CreateNewRepository", ReplyAction="http://tempuri.org/IGinClientService/CreateNewRepositoryResponse")]
         bool CreateNewRepository(string repoName);
@@ -150,12 +150,12 @@ namespace GinClientApp.GinClientService {
                 base(callbackInstance, binding, remoteAddress) {
         }
         
-        public bool AddRepository(string physicalDirectory, string mountpoint, string name, string commandline, bool performFullCheckout) {
-            return base.Channel.AddRepository(physicalDirectory, mountpoint, name, commandline, performFullCheckout);
+        public bool AddRepository(string physicalDirectory, string mountpoint, string name, string commandline, bool performFullCheckout, bool createNew) {
+            return base.Channel.AddRepository(physicalDirectory, mountpoint, name, commandline, performFullCheckout, createNew);
         }
         
-        public System.Threading.Tasks.Task<bool> AddRepositoryAsync(string physicalDirectory, string mountpoint, string name, string commandline, bool performFullCheckout) {
-            return base.Channel.AddRepositoryAsync(physicalDirectory, mountpoint, name, commandline, performFullCheckout);
+        public System.Threading.Tasks.Task<bool> AddRepositoryAsync(string physicalDirectory, string mountpoint, string name, string commandline, bool performFullCheckout, bool createNew) {
+            return base.Channel.AddRepositoryAsync(physicalDirectory, mountpoint, name, commandline, performFullCheckout, createNew);
         }
         
         public bool CreateNewRepository(string repoName) {

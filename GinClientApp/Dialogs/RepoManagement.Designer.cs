@@ -43,7 +43,6 @@
             this.label5 = new System.Windows.Forms.Label();
             this.txtPhysdir = new System.Windows.Forms.TextBox();
             this.btnPickPhysDir = new System.Windows.Forms.Button();
-            this.btnCreate = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lvwRepositories
@@ -126,18 +125,10 @@
             this.btnPickPhysDir.UseVisualStyleBackColor = true;
             this.btnPickPhysDir.Click += new System.EventHandler(this.btnPickPhysDir_Click);
             // 
-            // btnCreate
-            // 
-            resources.ApplyResources(this.btnCreate, "btnCreate");
-            this.btnCreate.Name = "btnCreate";
-            this.btnCreate.UseVisualStyleBackColor = true;
-            this.btnCreate.Click += new System.EventHandler(this.btnCreate_Click);
-            // 
             // RepoManagement
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.btnCreate);
             this.Controls.Add(this.btnPickPhysDir);
             this.Controls.Add(this.txtPhysdir);
             this.Controls.Add(this.label5);
@@ -175,6 +166,5 @@
         private System.Windows.Forms.TextBox txtPhysdir;
         private System.Windows.Forms.Button btnPickPhysDir;
         private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.Button btnCreate;
     }
 }
