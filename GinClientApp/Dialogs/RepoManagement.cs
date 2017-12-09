@@ -5,7 +5,6 @@ using System.Linq;
 using System.Windows.Forms;
 using GinClientApp.Dialogs;
 using GinClientApp.GinService;
-using GinClientApp.Properties;
 using GinClientLibrary;
 using Newtonsoft.Json;
 
@@ -15,13 +14,14 @@ namespace GinClientApp
     {
         private readonly GinServiceClient _client;
         private readonly GinApplicationContext.UserCredentials _credentials;
+        private readonly GinApplicationContext.GlobalOptions _options;
         private List<GinRepositoryData> _repositories;
 
         private GinRepositoryData _selectedRepository;
         private bool _suppressEvents;
-        private GinApplicationContext.GlobalOptions _options;
 
-        public RepoManagement(GinServiceClient client, GinApplicationContext.GlobalOptions options, GinApplicationContext.UserCredentials credentials)
+        public RepoManagement(GinServiceClient client, GinApplicationContext.GlobalOptions options,
+            GinApplicationContext.UserCredentials credentials)
         {
             InitializeComponent();
             _client = client;
@@ -31,7 +31,9 @@ namespace GinClientApp
 
         private void RepoManagement_Load(object sender, EventArgs e)
         {
-            _repositories = new List<GinRepositoryData>(JsonConvert.DeserializeObject<GinRepositoryData[]>(_client.GetRepositoryList()));
+            _repositories =
+                new List<GinRepositoryData>(
+                    JsonConvert.DeserializeObject<GinRepositoryData[]>(_client.GetRepositoryList()));
 
             foreach (var repo in _repositories)
                 lvwRepositories.Items.Add(repo.Name);
@@ -130,9 +132,9 @@ namespace GinClientApp
                 var repoAddress = getcmdlinedlg.RepositoryName;
                 var repoName = repoAddress.Split('/')[1];
                 var repoPhysAddress = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
-                                        @"\g-node\GinWindowsClient\Repositories\" + repoName;
+                                      @"\g-node\GinWindowsClient\Repositories\" + repoName;
                 var repoMountpoint = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) +
-                                        @"\Gin Repositories\" + repoName;
+                                     @"\Gin Repositories\" + repoName;
 
                 var newRepo = new GinRepositoryData(new DirectoryInfo(repoPhysAddress),
                     new DirectoryInfo(repoMountpoint), repoName, repoAddress, getcmdlinedlg.CreateNew);
