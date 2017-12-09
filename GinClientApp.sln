@@ -10,7 +10,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GinClientApp", "GinClientAp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GinClientLibrary", "GinClientLibrary\GinClientLibrary.csproj", "{BC992C0B-8187-4CCA-8827-617A4A85575D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GinClientService", "GinClientService\GinClientService.csproj", "{8687E754-5DC6-4B69-80A2-9F6BD2E6340F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GinService", "GinClientService\GinService.csproj", "{8687E754-5DC6-4B69-80A2-9F6BD2E6340F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

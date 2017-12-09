@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GinClientApp.Dialogs;
-using GinClientApp.GinClientService;
+using GinClientApp.GinService;
 using GinClientApp.Properties;
 using GinClientLibrary;
 using Newtonsoft.Json;
@@ -13,7 +13,7 @@ namespace GinClientApp
 {
     public partial class RepoManagement : Form
     {
-        private readonly GinClientServiceClient _client;
+        private readonly GinServiceClient _client;
         private readonly GinApplicationContext.UserCredentials _credentials;
         private List<GinRepositoryData> _repositories;
 
@@ -21,7 +21,7 @@ namespace GinClientApp
         private bool _suppressEvents;
         private GinApplicationContext.GlobalOptions _options;
 
-        public RepoManagement(GinClientServiceClient client, GinApplicationContext.GlobalOptions options, GinApplicationContext.UserCredentials credentials)
+        public RepoManagement(GinServiceClient client, GinApplicationContext.GlobalOptions options, GinApplicationContext.UserCredentials credentials)
         {
             InitializeComponent();
             _client = client;

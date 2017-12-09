@@ -3,7 +3,7 @@ using System.ServiceModel;
 using System.ServiceProcess;
 using GinClientLibrary;
 
-namespace GinClientService
+namespace GinService
 {
     public class GinClientWindowsService : ServiceBase
     {
@@ -29,7 +29,7 @@ namespace GinClientService
 
             // CreateDirectories a ServiceHost for the CalculatorService type and 
             // provide the base address.
-            _serviceHost = new ServiceHost(typeof(GinClientService));
+            _serviceHost = new ServiceHost(typeof(GinService));
 
             // Open the ServiceHostBase to create listeners and start 
             // listening for messages.

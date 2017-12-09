@@ -3,10 +3,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.ServiceModel;
 using GinClientLibrary;
 
-namespace GinClientService
+namespace GinService
 {
     [ServiceContract(CallbackContract = typeof(IGinClientCallback))]
-    public interface IGinClientService
+    public interface IGinService
     {
         /// <summary>
         /// Adds a new repository to the list of managed Repositories. If necessary,

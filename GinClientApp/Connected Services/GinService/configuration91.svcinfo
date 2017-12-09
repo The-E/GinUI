@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="9v2y6Fv/8GlUYt+HDpOXSMQoeYo=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="0XV9Vd8r1BzM5R0cOVURJ2WKga0=">
   <bindingConfigurations>
-    <bindingConfiguration bindingType="netNamedPipeBinding" name="NetNamedPipeBinding_IGinClientService">
+    <bindingConfiguration bindingType="netNamedPipeBinding" name="NetNamedPipeBinding_IGinService">
       <properties>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>NetNamedPipeBinding_IGinClientService</serializedValue>
+          <serializedValue>NetNamedPipeBinding_IGinService</serializedValue>
         </property>
         <property path="/closeTimeout" isComplexType="false" isExplicitlyDefined="true" clrType="System.TimeSpan, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -76,7 +76,7 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="NetNamedPipeBinding_IGinClientService" contract="GinClientService.IGinClientService" bindingType="netNamedPipeBinding" address="net.pipe://localhost/GinService/service" bindingConfiguration="NetNamedPipeBinding_IGinClientService">
+    <endpoint name="NetNamedPipeBinding_IGinService" contract="GinService.IGinService" bindingType="netNamedPipeBinding" address="net.pipe://localhost/GinService/service" bindingConfiguration="NetNamedPipeBinding_IGinService">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>net.pipe://localhost/GinService/service</serializedValue>
@@ -88,10 +88,10 @@
           <serializedValue>netNamedPipeBinding</serializedValue>
         </property>
         <property path="/bindingConfiguration" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>NetNamedPipeBinding_IGinClientService</serializedValue>
+          <serializedValue>NetNamedPipeBinding_IGinService</serializedValue>
         </property>
         <property path="/contract" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>GinClientService.IGinClientService</serializedValue>
+          <serializedValue>GinService.IGinService</serializedValue>
         </property>
         <property path="/headers" isComplexType="true" isExplicitlyDefined="false" clrType="System.ServiceModel.Configuration.AddressHeaderCollectionElement, System.ServiceModel, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>System.ServiceModel.Configuration.AddressHeaderCollectionElement</serializedValue>
@@ -151,7 +151,7 @@
           <serializedValue>False</serializedValue>
         </property>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>NetNamedPipeBinding_IGinClientService</serializedValue>
+          <serializedValue>NetNamedPipeBinding_IGinService</serializedValue>
         </property>
         <property path="/kind" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />

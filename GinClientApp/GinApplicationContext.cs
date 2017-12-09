@@ -6,7 +6,7 @@ using System.Linq;
 using System.ServiceModel;
 using System.Windows.Forms;
 using GinClientApp.Dialogs;
-using GinClientApp.GinClientService;
+using GinClientApp.GinService;
 using GinClientApp.Properties;
 using GinClientLibrary;
 using Newtonsoft.Json;
@@ -14,9 +14,9 @@ using Timer = System.Timers.Timer;
 
 namespace GinClientApp
 {
-    public class GinApplicationContext : ApplicationContext, IGinClientServiceCallback
+    public class GinApplicationContext : ApplicationContext, IGinServiceCallback
     {
-        private readonly GinClientServiceClient _client;
+        private readonly GinServiceClient _client;
         private readonly NotifyIcon _trayIcon;
         private readonly UserCredentials _credentials;
         private GlobalOptions _options;
@@ -46,7 +46,7 @@ namespace GinClientApp
         {
             try
             {
-                _client = new GinClientServiceClient(new InstanceContext(this));
+                _client = new GinServiceClient(new InstanceContext(this));
 
                 if (_client.InnerChannel.State == CommunicationState.Faulted)
                     throw new Exception();
@@ -293,12 +293,12 @@ namespace GinClientApp
             throw new NotImplementedException();
         }
 
-        void IGinClientServiceCallback.FileOperationFinished(string filename, string repository, bool success)
+        void IGinServiceCallback.FileOperationFinished(string filename, string repository, bool success)
         {
             //progressDisplay?.RemoveFileTransfer(filename);
         }
 
-        void IGinClientServiceCallback.FileOperationStarted(string filename, string repository)
+        void IGinServiceCallback.FileOperationStarted(string filename, string repository)
         {
             _trayIcon.BalloonTipTitle = Resources.GinApplicationContext_Repository_Activity;
             _trayIcon.BalloonTipText =
@@ -312,7 +312,7 @@ namespace GinClientApp
             //progressDisplay.Show();
         }
 
-        void IGinClientServiceCallback.FileOperationProgress(string filename, string repository, int progress,
+        void IGinServiceCallback.FileOperationProgress(string filename, string repository, int progress,
             string speed, string state)
         {
             Console.WriteLine("Filename: {0}, Repo: {1}, Progress: {2}, Speed: {3}, State: {4}", filename, repository,
@@ -321,7 +321,7 @@ namespace GinClientApp
             //progressDisplay?.SetProgressBarState(filename, state, progress, speed);
         }
 
-        void IGinClientServiceCallback.GinServiceError(string message)
+        void IGinServiceCallback.GinServiceError(string message)
         {
             MessageBox.Show(message, Resources.GinApplicationContext_Gin_Service_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             Exit(this, EventArgs.Empty);

@@ -1,0 +1,418 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tempuri.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="GinService" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy wsu:Id="NetNamedPipeBinding_IGinService_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <msb:BinaryEncoding xmlns:msb="http://schemas.microsoft.com/ws/06/2004/mspolicy/netbinary1" />
+        <sp:TransportBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <wsp:Policy>
+            <sp:TransportToken>
+              <wsp:Policy>
+                <msf:WindowsTransportSecurity xmlns:msf="http://schemas.microsoft.com/ws/2006/05/framing/policy">
+                  <msf:ProtectionLevel>EncryptAndSign</msf:ProtectionLevel>
+                </msf:WindowsTransportSecurity>
+              </wsp:Policy>
+            </sp:TransportToken>
+            <sp:AlgorithmSuite>
+              <wsp:Policy>
+                <sp:Basic256 />
+              </wsp:Policy>
+            </sp:AlgorithmSuite>
+            <sp:Layout>
+              <wsp:Policy>
+                <sp:Strict />
+              </wsp:Policy>
+            </sp:Layout>
+          </wsp:Policy>
+        </sp:TransportBinding>
+        <wsaw:UsingAddressing />
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import namespace="http://tempuri.org/" />
+      <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/GinClientLibrary" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/System.IO" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IGinService_AddRepository_InputMessage">
+    <wsdl:part name="parameters" element="tns:AddRepository" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_AddRepository_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AddRepositoryResponse" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_CreateNewRepository_InputMessage">
+    <wsdl:part name="parameters" element="tns:CreateNewRepository" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_CreateNewRepository_OutputMessage">
+    <wsdl:part name="parameters" element="tns:CreateNewRepositoryResponse" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_MountRepository_InputMessage">
+    <wsdl:part name="parameters" element="tns:MountRepository" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_MountRepository_OutputMessage">
+    <wsdl:part name="parameters" element="tns:MountRepositoryResponse" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_UnmountRepository_InputMessage">
+    <wsdl:part name="parameters" element="tns:UnmountRepository" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_UnmountRepository_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UnmountRepositoryResponse" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_DeleteRepository_InputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteRepository" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_DeleteRepository_OutputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteRepositoryResponse" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_UnmmountAllRepositories_InputMessage">
+    <wsdl:part name="parameters" element="tns:UnmmountAllRepositories" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_UnmmountAllRepositories_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UnmmountAllRepositoriesResponse" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_Login_InputMessage">
+    <wsdl:part name="parameters" element="tns:Login" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_Login_OutputMessage">
+    <wsdl:part name="parameters" element="tns:LoginResponse" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_GetRepositoryList_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetRepositoryList" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_GetRepositoryList_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetRepositoryListResponse" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_UpdateRepository_InputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateRepository" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_UpdateRepository_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateRepositoryResponse" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_RetrieveFile_InputMessage">
+    <wsdl:part name="parameters" element="tns:RetrieveFile" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_RetrieveFile_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RetrieveFileResponse" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_UploadFile_InputMessage">
+    <wsdl:part name="parameters" element="tns:UploadFile" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_UploadFile_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UploadFileResponse" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_StashFile_InputMessage">
+    <wsdl:part name="parameters" element="tns:StashFile" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_StashFile_OutputMessage">
+    <wsdl:part name="parameters" element="tns:StashFileResponse" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_DownloadUpdateInfo_InputMessage">
+    <wsdl:part name="parameters" element="tns:DownloadUpdateInfo" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_DownloadUpdateInfo_OutputMessage">
+    <wsdl:part name="parameters" element="tns:DownloadUpdateInfoResponse" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_DownloadAllUpdateInfo_InputMessage">
+    <wsdl:part name="parameters" element="tns:DownloadAllUpdateInfo" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_DownloadAllUpdateInfo_OutputMessage">
+    <wsdl:part name="parameters" element="tns:DownloadAllUpdateInfoResponse" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_GetRepositoryFileInfo_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetRepositoryFileInfo" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_GetRepositoryFileInfo_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetRepositoryFileInfoResponse" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_FileOperationStarted_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:FileOperationStarted" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_FileOperationStarted_InputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:FileOperationStartedResponse" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_FileOperationFinished_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:FileOperationFinished" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_FileOperationFinished_InputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:FileOperationFinishedResponse" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_FileOperationProgress_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:FileOperationProgress" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_FileOperationProgress_InputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:FileOperationProgressResponse" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_GinServiceError_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:GinServiceError" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_GinServiceError_InputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:GinServiceErrorResponse" />
+  </wsdl:message>
+  <wsdl:portType name="IGinService">
+    <wsdl:operation name="AddRepository">
+      <wsdl:input wsaw:Action="http://tempuri.org/IGinService/AddRepository" message="tns:IGinService_AddRepository_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IGinService/AddRepositoryResponse" message="tns:IGinService_AddRepository_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateNewRepository">
+      <wsdl:input wsaw:Action="http://tempuri.org/IGinService/CreateNewRepository" message="tns:IGinService_CreateNewRepository_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IGinService/CreateNewRepositoryResponse" message="tns:IGinService_CreateNewRepository_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="MountRepository">
+      <wsdl:input wsaw:Action="http://tempuri.org/IGinService/MountRepository" message="tns:IGinService_MountRepository_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IGinService/MountRepositoryResponse" message="tns:IGinService_MountRepository_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UnmountRepository">
+      <wsdl:input wsaw:Action="http://tempuri.org/IGinService/UnmountRepository" message="tns:IGinService_UnmountRepository_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IGinService/UnmountRepositoryResponse" message="tns:IGinService_UnmountRepository_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteRepository">
+      <wsdl:input wsaw:Action="http://tempuri.org/IGinService/DeleteRepository" message="tns:IGinService_DeleteRepository_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IGinService/DeleteRepositoryResponse" message="tns:IGinService_DeleteRepository_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UnmmountAllRepositories">
+      <wsdl:input wsaw:Action="http://tempuri.org/IGinService/UnmmountAllRepositories" message="tns:IGinService_UnmmountAllRepositories_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IGinService/UnmmountAllRepositoriesResponse" message="tns:IGinService_UnmmountAllRepositories_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="Login">
+      <wsdl:input wsaw:Action="http://tempuri.org/IGinService/Login" message="tns:IGinService_Login_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IGinService/LoginResponse" message="tns:IGinService_Login_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRepositoryList">
+      <wsdl:input wsaw:Action="http://tempuri.org/IGinService/GetRepositoryList" message="tns:IGinService_GetRepositoryList_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IGinService/GetRepositoryListResponse" message="tns:IGinService_GetRepositoryList_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateRepository">
+      <wsdl:input wsaw:Action="http://tempuri.org/IGinService/UpdateRepository" message="tns:IGinService_UpdateRepository_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IGinService/UpdateRepositoryResponse" message="tns:IGinService_UpdateRepository_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="RetrieveFile">
+      <wsdl:input wsaw:Action="http://tempuri.org/IGinService/RetrieveFile" message="tns:IGinService_RetrieveFile_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IGinService/RetrieveFileResponse" message="tns:IGinService_RetrieveFile_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UploadFile">
+      <wsdl:input wsaw:Action="http://tempuri.org/IGinService/UploadFile" message="tns:IGinService_UploadFile_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IGinService/UploadFileResponse" message="tns:IGinService_UploadFile_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="StashFile">
+      <wsdl:input wsaw:Action="http://tempuri.org/IGinService/StashFile" message="tns:IGinService_StashFile_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IGinService/StashFileResponse" message="tns:IGinService_StashFile_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="DownloadUpdateInfo">
+      <wsdl:input wsaw:Action="http://tempuri.org/IGinService/DownloadUpdateInfo" message="tns:IGinService_DownloadUpdateInfo_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IGinService/DownloadUpdateInfoResponse" message="tns:IGinService_DownloadUpdateInfo_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="DownloadAllUpdateInfo">
+      <wsdl:input wsaw:Action="http://tempuri.org/IGinService/DownloadAllUpdateInfo" message="tns:IGinService_DownloadAllUpdateInfo_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IGinService/DownloadAllUpdateInfoResponse" message="tns:IGinService_DownloadAllUpdateInfo_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRepositoryFileInfo">
+      <wsdl:input wsaw:Action="http://tempuri.org/IGinService/GetRepositoryFileInfo" message="tns:IGinService_GetRepositoryFileInfo_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IGinService/GetRepositoryFileInfoResponse" message="tns:IGinService_GetRepositoryFileInfo_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="FileOperationStarted">
+      <wsdl:output wsaw:Action="http://tempuri.org/IGinService/FileOperationStarted" message="tns:IGinService_FileOperationStarted_OutputCallbackMessage" />
+      <wsdl:input wsaw:Action="http://tempuri.org/IGinService/FileOperationStartedResponse" message="tns:IGinService_FileOperationStarted_InputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="FileOperationFinished">
+      <wsdl:output wsaw:Action="http://tempuri.org/IGinService/FileOperationFinished" message="tns:IGinService_FileOperationFinished_OutputCallbackMessage" />
+      <wsdl:input wsaw:Action="http://tempuri.org/IGinService/FileOperationFinishedResponse" message="tns:IGinService_FileOperationFinished_InputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="FileOperationProgress">
+      <wsdl:output wsaw:Action="http://tempuri.org/IGinService/FileOperationProgress" message="tns:IGinService_FileOperationProgress_OutputCallbackMessage" />
+      <wsdl:input wsaw:Action="http://tempuri.org/IGinService/FileOperationProgressResponse" message="tns:IGinService_FileOperationProgress_InputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GinServiceError">
+      <wsdl:output wsaw:Action="http://tempuri.org/IGinService/GinServiceError" message="tns:IGinService_GinServiceError_OutputCallbackMessage" />
+      <wsdl:input wsaw:Action="http://tempuri.org/IGinService/GinServiceErrorResponse" message="tns:IGinService_GinServiceError_InputCallbackMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="NetNamedPipeBinding_IGinService" type="tns:IGinService">
+    <wsp:PolicyReference URI="#NetNamedPipeBinding_IGinService_policy" />
+    <soap12:binding transport="http://schemas.microsoft.com/soap/named-pipe" />
+    <wsdl:operation name="AddRepository">
+      <soap12:operation soapAction="http://tempuri.org/IGinService/AddRepository" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateNewRepository">
+      <soap12:operation soapAction="http://tempuri.org/IGinService/CreateNewRepository" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MountRepository">
+      <soap12:operation soapAction="http://tempuri.org/IGinService/MountRepository" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UnmountRepository">
+      <soap12:operation soapAction="http://tempuri.org/IGinService/UnmountRepository" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteRepository">
+      <soap12:operation soapAction="http://tempuri.org/IGinService/DeleteRepository" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UnmmountAllRepositories">
+      <soap12:operation soapAction="http://tempuri.org/IGinService/UnmmountAllRepositories" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Login">
+      <soap12:operation soapAction="http://tempuri.org/IGinService/Login" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRepositoryList">
+      <soap12:operation soapAction="http://tempuri.org/IGinService/GetRepositoryList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateRepository">
+      <soap12:operation soapAction="http://tempuri.org/IGinService/UpdateRepository" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RetrieveFile">
+      <soap12:operation soapAction="http://tempuri.org/IGinService/RetrieveFile" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UploadFile">
+      <soap12:operation soapAction="http://tempuri.org/IGinService/UploadFile" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="StashFile">
+      <soap12:operation soapAction="http://tempuri.org/IGinService/StashFile" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DownloadUpdateInfo">
+      <soap12:operation soapAction="http://tempuri.org/IGinService/DownloadUpdateInfo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DownloadAllUpdateInfo">
+      <soap12:operation soapAction="http://tempuri.org/IGinService/DownloadAllUpdateInfo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRepositoryFileInfo">
+      <soap12:operation soapAction="http://tempuri.org/IGinService/GetRepositoryFileInfo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileOperationStarted">
+      <soap12:operation soapAction="http://tempuri.org/IGinService/FileOperationStarted" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileOperationFinished">
+      <soap12:operation soapAction="http://tempuri.org/IGinService/FileOperationFinished" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileOperationProgress">
+      <soap12:operation soapAction="http://tempuri.org/IGinService/FileOperationProgress" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GinServiceError">
+      <soap12:operation soapAction="http://tempuri.org/IGinService/GinServiceError" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="GinService">
+    <wsdl:port name="NetNamedPipeBinding_IGinService" binding="tns:NetNamedPipeBinding_IGinService">
+      <soap12:address location="net.pipe://localhost/GinService/service" />
+      <wsa10:EndpointReference>
+        <wsa10:Address>net.pipe://localhost/GinService/service</wsa10:Address>
+        <Identity xmlns="http://schemas.xmlsoap.org/ws/2006/02/addressingidentity">
+          <Dns>localhost</Dns>
+        </Identity>
+      </wsa10:EndpointReference>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

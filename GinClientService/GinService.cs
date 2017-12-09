@@ -6,11 +6,11 @@ using System.ServiceModel;
 using GinClientLibrary;
 using Newtonsoft.Json;
 
-namespace GinClientService
+namespace GinService
 {
-    public class GinClientService : IGinClientService
+    public class GinService : IGinService
     {
-        public GinClientService()
+        public GinService()
         {
             RepositoryManager.Instance.MountAllRepositories();
             var callback = OperationContext.Current.GetCallbackChannel<IGinClientCallback>();
@@ -28,19 +28,19 @@ namespace GinClientService
         }
         
 
-        bool IGinClientService.AddRepository(string physicalDirectory, string mountpoint, string name, string commandline, bool performFullCheckout, bool createNew)
+        bool IGinService.AddRepository(string physicalDirectory, string mountpoint, string name, string commandline, bool performFullCheckout, bool createNew)
         {
             RepositoryManager.Instance.AddRepository(new DirectoryInfo(physicalDirectory),
                 new DirectoryInfo(mountpoint), name, commandline, performFullCheckout, createNew);
             return true;
         }
 
-        bool IGinClientService.CreateNewRepository(string repoName)
+        bool IGinService.CreateNewRepository(string repoName)
         {
             return RepositoryManager.Instance.CreateNewRepository(repoName);
         }
 
-        void IGinClientService.DownloadAllUpdateInfo()
+        void IGinService.DownloadAllUpdateInfo()
         {
             foreach (var repo in RepositoryManager.Instance.Repositories)
             {
@@ -48,59 +48,59 @@ namespace GinClientService
             }
         }
 
-        void IGinClientService.DownloadUpdateInfo(string repoName)
+        void IGinService.DownloadUpdateInfo(string repoName)
         {
             var repo = RepositoryManager.Instance.GetRepoByName(repoName);
 
             repo.DownloadUpdateInfo();
         }
 
-        string IGinClientService.GetRepositoryList()
+        string IGinService.GetRepositoryList()
         {
             var result = RepositoryManager.Instance.Repositories.Select(repo => repo as GinRepositoryData).ToArray();
             return JsonConvert.SerializeObject(result);
         }
 
-        bool IGinClientService.Login(string username, string password)
+        bool IGinService.Login(string username, string password)
         {
             return RepositoryManager.Instance.Login(username, password);
         }
 
-        bool IGinClientService.RetrieveFile(string repoName, string filepath)
+        bool IGinService.RetrieveFile(string repoName, string filepath)
         {
             var repo = RepositoryManager.Instance.GetRepoByName(repoName);
 
             return repo.RetrieveFile(filepath);
         }
 
-        bool IGinClientService.StashFile(string repoName, string filepath)
+        bool IGinService.StashFile(string repoName, string filepath)
         {
             var repo = RepositoryManager.Instance.GetRepoByName(repoName);
 
             return repo.RemoveFile(filepath);
         }
 
-        bool IGinClientService.UploadFile(string repoName, string filepath)
+        bool IGinService.UploadFile(string repoName, string filepath)
         {
             var repo = RepositoryManager.Instance.GetRepoByName(repoName);
 
             return repo.UploadFile(filepath);
         }
 
-        bool IGinClientService.UnmmountAllRepositories()
+        bool IGinService.UnmmountAllRepositories()
         {
             RepositoryManager.Instance.UnmountAllRepositories();
             return true;
         }
 
-        bool IGinClientService.UnmountRepository(string repoName)
+        bool IGinService.UnmountRepository(string repoName)
         {
             RepositoryManager.Instance.UnmountRepository(
                 RepositoryManager.Instance.GetRepoByName(repoName));
             return true;
         }
 
-        void IGinClientService.DeleteRepository(string repoName)
+        void IGinService.DeleteRepository(string repoName)
         {
             try
             {
@@ -112,17 +112,17 @@ namespace GinClientService
             }
         }
 
-        string IGinClientService.GetRepositoryFileInfo(string repoName)
+        string IGinService.GetRepositoryFileInfo(string repoName)
         {
             return RepositoryManager.Instance.GetRepositoryFileInfo(RepositoryManager.Instance.GetRepoByName(repoName));
         }
 
-        bool IGinClientService.UpdateRepository(string repoName, GinRepositoryData data)
+        bool IGinService.UpdateRepository(string repoName, GinRepositoryData data)
         {
             return RepositoryManager.Instance.UpdateRepository(repoName, data);
         }
 
-        bool IGinClientService.MountRepository(string repoName)
+        bool IGinService.MountRepository(string repoName)
         {
             RepositoryManager.Instance.MountRepository(RepositoryManager.Instance.GetRepoByName(repoName));
             return true;

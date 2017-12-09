@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Windows.Forms;
-using GinClientApp.GinClientService;
+using GinClientApp.GinService;
 
 namespace GinClientApp
 {
     public partial class GetUserCredentials : Form
     {
-        private readonly GinClientServiceClient _client;
+        private readonly GinServiceClient _client;
         public string Username { get; set; }
         public string Password { get; set; }
         
 
-        public GetUserCredentials(GinClientServiceClient client)
+        public GetUserCredentials(GinServiceClient client)
         {
             InitializeComponent();
             _client = client;

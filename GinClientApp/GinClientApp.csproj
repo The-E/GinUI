@@ -63,7 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Connected Services\GinClientService\Reference.cs">
+    <Compile Include="Connected Services\GinService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -172,17 +172,17 @@
     <EmbeddedResource Include="Dialogs\RepoManagement.resx">
       <DependentUpon>RepoManagement.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="Connected Services\GinClientService\GinClientLibrary.xsd">
+    <None Include="Connected Services\GinService\GinClientLibrary.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\GinClientService\service.wsdl" />
-    <None Include="Connected Services\GinClientService\service.xsd">
+    <None Include="Connected Services\GinService\service.wsdl" />
+    <None Include="Connected Services\GinService\service.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\GinClientService\service1.xsd">
+    <None Include="Connected Services\GinService\service1.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\GinClientService\System.IO.xsd">
+    <None Include="Connected Services\GinService\System.IO.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
@@ -202,9 +202,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Connected Services\GinClientService\configuration91.svcinfo" />
-    <None Include="Connected Services\GinClientService\configuration.svcinfo" />
-    <None Include="Connected Services\GinClientService\Reference.svcmap">
+    <None Include="Connected Services\GinService\configuration91.svcinfo" />
+    <None Include="Connected Services\GinService\configuration.svcinfo" />
+    <None Include="Connected Services\GinService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
@@ -222,7 +222,7 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadataStorage Include="Connected Services\GinClientService\" />
+    <WCFMetadataStorage Include="Connected Services\GinService\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

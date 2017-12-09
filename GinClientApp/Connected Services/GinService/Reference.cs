@@ -8,145 +8,145 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace GinClientApp.GinClientService {
+namespace GinClientApp.GinService {
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="GinClientService.IGinClientService", CallbackContract=typeof(GinClientApp.GinClientService.IGinClientServiceCallback))]
-    public interface IGinClientService {
+    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="GinService.IGinService", CallbackContract=typeof(GinClientApp.GinService.IGinServiceCallback))]
+    public interface IGinService {
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/AddRepository", ReplyAction="http://tempuri.org/IGinClientService/AddRepositoryResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/AddRepository", ReplyAction="http://tempuri.org/IGinService/AddRepositoryResponse")]
         bool AddRepository(string physicalDirectory, string mountpoint, string name, string commandline, bool performFullCheckout, bool createNew);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/AddRepository", ReplyAction="http://tempuri.org/IGinClientService/AddRepositoryResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/AddRepository", ReplyAction="http://tempuri.org/IGinService/AddRepositoryResponse")]
         System.Threading.Tasks.Task<bool> AddRepositoryAsync(string physicalDirectory, string mountpoint, string name, string commandline, bool performFullCheckout, bool createNew);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/CreateNewRepository", ReplyAction="http://tempuri.org/IGinClientService/CreateNewRepositoryResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/CreateNewRepository", ReplyAction="http://tempuri.org/IGinService/CreateNewRepositoryResponse")]
         bool CreateNewRepository(string repoName);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/CreateNewRepository", ReplyAction="http://tempuri.org/IGinClientService/CreateNewRepositoryResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/CreateNewRepository", ReplyAction="http://tempuri.org/IGinService/CreateNewRepositoryResponse")]
         System.Threading.Tasks.Task<bool> CreateNewRepositoryAsync(string repoName);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/MountRepository", ReplyAction="http://tempuri.org/IGinClientService/MountRepositoryResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/MountRepository", ReplyAction="http://tempuri.org/IGinService/MountRepositoryResponse")]
         bool MountRepository(string repoName);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/MountRepository", ReplyAction="http://tempuri.org/IGinClientService/MountRepositoryResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/MountRepository", ReplyAction="http://tempuri.org/IGinService/MountRepositoryResponse")]
         System.Threading.Tasks.Task<bool> MountRepositoryAsync(string repoName);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/UnmountRepository", ReplyAction="http://tempuri.org/IGinClientService/UnmountRepositoryResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UnmountRepository", ReplyAction="http://tempuri.org/IGinService/UnmountRepositoryResponse")]
         bool UnmountRepository(string repoName);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/UnmountRepository", ReplyAction="http://tempuri.org/IGinClientService/UnmountRepositoryResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UnmountRepository", ReplyAction="http://tempuri.org/IGinService/UnmountRepositoryResponse")]
         System.Threading.Tasks.Task<bool> UnmountRepositoryAsync(string repoName);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/DeleteRepository", ReplyAction="http://tempuri.org/IGinClientService/DeleteRepositoryResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/DeleteRepository", ReplyAction="http://tempuri.org/IGinService/DeleteRepositoryResponse")]
         void DeleteRepository(string repoName);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/DeleteRepository", ReplyAction="http://tempuri.org/IGinClientService/DeleteRepositoryResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/DeleteRepository", ReplyAction="http://tempuri.org/IGinService/DeleteRepositoryResponse")]
         System.Threading.Tasks.Task DeleteRepositoryAsync(string repoName);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/UnmmountAllRepositories", ReplyAction="http://tempuri.org/IGinClientService/UnmmountAllRepositoriesResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UnmmountAllRepositories", ReplyAction="http://tempuri.org/IGinService/UnmmountAllRepositoriesResponse")]
         bool UnmmountAllRepositories();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/UnmmountAllRepositories", ReplyAction="http://tempuri.org/IGinClientService/UnmmountAllRepositoriesResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UnmmountAllRepositories", ReplyAction="http://tempuri.org/IGinService/UnmmountAllRepositoriesResponse")]
         System.Threading.Tasks.Task<bool> UnmmountAllRepositoriesAsync();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/Login", ReplyAction="http://tempuri.org/IGinClientService/LoginResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/Login", ReplyAction="http://tempuri.org/IGinService/LoginResponse")]
         bool Login(string username, string password);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/Login", ReplyAction="http://tempuri.org/IGinClientService/LoginResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/Login", ReplyAction="http://tempuri.org/IGinService/LoginResponse")]
         System.Threading.Tasks.Task<bool> LoginAsync(string username, string password);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/GetRepositoryList", ReplyAction="http://tempuri.org/IGinClientService/GetRepositoryListResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/GetRepositoryList", ReplyAction="http://tempuri.org/IGinService/GetRepositoryListResponse")]
         string GetRepositoryList();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/GetRepositoryList", ReplyAction="http://tempuri.org/IGinClientService/GetRepositoryListResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/GetRepositoryList", ReplyAction="http://tempuri.org/IGinService/GetRepositoryListResponse")]
         System.Threading.Tasks.Task<string> GetRepositoryListAsync();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/UpdateRepository", ReplyAction="http://tempuri.org/IGinClientService/UpdateRepositoryResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UpdateRepository", ReplyAction="http://tempuri.org/IGinService/UpdateRepositoryResponse")]
         bool UpdateRepository(string repoName, GinClientLibrary.GinRepositoryData data);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/UpdateRepository", ReplyAction="http://tempuri.org/IGinClientService/UpdateRepositoryResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UpdateRepository", ReplyAction="http://tempuri.org/IGinService/UpdateRepositoryResponse")]
         System.Threading.Tasks.Task<bool> UpdateRepositoryAsync(string repoName, GinClientLibrary.GinRepositoryData data);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/RetrieveFile", ReplyAction="http://tempuri.org/IGinClientService/RetrieveFileResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/RetrieveFile", ReplyAction="http://tempuri.org/IGinService/RetrieveFileResponse")]
         bool RetrieveFile(string repoName, string filepath);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/RetrieveFile", ReplyAction="http://tempuri.org/IGinClientService/RetrieveFileResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/RetrieveFile", ReplyAction="http://tempuri.org/IGinService/RetrieveFileResponse")]
         System.Threading.Tasks.Task<bool> RetrieveFileAsync(string repoName, string filepath);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/UploadFile", ReplyAction="http://tempuri.org/IGinClientService/UploadFileResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UploadFile", ReplyAction="http://tempuri.org/IGinService/UploadFileResponse")]
         bool UploadFile(string repoName, string filepath);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/UploadFile", ReplyAction="http://tempuri.org/IGinClientService/UploadFileResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UploadFile", ReplyAction="http://tempuri.org/IGinService/UploadFileResponse")]
         System.Threading.Tasks.Task<bool> UploadFileAsync(string repoName, string filepath);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/StashFile", ReplyAction="http://tempuri.org/IGinClientService/StashFileResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/StashFile", ReplyAction="http://tempuri.org/IGinService/StashFileResponse")]
         bool StashFile(string repoName, string filepath);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/StashFile", ReplyAction="http://tempuri.org/IGinClientService/StashFileResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/StashFile", ReplyAction="http://tempuri.org/IGinService/StashFileResponse")]
         System.Threading.Tasks.Task<bool> StashFileAsync(string repoName, string filepath);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/DownloadUpdateInfo", ReplyAction="http://tempuri.org/IGinClientService/DownloadUpdateInfoResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/DownloadUpdateInfo", ReplyAction="http://tempuri.org/IGinService/DownloadUpdateInfoResponse")]
         void DownloadUpdateInfo(string repoName);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/DownloadUpdateInfo", ReplyAction="http://tempuri.org/IGinClientService/DownloadUpdateInfoResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/DownloadUpdateInfo", ReplyAction="http://tempuri.org/IGinService/DownloadUpdateInfoResponse")]
         System.Threading.Tasks.Task DownloadUpdateInfoAsync(string repoName);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/DownloadAllUpdateInfo", ReplyAction="http://tempuri.org/IGinClientService/DownloadAllUpdateInfoResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/DownloadAllUpdateInfo", ReplyAction="http://tempuri.org/IGinService/DownloadAllUpdateInfoResponse")]
         void DownloadAllUpdateInfo();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/DownloadAllUpdateInfo", ReplyAction="http://tempuri.org/IGinClientService/DownloadAllUpdateInfoResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/DownloadAllUpdateInfo", ReplyAction="http://tempuri.org/IGinService/DownloadAllUpdateInfoResponse")]
         System.Threading.Tasks.Task DownloadAllUpdateInfoAsync();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/GetRepositoryFileInfo", ReplyAction="http://tempuri.org/IGinClientService/GetRepositoryFileInfoResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/GetRepositoryFileInfo", ReplyAction="http://tempuri.org/IGinService/GetRepositoryFileInfoResponse")]
         string GetRepositoryFileInfo(string repoName);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/GetRepositoryFileInfo", ReplyAction="http://tempuri.org/IGinClientService/GetRepositoryFileInfoResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/GetRepositoryFileInfo", ReplyAction="http://tempuri.org/IGinService/GetRepositoryFileInfoResponse")]
         System.Threading.Tasks.Task<string> GetRepositoryFileInfoAsync(string repoName);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface IGinClientServiceCallback {
+    public interface IGinServiceCallback {
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/FileOperationStarted", ReplyAction="http://tempuri.org/IGinClientService/FileOperationStartedResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/FileOperationStarted", ReplyAction="http://tempuri.org/IGinService/FileOperationStartedResponse")]
         void FileOperationStarted(string filename, string repository);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/FileOperationFinished", ReplyAction="http://tempuri.org/IGinClientService/FileOperationFinishedResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/FileOperationFinished", ReplyAction="http://tempuri.org/IGinService/FileOperationFinishedResponse")]
         void FileOperationFinished(string filename, string repository, bool success);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/FileOperationProgress", ReplyAction="http://tempuri.org/IGinClientService/FileOperationProgressResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/FileOperationProgress", ReplyAction="http://tempuri.org/IGinService/FileOperationProgressResponse")]
         void FileOperationProgress(string filename, string repository, int progress, string speed, string state);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinClientService/GinServiceError", ReplyAction="http://tempuri.org/IGinClientService/GinServiceErrorResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/GinServiceError", ReplyAction="http://tempuri.org/IGinService/GinServiceErrorResponse")]
         void GinServiceError(string message);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface IGinClientServiceChannel : GinClientApp.GinClientService.IGinClientService, System.ServiceModel.IClientChannel {
+    public interface IGinServiceChannel : GinClientApp.GinService.IGinService, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class GinClientServiceClient : System.ServiceModel.DuplexClientBase<GinClientApp.GinClientService.IGinClientService>, GinClientApp.GinClientService.IGinClientService {
+    public partial class GinServiceClient : System.ServiceModel.DuplexClientBase<GinClientApp.GinService.IGinService>, GinClientApp.GinService.IGinService {
         
-        public GinClientServiceClient(System.ServiceModel.InstanceContext callbackInstance) : 
+        public GinServiceClient(System.ServiceModel.InstanceContext callbackInstance) : 
                 base(callbackInstance) {
         }
         
-        public GinClientServiceClient(System.ServiceModel.InstanceContext callbackInstance, string endpointConfigurationName) : 
+        public GinServiceClient(System.ServiceModel.InstanceContext callbackInstance, string endpointConfigurationName) : 
                 base(callbackInstance, endpointConfigurationName) {
         }
         
-        public GinClientServiceClient(System.ServiceModel.InstanceContext callbackInstance, string endpointConfigurationName, string remoteAddress) : 
+        public GinServiceClient(System.ServiceModel.InstanceContext callbackInstance, string endpointConfigurationName, string remoteAddress) : 
                 base(callbackInstance, endpointConfigurationName, remoteAddress) {
         }
         
-        public GinClientServiceClient(System.ServiceModel.InstanceContext callbackInstance, string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) : 
+        public GinServiceClient(System.ServiceModel.InstanceContext callbackInstance, string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) : 
                 base(callbackInstance, endpointConfigurationName, remoteAddress) {
         }
         
-        public GinClientServiceClient(System.ServiceModel.InstanceContext callbackInstance, System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
+        public GinServiceClient(System.ServiceModel.InstanceContext callbackInstance, System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
                 base(callbackInstance, binding, remoteAddress) {
         }
         
