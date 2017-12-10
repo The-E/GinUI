@@ -150,6 +150,11 @@ namespace GinClientLibrary
             return true;
         }
 
+        public bool IsManagedPath(string filePath)
+        {
+            return Repositories.Any(repo => filePath.Contains(repo.Mountpoint.FullName));
+        }
+
         public string GetRepositoryFileInfo(GinRepository ginRepository)
         {
             return ginRepository.GetStatusCacheJson();

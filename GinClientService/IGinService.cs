@@ -129,6 +129,14 @@ namespace GinService
         /// <returns>A JSON representation of a Dictionary&lt;string, GinRepository.FileStatus&gt;</returns>
         [OperationContract]
         string GetRepositoryFileInfo(string repoName);
+
+        /// <summary>
+        /// Check whether a given path is part of any managed repository
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        [OperationContract]
+        bool IsManagedPath(string filePath);
     }
 
     [SuppressMessage("ReSharper", "OperationContractWithoutServiceContract")]

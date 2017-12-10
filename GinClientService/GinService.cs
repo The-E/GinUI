@@ -127,5 +127,10 @@ namespace GinService
             RepositoryManager.Instance.MountRepository(RepositoryManager.Instance.GetRepoByName(repoName));
             return true;
         }
+
+        bool IGinService.IsManagedPath(string filePath)
+        {
+            return RepositoryManager.Instance.IsManagedPath(filePath);
+        }
     }
 }

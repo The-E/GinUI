@@ -12,6 +12,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GinClientLibrary", "GinClie
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GinService", "GinClientService\GinService.csproj", "{8687E754-5DC6-4B69-80A2-9F6BD2E6340F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GinShellExtension", "GinShellExtension\GinShellExtension.csproj", "{1FE82056-FFB4-41E3-9700-8470B9FEB318}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8687E754-5DC6-4B69-80A2-9F6BD2E6340F} = {8687E754-5DC6-4B69-80A2-9F6BD2E6340F}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +49,14 @@ Global
 		{8687E754-5DC6-4B69-80A2-9F6BD2E6340F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8687E754-5DC6-4B69-80A2-9F6BD2E6340F}.Release|x86.ActiveCfg = Release|Any CPU
 		{8687E754-5DC6-4B69-80A2-9F6BD2E6340F}.Release|x86.Build.0 = Release|Any CPU
+		{1FE82056-FFB4-41E3-9700-8470B9FEB318}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FE82056-FFB4-41E3-9700-8470B9FEB318}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FE82056-FFB4-41E3-9700-8470B9FEB318}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1FE82056-FFB4-41E3-9700-8470B9FEB318}.Debug|x86.Build.0 = Debug|Any CPU
+		{1FE82056-FFB4-41E3-9700-8470B9FEB318}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FE82056-FFB4-41E3-9700-8470B9FEB318}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FE82056-FFB4-41E3-9700-8470B9FEB318}.Release|x86.ActiveCfg = Release|Any CPU
+		{1FE82056-FFB4-41E3-9700-8470B9FEB318}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

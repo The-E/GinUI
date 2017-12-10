@@ -8,11 +8,138 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace GinClientApp.GinService {
+namespace GinShellExtension.GinService {
+    using System.Runtime.Serialization;
+    using System;
     
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="GinRepositoryData", Namespace="http://schemas.datacontract.org/2004/07/GinClientLibrary")]
+    [System.SerializableAttribute()]
+    public partial class GinRepositoryData : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string AddressField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private bool CreateNewField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private bool MountedField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.IO.DirectoryInfo MountpointField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string NameField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.IO.DirectoryInfo PhysicalDirectoryField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Address {
+            get {
+                return this.AddressField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.AddressField, value) != true)) {
+                    this.AddressField = value;
+                    this.RaisePropertyChanged("Address");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool CreateNew {
+            get {
+                return this.CreateNewField;
+            }
+            set {
+                if ((this.CreateNewField.Equals(value) != true)) {
+                    this.CreateNewField = value;
+                    this.RaisePropertyChanged("CreateNew");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool Mounted {
+            get {
+                return this.MountedField;
+            }
+            set {
+                if ((this.MountedField.Equals(value) != true)) {
+                    this.MountedField = value;
+                    this.RaisePropertyChanged("Mounted");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.IO.DirectoryInfo Mountpoint {
+            get {
+                return this.MountpointField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.MountpointField, value) != true)) {
+                    this.MountpointField = value;
+                    this.RaisePropertyChanged("Mountpoint");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Name {
+            get {
+                return this.NameField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.NameField, value) != true)) {
+                    this.NameField = value;
+                    this.RaisePropertyChanged("Name");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.IO.DirectoryInfo PhysicalDirectory {
+            get {
+                return this.PhysicalDirectoryField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.PhysicalDirectoryField, value) != true)) {
+                    this.PhysicalDirectoryField = value;
+                    this.RaisePropertyChanged("PhysicalDirectory");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="GinService.IGinService", CallbackContract=typeof(GinClientApp.GinService.IGinServiceCallback))]
+    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="GinService.IGinService", CallbackContract=typeof(GinShellExtension.GinService.IGinServiceCallback))]
     public interface IGinService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/AddRepository", ReplyAction="http://tempuri.org/IGinService/AddRepositoryResponse")]
@@ -64,10 +191,10 @@ namespace GinClientApp.GinService {
         System.Threading.Tasks.Task<string> GetRepositoryListAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UpdateRepository", ReplyAction="http://tempuri.org/IGinService/UpdateRepositoryResponse")]
-        bool UpdateRepository(string repoName, GinClientLibrary.GinRepositoryData data);
+        bool UpdateRepository(string repoName, GinShellExtension.GinService.GinRepositoryData data);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UpdateRepository", ReplyAction="http://tempuri.org/IGinService/UpdateRepositoryResponse")]
-        System.Threading.Tasks.Task<bool> UpdateRepositoryAsync(string repoName, GinClientLibrary.GinRepositoryData data);
+        System.Threading.Tasks.Task<bool> UpdateRepositoryAsync(string repoName, GinShellExtension.GinService.GinRepositoryData data);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/RetrieveFile", ReplyAction="http://tempuri.org/IGinService/RetrieveFileResponse")]
         bool RetrieveFile(string repoName, string filepath);
@@ -129,12 +256,12 @@ namespace GinClientApp.GinService {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface IGinServiceChannel : GinClientApp.GinService.IGinService, System.ServiceModel.IClientChannel {
+    public interface IGinServiceChannel : GinShellExtension.GinService.IGinService, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class GinServiceClient : System.ServiceModel.DuplexClientBase<GinClientApp.GinService.IGinService>, GinClientApp.GinService.IGinService {
+    public partial class GinServiceClient : System.ServiceModel.DuplexClientBase<GinShellExtension.GinService.IGinService>, GinShellExtension.GinService.IGinService {
         
         public GinServiceClient(System.ServiceModel.InstanceContext callbackInstance) : 
                 base(callbackInstance) {
@@ -220,11 +347,11 @@ namespace GinClientApp.GinService {
             return base.Channel.GetRepositoryListAsync();
         }
         
-        public bool UpdateRepository(string repoName, GinClientLibrary.GinRepositoryData data) {
+        public bool UpdateRepository(string repoName, GinShellExtension.GinService.GinRepositoryData data) {
             return base.Channel.UpdateRepository(repoName, data);
         }
         
-        public System.Threading.Tasks.Task<bool> UpdateRepositoryAsync(string repoName, GinClientLibrary.GinRepositoryData data) {
+        public System.Threading.Tasks.Task<bool> UpdateRepositoryAsync(string repoName, GinShellExtension.GinService.GinRepositoryData data) {
             return base.Channel.UpdateRepositoryAsync(repoName, data);
         }
         
