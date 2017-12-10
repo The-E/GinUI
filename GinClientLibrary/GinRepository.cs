@@ -191,11 +191,14 @@ namespace GinClientLibrary
 
             lock (this)
             {
-                GetCommandLineOutputEvent("cmd.exe", "/c gin.exe get-content " + filename + " --json", directoryName,
+                GetCommandLineOutputEvent("cmd.exe", "/C gin.exe get-content " + filename + " --json", directoryName,
                     out var error);
                 
 
                 ReadRepoStatus();
+
+                if (!string.IsNullOrEmpty(error))
+                    OnFileOperationError(error);
 
                 return string.IsNullOrEmpty(error);
             }
@@ -212,7 +215,7 @@ namespace GinClientLibrary
 
             lock (this)
             {
-                GetCommandLineOutputEvent("cmd.exe", "/c gin.exe upload " + filename + " --json", directoryName,
+                GetCommandLineOutputEvent("cmd.exe", "/C gin.exe upload " + filename + " --json", directoryName,
                     out var error);
 
 
@@ -225,11 +228,11 @@ namespace GinClientLibrary
             }
         }
 
-        public bool UploadRepository()
+        public void UploadRepository()
         {
             lock (this)
             {
-                GetCommandLineOutputEvent("cmd.exe", "/c gin.exe upload --json", PhysicalDirectory.FullName,
+                GetCommandLineOutputEvent("cmd.exe", "/C gin.exe upload --json", PhysicalDirectory.FullName,
                     out var error);
 
 
@@ -237,8 +240,6 @@ namespace GinClientLibrary
 
                 if (!string.IsNullOrEmpty(error))
                     OnFileOperationError(error);
-
-                return string.IsNullOrEmpty(error);
             }
 
         }
@@ -261,13 +262,10 @@ namespace GinClientLibrary
 
                 ReadRepoStatus();
 
-                if (!string.IsNullOrEmpty(error))
-                {
-                    OnFileOperationError(error);
-                    return false;
-                }
+                if (string.IsNullOrEmpty(error)) return true;
 
-                return true;
+                OnFileOperationError(error);
+                return false;
             }
         }
 
@@ -285,18 +283,31 @@ namespace GinClientLibrary
             if (CreateNew)
             {
                 var result = GetCommandLineOutput("cmd.exe", "/C gin.exe create " + Name,
-                    PhysicalDirectory.Parent.FullName, out string error);
+                    PhysicalDirectory.Parent.FullName, out var error);
+
+                if (!string.IsNullOrEmpty(error))
+                    OnFileOperationError(error);
             }
             else
             {
 
                 if (PhysicalDirectory.IsEmpty())
+                {
                     GetCommandLineOutputEvent("cmd.exe", "/C gin.exe get " + Address + " --json",
-                        PhysicalDirectory.Parent.FullName, out string error);
+                        PhysicalDirectory.Parent.FullName, out var error);
+
+                    if (!string.IsNullOrEmpty(error))
+                        OnFileOperationError(error);
+                }
 
                 if (performFullCheckout)
+                {
                     GetCommandLineOutputEvent("cmd.exe", "/C gin.exe download --content --json",
-                        PhysicalDirectory.Parent.FullName, out string error);
+                        PhysicalDirectory.Parent.FullName, out var error);
+
+                    if (!string.IsNullOrEmpty(error))
+                        OnFileOperationError(error);
+                }
             }
         }
 

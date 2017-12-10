@@ -141,11 +141,9 @@ namespace GinClientLibrary
                 
                 process.WaitForExit();
 
-                if (!string.IsNullOrEmpty(error))
-                {
-                    RepositoryManager.Instance.OnRepositoryOperationError(null, new GinRepository.FileOperationErrorEventArgs() { RepositoryName = "RepositoryManager", Message = error });
-                    return false;
-                }
+                if (string.IsNullOrEmpty(error)) return true;
+                RepositoryManager.Instance.OnRepositoryOperationError(null, new GinRepository.FileOperationErrorEventArgs() { RepositoryName = "RepositoryManager", Message = error });
+                return false;
             }
 
             return true;
@@ -153,7 +151,7 @@ namespace GinClientLibrary
 
         public GinRepository GetRepoByPath(string filePath)
         {
-            throw new NotImplementedException();
+            return Repositories.Find(repo => filePath.Contains(repo.Mountpoint.FullName.Trim('\\')));
         }
 
         public bool IsBasePath(string filePath)
