@@ -1,6 +1,6 @@
 ﻿namespace GinClientApp.Dialogs
 {
-    partial class GetGINCmdline
+    partial class GetGinCmdline
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GetGINCmdline));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GetGinCmdline));
             this.label1 = new System.Windows.Forms.Label();
             this.txtRepoName = new System.Windows.Forms.TextBox();
             this.btnCancel = new System.Windows.Forms.Button();
@@ -80,7 +80,7 @@
             this.Controls.Add(this.txtRepoName);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Name = "GetGINCmdline";
+            this.Name = "GetGinCmdline";
             this.Load += new System.EventHandler(this.GetGINCmdline_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

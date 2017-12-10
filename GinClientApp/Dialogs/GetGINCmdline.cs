@@ -1,27 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace GinClientApp.Dialogs
 {
-    public partial class GetGINCmdline : Form
+    public partial class GetGinCmdline : Form
     {
-        public string RepositoryName { get; set; }
-        public bool CreateNew { get; set; }
+        public string RepositoryName { get; private set; }
+        public bool CreateNew { get; private set; }
         private GinApplicationContext.UserCredentials _credentials;
 
         [DllImport("user32.dll")]
         private static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
 
 
-        public GetGINCmdline(GinApplicationContext.UserCredentials credentials)
+        public GetGinCmdline(GinApplicationContext.UserCredentials credentials)
         {
             InitializeComponent();
             SendMessage(txtRepoName.Handle, 0x1501, 1, "<username>/<repository>");
@@ -40,8 +34,7 @@ namespace GinClientApp.Dialogs
             if (!RepositoryName.Contains('/') && !CreateNew)
             {
                 var result = MessageBox.Show(
-                    "The entered repository name is not valid.\nDo you wish to create a new repository named " +
-                    RepositoryName + " under your username?", "Gin Client Warning", MessageBoxButtons.YesNo,
+                    string.Format("The entered repository name is not valid.\nDo you wish to create a new repository named {0} under your username?", RepositoryName), Properties.Resources.GinApplicationContext_Gin_Client_Error, MessageBoxButtons.YesNo,
                     MessageBoxIcon.Warning);
 
                 if (result == DialogResult.Yes)
@@ -60,7 +53,7 @@ namespace GinClientApp.Dialogs
                 var result =
                     MessageBox.Show(
                         "The entered repository name is not valid.\nDo you wish to check out an existing repository?",
-                        "Gin Client Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                        Properties.Resources.GinApplicationContext_Gin_Client_Error, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (result == DialogResult.Yes)
                 {
                     chbCreateNew.Checked = false;

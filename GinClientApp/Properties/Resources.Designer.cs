@@ -61,11 +61,38 @@ namespace GinClientApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Login failed.
+        /// </summary>
+        internal static string GetUserCredentials_Login_Failed {
+            get {
+                return ResourceManager.GetString("GetUserCredentials_Login_Failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Login unsuccessful. Username or password are incorrect.
+        /// </summary>
+        internal static string GetUserCredentials_Login_Unsuccessful {
+            get {
+                return ResourceManager.GetString("GetUserCredentials_Login_Unsuccessful", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error while trying to access Gin Client Service.
         /// </summary>
         internal static string GinApplicationContext_Error_while_trying_to_access_Gin_Client_Service {
             get {
                 return ResourceManager.GetString("GinApplicationContext_Error_while_trying_to_access_Gin_Client_Service", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error while trying to log in to GIN.
+        /// </summary>
+        internal static string GinApplicationContext_Error_while_trying_to_log_in_to_GIN {
+            get {
+                return ResourceManager.GetString("GinApplicationContext_Error_while_trying_to_log_in_to_GIN", resourceCulture);
             }
         }
         
@@ -102,6 +129,15 @@ namespace GinClientApp.Properties {
         internal static string GinApplicationContext_Gin_Service_Error {
             get {
                 return ResourceManager.GetString("GinApplicationContext_Gin_Service_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gin Service has stopped communicating..
+        /// </summary>
+        internal static string GinApplicationContext_Gin_Service_has_stopped_communicating_ {
+            get {
+                return ResourceManager.GetString("GinApplicationContext_Gin_Service_has_stopped_communicating_", resourceCulture);
             }
         }
         
@@ -165,6 +201,24 @@ namespace GinClientApp.Properties {
         internal static string GinApplicationContext_Upload {
             get {
                 return ResourceManager.GetString("GinApplicationContext_Upload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gin Client Warning.
+        /// </summary>
+        internal static string GinClientApp_Gin_Client_Warning {
+            get {
+                return ResourceManager.GetString("GinClientApp_Gin_Client_Warning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This will delete the selected Repository and all associated data. Continue?.
+        /// </summary>
+        internal static string RepoManagement_Delete_repository {
+            get {
+                return ResourceManager.GetString("RepoManagement_Delete_repository", resourceCulture);
             }
         }
     }

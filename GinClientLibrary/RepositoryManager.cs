@@ -8,6 +8,7 @@ using System.Threading;
 using DokanNet;
 using GinClientLibrary.Extensions;
 using Newtonsoft.Json;
+using static System.String;
 
 namespace GinClientLibrary
 {
@@ -30,11 +31,11 @@ namespace GinClientLibrary
         private static RepositoryManager _instance;
 
         private List<GinRepository> _repositories;
-        private static readonly StringBuilder _output = new StringBuilder("");
+        private static readonly StringBuilder Output = new StringBuilder("");
         private void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(e.Data))
-                _output.AppendLine(e.Data);
+            if (!IsNullOrEmpty(e.Data))
+                Output.AppendLine(e.Data);
         }
 
         private RepositoryManager()
@@ -47,7 +48,7 @@ namespace GinClientLibrary
 
         public GinRepository GetRepoByName(string name)
         {
-            return Repositories.Single(r => string.Compare(r.Name, name, true) == 0);
+            return Repositories.Single(r => Compare(r.Name, name, StringComparison.OrdinalIgnoreCase) == 0);
         }
 
         public void Logout()
@@ -133,7 +134,7 @@ namespace GinClientLibrary
                 };
 
                 process.OutputDataReceived += Process_OutputDataReceived;
-                _output.Clear();
+                Output.Clear();
                 process.Start();
                 process.BeginOutputReadLine();
                 process.StandardInput.WriteLine(password);
@@ -141,12 +142,10 @@ namespace GinClientLibrary
                 
                 process.WaitForExit();
 
-                if (string.IsNullOrEmpty(error)) return true;
-                RepositoryManager.Instance.OnRepositoryOperationError(null, new GinRepository.FileOperationErrorEventArgs() { RepositoryName = "RepositoryManager", Message = error });
+                if (IsNullOrEmpty(error)) return true;
+                Instance.OnRepositoryOperationError(null, new GinRepository.FileOperationErrorEventArgs() { RepositoryName = "RepositoryManager", Message = error });
                 return false;
             }
-
-            return true;
         }
 
         public GinRepository GetRepoByPath(string filePath)
@@ -192,7 +191,7 @@ namespace GinClientLibrary
         {
             lock (this)
             {
-                var repo = Repositories.Single(r => string.Compare(r.Name, repoName) == 0);
+                var repo = Repositories.Single(r => CompareOrdinal(r.Name, repoName) == 0);
                 UnmountRepository(repo);
                 Repositories.Remove(repo);
                 repo = new GinRepository(data);
@@ -265,14 +264,14 @@ namespace GinClientLibrary
 
         public event FileRetrievalStartedHandler FileRetrievalStarted;
 
-        protected void OnFileRetrievalStarted(DokanInterface.FileOperationEventArgs e, GinRepository sender)
+        private void OnFileRetrievalStarted(DokanInterface.FileOperationEventArgs e, GinRepository sender)
         {
             FileRetrievalStarted?.Invoke(this, sender, e.File);
         }
 
         public event FileRetrievalCompletedHandler FileRetrievalCompleted;
 
-        protected void OnFileRetrievalCompleted(DokanInterface.FileOperationEventArgs e, GinRepository sender)
+        private void OnFileRetrievalCompleted(DokanInterface.FileOperationEventArgs e, GinRepository sender)
         {
             FileRetrievalCompleted?.Invoke(this, sender, e.File, e.Success);
         }
@@ -289,7 +288,7 @@ namespace GinClientLibrary
 
         public event RepositoryOperationErrorHandler RepositoryOperationError;
 
-        public void OnRepositoryOperationError(GinRepository sender,
+        private void OnRepositoryOperationError(GinRepository sender,
             GinRepository.FileOperationErrorEventArgs message)
         {
             RepositoryOperationError?.Invoke(sender, message);
@@ -307,7 +306,7 @@ namespace GinClientLibrary
 
             public int GetProgress()
             {
-                if (!string.IsNullOrEmpty(progress))
+                if (!IsNullOrEmpty(progress))
                     return int.Parse(progress.Trim('%'));
 
                 return 0;

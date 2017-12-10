@@ -12,7 +12,7 @@ namespace GinService
         public GinClientWindowsService()
         {
             // Name the Windows Service
-            ServiceName = "GinClientService";
+            ServiceName = "GinService";
         }
 
         public static void Main()
@@ -50,7 +50,7 @@ namespace GinService
             // 
             // GinClientWindowsService
             // 
-            this.ServiceName = "Gin Client Service";
+            ServiceName = "Gin Client Service";
 
         }
     }

@@ -1,4 +1,4 @@
-﻿namespace GinClientApp
+﻿namespace GinClientApp.Dialogs
 {
     partial class RepoManagement
     {

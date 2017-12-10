@@ -20,7 +20,7 @@ namespace GinClientApp
         private readonly NotifyIcon _trayIcon;
         private readonly UserCredentials _credentials;
         private GlobalOptions _options;
-        private Timer _updateIntervalTimer;
+        private readonly Timer _updateIntervalTimer;
 
         public class GlobalOptions
         {
@@ -77,10 +77,7 @@ namespace GinClientApp
                     var optionsDlg = new GlobalOptionsDlg(new GlobalOptions());
                     var res = optionsDlg.ShowDialog();
 
-                    if (res == DialogResult.OK)
-                        _options = optionsDlg.Options;
-                    else
-                        _options = new GlobalOptions();
+                    _options = res == DialogResult.OK ? optionsDlg.Options : new GlobalOptions();
                 }
             }
             else
@@ -88,10 +85,7 @@ namespace GinClientApp
                 var optionsDlg = new GlobalOptionsDlg(new GlobalOptions());
                 var res = optionsDlg.ShowDialog();
 
-                if (res == DialogResult.OK)
-                    _options = optionsDlg.Options;
-                else
-                    _options = new GlobalOptions();
+                _options = res == DialogResult.OK ? optionsDlg.Options : new GlobalOptions();
 
                 var fs = File.CreateText(saveFilePath + @"\GlobalOptionsDlg.json");
                 fs.Write(JsonConvert.SerializeObject(_options));
@@ -99,8 +93,7 @@ namespace GinClientApp
                 fs.Close();
             }
 
-            _updateIntervalTimer = new Timer(_options.RepositoryUpdateInterval * 1000);
-            _updateIntervalTimer.AutoReset = true;
+            _updateIntervalTimer = new Timer(_options.RepositoryUpdateInterval * 1000) {AutoReset = true};
             _updateIntervalTimer.Elapsed += (sender, args) => { _client.DownloadAllUpdateInfo(); };
             _updateIntervalTimer.Start();
             #endregion
@@ -116,7 +109,7 @@ namespace GinClientApp
 
                     if (!_client.Login(_credentials.Username, _credentials.Password))
                     {
-                        MessageBox.Show("Error while trying to log in to GIN", Resources.GinApplicationContext_Gin_Client_Error,
+                        MessageBox.Show(Resources.GinApplicationContext_Error_while_trying_to_log_in_to_GIN, Resources.GinApplicationContext_Gin_Client_Error,
                             MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     else
@@ -191,8 +184,8 @@ namespace GinClientApp
 
         private void InnerChannelOnFaulted(object sender1, EventArgs eventArgs)
         {
-            MessageBox.Show("Gin Service has stopped communicating.",
-                Properties.Resources.GinApplicationContext_Gin_Service_Error, MessageBoxButtons.OK);
+            MessageBox.Show(Resources.GinApplicationContext_Gin_Service_has_stopped_communicating_,
+                Resources.GinApplicationContext_Gin_Service_Error, MessageBoxButtons.OK);
             Exit(null, EventArgs.Empty);
         }
 
@@ -204,8 +197,7 @@ namespace GinClientApp
 
             foreach (var repo in repositories)
             {
-                var mitem = new MenuItem(repo.Name);
-                mitem.Tag = repo;
+                var mitem = new MenuItem(repo.Name) {Tag = repo};
                 //mitem.MenuItems.Add("Edit", EditRepoMenuItemHandler);
                 mitem.MenuItems.Add(Resources.GinApplicationContext_Upload, UploadRepoMenuItemHandler);
                 mitem.MenuItems.Add(Resources.GinApplicationContext_Unmount, UnmountRepoMenuItemHandler);
@@ -237,15 +229,16 @@ namespace GinClientApp
                       kvp.Value == GinRepository.FileStatus.Unknown
                 select kvp;
 
-            if (!alteredFiles.Any())
+            var files = alteredFiles as KeyValuePair<string, GinRepository.FileStatus>[] ?? alteredFiles.ToArray();
+            if (!files.Any())
                 return; //Nothing to upload here
 
-            var uploadfiledlg = new UploadFilesDlg(alteredFiles);
+            var uploadfiledlg = new UploadFilesDlg(files);
             var res = uploadfiledlg.ShowDialog();
 
             if (res == DialogResult.Cancel) return;
 
-            foreach (var file in alteredFiles)
+            foreach (var file in files)
             {
                 _client.UploadFile(repo.Name, file.Key);
             }

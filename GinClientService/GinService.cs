@@ -160,9 +160,10 @@ namespace GinService
 
         void IGinService.DownloadFiles(IEnumerable<string> filePaths)
         {
-            var repo = RepositoryManager.Instance.GetRepoByName(filePaths.First());
+            var files = filePaths as string[] ?? filePaths.ToArray();
+            var repo = RepositoryManager.Instance.GetRepoByName(files.First());
 
-            foreach (var file in filePaths)
+            foreach (var file in files)
             {
                 repo.RetrieveFile(file);
             }

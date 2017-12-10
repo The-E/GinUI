@@ -10,8 +10,8 @@ namespace GinService
     public class ProjectInstaller : Installer
     {
         private readonly ServiceProcessInstaller _process;
-        private ServiceProcessInstaller serviceProcessInstaller1;
-        private ServiceInstaller serviceInstaller1;
+        private ServiceProcessInstaller _serviceProcessInstaller1;
+        private ServiceInstaller _serviceInstaller1;
         private readonly ServiceInstaller _service;
 
         public ProjectInstaller()
@@ -32,24 +32,24 @@ namespace GinService
 
         private void InitializeComponent()
         {
-            this.serviceProcessInstaller1 = new System.ServiceProcess.ServiceProcessInstaller();
-            this.serviceInstaller1 = new System.ServiceProcess.ServiceInstaller();
+            this._serviceProcessInstaller1 = new System.ServiceProcess.ServiceProcessInstaller();
+            this._serviceInstaller1 = new System.ServiceProcess.ServiceInstaller();
             // 
             // serviceProcessInstaller1
             // 
-            this.serviceProcessInstaller1.Account = System.ServiceProcess.ServiceAccount.LocalService;
-            this.serviceProcessInstaller1.Password = null;
-            this.serviceProcessInstaller1.Username = null;
+            this._serviceProcessInstaller1.Account = System.ServiceProcess.ServiceAccount.LocalService;
+            this._serviceProcessInstaller1.Password = null;
+            this._serviceProcessInstaller1.Username = null;
             // 
             // serviceInstaller1
             // 
-            this.serviceInstaller1.ServiceName = "Gin Client Service";
+            this._serviceInstaller1.ServiceName = "Gin Client Service";
             // 
             // ProjectInstaller
             // 
             this.Installers.AddRange(new System.Configuration.Install.Installer[] {
-            this.serviceProcessInstaller1,
-            this.serviceInstaller1});
+            this._serviceProcessInstaller1,
+            this._serviceInstaller1});
 
         }
     }

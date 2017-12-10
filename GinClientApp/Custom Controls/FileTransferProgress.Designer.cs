@@ -1,4 +1,4 @@
-﻿namespace GinClientApp
+﻿namespace GinClientApp.Custom_Controls
 {
     partial class FileTransferProgress
     {

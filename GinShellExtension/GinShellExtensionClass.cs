@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.ServiceModel;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using GinShellExtension.GinService;
 using SharpShell.SharpContextMenu;
@@ -14,7 +12,7 @@ namespace GinShellExtension
     [ComVisible(true)]
     public class GinShellExtensionClass : SharpContextMenu
     {
-        private GinServiceClient _client;
+        private readonly GinServiceClient _client;
         private bool _clientFaulted;
 
         public GinShellExtensionClass()

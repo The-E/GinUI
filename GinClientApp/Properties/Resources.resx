@@ -153,4 +153,22 @@
   <data name="GinApplicationContext_Upload" xml:space="preserve">
     <value>Upload local files</value>
   </data>
+  <data name="GetUserCredentials_Login_Unsuccessful" xml:space="preserve">
+    <value>Login unsuccessful. Username or password are incorrect</value>
+  </data>
+  <data name="GetUserCredentials_Login_Failed" xml:space="preserve">
+    <value>Login failed</value>
+  </data>
+  <data name="RepoManagement_Delete_repository" xml:space="preserve">
+    <value>This will delete the selected Repository and all associated data. Continue?</value>
+  </data>
+  <data name="GinClientApp_Gin_Client_Warning" xml:space="preserve">
+    <value>Gin Client Warning</value>
+  </data>
+  <data name="GinApplicationContext_Error_while_trying_to_log_in_to_GIN" xml:space="preserve">
+    <value>Error while trying to log in to GIN</value>
+  </data>
+  <data name="GinApplicationContext_Gin_Service_has_stopped_communicating_" xml:space="preserve">
+    <value>Gin Service has stopped communicating.</value>
+  </data>
 </root>

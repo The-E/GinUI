@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using GinClientApp.Dialogs;
 using GinClientApp.GinService;
+using GinClientApp.Properties;
 using GinClientLibrary;
 using Newtonsoft.Json;
 
-namespace GinClientApp
+namespace GinClientApp.Dialogs
 {
     public partial class RepoManagement : Form
     {
@@ -50,7 +50,7 @@ namespace GinClientApp
 
             _suppressEvents = true;
             var repoName = lvwRepositories.SelectedItems[0];
-            _selectedRepository = _repositories.Single(r => string.Compare(r.Name, repoName.Text) == 0);
+            _selectedRepository = _repositories.Single(r => String.CompareOrdinal(r.Name, repoName.Text) == 0);
             txtRepoName.Text = _selectedRepository.Name;
             txtGinCommandline.Text = _selectedRepository.Address;
             txtMountpoint.Text = _selectedRepository.Mountpoint.FullName;
@@ -124,7 +124,7 @@ namespace GinClientApp
 
         private void btnAddNew_Click(object sender, EventArgs e)
         {
-            var getcmdlinedlg = new GetGINCmdline(_credentials);
+            var getcmdlinedlg = new GetGinCmdline(_credentials);
             var result = getcmdlinedlg.ShowDialog();
 
             if (result == DialogResult.OK)
@@ -151,8 +151,8 @@ namespace GinClientApp
         {
             if (_selectedRepository == null) return;
 
-            var res = MessageBox.Show("This will delete the selected Repository and all associated data. Continue?",
-                "Gin Client", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            var res = MessageBox.Show(Resources.RepoManagement_Delete_repository,
+                Resources.GinClientApp_Gin_Client_Warning, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
             if (res != DialogResult.Yes) return;
 
@@ -177,7 +177,7 @@ namespace GinClientApp
         {
             var newDir = PickDirectory(txtMountpoint.Text);
 
-            if (string.Compare(newDir, txtMountpoint.Text) == 0) return;
+            if (String.Compare(newDir, txtMountpoint.Text) == 0) return;
 
             txtMountpoint.Text = newDir;
         }
@@ -186,7 +186,7 @@ namespace GinClientApp
         {
             var newDir = PickDirectory(txtPhysdir.Text);
 
-            if (string.Compare(newDir, txtPhysdir.Text) == 0) return;
+            if (String.Compare(newDir, txtPhysdir.Text) == 0) return;
 
             txtPhysdir.Text = newDir;
         }

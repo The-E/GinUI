@@ -49,7 +49,7 @@ namespace GinClientLibrary
         {
         }
 
-        public Dictionary<string, FileStatus> StatusCache =>
+        private Dictionary<string, FileStatus> StatusCache =>
             _scache ?? (_scache = new Dictionary<string, FileStatus>());
 
         public void DownloadUpdateInfo()
