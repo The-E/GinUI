@@ -172,6 +172,9 @@
     <EmbeddedResource Include="Dialogs\RepoManagement.resx">
       <DependentUpon>RepoManagement.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="Connected Services\GinService\Arrays.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Connected Services\GinService\GinClientLibrary.xsd">
       <SubType>Designer</SubType>
     </None>

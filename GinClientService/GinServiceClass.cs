@@ -8,9 +8,9 @@ using Newtonsoft.Json;
 
 namespace GinService
 {
-    public class GinService : IGinService
+    public class GinServiceClass : IGinService
     {
-        public GinService()
+        public GinServiceClass()
         {
             RepositoryManager.Instance.MountAllRepositories();
             var callback = OperationContext.Current.GetCallbackChannel<IGinClientCallback>();
@@ -133,39 +133,9 @@ namespace GinService
             return RepositoryManager.Instance.IsManagedPath(filePath);
         }
 
-        bool IGinService.IsBasePath(string filePath)
+        bool IGinService.IsBaseDirectory(string filePath)
         {
-            return RepositoryManager.Instance.IsBasePath(filePath);
-        }
-
-        void IGinService.UpdateRepositories(IEnumerable<string> filePaths)
-        {
-            foreach (var filePath in filePaths)
-            {
-                var repo = RepositoryManager.Instance.GetRepoByPath(filePath);
-
-                repo?.DownloadUpdateInfo();
-            }
-        }
-
-        void IGinService.UploadRepositories(IEnumerable<string> filePaths)
-        {
-            foreach (var filePath in filePaths)
-            {
-                var repo = RepositoryManager.Instance.GetRepoByPath(filePath);
-
-                repo?.UploadRepository();
-            }
-        }
-
-        void IGinService.DownloadFiles(IEnumerable<string> filePaths)
-        {
-            var repo = RepositoryManager.Instance.GetRepoByName(filePaths.First());
-
-            foreach (var file in filePaths)
-            {
-                repo.RetrieveFile(file);
-            }
+            return RepositoryManager.Instance.IsBaseDirectory(filePath);
         }
     }
 }

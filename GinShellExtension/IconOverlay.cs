@@ -13,17 +13,17 @@ namespace GinShellExtension
     {
         protected override int GetPriority()
         {
-            throw new NotImplementedException();
+            return 90;
         }
 
         protected override bool CanShowOverlay(string path, FILE_ATTRIBUTE attributes)
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         protected override Icon GetOverlayIcon()
         {
-            throw new NotImplementedException();
+            return null;
         }
     }
 }

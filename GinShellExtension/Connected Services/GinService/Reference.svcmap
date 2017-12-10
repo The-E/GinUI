@@ -27,6 +27,7 @@
     <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="6cfb942e-0135-462c-96b2-ded771fea347" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/GinService/mex" />
     <MetadataFile FileName="GinClientLibrary.xsd" MetadataType="Schema" ID="1164d6bb-0021-4e46-8fa9-077c5a5023a6" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/GinService/mex" />
     <MetadataFile FileName="System.IO.xsd" MetadataType="Schema" ID="3991182d-ae0b-4075-873e-9f59cb8e42ab" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/GinService/mex" />
+    <MetadataFile FileName="Arrays.xsd" MetadataType="Schema" ID="ecf0be33-a479-4208-a9fc-0aa158b8fba8" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/GinService/mex" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

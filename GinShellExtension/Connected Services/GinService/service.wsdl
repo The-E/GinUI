@@ -35,6 +35,7 @@
       <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
       <xsd:import namespace="http://schemas.datacontract.org/2004/07/GinClientLibrary" />
       <xsd:import namespace="http://schemas.datacontract.org/2004/07/System.IO" />
+      <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
     </xsd:schema>
   </wsdl:types>
   <wsdl:message name="IGinService_AddRepository_InputMessage">
@@ -133,6 +134,30 @@
   <wsdl:message name="IGinService_IsManagedPath_OutputMessage">
     <wsdl:part name="parameters" element="tns:IsManagedPathResponse" />
   </wsdl:message>
+  <wsdl:message name="IGinService_IsBasePath_InputMessage">
+    <wsdl:part name="parameters" element="tns:IsBasePath" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_IsBasePath_OutputMessage">
+    <wsdl:part name="parameters" element="tns:IsBasePathResponse" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_UpdateRepositories_InputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateRepositories" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_UpdateRepositories_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateRepositoriesResponse" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_UploadRepositories_InputMessage">
+    <wsdl:part name="parameters" element="tns:UploadRepositories" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_UploadRepositories_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UploadRepositoriesResponse" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_DownloadFiles_InputMessage">
+    <wsdl:part name="parameters" element="tns:DownloadFiles" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_DownloadFiles_OutputMessage">
+    <wsdl:part name="parameters" element="tns:DownloadFilesResponse" />
+  </wsdl:message>
   <wsdl:message name="IGinService_FileOperationStarted_OutputCallbackMessage">
     <wsdl:part name="parameters" element="tns:FileOperationStarted" />
   </wsdl:message>
@@ -221,6 +246,22 @@
     <wsdl:operation name="IsManagedPath">
       <wsdl:input wsaw:Action="http://tempuri.org/IGinService/IsManagedPath" message="tns:IGinService_IsManagedPath_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IGinService/IsManagedPathResponse" message="tns:IGinService_IsManagedPath_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="IsBasePath">
+      <wsdl:input wsaw:Action="http://tempuri.org/IGinService/IsBasePath" message="tns:IGinService_IsBasePath_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IGinService/IsBasePathResponse" message="tns:IGinService_IsBasePath_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateRepositories">
+      <wsdl:input wsaw:Action="http://tempuri.org/IGinService/UpdateRepositories" message="tns:IGinService_UpdateRepositories_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IGinService/UpdateRepositoriesResponse" message="tns:IGinService_UpdateRepositories_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UploadRepositories">
+      <wsdl:input wsaw:Action="http://tempuri.org/IGinService/UploadRepositories" message="tns:IGinService_UploadRepositories_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IGinService/UploadRepositoriesResponse" message="tns:IGinService_UploadRepositories_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="DownloadFiles">
+      <wsdl:input wsaw:Action="http://tempuri.org/IGinService/DownloadFiles" message="tns:IGinService_DownloadFiles_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IGinService/DownloadFilesResponse" message="tns:IGinService_DownloadFiles_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="FileOperationStarted">
       <wsdl:output wsaw:Action="http://tempuri.org/IGinService/FileOperationStarted" message="tns:IGinService_FileOperationStarted_OutputCallbackMessage" />
@@ -379,6 +420,42 @@
     </wsdl:operation>
     <wsdl:operation name="IsManagedPath">
       <soap12:operation soapAction="http://tempuri.org/IGinService/IsManagedPath" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsBasePath">
+      <soap12:operation soapAction="http://tempuri.org/IGinService/IsBasePath" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateRepositories">
+      <soap12:operation soapAction="http://tempuri.org/IGinService/UpdateRepositories" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UploadRepositories">
+      <soap12:operation soapAction="http://tempuri.org/IGinService/UploadRepositories" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DownloadFiles">
+      <soap12:operation soapAction="http://tempuri.org/IGinService/DownloadFiles" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

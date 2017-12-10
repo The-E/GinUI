@@ -110,6 +110,30 @@ namespace GinClientApp.GinService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/IsManagedPath", ReplyAction="http://tempuri.org/IGinService/IsManagedPathResponse")]
         System.Threading.Tasks.Task<bool> IsManagedPathAsync(string filePath);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/IsBasePath", ReplyAction="http://tempuri.org/IGinService/IsBasePathResponse")]
+        bool IsBasePath(string filePath);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/IsBasePath", ReplyAction="http://tempuri.org/IGinService/IsBasePathResponse")]
+        System.Threading.Tasks.Task<bool> IsBasePathAsync(string filePath);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UpdateRepositories", ReplyAction="http://tempuri.org/IGinService/UpdateRepositoriesResponse")]
+        void UpdateRepositories(string[] filePaths);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UpdateRepositories", ReplyAction="http://tempuri.org/IGinService/UpdateRepositoriesResponse")]
+        System.Threading.Tasks.Task UpdateRepositoriesAsync(string[] filePaths);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UploadRepositories", ReplyAction="http://tempuri.org/IGinService/UploadRepositoriesResponse")]
+        void UploadRepositories(string[] filePaths);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UploadRepositories", ReplyAction="http://tempuri.org/IGinService/UploadRepositoriesResponse")]
+        System.Threading.Tasks.Task UploadRepositoriesAsync(string[] filePaths);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/DownloadFiles", ReplyAction="http://tempuri.org/IGinService/DownloadFilesResponse")]
+        void DownloadFiles(string[] filePaths);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/DownloadFiles", ReplyAction="http://tempuri.org/IGinService/DownloadFilesResponse")]
+        System.Threading.Tasks.Task DownloadFilesAsync(string[] filePaths);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -282,6 +306,38 @@ namespace GinClientApp.GinService {
         
         public System.Threading.Tasks.Task<bool> IsManagedPathAsync(string filePath) {
             return base.Channel.IsManagedPathAsync(filePath);
+        }
+        
+        public bool IsBasePath(string filePath) {
+            return base.Channel.IsBasePath(filePath);
+        }
+        
+        public System.Threading.Tasks.Task<bool> IsBasePathAsync(string filePath) {
+            return base.Channel.IsBasePathAsync(filePath);
+        }
+        
+        public void UpdateRepositories(string[] filePaths) {
+            base.Channel.UpdateRepositories(filePaths);
+        }
+        
+        public System.Threading.Tasks.Task UpdateRepositoriesAsync(string[] filePaths) {
+            return base.Channel.UpdateRepositoriesAsync(filePaths);
+        }
+        
+        public void UploadRepositories(string[] filePaths) {
+            base.Channel.UploadRepositories(filePaths);
+        }
+        
+        public System.Threading.Tasks.Task UploadRepositoriesAsync(string[] filePaths) {
+            return base.Channel.UploadRepositoriesAsync(filePaths);
+        }
+        
+        public void DownloadFiles(string[] filePaths) {
+            base.Channel.DownloadFiles(filePaths);
+        }
+        
+        public System.Threading.Tasks.Task DownloadFilesAsync(string[] filePaths) {
+            return base.Channel.DownloadFilesAsync(filePaths);
         }
     }
 }

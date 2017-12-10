@@ -225,6 +225,24 @@ namespace GinClientLibrary
             }
         }
 
+        public bool UploadRepository()
+        {
+            lock (this)
+            {
+                GetCommandLineOutputEvent("cmd.exe", "/c gin.exe upload --json", PhysicalDirectory.FullName,
+                    out var error);
+
+
+                ReadRepoStatus();
+
+                if (!string.IsNullOrEmpty(error))
+                    OnFileOperationError(error);
+
+                return string.IsNullOrEmpty(error);
+            }
+
+        }
+
         /// <summary>
         ///     Return a file to the annex
         /// </summary>

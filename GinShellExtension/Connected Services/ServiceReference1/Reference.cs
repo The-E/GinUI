@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace GinShellExtension.GinService {
+namespace GinShellExtension.ServiceReference1 {
     using System.Runtime.Serialization;
     using System;
     
@@ -139,7 +139,7 @@ namespace GinShellExtension.GinService {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="GinService.IGinService", CallbackContract=typeof(GinShellExtension.GinService.IGinServiceCallback))]
+    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="ServiceReference1.IGinService", CallbackContract=typeof(GinShellExtension.ServiceReference1.IGinServiceCallback))]
     public interface IGinService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/AddRepository", ReplyAction="http://tempuri.org/IGinService/AddRepositoryResponse")]
@@ -191,10 +191,10 @@ namespace GinShellExtension.GinService {
         System.Threading.Tasks.Task<string> GetRepositoryListAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UpdateRepository", ReplyAction="http://tempuri.org/IGinService/UpdateRepositoryResponse")]
-        bool UpdateRepository(string repoName, GinShellExtension.GinService.GinRepositoryData data);
+        bool UpdateRepository(string repoName, GinShellExtension.ServiceReference1.GinRepositoryData data);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UpdateRepository", ReplyAction="http://tempuri.org/IGinService/UpdateRepositoryResponse")]
-        System.Threading.Tasks.Task<bool> UpdateRepositoryAsync(string repoName, GinShellExtension.GinService.GinRepositoryData data);
+        System.Threading.Tasks.Task<bool> UpdateRepositoryAsync(string repoName, GinShellExtension.ServiceReference1.GinRepositoryData data);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/RetrieveFile", ReplyAction="http://tempuri.org/IGinService/RetrieveFileResponse")]
         bool RetrieveFile(string repoName, string filepath);
@@ -237,30 +237,6 @@ namespace GinShellExtension.GinService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/IsManagedPath", ReplyAction="http://tempuri.org/IGinService/IsManagedPathResponse")]
         System.Threading.Tasks.Task<bool> IsManagedPathAsync(string filePath);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/IsBasePath", ReplyAction="http://tempuri.org/IGinService/IsBasePathResponse")]
-        bool IsBasePath(string filePath);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/IsBasePath", ReplyAction="http://tempuri.org/IGinService/IsBasePathResponse")]
-        System.Threading.Tasks.Task<bool> IsBasePathAsync(string filePath);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UpdateRepositories", ReplyAction="http://tempuri.org/IGinService/UpdateRepositoriesResponse")]
-        void UpdateRepositories(string[] filePaths);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UpdateRepositories", ReplyAction="http://tempuri.org/IGinService/UpdateRepositoriesResponse")]
-        System.Threading.Tasks.Task UpdateRepositoriesAsync(string[] filePaths);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UploadRepositories", ReplyAction="http://tempuri.org/IGinService/UploadRepositoriesResponse")]
-        void UploadRepositories(string[] filePaths);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UploadRepositories", ReplyAction="http://tempuri.org/IGinService/UploadRepositoriesResponse")]
-        System.Threading.Tasks.Task UploadRepositoriesAsync(string[] filePaths);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/DownloadFiles", ReplyAction="http://tempuri.org/IGinService/DownloadFilesResponse")]
-        void DownloadFiles(string[] filePaths);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/DownloadFiles", ReplyAction="http://tempuri.org/IGinService/DownloadFilesResponse")]
-        System.Threading.Tasks.Task DownloadFilesAsync(string[] filePaths);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -280,12 +256,12 @@ namespace GinShellExtension.GinService {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface IGinServiceChannel : GinShellExtension.GinService.IGinService, System.ServiceModel.IClientChannel {
+    public interface IGinServiceChannel : GinShellExtension.ServiceReference1.IGinService, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class GinServiceClient : System.ServiceModel.DuplexClientBase<GinShellExtension.GinService.IGinService>, GinShellExtension.GinService.IGinService {
+    public partial class GinServiceClient : System.ServiceModel.DuplexClientBase<GinShellExtension.ServiceReference1.IGinService>, GinShellExtension.ServiceReference1.IGinService {
         
         public GinServiceClient(System.ServiceModel.InstanceContext callbackInstance) : 
                 base(callbackInstance) {
@@ -371,11 +347,11 @@ namespace GinShellExtension.GinService {
             return base.Channel.GetRepositoryListAsync();
         }
         
-        public bool UpdateRepository(string repoName, GinShellExtension.GinService.GinRepositoryData data) {
+        public bool UpdateRepository(string repoName, GinShellExtension.ServiceReference1.GinRepositoryData data) {
             return base.Channel.UpdateRepository(repoName, data);
         }
         
-        public System.Threading.Tasks.Task<bool> UpdateRepositoryAsync(string repoName, GinShellExtension.GinService.GinRepositoryData data) {
+        public System.Threading.Tasks.Task<bool> UpdateRepositoryAsync(string repoName, GinShellExtension.ServiceReference1.GinRepositoryData data) {
             return base.Channel.UpdateRepositoryAsync(repoName, data);
         }
         
@@ -433,38 +409,6 @@ namespace GinShellExtension.GinService {
         
         public System.Threading.Tasks.Task<bool> IsManagedPathAsync(string filePath) {
             return base.Channel.IsManagedPathAsync(filePath);
-        }
-        
-        public bool IsBasePath(string filePath) {
-            return base.Channel.IsBasePath(filePath);
-        }
-        
-        public System.Threading.Tasks.Task<bool> IsBasePathAsync(string filePath) {
-            return base.Channel.IsBasePathAsync(filePath);
-        }
-        
-        public void UpdateRepositories(string[] filePaths) {
-            base.Channel.UpdateRepositories(filePaths);
-        }
-        
-        public System.Threading.Tasks.Task UpdateRepositoriesAsync(string[] filePaths) {
-            return base.Channel.UpdateRepositoriesAsync(filePaths);
-        }
-        
-        public void UploadRepositories(string[] filePaths) {
-            base.Channel.UploadRepositories(filePaths);
-        }
-        
-        public System.Threading.Tasks.Task UploadRepositoriesAsync(string[] filePaths) {
-            return base.Channel.UploadRepositoriesAsync(filePaths);
-        }
-        
-        public void DownloadFiles(string[] filePaths) {
-            base.Channel.DownloadFiles(filePaths);
-        }
-        
-        public System.Threading.Tasks.Task DownloadFilesAsync(string[] filePaths) {
-            return base.Channel.DownloadFilesAsync(filePaths);
         }
     }
 }

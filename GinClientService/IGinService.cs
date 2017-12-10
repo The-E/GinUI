@@ -137,6 +137,23 @@ namespace GinService
         /// <returns></returns>
         [OperationContract]
         bool IsManagedPath(string filePath);
+
+        /// <summary>
+        /// Check whether a given path is a repository base path
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        [OperationContract]
+        bool IsBasePath(string filePath);
+
+        [OperationContract]
+        void UpdateRepositories(IEnumerable<string> filePaths);
+
+        [OperationContract]
+        void UploadRepositories(IEnumerable<string> filePaths);
+
+        [OperationContract]
+        void DownloadFiles(IEnumerable<string> filePaths);
     }
 
     [SuppressMessage("ReSharper", "OperationContractWithoutServiceContract")]

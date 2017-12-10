@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using DokanNet;
+using GinClientLibrary.Extensions;
 using Newtonsoft.Json;
 
 namespace GinClientLibrary
@@ -148,6 +149,20 @@ namespace GinClientLibrary
             }
 
             return true;
+        }
+
+        public GinRepository GetRepoByPath(string filePath)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsBasePath(string filePath)
+        {
+            var attr = File.GetAttributes(filePath);
+            if ((attr & FileAttributes.Directory) != FileAttributes.Directory) return false;
+            var dInfo = new DirectoryInfo(filePath);
+
+            return Repositories.Any(repo => repo.Mountpoint.IsEqualTo(dInfo));
         }
 
         public bool IsManagedPath(string filePath)
