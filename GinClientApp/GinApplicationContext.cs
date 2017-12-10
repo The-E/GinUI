@@ -47,6 +47,7 @@ namespace GinClientApp
             try
             {
                 _client = new GinServiceClient(new InstanceContext(this));
+                _client.InnerChannel.Faulted += InnerChannelOnFaulted;
 
                 if (_client.InnerChannel.State == CommunicationState.Faulted)
                     throw new Exception();
@@ -186,6 +187,13 @@ namespace GinClientApp
             };
 
             _trayIcon.DoubleClick += _trayIcon_DoubleClick;
+        }
+
+        private void InnerChannelOnFaulted(object sender1, EventArgs eventArgs)
+        {
+            MessageBox.Show("Gin Service has stopped communicating.",
+                Properties.Resources.GinApplicationContext_Gin_Service_Error, MessageBoxButtons.OK);
+            Exit(null, EventArgs.Empty);
         }
 
         private MenuItem[] BuildContextMenu()

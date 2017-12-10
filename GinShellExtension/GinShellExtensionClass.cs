@@ -15,15 +15,17 @@ namespace GinShellExtension
     public class GinShellExtensionClass : SharpContextMenu
     {
         private GinServiceClient _client;
+        private bool _clientFaulted;
 
         public GinShellExtensionClass()
         {
             _client = new GinServiceClient(new InstanceContext(this));
+            _client.InnerChannel.Faulted += (sender, args) => _clientFaulted = true;
         }
 
         protected override bool CanShowMenu()
         {
-            return _client.IsManagedPath(SelectedItemPaths.First());
+            return !_clientFaulted && _client.IsManagedPath(SelectedItemPaths.First());
         }
 
         protected override ContextMenuStrip CreateMenu()
