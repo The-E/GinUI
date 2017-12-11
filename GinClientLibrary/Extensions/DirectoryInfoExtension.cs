@@ -14,6 +14,9 @@ namespace GinClientLibrary.Extensions
         
         public static bool IsEmpty(this DirectoryInfo directory)
         {
+            if (!Directory.Exists(directory.FullName))
+                return true;
+
             return !Directory.EnumerateFileSystemEntries(directory.FullName).Any();
         }
 

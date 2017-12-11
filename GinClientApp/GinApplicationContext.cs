@@ -95,7 +95,6 @@ namespace GinClientApp
 
             _updateIntervalTimer = new Timer(_options.RepositoryUpdateInterval * 1000) {AutoReset = true};
             _updateIntervalTimer.Elapsed += (sender, args) => { _client.DownloadAllUpdateInfo(); };
-            _updateIntervalTimer.Start();
             #endregion
 
             #region Login
@@ -180,6 +179,7 @@ namespace GinClientApp
             };
 
             _trayIcon.DoubleClick += _trayIcon_DoubleClick;
+            _updateIntervalTimer.Start();
         }
 
         private void InnerChannelOnFaulted(object sender1, EventArgs eventArgs)
