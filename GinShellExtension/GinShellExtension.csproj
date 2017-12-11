@@ -34,7 +34,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>GinUIShellExtension.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>GinShellExtension.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Apex.WinForms, Version=1.6.0.0, Culture=neutral, PublicKeyToken=98d06957926c086d, processorArchitecture=MSIL">
@@ -87,7 +87,7 @@
     <None Include="Connected Services\GinService\System.IO.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="GinUIShellExtension.pfx" />
+    <None Include="GinShellExtension.pfx" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
