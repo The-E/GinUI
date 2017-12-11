@@ -47,12 +47,12 @@ namespace GinClientApp
             try
             {
                 _client = new GinServiceClient(new InstanceContext(this));
-                _client.InnerChannel.Faulted += InnerChannelOnFaulted;
+                _client.InnerDuplexChannel.Faulted += InnerChannelOnFaulted;
 
                 if (_client.InnerChannel.State == CommunicationState.Faulted)
                     throw new Exception();
             }
-            catch
+            catch (Exception e)
             {
                 MessageBox.Show(Resources.GinApplicationContext_Error_while_trying_to_access_Gin_Client_Service, Resources.GinApplicationContext_Gin_Client_Error,
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -336,9 +336,15 @@ namespace GinClientApp
         private void Exit(object sender, EventArgs e)
         {
             // Hide tray icon, otherwise it will remain shown until user mouses over it
-            _trayIcon.Visible = false;
-            _client.UnmmountAllRepositories();
-            _client.Close();
+            if (_trayIcon != null)
+                _trayIcon.Visible = false;
+
+            if (_client != null && _client.InnerChannel.State != CommunicationState.Faulted)
+            {
+                _client.UnmmountAllRepositories();
+                _client.Close();
+            }
+
             Application.Exit();
         }
 
