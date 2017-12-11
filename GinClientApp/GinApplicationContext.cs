@@ -48,6 +48,9 @@ namespace GinClientApp
             {
                 _client = new GinServiceClient(new InstanceContext(this));
                 _client.InnerDuplexChannel.Faulted += InnerChannelOnFaulted;
+                _client.InnerChannel.OperationTimeout = TimeSpan.MaxValue;
+                _client.InnerDuplexChannel.OperationTimeout = TimeSpan.MaxValue;
+          
 
                 if (_client.InnerChannel.State == CommunicationState.Faulted)
                     throw new Exception();
