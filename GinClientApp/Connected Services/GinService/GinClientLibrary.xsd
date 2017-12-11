@@ -3,7 +3,8 @@
   <xs:import namespace="http://schemas.datacontract.org/2004/07/System.IO" />
   <xs:complexType name="GinRepositoryData">
     <xs:sequence>
-      <xs:element minOccurs="0" name="Commandline" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Address" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CreateNew" type="xs:boolean" />
       <xs:element minOccurs="0" name="Mounted" type="xs:boolean" />
       <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/System.IO" minOccurs="0" name="Mountpoint" nillable="true" type="q1:DirectoryInfo" />
       <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />

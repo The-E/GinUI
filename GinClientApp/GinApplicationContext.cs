@@ -2,22 +2,25 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.ServiceModel;
 using System.Windows.Forms;
 using GinClientApp.Dialogs;
-using GinClientApp.GinClientService;
+using GinClientApp.GinService;
+using GinClientApp.Properties;
 using GinClientLibrary;
 using Newtonsoft.Json;
 using Timer = System.Timers.Timer;
 
 namespace GinClientApp
 {
-    public class GinApplicationContext : ApplicationContext, IGinClientServiceCallback
+    public class GinApplicationContext : ApplicationContext, IGinServiceCallback
     {
-        private readonly GinClientServiceClient _client;
+        private readonly GinServiceClient _client;
         private readonly NotifyIcon _trayIcon;
+        private readonly UserCredentials _credentials;
         private GlobalOptions _options;
-        private Timer _updateIntervalTimer;
+        private readonly Timer _updateIntervalTimer;
 
         public class GlobalOptions
         {
@@ -43,19 +46,23 @@ namespace GinClientApp
         {
             try
             {
-                _client = new GinClientServiceClient(new InstanceContext(this));
+                _client = new GinServiceClient(new InstanceContext(this));
+                _client.InnerDuplexChannel.Faulted += InnerChannelOnFaulted;
+                _client.InnerChannel.OperationTimeout = TimeSpan.MaxValue;
+                _client.InnerDuplexChannel.OperationTimeout = TimeSpan.MaxValue;
+          
 
                 if (_client.InnerChannel.State == CommunicationState.Faulted)
                     throw new Exception();
             }
-            catch
+            catch (Exception e)
             {
-                MessageBox.Show("Error while trying to access Gin Client Service", "Gin Client Error",
+                MessageBox.Show(Resources.GinApplicationContext_Error_while_trying_to_access_Gin_Client_Service, Resources.GinApplicationContext_Gin_Client_Error,
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             var saveFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
-                               @"\gnode\GinWindowsClient";
+                               @"\g-node\GinWindowsClient";
             if (!Directory.Exists(saveFilePath))
                 Directory.CreateDirectory(saveFilePath);
 
@@ -73,10 +80,7 @@ namespace GinClientApp
                     var optionsDlg = new GlobalOptionsDlg(new GlobalOptions());
                     var res = optionsDlg.ShowDialog();
 
-                    if (res == DialogResult.OK)
-                        _options = optionsDlg.Options;
-                    else
-                        _options = new GlobalOptions();
+                    _options = res == DialogResult.OK ? optionsDlg.Options : new GlobalOptions();
                 }
             }
             else
@@ -84,10 +88,7 @@ namespace GinClientApp
                 var optionsDlg = new GlobalOptionsDlg(new GlobalOptions());
                 var res = optionsDlg.ShowDialog();
 
-                if (res == DialogResult.OK)
-                    _options = optionsDlg.Options;
-                else
-                    _options = new GlobalOptions();
+                _options = res == DialogResult.OK ? optionsDlg.Options : new GlobalOptions();
 
                 var fs = File.CreateText(saveFilePath + @"\GlobalOptionsDlg.json");
                 fs.Write(JsonConvert.SerializeObject(_options));
@@ -95,10 +96,8 @@ namespace GinClientApp
                 fs.Close();
             }
 
-            _updateIntervalTimer = new Timer(_options.RepositoryUpdateInterval * 1000);
-            _updateIntervalTimer.AutoReset = true;
+            _updateIntervalTimer = new Timer(_options.RepositoryUpdateInterval * 1000) {AutoReset = true};
             _updateIntervalTimer.Elapsed += (sender, args) => { _client.DownloadAllUpdateInfo(); };
-            _updateIntervalTimer.Start();
             #endregion
 
             #region Login
@@ -108,11 +107,11 @@ namespace GinClientApp
                 try
                 {
                     var text = File.OpenText(saveFilePath + @"\Credentials.json").ReadToEnd();
-                    var credentials = JsonConvert.DeserializeObject<UserCredentials>(text);
+                    _credentials = JsonConvert.DeserializeObject<UserCredentials>(text);
 
-                    if (!_client.Login(credentials.Username, credentials.Password))
+                    if (!_client.Login(_credentials.Username, _credentials.Password))
                     {
-                        MessageBox.Show("Error while trying to log in to GIN", "Gin Client Error",
+                        MessageBox.Show(Resources.GinApplicationContext_Error_while_trying_to_log_in_to_GIN, Resources.GinApplicationContext_Gin_Client_Error,
                             MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     else
@@ -160,7 +159,7 @@ namespace GinClientApp
                     foreach (var repo in repos)
                     {
                         _client.AddRepository(repo.PhysicalDirectory.FullName, repo.Mountpoint.FullName, repo.Name,
-                            repo.Commandline, _options.RepositoryCheckoutOption == GlobalOptions.CheckoutOption.FullCheckout);
+                            repo.Address, _options.RepositoryCheckoutOption == GlobalOptions.CheckoutOption.FullCheckout, false);
                     }
                 }
                 catch (Exception e)
@@ -183,6 +182,14 @@ namespace GinClientApp
             };
 
             _trayIcon.DoubleClick += _trayIcon_DoubleClick;
+            _updateIntervalTimer.Start();
+        }
+
+        private void InnerChannelOnFaulted(object sender1, EventArgs eventArgs)
+        {
+            MessageBox.Show(Resources.GinApplicationContext_Gin_Service_has_stopped_communicating_,
+                Resources.GinApplicationContext_Gin_Service_Error, MessageBoxButtons.OK);
+            Exit(null, EventArgs.Empty);
         }
 
         private MenuItem[] BuildContextMenu()
@@ -193,11 +200,11 @@ namespace GinClientApp
 
             foreach (var repo in repositories)
             {
-                var mitem = new MenuItem(repo.Name);
-                mitem.Tag = repo;
+                var mitem = new MenuItem(repo.Name) {Tag = repo};
                 //mitem.MenuItems.Add("Edit", EditRepoMenuItemHandler);
-                mitem.MenuItems.Add("Unmount", UnmountRepoMenuItemHandler);
-                mitem.MenuItems.Add("Update", UpdateRepoMenuItemHandler);
+                mitem.MenuItems.Add(Resources.GinApplicationContext_Upload, UploadRepoMenuItemHandler);
+                mitem.MenuItems.Add(Resources.GinApplicationContext_Unmount, UnmountRepoMenuItemHandler);
+                mitem.MenuItems.Add(Resources.GinApplicationContext_Update, UpdateRepoMenuItemHandler);
 
                 menuitems.Add(mitem);
             }
@@ -205,13 +212,39 @@ namespace GinClientApp
             if (repositories.Length != 0)
                 menuitems.Add(new MenuItem("-"));
 
-            menuitems.Add(new MenuItem("Manage Repositories", ManageRepositoriesMenuItemHandler));
+            menuitems.Add(new MenuItem(Resources.GinApplicationContext_Manage_Repositories, ManageRepositoriesMenuItemHandler));
 
-            menuitems.Add(new MenuItem("Options", ShowOptionsMenuItemHandler));
+            menuitems.Add(new MenuItem(Resources.GinApplicationContext_Options, ShowOptionsMenuItemHandler));
 
-            menuitems.Add(new MenuItem("Exit", Exit));
+            menuitems.Add(new MenuItem(Resources.GinApplicationContext_Exit, Exit));
 
             return menuitems.ToArray();
+        }
+
+        private void UploadRepoMenuItemHandler(object sender, EventArgs e)
+        {
+            var repo = (GinRepositoryData)((MenuItem)sender).Parent.Tag;
+            var fstatus = JsonConvert.DeserializeObject <
+                          Dictionary<string, GinRepository.FileStatus>>(_client.GetRepositoryFileInfo(repo.Name));
+
+            var alteredFiles = from kvp in fstatus
+                where kvp.Value == GinRepository.FileStatus.OnDiskModified ||
+                      kvp.Value == GinRepository.FileStatus.Unknown
+                select kvp;
+
+            var files = alteredFiles as KeyValuePair<string, GinRepository.FileStatus>[] ?? alteredFiles.ToArray();
+            if (!files.Any())
+                return; //Nothing to upload here
+
+            var uploadfiledlg = new UploadFilesDlg(files);
+            var res = uploadfiledlg.ShowDialog();
+
+            if (res == DialogResult.Cancel) return;
+
+            foreach (var file in files)
+            {
+                _client.UploadFile(repo.Name, file.Key);
+            }
         }
 
         private void ShowOptionsMenuItemHandler(object sender, EventArgs e)
@@ -237,7 +270,7 @@ namespace GinClientApp
 
         private void ManageRepositoriesMenuItemHandler(object sender, EventArgs e)
         {
-            var repomanager = new RepoManagement(_client, _options);
+            var repomanager = new RepoManagement(_client, _options, _credentials);
             repomanager.Closed += (o, args) => { _trayIcon.ContextMenu = new ContextMenu(BuildContextMenu()); };
             repomanager.ShowDialog();
         }
@@ -247,15 +280,15 @@ namespace GinClientApp
             
             var mItem = (MenuItem) sender;
             var repo = (GinRepositoryData)mItem.Parent.Tag;
-            if (string.CompareOrdinal("Unmount", mItem.Text) == 0)
+            if (string.CompareOrdinal(Resources.GinApplicationContext_Unmount, mItem.Text) == 0)
             {
                 _client.UnmountRepository(repo.Name);
-                mItem.Text = "Mount";
+                mItem.Text = Resources.GinApplicationContext_Mount;
             }
             else
             {
                 _client.MountRepository(repo.Name);
-                mItem.Text = "Unmount";
+                mItem.Text = Resources.GinApplicationContext_Unmount;
             }
         }
 
@@ -264,16 +297,16 @@ namespace GinClientApp
             throw new NotImplementedException();
         }
 
-        void IGinClientServiceCallback.FileOperationFinished(string filename, string repository, bool success)
+        void IGinServiceCallback.FileOperationFinished(string filename, string repository, bool success)
         {
             //progressDisplay?.RemoveFileTransfer(filename);
         }
 
-        void IGinClientServiceCallback.FileOperationStarted(string filename, string repository)
+        void IGinServiceCallback.FileOperationStarted(string filename, string repository)
         {
-            _trayIcon.BalloonTipTitle = @"GIN Repository activity in progress";
+            _trayIcon.BalloonTipTitle = Resources.GinApplicationContext_Repository_Activity;
             _trayIcon.BalloonTipText =
-                $"Retrieving {Path.GetFileName(filename)} from repository {repository}";
+                string.Format(Resources.GinApplicationContext_FileOperation_Retrieving, Path.GetFileName(filename), repository);
             _trayIcon.ShowBalloonTip(5000);
 
             //if (progressDisplay == null)
@@ -283,7 +316,7 @@ namespace GinClientApp
             //progressDisplay.Show();
         }
 
-        void IGinClientServiceCallback.FileOperationProgress(string filename, string repository, int progress,
+        void IGinServiceCallback.FileOperationProgress(string filename, string repository, int progress,
             string speed, string state)
         {
             Console.WriteLine("Filename: {0}, Repo: {1}, Progress: {2}, Speed: {3}, State: {4}", filename, repository,
@@ -292,9 +325,9 @@ namespace GinClientApp
             //progressDisplay?.SetProgressBarState(filename, state, progress, speed);
         }
 
-        void IGinClientServiceCallback.GinServiceError(string message)
+        void IGinServiceCallback.GinServiceError(string message)
         {
-            MessageBox.Show(message, "GIN Service Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(message, Resources.GinApplicationContext_Gin_Service_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             Exit(this, EventArgs.Empty);
         }
 
@@ -306,13 +339,19 @@ namespace GinClientApp
         private void Exit(object sender, EventArgs e)
         {
             // Hide tray icon, otherwise it will remain shown until user mouses over it
-            _trayIcon.Visible = false;
-            _client.UnmmountAllRepositories();
-            _client.Close();
+            if (_trayIcon != null)
+                _trayIcon.Visible = false;
+
+            if (_client != null && _client.InnerChannel.State != CommunicationState.Faulted)
+            {
+                _client.UnmmountAllRepositories();
+                _client.Close();
+            }
+
             Application.Exit();
         }
 
-        struct UserCredentials
+        public struct UserCredentials
         {
             public string Username { get; set; }
             public string Password { get; set; }

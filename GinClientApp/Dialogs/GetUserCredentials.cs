@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Windows.Forms;
-using GinClientApp.GinClientService;
+using GinClientApp.GinService;
+using GinClientApp.Properties;
 
-namespace GinClientApp
+namespace GinClientApp.Dialogs
 {
     public partial class GetUserCredentials : Form
     {
-        private readonly GinClientServiceClient _client;
-        public string Username { get; set; }
-        public string Password { get; set; }
+        private readonly GinServiceClient _client;
+        public string Username { get; private set; }
+        public string Password { get; private set; }
         
 
-        public GetUserCredentials(GinClientServiceClient client)
+        public GetUserCredentials(GinServiceClient client)
         {
             InitializeComponent();
             _client = client;
@@ -23,7 +24,7 @@ namespace GinClientApp
 
             if (!_client.Login(Username, Password))
             {
-                MessageBox.Show("Login unsuccessful. Username or password are incorrect", "Login failed",
+                MessageBox.Show(Resources.GetUserCredentials_Login_Unsuccessful, Resources.GetUserCredentials_Login_Failed,
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }

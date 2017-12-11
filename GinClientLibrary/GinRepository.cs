@@ -37,28 +37,19 @@ namespace GinClientLibrary
 
         private Dictionary<string, FileStatus> _scache;
 
-        public GinRepository(DirectoryInfo physicalDirectory, DirectoryInfo mountpoint, string name, string commandline)
+        public GinRepository(DirectoryInfo physicalDirectory, DirectoryInfo mountpoint, string name, string address, bool createNew) : base(physicalDirectory, mountpoint, name, address, createNew)
         {
-            PhysicalDirectory = physicalDirectory;
-            Mountpoint = mountpoint;
-            Name = name;
-            Commandline = commandline;
             Mounted = false;
             DokanInterface = new DokanInterface(this, false);
             DokanInterface.FileOperationStarted += DokanInterface_FileOperationStarted;
-            DokanInterface.FileOperationCompleted += DokanInterface_FileOperationCompleted;
-            
+            DokanInterface.FileOperationCompleted += DokanInterface_FileOperationCompleted;            
         }
 
-        public GinRepository(GinRepositoryData data)
+        public GinRepository(GinRepositoryData data) : base(data.PhysicalDirectory, data.Mountpoint, data.Name, data.Address, data.CreateNew)
         {
-            Mountpoint = data.Mountpoint;
-            PhysicalDirectory = data.PhysicalDirectory;
-            Name = data.Name;
-            Commandline = data.Commandline;
         }
 
-        public Dictionary<string, FileStatus> StatusCache =>
+        private Dictionary<string, FileStatus> StatusCache =>
             _scache ?? (_scache = new Dictionary<string, FileStatus>());
 
         public void DownloadUpdateInfo()
@@ -155,6 +146,12 @@ namespace GinClientLibrary
             }
         }
 
+        public string GetStatusCacheJson()
+        {
+            ReadRepoStatus();
+            return JsonConvert.SerializeObject(StatusCache);
+        }
+
         public FileStatus GetFileStatus(string filePath)
         {
             lock (this)
@@ -194,11 +191,14 @@ namespace GinClientLibrary
 
             lock (this)
             {
-                GetCommandLineOutputEvent("cmd.exe", "/c gin.exe get-content " + filename + " --json", directoryName,
+                GetCommandLineOutputEvent("cmd.exe", "/C gin.exe get-content " + filename + " --json", directoryName,
                     out var error);
                 
 
                 ReadRepoStatus();
+
+                if (!string.IsNullOrEmpty(error))
+                    OnFileOperationError(error);
 
                 return string.IsNullOrEmpty(error);
             }
@@ -215,7 +215,7 @@ namespace GinClientLibrary
 
             lock (this)
             {
-                GetCommandLineOutputEvent("cmd.exe", "/c gin.exe upload " + filename + " --json", directoryName,
+                GetCommandLineOutputEvent("cmd.exe", "/C gin.exe upload " + filename + " --json", directoryName,
                     out var error);
 
 
@@ -226,6 +226,22 @@ namespace GinClientLibrary
 
                 return string.IsNullOrEmpty(error);
             }
+        }
+
+        public void UploadRepository()
+        {
+            lock (this)
+            {
+                GetCommandLineOutputEvent("cmd.exe", "/C gin.exe upload --json", PhysicalDirectory.FullName,
+                    out var error);
+
+
+                ReadRepoStatus();
+
+                if (!string.IsNullOrEmpty(error))
+                    OnFileOperationError(error);
+            }
+
         }
 
         /// <summary>
@@ -246,16 +262,13 @@ namespace GinClientLibrary
 
                 ReadRepoStatus();
 
-                if (!string.IsNullOrEmpty(error))
-                {
-                    OnFileOperationError(error);
-                    return false;
-                }
+                if (string.IsNullOrEmpty(error)) return true;
 
-                return true;
+                OnFileOperationError(error);
+                return false;
             }
         }
-        
+
         /// <summary>
         ///     Creates a new repository folder from scratch
         /// </summary>
@@ -267,11 +280,35 @@ namespace GinClientLibrary
             if (!Directory.Exists(Mountpoint.FullName))
                 Directory.CreateDirectory(Mountpoint.FullName);
 
-            if (PhysicalDirectory.IsEmpty())
-                GetCommandLineOutputEvent("cmd.exe", "/C gin.exe get " + Commandline + " --json", PhysicalDirectory.Parent.FullName, out string error);
+            if (CreateNew)
+            {
+                var result = GetCommandLineOutput("cmd.exe", "/C gin.exe create " + Name,
+                    PhysicalDirectory.Parent.FullName, out var error);
 
-            if (performFullCheckout)
-                GetCommandLineOutputEvent("cmd.exe", "/C gin.exe download --content --json", PhysicalDirectory.Parent.FullName, out string error);
+                if (!string.IsNullOrEmpty(error))
+                    OnFileOperationError(error);
+            }
+            else
+            {
+
+                if (PhysicalDirectory.IsEmpty())
+                {
+                    GetCommandLineOutputEvent("cmd.exe", "/C gin.exe get " + Address + " --json",
+                        PhysicalDirectory.Parent.FullName, out var error);
+
+                    if (!string.IsNullOrEmpty(error))
+                        OnFileOperationError(error);
+                }
+
+                if (performFullCheckout)
+                {
+                    GetCommandLineOutputEvent("cmd.exe", "/C gin.exe download --content --json",
+                        PhysicalDirectory.Parent.FullName, out var error);
+
+                    if (!string.IsNullOrEmpty(error))
+                        OnFileOperationError(error);
+                }
+            }
         }
 
         public void DeleteRepository()
@@ -366,10 +403,10 @@ namespace GinClientLibrary
         private readonly object _thisLock = new object();
 
         /// <summary>
-        ///     Execute a commandline program and capture its output
+        ///     Execute a address program and capture its output
         /// </summary>
         /// <param name="program">The program to execute, e.g. cmd.exe</param>
-        /// <param name="commandline">Any commandline arguments</param>
+        /// <param name="commandline">Any address arguments</param>
         /// <param name="workingDirectory">The working directory</param>
         /// <param name="error">stderr output</param>
         /// <returns>Any return values of the command</returns>
@@ -479,5 +516,6 @@ namespace GinClientLibrary
         }
 
         #endregion
+
     }
 }

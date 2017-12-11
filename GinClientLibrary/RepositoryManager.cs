@@ -6,7 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using DokanNet;
+using GinClientLibrary.Extensions;
 using Newtonsoft.Json;
+using static System.String;
 
 namespace GinClientLibrary
 {
@@ -29,11 +31,11 @@ namespace GinClientLibrary
         private static RepositoryManager _instance;
 
         private List<GinRepository> _repositories;
-        private static readonly StringBuilder _output = new StringBuilder("");
+        private static readonly StringBuilder Output = new StringBuilder("");
         private void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(e.Data))
-                _output.AppendLine(e.Data);
+            if (!IsNullOrEmpty(e.Data))
+                Output.AppendLine(e.Data);
         }
 
         private RepositoryManager()
@@ -46,7 +48,7 @@ namespace GinClientLibrary
 
         public GinRepository GetRepoByName(string name)
         {
-            return Repositories.Single(r => string.Compare(r.Name, name, true) == 0);
+            return Repositories.Single(r => Compare(r.Name, name, StringComparison.OrdinalIgnoreCase) == 0);
         }
 
         public void Logout()
@@ -73,6 +75,35 @@ namespace GinClientLibrary
             }
         }
 
+        public bool CreateNewRepository(string repoName)
+        {
+            //TODO: Coordinate with achilleas to get the gin client to accept a --json parameter to gin repos
+            //TODO: Return false if a repo with that name already exists
+
+            lock (this)
+            {
+                var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        FileName = "cmd.exe",
+                        WorkingDirectory = @"C:\",
+                        Arguments = "/C gin.exe create " + repoName,
+                        CreateNoWindow = true,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        RedirectStandardInput = true,
+                        UseShellExecute = false
+                    }
+                };
+
+                process.Start();
+            }
+
+            return true;
+        }
+
         public bool Login(string username, string password)
         {
             //if you wanna do the POST request in the Windows client separately, you can just 
@@ -80,7 +111,7 @@ namespace GinClientLibrary
             //"content-type: application/json" and "Authorization: Basic <base64 encoded $USERNAME:$PASSWORD>"
             //default host gin.g-node.org
             //request returns a token that needs to be saved and attached to future requests
-            //default path %userprofile%\.config\gin\, will be changed to %appdata%\gnode\gin\
+            //default path %userprofile%\.config\gin\, will be changed to %appdata%\g-node\gin\
 
             //Also note: In a service context, %userprofile% evaluates to C:\Windows\system32\config\systemprofile\; %AppData% to C:\Windows\system32\config\systemprofile\Appdata\Roaming
 
@@ -103,7 +134,7 @@ namespace GinClientLibrary
                 };
 
                 process.OutputDataReceived += Process_OutputDataReceived;
-                _output.Clear();
+                Output.Clear();
                 process.Start();
                 process.BeginOutputReadLine();
                 process.StandardInput.WriteLine(password);
@@ -111,16 +142,35 @@ namespace GinClientLibrary
                 
                 process.WaitForExit();
 
-                if (!string.IsNullOrEmpty(error))
-                {
-                    RepositoryManager.Instance.OnRepositoryOperationError(null, new GinRepository.FileOperationErrorEventArgs() { RepositoryName = "RepositoryManager", Message = error });
-                    return false;
-                }
+                if (IsNullOrEmpty(error)) return true;
+                Instance.OnRepositoryOperationError(null, new GinRepository.FileOperationErrorEventArgs() { RepositoryName = "RepositoryManager", Message = error });
+                return false;
             }
-
-            return true;
         }
-        
+
+        public GinRepository GetRepoByPath(string filePath)
+        {
+            return Repositories.Find(repo => filePath.Contains(repo.Mountpoint.FullName.Trim('\\')));
+        }
+
+        public bool IsBasePath(string filePath)
+        {
+            var attr = File.GetAttributes(filePath);
+            if ((attr & FileAttributes.Directory) != FileAttributes.Directory) return false;
+            var dInfo = new DirectoryInfo(filePath);
+
+            return Repositories.Any(repo => repo.Mountpoint.IsEqualTo(dInfo));
+        }
+
+        public bool IsManagedPath(string filePath)
+        {
+            return Repositories.Any(repo => filePath.Contains(repo.Mountpoint.FullName));
+        }
+
+        public string GetRepositoryFileInfo(GinRepository ginRepository)
+        {
+            return ginRepository.GetStatusCacheJson();
+        }
 
         public void MountAllRepositories()
         {
@@ -141,7 +191,7 @@ namespace GinClientLibrary
         {
             lock (this)
             {
-                var repo = Repositories.Single(r => string.Compare(r.Name, repoName) == 0);
+                var repo = Repositories.Single(r => CompareOrdinal(r.Name, repoName) == 0);
                 UnmountRepository(repo);
                 Repositories.Remove(repo);
                 repo = new GinRepository(data);
@@ -172,13 +222,13 @@ namespace GinClientLibrary
             Repositories.Clear();
         }
 
-        public void AddRepository(DirectoryInfo physicalDirectory, DirectoryInfo mountpoint, string name, string commandline, bool performFullCheckout)
+        public void AddRepository(DirectoryInfo physicalDirectory, DirectoryInfo mountpoint, string name, string commandline, bool performFullCheckout, bool createNew)
         {
             var repo = new GinRepository(
                 physicalDirectory,
                 mountpoint,
                 name,
-                commandline);
+                commandline, createNew);
 
             repo.FileOperationStarted += Repo_FileOperationStarted;
             repo.FileOperationCompleted += Repo_FileOperationCompleted;
@@ -214,14 +264,14 @@ namespace GinClientLibrary
 
         public event FileRetrievalStartedHandler FileRetrievalStarted;
 
-        protected void OnFileRetrievalStarted(DokanInterface.FileOperationEventArgs e, GinRepository sender)
+        private void OnFileRetrievalStarted(DokanInterface.FileOperationEventArgs e, GinRepository sender)
         {
             FileRetrievalStarted?.Invoke(this, sender, e.File);
         }
 
         public event FileRetrievalCompletedHandler FileRetrievalCompleted;
 
-        protected void OnFileRetrievalCompleted(DokanInterface.FileOperationEventArgs e, GinRepository sender)
+        private void OnFileRetrievalCompleted(DokanInterface.FileOperationEventArgs e, GinRepository sender)
         {
             FileRetrievalCompleted?.Invoke(this, sender, e.File, e.Success);
         }
@@ -238,7 +288,7 @@ namespace GinClientLibrary
 
         public event RepositoryOperationErrorHandler RepositoryOperationError;
 
-        public void OnRepositoryOperationError(GinRepository sender,
+        private void OnRepositoryOperationError(GinRepository sender,
             GinRepository.FileOperationErrorEventArgs message)
         {
             RepositoryOperationError?.Invoke(sender, message);
@@ -256,7 +306,7 @@ namespace GinClientLibrary
 
             public int GetProgress()
             {
-                if (!string.IsNullOrEmpty(progress))
+                if (!IsNullOrEmpty(progress))
                     return int.Parse(progress.Trim('%'));
 
                 return 0;

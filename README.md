@@ -8,8 +8,8 @@ A Windows frontend for gin
 1. Install Dokan https://github.com/dokan-dev/dokany/releases/download/v1.0.5/DokanSetup-1.0.5.1000.exe
 2. (Assuming Visual Studio 2017 is installed) Open Solution file, compile. This will trigger a nuget package restore.
 3. Open the VS command line (Tools -> Visual Studio Command Prompt)
-4. Go to the output directory for the Gin Client Service (should be \GinUI\GinClientService\bin) on the commandline
-5. Use the following command: "InstallUtil GinClientService.exe" This installs the Windows Service. Reboot if prompted.
+4. Go to the output directory for the Gin Client Service (should be \GinUI\GinClientService\bin\debug) on the commandline
+5. Use the following command: "InstallUtil GinService.exe" This installs the Windows Service. Reboot if prompted.
 6. Open services.msc. Locate the "Gin Client Service", and start it manually.
 7. The VS debugger will pop up. It will ask you to start a new instance of VS with admin rights. Let it. Once it has stopped at the designated breakpoint (you'll see it in the code at GinClientWindowsService.cs line 25; this line can be commented out safely), hit F5 to let execution proceed.
 8. Start the Gin Client App (should be in \GinClientApp\bin\Debug), either manually or by pressing F5 in that non-admin VS instance.

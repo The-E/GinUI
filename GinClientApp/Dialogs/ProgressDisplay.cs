@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
+using GinClientApp.Custom_Controls;
 using Microsoft.WindowsAPICodePack.Taskbar;
 
-namespace GinClientApp
+namespace GinClientApp.Dialogs
 {
     public partial class ProgressDisplay : Form
     {

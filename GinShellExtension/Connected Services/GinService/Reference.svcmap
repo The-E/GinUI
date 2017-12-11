@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="0c080647-258a-42d9-aefc-4fcfe08234da" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:8733/Design_Time_Addresses/GinService/mex" Protocol="mex" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="f57218ad-a72c-46bf-bbe0-5787e1a0f8f4" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/GinService/mex" />
+    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="3a01687d-0f90-44ba-b8e8-442eec448ddf" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/GinService/mex" />
+    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="6cfb942e-0135-462c-96b2-ded771fea347" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/GinService/mex" />
+    <MetadataFile FileName="GinClientLibrary.xsd" MetadataType="Schema" ID="1164d6bb-0021-4e46-8fa9-077c5a5023a6" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/GinService/mex" />
+    <MetadataFile FileName="System.IO.xsd" MetadataType="Schema" ID="3991182d-ae0b-4075-873e-9f59cb8e42ab" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/GinService/mex" />
+    <MetadataFile FileName="Arrays.xsd" MetadataType="Schema" ID="ecf0be33-a479-4208-a9fc-0aa158b8fba8" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/GinService/mex" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

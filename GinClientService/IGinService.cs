@@ -3,10 +3,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.ServiceModel;
 using GinClientLibrary;
 
-namespace GinClientService
+namespace GinService
 {
     [ServiceContract(CallbackContract = typeof(IGinClientCallback))]
-    public interface IGinClientService
+    public interface IGinService
     {
         /// <summary>
         /// Adds a new repository to the list of managed Repositories. If necessary,
@@ -18,9 +18,18 @@ namespace GinClientService
         /// <param name="name">The name of this repository</param>
         /// <param name="commandline">The gin get commandline used to initialize this, e.g. "gin get username/repository"</param>
         /// <param name="performFullCheckout">When true, all files are checked out of the annex, e.g "gin get </param>
+        /// <param name="createNew">When true, this repository will be created new, i.e. through gin create</param>
         /// <returns>True if repository creation succeeded</returns>
         [OperationContract]
-        bool AddRepository(string physicalDirectory, string mountpoint, string name, string commandline, bool performFullCheckout);
+        bool AddRepository(string physicalDirectory, string mountpoint, string name, string commandline, bool performFullCheckout, bool createNew);
+
+        /// <summary>
+        /// Create a new repository on the remote server
+        /// </summary>
+        /// <param name="repoName"></param>
+        /// <returns></returns>
+        [OperationContract]
+        bool CreateNewRepository(string repoName);
 
         /// <summary>
         /// Unmounts a repository.
@@ -112,6 +121,39 @@ namespace GinClientService
         /// </summary>
         [OperationContract]
         void DownloadAllUpdateInfo();
+
+        /// <summary>
+        /// Get a JSON representation of the current status of every file in the repository
+        /// </summary>
+        /// <param name="repoName">Name of the Repository</param>
+        /// <returns>A JSON representation of a Dictionary&lt;string, GinRepository.FileStatus&gt;</returns>
+        [OperationContract]
+        string GetRepositoryFileInfo(string repoName);
+
+        /// <summary>
+        /// Check whether a given path is part of any managed repository
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        [OperationContract]
+        bool IsManagedPath(string filePath);
+
+        /// <summary>
+        /// Check whether a given path is a repository base path
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        [OperationContract]
+        bool IsBasePath(string filePath);
+
+        [OperationContract]
+        void UpdateRepositories(IEnumerable<string> filePaths);
+
+        [OperationContract]
+        void UploadRepositories(IEnumerable<string> filePaths);
+
+        [OperationContract]
+        void DownloadFiles(IEnumerable<string> filePaths);
     }
 
     [SuppressMessage("ReSharper", "OperationContractWithoutServiceContract")]

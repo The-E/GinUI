@@ -23,7 +23,7 @@ namespace GinClientLibrary
         /// <summary>
         ///     The GinRepository linked to this Dokan Interface. Provided mostly for convenience.
         /// </summary>
-        public GinRepository Repository { get; }
+        private GinRepository _repository;
 
         #endregion
 
@@ -45,7 +45,7 @@ namespace GinClientLibrary
         {
             InitLogging();
 
-            Repository = repo;
+            _repository = repo;
             _doLogging = enableLogging;
         }
 
@@ -62,7 +62,7 @@ namespace GinClientLibrary
         /// <exception cref="DokanInterfaceException">Thrown if the mount fails</exception>
         public void Initialize()
         {
-            this.Mount(Repository.Mountpoint.FullName.Trim('\\'),
+            this.Mount(_repository.Mountpoint.FullName.Trim('\\'),
                 DokanOptions.DebugMode | DokanOptions.StderrOutput);
 
         }
@@ -154,7 +154,7 @@ namespace GinClientLibrary
         /// <returns></returns>
         private string GetPath(string fileName)
         {
-            return Repository.PhysicalDirectory.FullName + fileName;
+            return _repository.PhysicalDirectory.FullName + fileName;
         }
 
         private IList<FileInformation> FindFilesHelper(string fileName, string searchPattern)
@@ -259,9 +259,9 @@ namespace GinClientLibrary
 
                             try
                             {
-                                File.GetAttributes(filePath).HasFlag(FileAttributes.Directory);
-                                return Trace(nameof(CreateFile), fileName, info, access, share, mode, options,
-                                    attributes, DokanResult.AlreadyExists);
+                                if (File.GetAttributes(filePath).HasFlag(FileAttributes.Directory))
+                                    return Trace(nameof(CreateFile), fileName, info, access, share, mode, options,
+                                        attributes, DokanResult.AlreadyExists);
                             }
                             catch (IOException)
                             {
@@ -290,7 +290,7 @@ namespace GinClientLibrary
                 {
                     pathIsDirectory = Directory.Exists(filePath);
                     pathExists = pathIsDirectory || File.Exists(filePath);
-                    var fileStatus = Repository.GetFileStatus(filePath);
+                    var fileStatus = _repository.GetFileStatus(filePath);
                     fileisAnnexed = fileStatus == GinRepository.FileStatus.InAnnex ||
                                     fileStatus == GinRepository.FileStatus.InAnnexModified;
                 }
@@ -326,7 +326,7 @@ namespace GinClientLibrary
                             {
                                 var a = info.TryResetTimeout(30000); //Annex operations take time; 
                                 OnFileOperationStarted(new FileOperationEventArgs {Success = false, File = fileName});
-                                var success = Repository.RetrieveFile(filePath);
+                                var success = _repository.RetrieveFile(filePath);
                                 OnFileOperationCompleted(
                                     new FileOperationEventArgs {Success = success, File = fileName});
                             }
@@ -464,7 +464,7 @@ namespace GinClientLibrary
             out long totalNumberOfFreeBytes, DokanFileInfo info)
         {
             var dinfo = DriveInfo.GetDrives().Single(di => string.Equals(di.RootDirectory.Name,
-                Path.GetPathRoot(Repository.PhysicalDirectory + "\\"), StringComparison.OrdinalIgnoreCase));
+                Path.GetPathRoot(_repository.PhysicalDirectory + "\\"), StringComparison.OrdinalIgnoreCase));
 
             freeBytesAvailable = dinfo.TotalFreeSpace;
             totalNumberOfBytes = dinfo.TotalSize;
@@ -514,7 +514,7 @@ namespace GinClientLibrary
         public NtStatus GetVolumeInformation(out string volumeLabel, out FileSystemFeatures features,
             out string fileSystemName, DokanFileInfo info)
         {
-            volumeLabel = Repository.Mountpoint.FullName + Path.DirectorySeparatorChar + Repository.Name;
+            volumeLabel = _repository.Mountpoint.FullName + Path.DirectorySeparatorChar + _repository.Name;
             fileSystemName = "NTFS";
             features = FileSystemFeatures.CasePreservedNames | FileSystemFeatures.CaseSensitiveSearch |
                        FileSystemFeatures.PersistentAcls | FileSystemFeatures.SupportsRemoteStorage |

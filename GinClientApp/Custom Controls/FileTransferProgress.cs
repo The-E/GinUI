@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace GinClientApp
+namespace GinClientApp.Custom_Controls
 {
     public partial class FileTransferProgress : UserControl
     {

@@ -3,31 +3,37 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using GinClientApp.Dialogs;
-using GinClientApp.GinClientService;
+using GinClientApp.GinService;
+using GinClientApp.Properties;
 using GinClientLibrary;
 using Newtonsoft.Json;
 
-namespace GinClientApp
+namespace GinClientApp.Dialogs
 {
     public partial class RepoManagement : Form
     {
-        private readonly GinClientServiceClient _client;
+        private readonly GinServiceClient _client;
+        private readonly GinApplicationContext.UserCredentials _credentials;
+        private readonly GinApplicationContext.GlobalOptions _options;
         private List<GinRepositoryData> _repositories;
+
         private GinRepositoryData _selectedRepository;
         private bool _suppressEvents;
-        private GinApplicationContext.GlobalOptions _options;
 
-        public RepoManagement(GinClientServiceClient client, GinApplicationContext.GlobalOptions options)
+        public RepoManagement(GinServiceClient client, GinApplicationContext.GlobalOptions options,
+            GinApplicationContext.UserCredentials credentials)
         {
             InitializeComponent();
             _client = client;
             _options = options;
+            _credentials = credentials;
         }
 
         private void RepoManagement_Load(object sender, EventArgs e)
         {
-            _repositories = new List<GinRepositoryData>(JsonConvert.DeserializeObject<GinRepositoryData[]>(_client.GetRepositoryList()));
+            _repositories =
+                new List<GinRepositoryData>(
+                    JsonConvert.DeserializeObject<GinRepositoryData[]>(_client.GetRepositoryList()));
 
             foreach (var repo in _repositories)
                 lvwRepositories.Items.Add(repo.Name);
@@ -44,9 +50,9 @@ namespace GinClientApp
 
             _suppressEvents = true;
             var repoName = lvwRepositories.SelectedItems[0];
-            _selectedRepository = _repositories.Single(r => string.Compare(r.Name, repoName.Text) == 0);
+            _selectedRepository = _repositories.Single(r => String.CompareOrdinal(r.Name, repoName.Text) == 0);
             txtRepoName.Text = _selectedRepository.Name;
-            txtGinCommandline.Text = _selectedRepository.Commandline;
+            txtGinCommandline.Text = _selectedRepository.Address;
             txtMountpoint.Text = _selectedRepository.Mountpoint.FullName;
             txtPhysdir.Text = _selectedRepository.PhysicalDirectory.FullName;
             _suppressEvents = false;
@@ -80,11 +86,16 @@ namespace GinClientApp
             if (_repositories.Count == 0) return;
 
             foreach (var repo in _repositories)
+            {
                 _client.AddRepository(repo.PhysicalDirectory.FullName, repo.Mountpoint.FullName, repo.Name,
-                    repo.Commandline, _options.RepositoryCheckoutOption == GinApplicationContext.GlobalOptions.CheckoutOption.FullCheckout);
+                    repo.Address,
+                    _options.RepositoryCheckoutOption ==
+                    GinApplicationContext.GlobalOptions.CheckoutOption.FullCheckout, repo.CreateNew);
 
+                repo.CreateNew = false;
+            }
             var saveFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
-                           @"\gnode\GinWindowsClient\SavedRepositories.json";
+                           @"\g-node\GinWindowsClient\SavedRepositories.json";
 
             if (!Directory.Exists(Path.GetDirectoryName(saveFile)))
                 Directory.CreateDirectory(Path.GetDirectoryName(saveFile));
@@ -108,29 +119,25 @@ namespace GinClientApp
             if (_suppressEvents) return;
             if (_selectedRepository == null) return;
 
-            _selectedRepository.Commandline = txtGinCommandline.Text;
+            _selectedRepository.Address = txtGinCommandline.Text;
         }
 
         private void btnAddNew_Click(object sender, EventArgs e)
         {
-            var getcmdlinedlg = new GetGINCmdline();
+            var getcmdlinedlg = new GetGinCmdline(_credentials);
             var result = getcmdlinedlg.ShowDialog();
 
             if (result == DialogResult.OK)
             {
-                var cmdline = getcmdlinedlg.Commandline;
-
-                var elems = cmdline.Split(' ');
-                if (elems.Length != 3) return; //TODO Error handling here
-                var repoAddress = elems[2];
+                var repoAddress = getcmdlinedlg.RepositoryName;
                 var repoName = repoAddress.Split('/')[1];
                 var repoPhysAddress = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
-                                      @"\gnode\GinWindowsClient\Repositories\" + repoName;
+                                      @"\g-node\GinWindowsClient\Repositories\" + repoName;
                 var repoMountpoint = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) +
                                      @"\Gin Repositories\" + repoName;
 
-                var newRepo = new GinRepository(new DirectoryInfo(repoPhysAddress),
-                    new DirectoryInfo(repoMountpoint), repoName, repoAddress);
+                var newRepo = new GinRepositoryData(new DirectoryInfo(repoPhysAddress),
+                    new DirectoryInfo(repoMountpoint), repoName, repoAddress, getcmdlinedlg.CreateNew);
 
                 _repositories.Add(newRepo);
 
@@ -144,8 +151,8 @@ namespace GinClientApp
         {
             if (_selectedRepository == null) return;
 
-            var res = MessageBox.Show("This will delete the selected Repository and all associated data. Continue?",
-                "Gin Client", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            var res = MessageBox.Show(Resources.RepoManagement_Delete_repository,
+                Resources.GinClientApp_Gin_Client_Warning, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
             if (res != DialogResult.Yes) return;
 
@@ -170,7 +177,7 @@ namespace GinClientApp
         {
             var newDir = PickDirectory(txtMountpoint.Text);
 
-            if (string.Compare(newDir, txtMountpoint.Text) == 0) return;
+            if (String.Compare(newDir, txtMountpoint.Text) == 0) return;
 
             txtMountpoint.Text = newDir;
         }
@@ -179,7 +186,7 @@ namespace GinClientApp
         {
             var newDir = PickDirectory(txtPhysdir.Text);
 
-            if (string.Compare(newDir, txtPhysdir.Text) == 0) return;
+            if (String.Compare(newDir, txtPhysdir.Text) == 0) return;
 
             txtPhysdir.Text = newDir;
         }

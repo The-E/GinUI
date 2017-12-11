@@ -63,7 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Connected Services\GinClientService\Reference.cs">
+    <Compile Include="Connected Services\GinService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -80,6 +80,12 @@
     <Compile Include="Dialogs\GetGINCmdline.Designer.cs">
       <DependentUpon>GetGINCmdline.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\GetRepoNameDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\GetRepoNameDlg.Designer.cs">
+      <DependentUpon>GetRepoNameDlg.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\GetUserCredentials.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -91,6 +97,12 @@
     </Compile>
     <Compile Include="Dialogs\GlobalOptionsDlg.Designer.cs">
       <DependentUpon>GlobalOptionsDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\UploadFilesDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\UploadFilesDlg.Designer.cs">
+      <DependentUpon>UploadFilesDlg.cs</DependentUpon>
     </Compile>
     <Compile Include="GinApplicationContext.cs" />
     <Compile Include="MainForm.cs">
@@ -117,14 +129,29 @@
     <EmbeddedResource Include="Custom Controls\FileTransferProgress.resx">
       <DependentUpon>FileTransferProgress.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\GetGINCmdline.en.resx">
+      <DependentUpon>GetGINCmdline.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\GetGINCmdline.resx">
       <DependentUpon>GetGINCmdline.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\GetRepoNameDlg.resx">
+      <DependentUpon>GetRepoNameDlg.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\GetUserCredentials.resx">
       <DependentUpon>GetUserCredentials.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\GlobalOptionsDlg.resx">
       <DependentUpon>GlobalOptionsDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\RepoManagement.en.resx">
+      <DependentUpon>RepoManagement.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\UploadFilesDlg.en.resx">
+      <DependentUpon>UploadFilesDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\UploadFilesDlg.resx">
+      <DependentUpon>UploadFilesDlg.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -140,21 +167,25 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="Dialogs\RepoManagement.resx">
       <DependentUpon>RepoManagement.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="Connected Services\GinClientService\GinClientLibrary.xsd">
+    <None Include="Connected Services\GinService\Arrays.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\GinClientService\service.wsdl" />
-    <None Include="Connected Services\GinClientService\service.xsd">
+    <None Include="Connected Services\GinService\GinClientLibrary.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\GinClientService\service1.xsd">
+    <None Include="Connected Services\GinService\service.wsdl" />
+    <None Include="Connected Services\GinService\service.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\GinClientService\System.IO.xsd">
+    <None Include="Connected Services\GinService\service1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\GinService\System.IO.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
@@ -174,9 +205,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Connected Services\GinClientService\configuration91.svcinfo" />
-    <None Include="Connected Services\GinClientService\configuration.svcinfo" />
-    <None Include="Connected Services\GinClientService\Reference.svcmap">
+    <None Include="Connected Services\GinService\configuration91.svcinfo" />
+    <None Include="Connected Services\GinService\configuration.svcinfo" />
+    <None Include="Connected Services\GinService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
@@ -194,7 +225,7 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadataStorage Include="Connected Services\GinClientService\" />
+    <WCFMetadataStorage Include="Connected Services\GinService\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

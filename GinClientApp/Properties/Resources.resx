@@ -46,7 +46,7 @@
     
     mimetype: application/x-microsoft.net.object.binary.base64
     value   : The object must be serialized with 
-            : System.Serialization.Formatters.Binary.BinaryFormatter
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
     
     mimetype: application/x-microsoft.net.object.soap.base64
@@ -60,6 +60,7 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
@@ -68,9 +69,10 @@
               <xsd:sequence>
                 <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="name" use="required" type="xsd:string" />
               <xsd:attribute name="type" type="xsd:string" />
               <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
@@ -85,9 +87,10 @@
                 <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
                 <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
               <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
               <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
@@ -109,9 +112,63 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="GinApplicationContext_Error_while_trying_to_access_Gin_Client_Service" xml:space="preserve">
+    <value>Error while trying to access Gin Client Service</value>
+  </data>
+  <data name="GinApplicationContext_Exit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="GinApplicationContext_Gin_Client_Error" xml:space="preserve">
+    <value>Gin Client Error</value>
+  </data>
+  <data name="GinApplicationContext_Manage_Repositories" xml:space="preserve">
+    <value>Manage Repositories</value>
+  </data>
+  <data name="GinApplicationContext_Mount" xml:space="preserve">
+    <value>Mount</value>
+  </data>
+  <data name="GinApplicationContext_Options" xml:space="preserve">
+    <value>Options</value>
+  </data>
+  <data name="GinApplicationContext_Repository_Activity" xml:space="preserve">
+    <value>GIN Repository activity in progress</value>
+  </data>
+  <data name="GinApplicationContext_Unmount" xml:space="preserve">
+    <value>Unmount</value>
+  </data>
+  <data name="GinApplicationContext_Update" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="GinApplicationContext_FileOperation_Retrieving" xml:space="preserve">
+    <value>Retrieving {0} from repository {1}</value>
+  </data>
+  <data name="GinApplicationContext_Gin_Service_Error" xml:space="preserve">
+    <value>Gin Service Error</value>
+  </data>
+  <data name="GinApplicationContext_Upload" xml:space="preserve">
+    <value>Upload local files</value>
+  </data>
+  <data name="GetUserCredentials_Login_Unsuccessful" xml:space="preserve">
+    <value>Login unsuccessful. Username or password are incorrect</value>
+  </data>
+  <data name="GetUserCredentials_Login_Failed" xml:space="preserve">
+    <value>Login failed</value>
+  </data>
+  <data name="RepoManagement_Delete_repository" xml:space="preserve">
+    <value>This will delete the selected Repository and all associated data. Continue?</value>
+  </data>
+  <data name="GinClientApp_Gin_Client_Warning" xml:space="preserve">
+    <value>Gin Client Warning</value>
+  </data>
+  <data name="GinApplicationContext_Error_while_trying_to_log_in_to_GIN" xml:space="preserve">
+    <value>Error while trying to log in to GIN</value>
+  </data>
+  <data name="GinApplicationContext_Gin_Service_has_stopped_communicating_" xml:space="preserve">
+    <value>Gin Service has stopped communicating.</value>
+  </data>
 </root>

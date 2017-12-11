@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using static GinClientApp.GinApplicationContext;
 using static GinClientApp.GinApplicationContext.GlobalOptions;
@@ -14,9 +7,7 @@ namespace GinClientApp.Dialogs
 {
     public partial class GlobalOptionsDlg : Form
     {
-        private GlobalOptions _options;
-
-        public GlobalOptions Options { get => _options; set => _options = value; }
+        public GlobalOptions Options { get; private set; }
 
         public GlobalOptionsDlg(GlobalOptions options)
         {

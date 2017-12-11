@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2009
+VisualStudioVersion = 15.0.27130.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GinClientApp", "GinClientApp\GinClientApp.csproj", "{07DCE841-1345-46EC-AD5A-289D4B77B73E}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -10,9 +10,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GinClientApp", "GinClientAp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GinClientLibrary", "GinClientLibrary\GinClientLibrary.csproj", "{BC992C0B-8187-4CCA-8827-617A4A85575D}"
 EndProject
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Installer", "Installer\Installer.wixproj", "{217CC61D-991F-4854-B39C-CF6A22990BB9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GinService", "GinClientService\GinService.csproj", "{8687E754-5DC6-4B69-80A2-9F6BD2E6340F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GinClientService", "GinClientService\GinClientService.csproj", "{8687E754-5DC6-4B69-80A2-9F6BD2E6340F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GinShellExtension", "GinShellExtension\GinShellExtension.csproj", "{1FE82056-FFB4-41E3-9700-8470B9FEB318}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8687E754-5DC6-4B69-80A2-9F6BD2E6340F} = {8687E754-5DC6-4B69-80A2-9F6BD2E6340F}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,12 +41,6 @@ Global
 		{BC992C0B-8187-4CCA-8827-617A4A85575D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BC992C0B-8187-4CCA-8827-617A4A85575D}.Release|x86.ActiveCfg = Release|Any CPU
 		{BC992C0B-8187-4CCA-8827-617A4A85575D}.Release|x86.Build.0 = Release|Any CPU
-		{217CC61D-991F-4854-B39C-CF6A22990BB9}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{217CC61D-991F-4854-B39C-CF6A22990BB9}.Debug|x86.ActiveCfg = Debug|x86
-		{217CC61D-991F-4854-B39C-CF6A22990BB9}.Debug|x86.Build.0 = Debug|x86
-		{217CC61D-991F-4854-B39C-CF6A22990BB9}.Release|Any CPU.ActiveCfg = Release|x86
-		{217CC61D-991F-4854-B39C-CF6A22990BB9}.Release|x86.ActiveCfg = Release|x86
-		{217CC61D-991F-4854-B39C-CF6A22990BB9}.Release|x86.Build.0 = Release|x86
 		{8687E754-5DC6-4B69-80A2-9F6BD2E6340F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8687E754-5DC6-4B69-80A2-9F6BD2E6340F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8687E754-5DC6-4B69-80A2-9F6BD2E6340F}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -52,6 +49,14 @@ Global
 		{8687E754-5DC6-4B69-80A2-9F6BD2E6340F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8687E754-5DC6-4B69-80A2-9F6BD2E6340F}.Release|x86.ActiveCfg = Release|Any CPU
 		{8687E754-5DC6-4B69-80A2-9F6BD2E6340F}.Release|x86.Build.0 = Release|Any CPU
+		{1FE82056-FFB4-41E3-9700-8470B9FEB318}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FE82056-FFB4-41E3-9700-8470B9FEB318}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FE82056-FFB4-41E3-9700-8470B9FEB318}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1FE82056-FFB4-41E3-9700-8470B9FEB318}.Debug|x86.Build.0 = Debug|Any CPU
+		{1FE82056-FFB4-41E3-9700-8470B9FEB318}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FE82056-FFB4-41E3-9700-8470B9FEB318}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FE82056-FFB4-41E3-9700-8470B9FEB318}.Release|x86.ActiveCfg = Release|Any CPU
+		{1FE82056-FFB4-41E3-9700-8470B9FEB318}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
