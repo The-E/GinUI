@@ -25,6 +25,9 @@ namespace GinService
             RepositoryManager.Instance.RepositoryOperationError += (sender, message) =>
                 callback.GinServiceError("Error while performing GIN action on Repository " + message.RepositoryName +
                                          ": " + message.Message);
+
+            //We need to issue a logout at this point to clear any potentially invalid tokens
+            RepositoryManager.Instance.Logout();
         }
         
 
