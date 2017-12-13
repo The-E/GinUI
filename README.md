@@ -5,7 +5,7 @@ A Windows frontend for gin
 #For testing purposes
 
 0. Add all the paths set by gin_shell.bat to the SYSTEM path.
-1. Install Dokan https://github.com/dokan-dev/dokany/releases/download/v1.0.5/DokanSetup-1.0.5.1000.exe
+1. Install Dokan https://github.com/dokan-dev/dokany/releases/download/v1.1.0/Dokan_x64.msi
 2. (Assuming Visual Studio 2017 is installed) Open Solution file, compile. This will trigger a nuget package restore.
 3. Open the VS command line (Tools -> Visual Studio Command Prompt)
 4. Go to the output directory for the Gin Client Service (should be \GinUI\GinClientService\bin\debug) on the commandline

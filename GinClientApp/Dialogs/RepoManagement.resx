@@ -205,10 +205,10 @@
     <value>False</value>
   </data>
   <data name="txtRepoName.Location" type="System.Drawing.Point, System.Drawing">
-    <value>400, 12</value>
+    <value>418, 12</value>
   </data>
   <data name="txtRepoName.Size" type="System.Drawing.Size, System.Drawing">
-    <value>168, 20</value>
+    <value>187, 20</value>
   </data>
   <data name="txtRepoName.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -217,7 +217,7 @@
     <value>txtRepoName</value>
   </data>
   <data name="&gt;&gt;txtRepoName.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RepoNameBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;txtRepoName.Parent" xml:space="preserve">
     <value>$this</value>
@@ -259,10 +259,10 @@
     <value>False</value>
   </data>
   <data name="txtGinCommandline.Location" type="System.Drawing.Point, System.Drawing">
-    <value>400, 38</value>
+    <value>418, 38</value>
   </data>
   <data name="txtGinCommandline.Size" type="System.Drawing.Size, System.Drawing">
-    <value>168, 20</value>
+    <value>187, 20</value>
   </data>
   <data name="txtGinCommandline.TabIndex" type="System.Int32, mscorlib">
     <value>7</value>
@@ -271,7 +271,7 @@
     <value>txtGinCommandline</value>
   </data>
   <data name="&gt;&gt;txtGinCommandline.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RepoNameBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;txtGinCommandline.Parent" xml:space="preserve">
     <value>$this</value>
@@ -286,13 +286,13 @@
     <value>302, 41</value>
   </data>
   <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>92, 13</value>
+    <value>110, 13</value>
   </data>
   <data name="label3.TabIndex" type="System.Int32, mscorlib">
     <value>8</value>
   </data>
   <data name="label3.Text" xml:space="preserve">
-    <value>Gin RepositoryName:</value>
+    <value>Gin Repository Name:</value>
   </data>
   <data name="&gt;&gt;label3.Name" xml:space="preserve">
     <value>label3</value>
@@ -340,10 +340,10 @@
     <value>False</value>
   </data>
   <data name="txtMountpoint.Location" type="System.Drawing.Point, System.Drawing">
-    <value>400, 64</value>
+    <value>418, 64</value>
   </data>
   <data name="txtMountpoint.Size" type="System.Drawing.Size, System.Drawing">
-    <value>134, 20</value>
+    <value>153, 20</value>
   </data>
   <data name="txtMountpoint.TabIndex" type="System.Int32, mscorlib">
     <value>11</value>
@@ -352,7 +352,7 @@
     <value>txtMountpoint</value>
   </data>
   <data name="&gt;&gt;txtMountpoint.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RepoNameBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;txtMountpoint.Parent" xml:space="preserve">
     <value>$this</value>
@@ -367,7 +367,7 @@
     <value>False</value>
   </data>
   <data name="btnPickMountPnt.Location" type="System.Drawing.Point, System.Drawing">
-    <value>540, 62</value>
+    <value>577, 62</value>
   </data>
   <data name="btnPickMountPnt.Size" type="System.Drawing.Size, System.Drawing">
     <value>28, 23</value>
@@ -424,10 +424,10 @@
     <value>False</value>
   </data>
   <data name="txtPhysdir.Location" type="System.Drawing.Point, System.Drawing">
-    <value>400, 91</value>
+    <value>418, 91</value>
   </data>
   <data name="txtPhysdir.Size" type="System.Drawing.Size, System.Drawing">
-    <value>134, 20</value>
+    <value>153, 20</value>
   </data>
   <data name="txtPhysdir.TabIndex" type="System.Int32, mscorlib">
     <value>14</value>
@@ -436,7 +436,7 @@
     <value>txtPhysdir</value>
   </data>
   <data name="&gt;&gt;txtPhysdir.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RepoNameBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;txtPhysdir.Parent" xml:space="preserve">
     <value>$this</value>
@@ -451,7 +451,7 @@
     <value>False</value>
   </data>
   <data name="btnPickPhysDir.Location" type="System.Drawing.Point, System.Drawing">
-    <value>540, 89</value>
+    <value>577, 89</value>
   </data>
   <data name="btnPickPhysDir.Size" type="System.Drawing.Size, System.Drawing">
     <value>28, 23</value>
@@ -481,7 +481,7 @@
     <value>6, 13</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>574, 391</value>
+    <value>611, 391</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>RepoManagement</value>
