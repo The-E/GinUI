@@ -275,8 +275,8 @@ namespace GinClientLibrary
         /// <returns></returns>
         public void CreateDirectories(bool performFullCheckout)
         {
-            if (!Directory.Exists(PhysicalDirectory.Parent.FullName))
-                Directory.CreateDirectory(PhysicalDirectory.Parent.FullName);
+            if (!Directory.Exists(PhysicalDirectory.FullName))
+                Directory.CreateDirectory(PhysicalDirectory.FullName);
             if (!Directory.Exists(Mountpoint.FullName))
                 Directory.CreateDirectory(Mountpoint.FullName);
 
