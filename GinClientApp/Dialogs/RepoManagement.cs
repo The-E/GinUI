@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.ServiceModel;
 using System.Windows.Forms;
 using GinClientApp.GinService;
 using GinClientApp.Properties;
@@ -12,28 +13,38 @@ namespace GinClientApp.Dialogs
 {
     public partial class RepoManagement : Form
     {
-        private readonly GinServiceClient _client;
+        private GinServiceClient _client;
         private readonly GinApplicationContext.UserCredentials _credentials;
         private readonly GinApplicationContext.GlobalOptions _options;
         private List<GinRepositoryData> _repositories;
+        private GinApplicationContext _parent;
 
         private GinRepositoryData _selectedRepository;
         private bool _suppressEvents;
 
+        private void RecreateClient()
+        {
+            _client = new GinServiceClient(new InstanceContext(_parent));
+            _client.InnerChannel.OperationTimeout = TimeSpan.MaxValue;
+            _client.InnerDuplexChannel.OperationTimeout = TimeSpan.MaxValue;
+        }
+
         public RepoManagement(GinServiceClient client, GinApplicationContext.GlobalOptions options,
-            GinApplicationContext.UserCredentials credentials)
+            GinApplicationContext.UserCredentials credentials, GinApplicationContext parent)
         {
             InitializeComponent();
-            _client = client;
             _options = options;
             _credentials = credentials;
+            _parent = parent;
         }
 
         private void RepoManagement_Load(object sender, EventArgs e)
         {
+            RecreateClient();
             _repositories =
                 new List<GinRepositoryData>(
                     JsonConvert.DeserializeObject<GinRepositoryData[]>(_client.GetRepositoryList()));
+            _client.Close();
 
             foreach (var repo in _repositories)
                 lvwRepositories.Items.Add(repo.Name);
@@ -81,16 +92,20 @@ namespace GinClientApp.Dialogs
 
         private void RepoManagement_FormClosing(object sender, FormClosingEventArgs e)
         {
+            RecreateClient();
             _client.UnmmountAllRepositories();
+            _client.Close();
 
             if (_repositories.Count == 0) return;
 
             foreach (var repo in _repositories)
             {
+                RecreateClient();
                 _client.AddRepository(repo.PhysicalDirectory.FullName, repo.Mountpoint.FullName, repo.Name,
                     repo.Address,
                     _options.RepositoryCheckoutOption ==
                     GinApplicationContext.GlobalOptions.CheckoutOption.FullCheckout, repo.CreateNew);
+                _client.Close();
 
                 repo.CreateNew = false;
             }
@@ -156,7 +171,9 @@ namespace GinClientApp.Dialogs
 
             if (res != DialogResult.Yes) return;
 
+            RecreateClient();
             _client.DeleteRepository(_selectedRepository.Name);
+            _client.Close();
             _repositories.Remove(_selectedRepository);
             lvwRepositories.Items.Clear();
 
