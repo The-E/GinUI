@@ -22,12 +22,11 @@ namespace GinService
             RepositoryManager.Instance.FileOperationProgress +=
                 (filename, repo, progress, speed, state) =>
                     callback.FileOperationProgress(filename, repo.Name, progress, speed, state);
-            RepositoryManager.Instance.RepositoryOperationError += (sender, message) =>
-                callback.GinServiceError("Error while performing GIN action on Repository " + message.RepositoryName +
-                                         ": " + message.Message);
+            //RepositoryManager.Instance.RepositoryOperationError += (sender, message) =>
+            //    callback.GinServiceError("Error while performing GIN action on Repository " + message.RepositoryName +
+            //                             ": " + message.Message);
 
             //We need to issue a logout at this point to clear any potentially invalid tokens
-            RepositoryManager.Instance.Logout();
         }
         
 
@@ -45,9 +44,12 @@ namespace GinService
 
         void IGinService.DownloadAllUpdateInfo()
         {
-            foreach (var repo in RepositoryManager.Instance.Repositories)
+            lock (this)
             {
-                repo.DownloadUpdateInfo();
+                foreach (var repo in RepositoryManager.Instance.Repositories)
+                {
+                    repo.DownloadUpdateInfo();
+                }
             }
         }
 

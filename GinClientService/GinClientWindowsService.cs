@@ -25,6 +25,8 @@ namespace GinService
             //TODO: Remove before release!
             Debugger.Launch();
 
+            RepositoryManager.Instance.Logout();
+
             _serviceHost?.Close();
 
             // CreateDirectories a ServiceHost for the CalculatorService type and 

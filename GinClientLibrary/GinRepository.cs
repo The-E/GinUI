@@ -54,14 +54,9 @@ namespace GinClientLibrary
 
         public void DownloadUpdateInfo()
         {
-            //During download, we need to unmount the repository, since gin can and will make drastic changes
-            Dokan.RemoveMountPoint(Mountpoint.FullName.Trim('\\'));
-
             GetCommandLineOutput("cmd.exe", "/C gin.exe download", PhysicalDirectory.FullName, out var error);
 
-            if (string.IsNullOrEmpty(error))
-                Mount();
-            else
+            if (!string.IsNullOrEmpty(error))
                 OnFileOperationError(error);
         }
 
@@ -131,6 +126,8 @@ namespace GinClientLibrary
                 }
 
                 var statusCollection = JsonConvert.DeserializeObject<List<Filestatus>>(output);
+
+                if (statusCollection == null) return;
 
                 foreach (var fstatus in statusCollection)
                 {
