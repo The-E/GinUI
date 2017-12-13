@@ -13,31 +13,61 @@ namespace GinShellExtension
     [ComVisible(true)]
     [COMServerAssociation(AssociationType.AllFiles)]
     [COMServerAssociation(AssociationType.Directory)]
-    public class GinShellExtensionClass : SharpContextMenu
+    public class GinShellExtensionClass : SharpContextMenu, IGinServiceCallback
     {
         private bool _clientFaulted;
+        
 
         protected override bool CanShowMenu()
         {
-            var _client = new GinServiceClient(new InstanceContext(this));
-            _client.InnerChannel.Faulted += (sender, args) => _clientFaulted = true;
+            var iContext = new InstanceContext(this);
+            var myBinding = new WSDualHttpBinding();
+            var myEndpoint = new EndpointAddress("http://localhost:8733/Design_Time_Addresses/GinService/");
+            var myChannelFactory = new DuplexChannelFactory<IGinService>(iContext, myBinding, myEndpoint);
 
-            return !_clientFaulted && _client.IsManagedPath(SelectedItemPaths.First());
+            var client = myChannelFactory.CreateChannel();
+
+            try
+            {
+                var result = client.IsManagedPath(SelectedItemPaths.First());
+
+                ((ICommunicationObject) client).Close();
+
+                return result;
+            }
+            catch
+            {
+                ((ICommunicationObject)client).Abort();
+                return false;
+            }
         }
 
         protected override ContextMenuStrip CreateMenu()
         {
-            var _client = new GinServiceClient(new InstanceContext(this));
-            _client.InnerChannel.Faulted += (sender, args) => _clientFaulted = true;
 
             var menu = new ContextMenuStrip();
 
             var baseItem = new ToolStripMenuItem("Gin Repository");
 
-            baseItem.DropDownItems.AddRange(_client.IsBasePath(SelectedItemPaths.First())
-                ? GetBaseDirectoryMenu()
-                : GetFileMenu());
+            var iContext = new InstanceContext(this);
+            var myBinding = new WSDualHttpBinding();
+            var myEndpoint = new EndpointAddress("http://localhost:8733/Design_Time_Addresses/GinService/");
+            var myChannelFactory = new DuplexChannelFactory<IGinService>(iContext, myBinding, myEndpoint);
 
+            var client = myChannelFactory.CreateChannel();
+
+            try
+            {
+                baseItem.DropDownItems.AddRange(client.IsBasePath(SelectedItemPaths.First())
+                    ? GetBaseDirectoryMenu()
+                    : GetFileMenu());
+
+                ((ICommunicationObject) client).Close();
+            }
+            catch
+            {
+                ((ICommunicationObject)client).Abort();
+            }
             return menu;
         }
 
@@ -64,26 +94,57 @@ namespace GinShellExtension
 
         private void RepoUpdate(object sender, EventArgs eventArgs)
         {
-            var _client = new GinServiceClient(new InstanceContext(this));
-            _client.InnerChannel.Faulted += (sender1, args) => _clientFaulted = true;
+            var iContext = new InstanceContext(this);
+            var myBinding = new WSDualHttpBinding();
+            var myEndpoint = new EndpointAddress("http://localhost:8733/Design_Time_Addresses/GinService/");
+            var myChannelFactory = new DuplexChannelFactory<IGinService>(iContext, myBinding, myEndpoint);
 
-            _client.UpdateRepositories(SelectedItemPaths.ToArray());
+            var client = myChannelFactory.CreateChannel();
+
+            client.UpdateRepositories(SelectedItemPaths.ToArray());
+            ((ICommunicationObject) client).Close();
         }
 
         private void RepoUpload(object sender, EventArgs eventArgs)
         {
-            var _client = new GinServiceClient(new InstanceContext(this));
-            _client.InnerChannel.Faulted += (sender1, args) => _clientFaulted = true;
+            var iContext = new InstanceContext(this);
+            var myBinding = new WSDualHttpBinding();
+            var myEndpoint = new EndpointAddress("http://localhost:8733/Design_Time_Addresses/GinService/");
+            var myChannelFactory = new DuplexChannelFactory<IGinService>(iContext, myBinding, myEndpoint);
 
-            _client.UploadRepositories(SelectedItemPaths.ToArray());
+            var client = myChannelFactory.CreateChannel();
+
+            client.UploadRepositories(SelectedItemPaths.ToArray());
+            ((ICommunicationObject)client).Close();
         }
 
         private void FileDownload(object sender, EventArgs eventArgs)
         {
-            var _client = new GinServiceClient(new InstanceContext(this));
-            _client.InnerChannel.Faulted += (sender1, args) => _clientFaulted = true;
+            var myBinding = new WSDualHttpBinding();
+            var myEndpoint = new EndpointAddress("http://localhost:8733/Design_Time_Addresses/GinService/");
+            var myChannelFactory = new ChannelFactory<IGinService>(myBinding, myEndpoint);
 
-            _client.DownloadFiles(SelectedItemPaths.ToArray());
+            var client = myChannelFactory.CreateChannel();
+
+            client.DownloadFiles(SelectedItemPaths.ToArray());
+            ((ICommunicationObject)client).Close();
+        }
+
+        //Implementing IGinServiceCallback here, but don't actually do anything with it.
+        public void FileOperationStarted(string filename, string repository)
+        {
+        }
+
+        public void FileOperationFinished(string filename, string repository, bool success)
+        {
+        }
+
+        public void FileOperationProgress(string filename, string repository, int progress, string speed, string state)
+        {
+        }
+
+        public void GinServiceError(string message)
+        {
         }
     }
 }

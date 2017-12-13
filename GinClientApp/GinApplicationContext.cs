@@ -20,7 +20,7 @@ namespace GinClientApp
         private readonly NotifyIcon _trayIcon;
         private readonly UserCredentials _credentials;
         private GlobalOptions _options;
-        private readonly Timer _updateIntervalTimer;
+        private Timer _updateIntervalTimer;
 
         public class GlobalOptions
         {
@@ -96,8 +96,12 @@ namespace GinClientApp
                 fs.Close();
             }
 
-            _updateIntervalTimer = new Timer(_options.RepositoryUpdateInterval * 1000) {AutoReset = true};
-            _updateIntervalTimer.Elapsed += (sender, args) => { _client.DownloadAllUpdateInfo(); };
+            if (_options.RepositoryUpdateInterval > 0)
+            {
+                _updateIntervalTimer = new Timer(_options.RepositoryUpdateInterval * 1000) {AutoReset = true};
+                _updateIntervalTimer.Elapsed += (sender, args) => { _client.DownloadAllUpdateInfo(); };
+            }
+
             #endregion
 
             #region Login
@@ -255,6 +259,13 @@ namespace GinClientApp
             if (res == DialogResult.OK)
             {
                 _options = optionsDlg.Options;
+                if (_options.RepositoryUpdateInterval <= 0) return;
+
+                if (_updateIntervalTimer == null)
+                {
+                    _updateIntervalTimer = new Timer(_options.RepositoryUpdateInterval * 1000) { AutoReset = true };
+                    _updateIntervalTimer.Elapsed += (sender1, args) => { _client.DownloadAllUpdateInfo(); };
+                }
                 _updateIntervalTimer.Stop();
                 _updateIntervalTimer.Interval = _options.RepositoryUpdateInterval * 1000;
                 _updateIntervalTimer.Start();
