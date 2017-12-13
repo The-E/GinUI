@@ -17,7 +17,7 @@ namespace GinClientApp.Dialogs
         private readonly GinApplicationContext.UserCredentials _credentials;
         private readonly GinApplicationContext.GlobalOptions _options;
         private List<GinRepositoryData> _repositories;
-        private GinApplicationContext _parent;
+        private readonly GinApplicationContext _parent;
 
         private GinRepositoryData _selectedRepository;
         private bool _suppressEvents;
@@ -29,7 +29,7 @@ namespace GinClientApp.Dialogs
             _client.InnerDuplexChannel.OperationTimeout = TimeSpan.MaxValue;
         }
 
-        public RepoManagement(GinServiceClient client, GinApplicationContext.GlobalOptions options,
+        public RepoManagement(GinApplicationContext.GlobalOptions options,
             GinApplicationContext.UserCredentials credentials, GinApplicationContext parent)
         {
             InitializeComponent();
@@ -61,7 +61,7 @@ namespace GinClientApp.Dialogs
 
             _suppressEvents = true;
             var repoName = lvwRepositories.SelectedItems[0];
-            _selectedRepository = _repositories.Single(r => String.CompareOrdinal(r.Name, repoName.Text) == 0);
+            _selectedRepository = _repositories.Single(r => string.CompareOrdinal(r.Name, repoName.Text) == 0);
             txtRepoName.Text = _selectedRepository.Name;
             txtGinCommandline.Text = _selectedRepository.Address;
             txtMountpoint.Text = _selectedRepository.Mountpoint.FullName;
