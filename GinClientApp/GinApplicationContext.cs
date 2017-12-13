@@ -282,7 +282,7 @@ namespace GinClientApp
         private void ManageRepositoriesMenuItemHandler(object sender, EventArgs e)
         {
             var repomanager = new RepoManagement(_client, _options, _credentials);
-            repomanager.Closed += (o, args) => { _trayIcon.ContextMenu = new ContextMenu(BuildContextMenu()); };
+            repomanager.Closed += (o, args) => { if (_trayIcon!= null) _trayIcon.ContextMenu = new ContextMenu(BuildContextMenu()); };
             repomanager.ShowDialog();
         }
 
