@@ -210,8 +210,13 @@ namespace GinClientLibrary
 
         public void DeleteRepository(GinRepository repo)
         {
-            UnmountRepository(repo);
-            repo.DeleteRepository();
+            lock (this)
+            {
+                UnmountRepository(repo);
+                repo.DeleteRepository();
+
+                Repositories.Remove(repo);
+            }
         }
 
         public void UnmountAllRepositories()

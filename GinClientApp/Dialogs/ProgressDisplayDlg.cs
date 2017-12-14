@@ -7,12 +7,12 @@ using Microsoft.WindowsAPICodePack.Taskbar;
 
 namespace GinClientApp.Dialogs
 {
-    public partial class ProgressDisplay : Form
+    public partial class ProgressDisplayDlg : Form
     {
         private readonly Dictionary<string, FileTransferProgress> _progressbars =
             new Dictionary<string, FileTransferProgress>();
 
-        public ProgressDisplay()
+        public ProgressDisplayDlg()
         {
             InitializeComponent();
         }

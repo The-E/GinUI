@@ -29,7 +29,7 @@ namespace GinService
 
             _serviceHost?.Close();
 
-            // CreateDirectories a ServiceHost for the CalculatorService type and 
+            // Create a ServiceHost for the GinService type and 
             // provide the base address.
             _serviceHost = new ServiceHost(typeof(GinService));
 

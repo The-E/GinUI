@@ -11,9 +11,8 @@ using Newtonsoft.Json;
 
 namespace GinClientApp.Dialogs
 {
-    public partial class RepoManagement : Form
+    public partial class RepoManagementDlg : Form
     {
-        private GinServiceClient _client;
         private readonly GinApplicationContext.UserCredentials _credentials;
         private readonly GinApplicationContext.GlobalOptions _options;
         private List<GinRepositoryData> _repositories;
@@ -23,15 +22,9 @@ namespace GinClientApp.Dialogs
 
         private GinRepositoryData _selectedRepository;
         private bool _suppressEvents;
+        
 
-        private void RecreateClient()
-        {
-            _client = new GinServiceClient(new InstanceContext(_parent));
-            _client.InnerChannel.OperationTimeout = TimeSpan.MaxValue;
-            _client.InnerDuplexChannel.OperationTimeout = TimeSpan.MaxValue;
-        }
-
-        public RepoManagement(GinApplicationContext.GlobalOptions options,
+        public RepoManagementDlg(GinApplicationContext.GlobalOptions options,
             GinApplicationContext.UserCredentials credentials, GinApplicationContext parent)
         {
             InitializeComponent();
@@ -42,11 +35,9 @@ namespace GinClientApp.Dialogs
 
         private void RepoManagement_Load(object sender, EventArgs e)
         {
-            RecreateClient();
             _repositories =
                 new List<GinRepositoryData>(
-                    JsonConvert.DeserializeObject<GinRepositoryData[]>(_client.GetRepositoryList()));
-            _client.Close();
+                    JsonConvert.DeserializeObject<GinRepositoryData[]>(_parent.ServiceClient.GetRepositoryList()));
 
             foreach (var repo in _repositories)
                 lvwRepositories.Items.Add(repo.Name);
@@ -143,9 +134,8 @@ namespace GinClientApp.Dialogs
 
             if (res != DialogResult.Yes) return;
 
-            RecreateClient();
-            _client.DeleteRepository(_selectedRepository.Name);
-            _client.Close();
+            _parent.ServiceClient.DeleteRepository(_selectedRepository.Name);
+
             _repositories.Remove(_selectedRepository);
             lvwRepositories.Items.Clear();
 

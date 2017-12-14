@@ -62,6 +62,8 @@ namespace GinClientLibrary
 
         public void Initialize()
         {
+            if (!Directory.Exists(PhysicalDirectory.FullName))
+                Directory.CreateDirectory(PhysicalDirectory.FullName);
             if (!Directory.Exists(Mountpoint.FullName))
                 Directory.CreateDirectory(Mountpoint.FullName);
 
@@ -188,7 +190,7 @@ namespace GinClientLibrary
 
             lock (this)
             {
-                GetCommandLineOutputEvent("cmd.exe", "/C gin.exe get-content " + filename + " --json", directoryName,
+                GetCommandLineOutputEvent("cmd.exe", "/C gin.exe get-content \"" + filename + "\" --json", directoryName,
                     out var error);
                 
 
@@ -212,7 +214,7 @@ namespace GinClientLibrary
 
             lock (this)
             {
-                GetCommandLineOutputEvent("cmd.exe", "/C gin.exe upload " + filename + " --json", directoryName,
+                GetCommandLineOutputEvent("cmd.exe", "/C gin.exe upload \"" + filename + "\" --json", directoryName,
                     out var error);
 
 
@@ -252,7 +254,7 @@ namespace GinClientLibrary
 
             lock (this)
             {
-                GetCommandLineOutput("cmd.exe", "/C gin.exe remove-content " + filename /*+ " -json"*/,
+                GetCommandLineOutput("cmd.exe", "/C gin.exe remove-content \"" + filename + "\""/*+ " -json"*/,
                     directoryName, out var error);
 
                 Output.Clear();

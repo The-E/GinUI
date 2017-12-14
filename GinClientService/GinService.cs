@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 
 namespace GinService
 {
+    [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Single, InstanceContextMode = InstanceContextMode.PerSession)]
     public class GinService : IGinService
     {
         public GinService()
@@ -22,9 +23,9 @@ namespace GinService
             RepositoryManager.Instance.FileOperationProgress +=
                 (filename, repo, progress, speed, state) =>
                     callback.FileOperationProgress(filename, repo.Name, progress, speed, state);
-            //RepositoryManager.Instance.RepositoryOperationError += (sender, message) =>
-            //    callback.GinServiceError("Error while performing GIN action on Repository " + message.RepositoryName +
-            //                             ": " + message.Message);
+            RepositoryManager.Instance.RepositoryOperationError += (sender, message) =>
+                callback.GinServiceError("Error while performing GIN action on Repository " + message.RepositoryName +
+                                         ": " + message.Message);
 
             //We need to issue a logout at this point to clear any potentially invalid tokens
         }
@@ -69,6 +70,12 @@ namespace GinService
         bool IGinService.Login(string username, string password)
         {
             return RepositoryManager.Instance.Login(username, password);
+        }
+
+
+        void IGinService.Logout()
+        {
+            RepositoryManager.Instance.Logout();
         }
 
         bool IGinService.RetrieveFile(string repoName, string filepath)
@@ -173,5 +180,6 @@ namespace GinService
                 repo.RetrieveFile(file);
             }
         }
+
     }
 }
