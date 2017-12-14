@@ -126,7 +126,7 @@ namespace GinClientApp
             }
             else
             {
-                var loginDlg = new GetUserCredentials(_client);
+                var loginDlg = new GetUserCredentials(this);
                 var loginResult = loginDlg.ShowDialog();
 
                 if (loginResult == DialogResult.OK)
