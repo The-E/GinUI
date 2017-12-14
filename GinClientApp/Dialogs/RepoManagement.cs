@@ -19,6 +19,8 @@ namespace GinClientApp.Dialogs
         private List<GinRepositoryData> _repositories;
         private readonly GinApplicationContext _parent;
 
+        public List<GinRepositoryData> Repositories { get { return _repositories; } }
+
         private GinRepositoryData _selectedRepository;
         private bool _suppressEvents;
 
@@ -92,37 +94,7 @@ namespace GinClientApp.Dialogs
 
         private void RepoManagement_FormClosing(object sender, FormClosingEventArgs e)
         {
-            RecreateClient();
-            _client.UnmmountAllRepositories();
-            _client.Close();
 
-            if (_repositories.Count == 0) return;
-
-            foreach (var repo in _repositories)
-            {
-                RecreateClient();
-                _client.AddRepository(repo.PhysicalDirectory.FullName, repo.Mountpoint.FullName, repo.Name,
-                    repo.Address,
-                    _options.RepositoryCheckoutOption ==
-                    GinApplicationContext.GlobalOptions.CheckoutOption.FullCheckout, repo.CreateNew);
-                _client.Close();
-
-                repo.CreateNew = false;
-            }
-            var saveFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
-                           @"\g-node\GinWindowsClient\SavedRepositories.json";
-
-            if (!Directory.Exists(Path.GetDirectoryName(saveFile)))
-                Directory.CreateDirectory(Path.GetDirectoryName(saveFile));
-
-            if (File.Exists(saveFile))
-                File.Delete(saveFile);
-
-
-            var fs = File.CreateText(saveFile);
-            fs.Write(JsonConvert.SerializeObject(_repositories));
-            fs.Flush();
-            fs.Close();
         }
 
         private void txtRepoName_TextChanged(object sender, EventArgs e)
