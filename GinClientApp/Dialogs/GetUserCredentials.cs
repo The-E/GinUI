@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ServiceModel;
 using System.Windows.Forms;
 using GinClientApp.GinService;
 using GinClientApp.Properties;
@@ -7,22 +8,33 @@ namespace GinClientApp.Dialogs
 {
     public partial class GetUserCredentials : Form
     {
-        private readonly GinServiceClient _client;
+        private GinServiceClient _client;
+        private GinApplicationContext _parent;
         public string Username { get; private set; }
         public string Password { get; private set; }
-        
 
-        public GetUserCredentials(GinServiceClient client)
+        private void RecreateClient()
+        {
+            _client = new GinServiceClient(new InstanceContext(_parent));
+            _client.InnerChannel.OperationTimeout = TimeSpan.MaxValue;
+            _client.InnerDuplexChannel.OperationTimeout = TimeSpan.MaxValue;
+        }
+
+        public GetUserCredentials(GinApplicationContext parent)
         {
             InitializeComponent();
-            _client = client;
+            _parent = parent;
         }
 
         private void Button1_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(Username)) return;
 
-            if (!_client.Login(Username, Password))
+            RecreateClient();
+            var loginResult = _client.Login(Username, Password);
+            _client.Close();
+
+            if (!loginResult)
             {
                 MessageBox.Show(Resources.GetUserCredentials_Login_Unsuccessful, Resources.GetUserCredentials_Login_Failed,
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
