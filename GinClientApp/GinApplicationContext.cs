@@ -289,6 +289,38 @@ namespace GinClientApp
             var repomanager = new RepoManagement(_options, _credentials, this);
             repomanager.Closed += (o, args) => { if (_trayIcon!= null) _trayIcon.ContextMenu = new ContextMenu(BuildContextMenu()); };
             repomanager.ShowDialog();
+
+            RecreateClient();
+            _client.UnmmountAllRepositories();
+            _client.Close();
+
+            if (repomanager.Repositories.Count == 0) return;
+
+            foreach (var repo in repomanager.Repositories)
+            {
+                RecreateClient();
+                _client.AddRepository(repo.PhysicalDirectory.FullName, repo.Mountpoint.FullName, repo.Name,
+                    repo.Address,
+                    _options.RepositoryCheckoutOption ==
+                    GinApplicationContext.GlobalOptions.CheckoutOption.FullCheckout, repo.CreateNew);
+                _client.Close();
+
+                repo.CreateNew = false;
+            }
+            var saveFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
+                           @"\g-node\GinWindowsClient\SavedRepositories.json";
+
+            if (!Directory.Exists(Path.GetDirectoryName(saveFile)))
+                Directory.CreateDirectory(Path.GetDirectoryName(saveFile));
+
+            if (File.Exists(saveFile))
+                File.Delete(saveFile);
+
+
+            var fs = File.CreateText(saveFile);
+            fs.Write(JsonConvert.SerializeObject(repomanager.Repositories));
+            fs.Flush();
+            fs.Close();
         }
 
         private void UnmountRepoMenuItemHandler(object sender, EventArgs e)
