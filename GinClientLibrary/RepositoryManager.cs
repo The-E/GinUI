@@ -216,10 +216,13 @@ namespace GinClientLibrary
 
         public void UnmountAllRepositories()
         {
-            foreach (var repo in Repositories)
-                UnmountRepository(repo);
+            lock (this)
+            {
+                foreach (var repo in Repositories)
+                    UnmountRepository(repo);
 
-            Repositories.Clear();
+                Repositories.Clear();
+            }
         }
 
         public void AddRepository(DirectoryInfo physicalDirectory, DirectoryInfo mountpoint, string name, string commandline, bool performFullCheckout, bool createNew)
