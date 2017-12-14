@@ -548,9 +548,48 @@ namespace GinClientLibrary
 
         public NtStatus MoveFile(string oldName, string newName, bool replace, DokanFileInfo info)
         {
-            var result = NtStatus.Success;
+            var oldpath = GetPath(oldName);
+            var newpath = GetPath(newName);
 
-            return Trace(nameof(MoveFile), null, info, result);
+            (info.Context as FileStream)?.Dispose();
+            info.Context = null;
+
+            var exist = info.IsDirectory ? Directory.Exists(newpath) : File.Exists(newpath);
+
+            try
+            {
+
+                if (!exist)
+                {
+                    info.Context = null;
+                    if (info.IsDirectory)
+                        Directory.Move(oldpath, newpath);
+                    else
+                        File.Move(oldpath, newpath);
+                    return Trace(nameof(MoveFile), oldName, info, DokanResult.Success, newName,
+                        replace.ToString(CultureInfo.InvariantCulture));
+                }
+                else if (replace)
+                {
+                    info.Context = null;
+
+                    if (info.IsDirectory) //Cannot replace directory destination - See MOVEFILE_REPLACE_EXISTING
+                        return Trace(nameof(MoveFile), oldName, info, DokanResult.AccessDenied, newName,
+                            replace.ToString(CultureInfo.InvariantCulture));
+
+                    File.Delete(newpath);
+                    File.Move(oldpath, newpath);
+                    return Trace(nameof(MoveFile), oldName, info, DokanResult.Success, newName,
+                        replace.ToString(CultureInfo.InvariantCulture));
+                }
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Trace(nameof(MoveFile), oldName, info, DokanResult.AccessDenied, newName,
+                    replace.ToString(CultureInfo.InvariantCulture));
+            }
+            return Trace(nameof(MoveFile), oldName, info, DokanResult.FileExists, newName,
+                replace.ToString(CultureInfo.InvariantCulture));
         }
 
         public NtStatus ReadFile(string fileName, byte[] buffer, out int bytesRead, long offset, DokanFileInfo info)

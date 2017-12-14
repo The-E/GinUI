@@ -5,7 +5,7 @@ using GinClientLibrary;
 
 namespace GinService
 {
-    [ServiceContract(CallbackContract = typeof(IGinClientCallback))]
+    [ServiceContract(CallbackContract = typeof(IGinClientCallback), SessionMode = SessionMode.Required)]
     public interface IGinService
     {
         /// <summary>
@@ -20,7 +20,7 @@ namespace GinService
         /// <param name="performFullCheckout">When true, all files are checked out of the annex, e.g "gin get </param>
         /// <param name="createNew">When true, this repository will be created new, i.e. through gin create</param>
         /// <returns>True if repository creation succeeded</returns>
-        [OperationContract]
+        [OperationContract()]
         bool AddRepository(string physicalDirectory, string mountpoint, string name, string commandline, bool performFullCheckout, bool createNew);
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace GinService
         /// </summary>
         /// <param name="repoName"></param>
         /// <returns></returns>
-        [OperationContract]
+        [OperationContract()]
         bool CreateNewRepository(string repoName);
 
         /// <summary>
@@ -36,17 +36,17 @@ namespace GinService
         /// </summary>
         /// <param name="repoName"></param>
         /// <returns></returns>
-        [OperationContract]
+        [OperationContract()]
         bool MountRepository(string repoName);
 
-        [OperationContract]
+        [OperationContract()]
         bool UnmountRepository(string repoName);
 
         /// <summary>
         /// Completely deletes a repository and all data associated with it
         /// </summary>
         /// <param name="repoName"></param>
-        [OperationContract]
+        [OperationContract(IsOneWay = true)]
         void DeleteRepository(string repoName);
 
         /// <summary>
@@ -64,6 +64,9 @@ namespace GinService
         /// <returns></returns>
         [OperationContract]
         bool Login(string username, string password);
+
+        [OperationContract(IsOneWay = true, IsTerminating = true)]
+        void Logout();
 
         /// <summary>
         /// Get a list of all currently managed repositories
@@ -119,7 +122,7 @@ namespace GinService
         /// <summary>
         /// Updates all repositories
         /// </summary>
-        [OperationContract]
+        [OperationContract(IsOneWay = true)]
         void DownloadAllUpdateInfo();
 
         /// <summary>
@@ -135,7 +138,7 @@ namespace GinService
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        [OperationContract]
+        [OperationContract(IsInitiating = true, IsTerminating = true)]
         bool IsManagedPath(string filePath);
 
         /// <summary>
@@ -143,7 +146,7 @@ namespace GinService
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        [OperationContract]
+        [OperationContract(IsInitiating = true, IsTerminating = true)]
         bool IsBasePath(string filePath);
 
         [OperationContract]
@@ -164,7 +167,7 @@ namespace GinService
         /// </summary>
         /// <param name="filename"></param>
         /// <param name="repository"></param>
-        [OperationContract]
+        [OperationContract(IsOneWay = true)]
         void FileOperationStarted(string filename, string repository);
 
         /// <summary>
@@ -173,7 +176,7 @@ namespace GinService
         /// <param name="filename"></param>
         /// <param name="repository"></param>
         /// <param name="success"></param>
-        [OperationContract]
+        [OperationContract(IsOneWay = true)]
         void FileOperationFinished(string filename, string repository, bool success);
 
         /// <summary>
@@ -184,14 +187,14 @@ namespace GinService
         /// <param name="progress"></param>
         /// <param name="speed"></param>
         /// <param name="state"></param>
-        [OperationContract]
+        [OperationContract(IsOneWay = true)]
         void FileOperationProgress(string filename, string repository, int progress, string speed, string state);
 
         /// <summary>
         /// Called when the Gin Client service experiences an internal error.
         /// </summary>
         /// <param name="message"></param>
-        [OperationContract]
+        [OperationContract(IsOneWay = true)]
         void GinServiceError(string message);
     }
 }

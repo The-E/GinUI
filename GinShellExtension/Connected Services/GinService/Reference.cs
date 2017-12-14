@@ -139,7 +139,7 @@ namespace GinShellExtension.GinService {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="GinService.IGinService", CallbackContract=typeof(GinShellExtension.GinService.IGinServiceCallback))]
+    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="GinService.IGinService", CallbackContract=typeof(GinShellExtension.GinService.IGinServiceCallback), SessionMode=System.ServiceModel.SessionMode.Required)]
     public interface IGinService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/AddRepository", ReplyAction="http://tempuri.org/IGinService/AddRepositoryResponse")]
@@ -166,10 +166,10 @@ namespace GinShellExtension.GinService {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UnmountRepository", ReplyAction="http://tempuri.org/IGinService/UnmountRepositoryResponse")]
         System.Threading.Tasks.Task<bool> UnmountRepositoryAsync(string repoName);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/DeleteRepository", ReplyAction="http://tempuri.org/IGinService/DeleteRepositoryResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IGinService/DeleteRepository")]
         void DeleteRepository(string repoName);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/DeleteRepository", ReplyAction="http://tempuri.org/IGinService/DeleteRepositoryResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IGinService/DeleteRepository")]
         System.Threading.Tasks.Task DeleteRepositoryAsync(string repoName);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UnmmountAllRepositories", ReplyAction="http://tempuri.org/IGinService/UnmmountAllRepositoriesResponse")]
@@ -183,6 +183,12 @@ namespace GinShellExtension.GinService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/Login", ReplyAction="http://tempuri.org/IGinService/LoginResponse")]
         System.Threading.Tasks.Task<bool> LoginAsync(string username, string password);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, IsTerminating=true, Action="http://tempuri.org/IGinService/Logout")]
+        void Logout();
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, IsTerminating=true, Action="http://tempuri.org/IGinService/Logout")]
+        System.Threading.Tasks.Task LogoutAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/GetRepositoryList", ReplyAction="http://tempuri.org/IGinService/GetRepositoryListResponse")]
         string GetRepositoryList();
@@ -220,10 +226,10 @@ namespace GinShellExtension.GinService {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/DownloadUpdateInfo", ReplyAction="http://tempuri.org/IGinService/DownloadUpdateInfoResponse")]
         System.Threading.Tasks.Task DownloadUpdateInfoAsync(string repoName);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/DownloadAllUpdateInfo", ReplyAction="http://tempuri.org/IGinService/DownloadAllUpdateInfoResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IGinService/DownloadAllUpdateInfo")]
         void DownloadAllUpdateInfo();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/DownloadAllUpdateInfo", ReplyAction="http://tempuri.org/IGinService/DownloadAllUpdateInfoResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IGinService/DownloadAllUpdateInfo")]
         System.Threading.Tasks.Task DownloadAllUpdateInfoAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/GetRepositoryFileInfo", ReplyAction="http://tempuri.org/IGinService/GetRepositoryFileInfoResponse")]
@@ -232,16 +238,16 @@ namespace GinShellExtension.GinService {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/GetRepositoryFileInfo", ReplyAction="http://tempuri.org/IGinService/GetRepositoryFileInfoResponse")]
         System.Threading.Tasks.Task<string> GetRepositoryFileInfoAsync(string repoName);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/IsManagedPath", ReplyAction="http://tempuri.org/IGinService/IsManagedPathResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsTerminating=true, Action="http://tempuri.org/IGinService/IsManagedPath", ReplyAction="http://tempuri.org/IGinService/IsManagedPathResponse")]
         bool IsManagedPath(string filePath);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/IsManagedPath", ReplyAction="http://tempuri.org/IGinService/IsManagedPathResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsTerminating=true, Action="http://tempuri.org/IGinService/IsManagedPath", ReplyAction="http://tempuri.org/IGinService/IsManagedPathResponse")]
         System.Threading.Tasks.Task<bool> IsManagedPathAsync(string filePath);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/IsBasePath", ReplyAction="http://tempuri.org/IGinService/IsBasePathResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsTerminating=true, Action="http://tempuri.org/IGinService/IsBasePath", ReplyAction="http://tempuri.org/IGinService/IsBasePathResponse")]
         bool IsBasePath(string filePath);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/IsBasePath", ReplyAction="http://tempuri.org/IGinService/IsBasePathResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsTerminating=true, Action="http://tempuri.org/IGinService/IsBasePath", ReplyAction="http://tempuri.org/IGinService/IsBasePathResponse")]
         System.Threading.Tasks.Task<bool> IsBasePathAsync(string filePath);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UpdateRepositories", ReplyAction="http://tempuri.org/IGinService/UpdateRepositoriesResponse")]
@@ -266,16 +272,16 @@ namespace GinShellExtension.GinService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     public interface IGinServiceCallback {
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/FileOperationStarted", ReplyAction="http://tempuri.org/IGinService/FileOperationStartedResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IGinService/FileOperationStarted")]
         void FileOperationStarted(string filename, string repository);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/FileOperationFinished", ReplyAction="http://tempuri.org/IGinService/FileOperationFinishedResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IGinService/FileOperationFinished")]
         void FileOperationFinished(string filename, string repository, bool success);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/FileOperationProgress", ReplyAction="http://tempuri.org/IGinService/FileOperationProgressResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IGinService/FileOperationProgress")]
         void FileOperationProgress(string filename, string repository, int progress, string speed, string state);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/GinServiceError", ReplyAction="http://tempuri.org/IGinService/GinServiceErrorResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IGinService/GinServiceError")]
         void GinServiceError(string message);
     }
     
@@ -361,6 +367,14 @@ namespace GinShellExtension.GinService {
         
         public System.Threading.Tasks.Task<bool> LoginAsync(string username, string password) {
             return base.Channel.LoginAsync(username, password);
+        }
+        
+        public void Logout() {
+            base.Channel.Logout();
+        }
+        
+        public System.Threading.Tasks.Task LogoutAsync() {
+            return base.Channel.LogoutAsync();
         }
         
         public string GetRepositoryList() {
