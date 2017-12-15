@@ -16,7 +16,7 @@ namespace GinClientApp
 {
     public class GinApplicationContext : ApplicationContext, IGinServiceCallback
     {
-        private GinServiceClient _client;
+        public GinServiceClient ServiceClient;
         private readonly NotifyIcon _trayIcon;
         private readonly UserCredentials _credentials;
         private GlobalOptions _options;
@@ -40,14 +40,14 @@ namespace GinClientApp
             }
         }
 
-        private ProgressDisplay progressDisplay;
+        private ProgressDisplayDlg progressDisplay;
 
         private void RecreateClient()
         {
-            _client = new GinServiceClient(new InstanceContext(this));
-            _client.InnerDuplexChannel.Faulted += InnerChannelOnFaulted;
-            _client.InnerChannel.OperationTimeout = TimeSpan.MaxValue;
-            _client.InnerDuplexChannel.OperationTimeout = TimeSpan.MaxValue;
+            ServiceClient = new GinServiceClient(new InstanceContext(this));
+            ServiceClient.InnerDuplexChannel.Faulted += InnerChannelOnFaulted;
+            ServiceClient.InnerChannel.OperationTimeout = TimeSpan.MaxValue;
+            ServiceClient.InnerDuplexChannel.OperationTimeout = TimeSpan.MaxValue;
         }
 
         public GinApplicationContext()
@@ -58,7 +58,7 @@ namespace GinClientApp
                 Icon = Resources.gin_icon_desaturated
             };
 
-            _client = new GinServiceClient(new InstanceContext(this));
+            ServiceClient = new GinServiceClient(new InstanceContext(this));
             var saveFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
                                @"\g-node\GinWindowsClient";
             if (!Directory.Exists(saveFilePath))
@@ -99,7 +99,8 @@ namespace GinClientApp
                 _updateIntervalTimer = new Timer(_options.RepositoryUpdateInterval * 1000) {AutoReset = true};
                 _updateIntervalTimer.Elapsed += (sender, args) =>
                 {
-                    RecreateClient(); _client.DownloadAllUpdateInfo(); _client.Close(); };
+                    ServiceClient.DownloadAllUpdateInfo();
+                };
             }
 
             #endregion
@@ -112,9 +113,8 @@ namespace GinClientApp
                 {
                     var text = File.OpenText(saveFilePath + @"\Credentials.json").ReadToEnd();
                     _credentials = JsonConvert.DeserializeObject<UserCredentials>(text);
-
-                    RecreateClient();
-                    if (!_client.Login(_credentials.Username, _credentials.Password))
+                    
+                    if (!ServiceClient.Login(_credentials.Username, _credentials.Password))
                     {
                         MessageBox.Show(Resources.GinApplicationContext_Error_while_trying_to_log_in_to_GIN, Resources.GinApplicationContext_Gin_Client_Error,
                             MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -123,7 +123,6 @@ namespace GinClientApp
                     {
                         loggedIn = true;
                     }
-                    _client.Close();
                 }
                 catch (Exception e)
                 {
@@ -132,7 +131,7 @@ namespace GinClientApp
             }
             else
             {
-                var loginDlg = new GetUserCredentials(this);
+                var loginDlg = new GetUserCredentialsDlg(this);
                 var loginResult = loginDlg.ShowDialog();
 
                 if (loginResult == DialogResult.OK)
@@ -164,10 +163,8 @@ namespace GinClientApp
 
                     foreach (var repo in repos)
                     {
-                        RecreateClient();
-                        _client.AddRepository(repo.PhysicalDirectory.FullName, repo.Mountpoint.FullName, repo.Name,
+                        ServiceClient.AddRepository(repo.PhysicalDirectory.FullName, repo.Mountpoint.FullName, repo.Name,
                             repo.Address, _options.RepositoryCheckoutOption == GlobalOptions.CheckoutOption.FullCheckout, false);
-                        _client.Close();
                     }
                 }
                 catch (Exception e)
@@ -200,9 +197,7 @@ namespace GinClientApp
         {
             var menuitems = new List<MenuItem>();
 
-            RecreateClient();
-            var repositories = JsonConvert.DeserializeObject<GinRepositoryData[]>(_client.GetRepositoryList());
-            _client.Close();
+            var repositories = JsonConvert.DeserializeObject<GinRepositoryData[]>(ServiceClient.GetRepositoryList());
             foreach (var repo in repositories)
             {
                 var mitem = new MenuItem(repo.Name) {Tag = repo};
@@ -229,10 +224,8 @@ namespace GinClientApp
         private void UploadRepoMenuItemHandler(object sender, EventArgs e)
         {
             var repo = (GinRepositoryData)((MenuItem)sender).Parent.Tag;
-            RecreateClient();
             var fstatus = JsonConvert.DeserializeObject <
-                          Dictionary<string, GinRepository.FileStatus>>(_client.GetRepositoryFileInfo(repo.Name));
-            _client.Close();
+                          Dictionary<string, GinRepository.FileStatus>>(ServiceClient.GetRepositoryFileInfo(repo.Name));
 
             var alteredFiles = from kvp in fstatus
                 where kvp.Value == GinRepository.FileStatus.OnDiskModified ||
@@ -250,9 +243,7 @@ namespace GinClientApp
 
             foreach (var file in files)
             {
-                RecreateClient();
-                _client.UploadFile(repo.Name, file.Key);
-                _client.Close();
+                ServiceClient.UploadFile(repo.Name, file.Key);
             }
         }
 
@@ -269,7 +260,9 @@ namespace GinClientApp
                 if (_updateIntervalTimer == null)
                 {
                     _updateIntervalTimer = new Timer(_options.RepositoryUpdateInterval * 1000) { AutoReset = true };
-                    _updateIntervalTimer.Elapsed += (sender1, args) => { RecreateClient(); _client.DownloadAllUpdateInfo(); _client.Close();};
+                    _updateIntervalTimer.Elapsed += (sender1, args) => { 
+                        ServiceClient.DownloadAllUpdateInfo();
+                    };
                 }
                 _updateIntervalTimer.Stop();
                 _updateIntervalTimer.Interval = _options.RepositoryUpdateInterval * 1000;
@@ -281,31 +274,25 @@ namespace GinClientApp
         {
             var repo = (GinRepositoryData)((MenuItem) sender).Parent.Tag;
 
-            RecreateClient();
-            _client.DownloadUpdateInfo(repo.Name);
-            _client.Close();
+            ServiceClient.DownloadUpdateInfo(repo.Name);
         }
 
         private void ManageRepositoriesMenuItemHandler(object sender, EventArgs e)
         {
-            var repomanager = new RepoManagement(_options, _credentials, this);
+            var repomanager = new RepoManagementDlg(_options, _credentials, this);
             repomanager.Closed += (o, args) => { if (_trayIcon!= null) _trayIcon.ContextMenu = new ContextMenu(BuildContextMenu()); };
             repomanager.ShowDialog();
-
-            RecreateClient();
-            _client.UnmmountAllRepositories();
-            _client.Close();
+            
+            ServiceClient.UnmmountAllRepositories();
 
             if (repomanager.Repositories.Count == 0) return;
 
             foreach (var repo in repomanager.Repositories)
             {
-                RecreateClient();
-                _client.AddRepository(repo.PhysicalDirectory.FullName, repo.Mountpoint.FullName, repo.Name,
+                ServiceClient.AddRepository(repo.PhysicalDirectory.FullName, repo.Mountpoint.FullName, repo.Name,
                     repo.Address,
                     _options.RepositoryCheckoutOption ==
                     GinApplicationContext.GlobalOptions.CheckoutOption.FullCheckout, repo.CreateNew);
-                _client.Close();
 
                 repo.CreateNew = false;
             }
@@ -330,19 +317,17 @@ namespace GinClientApp
             
             var mItem = (MenuItem) sender;
             var repo = (GinRepositoryData)mItem.Parent.Tag;
-            RecreateClient();
             if (string.CompareOrdinal(Resources.GinApplicationContext_Unmount, mItem.Text) == 0)
             {
-                _client.UnmountRepository(repo.Name);
+                ServiceClient.UnmountRepository(repo.Name);
 
                 mItem.Text = Resources.GinApplicationContext_Mount;
             }
             else
             {
-                _client.MountRepository(repo.Name);
+                ServiceClient.MountRepository(repo.Name);
                 mItem.Text = Resources.GinApplicationContext_Unmount;
             }
-            _client.Close();
         }
 
         private void EditRepoMenuItemHandler(object sender, EventArgs e)
@@ -395,11 +380,10 @@ namespace GinClientApp
             if (_trayIcon != null)
                 _trayIcon.Visible = false;
 
-            if (_client != null && _client.InnerChannel.State != CommunicationState.Faulted)
+            if (ServiceClient != null && ServiceClient.InnerChannel.State != CommunicationState.Faulted)
             {
-                RecreateClient();
-                _client.UnmmountAllRepositories();
-                _client.Close();
+                ServiceClient.UnmmountAllRepositories();
+                ServiceClient.Logout();
             }
 
             Application.Exit();

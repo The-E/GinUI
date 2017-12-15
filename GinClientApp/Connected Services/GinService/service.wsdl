@@ -310,29 +310,6 @@
       </wsp:All>
     </wsp:ExactlyOne>
   </wsp:Policy>
-  <wsp:Policy wsu:Id="WSDualHttpBinding_IGinService_DeleteRepository_output_policy">
-    <wsp:ExactlyOne>
-      <wsp:All>
-        <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
-          <sp:Body />
-          <sp:Header Name="Sequence" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm" />
-          <sp:Header Name="SequenceAcknowledgement" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm" />
-          <sp:Header Name="AckRequested" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm" />
-          <sp:Header Name="ChannelInstance" Namespace="http://schemas.microsoft.com/ws/2005/02/duplex" />
-          <sp:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="From" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="ReplyTo" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="MessageID" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="RelatesTo" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="Action" Namespace="http://www.w3.org/2005/08/addressing" />
-        </sp:SignedParts>
-        <sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
-          <sp:Body />
-        </sp:EncryptedParts>
-      </wsp:All>
-    </wsp:ExactlyOne>
-  </wsp:Policy>
   <wsp:Policy wsu:Id="WSDualHttpBinding_IGinService_UnmmountAllRepositories_Input_policy">
     <wsp:ExactlyOne>
       <wsp:All>
@@ -403,6 +380,29 @@
     </wsp:ExactlyOne>
   </wsp:Policy>
   <wsp:Policy wsu:Id="WSDualHttpBinding_IGinService_Login_output_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+          <sp:Header Name="Sequence" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm" />
+          <sp:Header Name="SequenceAcknowledgement" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm" />
+          <sp:Header Name="AckRequested" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm" />
+          <sp:Header Name="ChannelInstance" Namespace="http://schemas.microsoft.com/ws/2005/02/duplex" />
+          <sp:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="From" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="ReplyTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="MessageID" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="RelatesTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="Action" Namespace="http://www.w3.org/2005/08/addressing" />
+        </sp:SignedParts>
+        <sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+        </sp:EncryptedParts>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsp:Policy wsu:Id="WSDualHttpBinding_IGinService_Logout_Input_policy">
     <wsp:ExactlyOne>
       <wsp:All>
         <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
@@ -724,29 +724,6 @@
       </wsp:All>
     </wsp:ExactlyOne>
   </wsp:Policy>
-  <wsp:Policy wsu:Id="WSDualHttpBinding_IGinService_DownloadAllUpdateInfo_output_policy">
-    <wsp:ExactlyOne>
-      <wsp:All>
-        <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
-          <sp:Body />
-          <sp:Header Name="Sequence" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm" />
-          <sp:Header Name="SequenceAcknowledgement" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm" />
-          <sp:Header Name="AckRequested" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm" />
-          <sp:Header Name="ChannelInstance" Namespace="http://schemas.microsoft.com/ws/2005/02/duplex" />
-          <sp:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="From" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="ReplyTo" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="MessageID" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="RelatesTo" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="Action" Namespace="http://www.w3.org/2005/08/addressing" />
-        </sp:SignedParts>
-        <sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
-          <sp:Body />
-        </sp:EncryptedParts>
-      </wsp:All>
-    </wsp:ExactlyOne>
-  </wsp:Policy>
   <wsp:Policy wsu:Id="WSDualHttpBinding_IGinService_GetRepositoryFileInfo_Input_policy">
     <wsp:ExactlyOne>
       <wsp:All>
@@ -1046,53 +1023,7 @@
       </wsp:All>
     </wsp:ExactlyOne>
   </wsp:Policy>
-  <wsp:Policy wsu:Id="WSDualHttpBinding_IGinService_FileOperationStarted_Input_policy">
-    <wsp:ExactlyOne>
-      <wsp:All>
-        <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
-          <sp:Body />
-          <sp:Header Name="Sequence" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm" />
-          <sp:Header Name="SequenceAcknowledgement" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm" />
-          <sp:Header Name="AckRequested" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm" />
-          <sp:Header Name="ChannelInstance" Namespace="http://schemas.microsoft.com/ws/2005/02/duplex" />
-          <sp:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="From" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="ReplyTo" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="MessageID" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="RelatesTo" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="Action" Namespace="http://www.w3.org/2005/08/addressing" />
-        </sp:SignedParts>
-        <sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
-          <sp:Body />
-        </sp:EncryptedParts>
-      </wsp:All>
-    </wsp:ExactlyOne>
-  </wsp:Policy>
   <wsp:Policy wsu:Id="WSDualHttpBinding_IGinService_FileOperationFinished_output_policy">
-    <wsp:ExactlyOne>
-      <wsp:All>
-        <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
-          <sp:Body />
-          <sp:Header Name="Sequence" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm" />
-          <sp:Header Name="SequenceAcknowledgement" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm" />
-          <sp:Header Name="AckRequested" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm" />
-          <sp:Header Name="ChannelInstance" Namespace="http://schemas.microsoft.com/ws/2005/02/duplex" />
-          <sp:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="From" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="ReplyTo" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="MessageID" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="RelatesTo" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="Action" Namespace="http://www.w3.org/2005/08/addressing" />
-        </sp:SignedParts>
-        <sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
-          <sp:Body />
-        </sp:EncryptedParts>
-      </wsp:All>
-    </wsp:ExactlyOne>
-  </wsp:Policy>
-  <wsp:Policy wsu:Id="WSDualHttpBinding_IGinService_FileOperationFinished_Input_policy">
     <wsp:ExactlyOne>
       <wsp:All>
         <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
@@ -1138,53 +1069,7 @@
       </wsp:All>
     </wsp:ExactlyOne>
   </wsp:Policy>
-  <wsp:Policy wsu:Id="WSDualHttpBinding_IGinService_FileOperationProgress_Input_policy">
-    <wsp:ExactlyOne>
-      <wsp:All>
-        <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
-          <sp:Body />
-          <sp:Header Name="Sequence" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm" />
-          <sp:Header Name="SequenceAcknowledgement" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm" />
-          <sp:Header Name="AckRequested" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm" />
-          <sp:Header Name="ChannelInstance" Namespace="http://schemas.microsoft.com/ws/2005/02/duplex" />
-          <sp:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="From" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="ReplyTo" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="MessageID" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="RelatesTo" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="Action" Namespace="http://www.w3.org/2005/08/addressing" />
-        </sp:SignedParts>
-        <sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
-          <sp:Body />
-        </sp:EncryptedParts>
-      </wsp:All>
-    </wsp:ExactlyOne>
-  </wsp:Policy>
   <wsp:Policy wsu:Id="WSDualHttpBinding_IGinService_GinServiceError_output_policy">
-    <wsp:ExactlyOne>
-      <wsp:All>
-        <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
-          <sp:Body />
-          <sp:Header Name="Sequence" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm" />
-          <sp:Header Name="SequenceAcknowledgement" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm" />
-          <sp:Header Name="AckRequested" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm" />
-          <sp:Header Name="ChannelInstance" Namespace="http://schemas.microsoft.com/ws/2005/02/duplex" />
-          <sp:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="From" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="ReplyTo" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="MessageID" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="RelatesTo" Namespace="http://www.w3.org/2005/08/addressing" />
-          <sp:Header Name="Action" Namespace="http://www.w3.org/2005/08/addressing" />
-        </sp:SignedParts>
-        <sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
-          <sp:Body />
-        </sp:EncryptedParts>
-      </wsp:All>
-    </wsp:ExactlyOne>
-  </wsp:Policy>
-  <wsp:Policy wsu:Id="WSDualHttpBinding_IGinService_GinServiceError_Input_policy">
     <wsp:ExactlyOne>
       <wsp:All>
         <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
@@ -1243,9 +1128,6 @@
   <wsdl:message name="IGinService_DeleteRepository_InputMessage">
     <wsdl:part name="parameters" element="tns:DeleteRepository" />
   </wsdl:message>
-  <wsdl:message name="IGinService_DeleteRepository_OutputMessage">
-    <wsdl:part name="parameters" element="tns:DeleteRepositoryResponse" />
-  </wsdl:message>
   <wsdl:message name="IGinService_UnmmountAllRepositories_InputMessage">
     <wsdl:part name="parameters" element="tns:UnmmountAllRepositories" />
   </wsdl:message>
@@ -1257,6 +1139,9 @@
   </wsdl:message>
   <wsdl:message name="IGinService_Login_OutputMessage">
     <wsdl:part name="parameters" element="tns:LoginResponse" />
+  </wsdl:message>
+  <wsdl:message name="IGinService_Logout_InputMessage">
+    <wsdl:part name="parameters" element="tns:Logout" />
   </wsdl:message>
   <wsdl:message name="IGinService_GetRepositoryList_InputMessage">
     <wsdl:part name="parameters" element="tns:GetRepositoryList" />
@@ -1297,9 +1182,6 @@
   <wsdl:message name="IGinService_DownloadAllUpdateInfo_InputMessage">
     <wsdl:part name="parameters" element="tns:DownloadAllUpdateInfo" />
   </wsdl:message>
-  <wsdl:message name="IGinService_DownloadAllUpdateInfo_OutputMessage">
-    <wsdl:part name="parameters" element="tns:DownloadAllUpdateInfoResponse" />
-  </wsdl:message>
   <wsdl:message name="IGinService_GetRepositoryFileInfo_InputMessage">
     <wsdl:part name="parameters" element="tns:GetRepositoryFileInfo" />
   </wsdl:message>
@@ -1339,123 +1221,108 @@
   <wsdl:message name="IGinService_FileOperationStarted_OutputCallbackMessage">
     <wsdl:part name="parameters" element="tns:FileOperationStarted" />
   </wsdl:message>
-  <wsdl:message name="IGinService_FileOperationStarted_InputCallbackMessage">
-    <wsdl:part name="parameters" element="tns:FileOperationStartedResponse" />
-  </wsdl:message>
   <wsdl:message name="IGinService_FileOperationFinished_OutputCallbackMessage">
     <wsdl:part name="parameters" element="tns:FileOperationFinished" />
-  </wsdl:message>
-  <wsdl:message name="IGinService_FileOperationFinished_InputCallbackMessage">
-    <wsdl:part name="parameters" element="tns:FileOperationFinishedResponse" />
   </wsdl:message>
   <wsdl:message name="IGinService_FileOperationProgress_OutputCallbackMessage">
     <wsdl:part name="parameters" element="tns:FileOperationProgress" />
   </wsdl:message>
-  <wsdl:message name="IGinService_FileOperationProgress_InputCallbackMessage">
-    <wsdl:part name="parameters" element="tns:FileOperationProgressResponse" />
-  </wsdl:message>
   <wsdl:message name="IGinService_GinServiceError_OutputCallbackMessage">
     <wsdl:part name="parameters" element="tns:GinServiceError" />
   </wsdl:message>
-  <wsdl:message name="IGinService_GinServiceError_InputCallbackMessage">
-    <wsdl:part name="parameters" element="tns:GinServiceErrorResponse" />
-  </wsdl:message>
-  <wsdl:portType name="IGinService">
-    <wsdl:operation name="AddRepository">
+  <wsdl:portType msc:usingSession="true" name="IGinService">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="AddRepository">
       <wsdl:input wsaw:Action="http://tempuri.org/IGinService/AddRepository" message="tns:IGinService_AddRepository_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IGinService/AddRepositoryResponse" message="tns:IGinService_AddRepository_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="CreateNewRepository">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="CreateNewRepository">
       <wsdl:input wsaw:Action="http://tempuri.org/IGinService/CreateNewRepository" message="tns:IGinService_CreateNewRepository_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IGinService/CreateNewRepositoryResponse" message="tns:IGinService_CreateNewRepository_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="MountRepository">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="MountRepository">
       <wsdl:input wsaw:Action="http://tempuri.org/IGinService/MountRepository" message="tns:IGinService_MountRepository_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IGinService/MountRepositoryResponse" message="tns:IGinService_MountRepository_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="UnmountRepository">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="UnmountRepository">
       <wsdl:input wsaw:Action="http://tempuri.org/IGinService/UnmountRepository" message="tns:IGinService_UnmountRepository_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IGinService/UnmountRepositoryResponse" message="tns:IGinService_UnmountRepository_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="DeleteRepository">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="DeleteRepository">
       <wsdl:input wsaw:Action="http://tempuri.org/IGinService/DeleteRepository" message="tns:IGinService_DeleteRepository_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IGinService/DeleteRepositoryResponse" message="tns:IGinService_DeleteRepository_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="UnmmountAllRepositories">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="UnmmountAllRepositories">
       <wsdl:input wsaw:Action="http://tempuri.org/IGinService/UnmmountAllRepositories" message="tns:IGinService_UnmmountAllRepositories_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IGinService/UnmmountAllRepositoriesResponse" message="tns:IGinService_UnmmountAllRepositories_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="Login">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="Login">
       <wsdl:input wsaw:Action="http://tempuri.org/IGinService/Login" message="tns:IGinService_Login_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IGinService/LoginResponse" message="tns:IGinService_Login_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="GetRepositoryList">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="true" name="Logout">
+      <wsdl:input wsaw:Action="http://tempuri.org/IGinService/Logout" message="tns:IGinService_Logout_InputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GetRepositoryList">
       <wsdl:input wsaw:Action="http://tempuri.org/IGinService/GetRepositoryList" message="tns:IGinService_GetRepositoryList_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IGinService/GetRepositoryListResponse" message="tns:IGinService_GetRepositoryList_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="UpdateRepository">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="UpdateRepository">
       <wsdl:input wsaw:Action="http://tempuri.org/IGinService/UpdateRepository" message="tns:IGinService_UpdateRepository_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IGinService/UpdateRepositoryResponse" message="tns:IGinService_UpdateRepository_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="RetrieveFile">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="RetrieveFile">
       <wsdl:input wsaw:Action="http://tempuri.org/IGinService/RetrieveFile" message="tns:IGinService_RetrieveFile_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IGinService/RetrieveFileResponse" message="tns:IGinService_RetrieveFile_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="UploadFile">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="UploadFile">
       <wsdl:input wsaw:Action="http://tempuri.org/IGinService/UploadFile" message="tns:IGinService_UploadFile_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IGinService/UploadFileResponse" message="tns:IGinService_UploadFile_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="StashFile">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="StashFile">
       <wsdl:input wsaw:Action="http://tempuri.org/IGinService/StashFile" message="tns:IGinService_StashFile_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IGinService/StashFileResponse" message="tns:IGinService_StashFile_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="DownloadUpdateInfo">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="DownloadUpdateInfo">
       <wsdl:input wsaw:Action="http://tempuri.org/IGinService/DownloadUpdateInfo" message="tns:IGinService_DownloadUpdateInfo_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IGinService/DownloadUpdateInfoResponse" message="tns:IGinService_DownloadUpdateInfo_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="DownloadAllUpdateInfo">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="DownloadAllUpdateInfo">
       <wsdl:input wsaw:Action="http://tempuri.org/IGinService/DownloadAllUpdateInfo" message="tns:IGinService_DownloadAllUpdateInfo_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IGinService/DownloadAllUpdateInfoResponse" message="tns:IGinService_DownloadAllUpdateInfo_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="GetRepositoryFileInfo">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GetRepositoryFileInfo">
       <wsdl:input wsaw:Action="http://tempuri.org/IGinService/GetRepositoryFileInfo" message="tns:IGinService_GetRepositoryFileInfo_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IGinService/GetRepositoryFileInfoResponse" message="tns:IGinService_GetRepositoryFileInfo_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="IsManagedPath">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="true" name="IsManagedPath">
       <wsdl:input wsaw:Action="http://tempuri.org/IGinService/IsManagedPath" message="tns:IGinService_IsManagedPath_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IGinService/IsManagedPathResponse" message="tns:IGinService_IsManagedPath_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="IsBasePath">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="true" name="IsBasePath">
       <wsdl:input wsaw:Action="http://tempuri.org/IGinService/IsBasePath" message="tns:IGinService_IsBasePath_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IGinService/IsBasePathResponse" message="tns:IGinService_IsBasePath_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="UpdateRepositories">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="UpdateRepositories">
       <wsdl:input wsaw:Action="http://tempuri.org/IGinService/UpdateRepositories" message="tns:IGinService_UpdateRepositories_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IGinService/UpdateRepositoriesResponse" message="tns:IGinService_UpdateRepositories_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="UploadRepositories">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="UploadRepositories">
       <wsdl:input wsaw:Action="http://tempuri.org/IGinService/UploadRepositories" message="tns:IGinService_UploadRepositories_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IGinService/UploadRepositoriesResponse" message="tns:IGinService_UploadRepositories_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="DownloadFiles">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="DownloadFiles">
       <wsdl:input wsaw:Action="http://tempuri.org/IGinService/DownloadFiles" message="tns:IGinService_DownloadFiles_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IGinService/DownloadFilesResponse" message="tns:IGinService_DownloadFiles_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="FileOperationStarted">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="FileOperationStarted">
       <wsdl:output wsaw:Action="http://tempuri.org/IGinService/FileOperationStarted" message="tns:IGinService_FileOperationStarted_OutputCallbackMessage" />
-      <wsdl:input wsaw:Action="http://tempuri.org/IGinService/FileOperationStartedResponse" message="tns:IGinService_FileOperationStarted_InputCallbackMessage" />
     </wsdl:operation>
-    <wsdl:operation name="FileOperationFinished">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="FileOperationFinished">
       <wsdl:output wsaw:Action="http://tempuri.org/IGinService/FileOperationFinished" message="tns:IGinService_FileOperationFinished_OutputCallbackMessage" />
-      <wsdl:input wsaw:Action="http://tempuri.org/IGinService/FileOperationFinishedResponse" message="tns:IGinService_FileOperationFinished_InputCallbackMessage" />
     </wsdl:operation>
-    <wsdl:operation name="FileOperationProgress">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="FileOperationProgress">
       <wsdl:output wsaw:Action="http://tempuri.org/IGinService/FileOperationProgress" message="tns:IGinService_FileOperationProgress_OutputCallbackMessage" />
-      <wsdl:input wsaw:Action="http://tempuri.org/IGinService/FileOperationProgressResponse" message="tns:IGinService_FileOperationProgress_InputCallbackMessage" />
     </wsdl:operation>
-    <wsdl:operation name="GinServiceError">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GinServiceError">
       <wsdl:output wsaw:Action="http://tempuri.org/IGinService/GinServiceError" message="tns:IGinService_GinServiceError_OutputCallbackMessage" />
-      <wsdl:input wsaw:Action="http://tempuri.org/IGinService/GinServiceErrorResponse" message="tns:IGinService_GinServiceError_InputCallbackMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="WSDualHttpBinding_IGinService" type="tns:IGinService">
@@ -1511,10 +1378,6 @@
         <wsp:PolicyReference URI="#WSDualHttpBinding_IGinService_DeleteRepository_Input_policy" />
         <soap12:body use="literal" />
       </wsdl:input>
-      <wsdl:output>
-        <wsp:PolicyReference URI="#WSDualHttpBinding_IGinService_DeleteRepository_output_policy" />
-        <soap12:body use="literal" />
-      </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="UnmmountAllRepositories">
       <soap12:operation soapAction="http://tempuri.org/IGinService/UnmmountAllRepositories" style="document" />
@@ -1537,6 +1400,13 @@
         <wsp:PolicyReference URI="#WSDualHttpBinding_IGinService_Login_output_policy" />
         <soap12:body use="literal" />
       </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Logout">
+      <soap12:operation soapAction="http://tempuri.org/IGinService/Logout" style="document" />
+      <wsdl:input>
+        <wsp:PolicyReference URI="#WSDualHttpBinding_IGinService_Logout_Input_policy" />
+        <soap12:body use="literal" />
+      </wsdl:input>
     </wsdl:operation>
     <wsdl:operation name="GetRepositoryList">
       <soap12:operation soapAction="http://tempuri.org/IGinService/GetRepositoryList" style="document" />
@@ -1610,10 +1480,6 @@
         <wsp:PolicyReference URI="#WSDualHttpBinding_IGinService_DownloadAllUpdateInfo_Input_policy" />
         <soap12:body use="literal" />
       </wsdl:input>
-      <wsdl:output>
-        <wsp:PolicyReference URI="#WSDualHttpBinding_IGinService_DownloadAllUpdateInfo_output_policy" />
-        <soap12:body use="literal" />
-      </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="GetRepositoryFileInfo">
       <soap12:operation soapAction="http://tempuri.org/IGinService/GetRepositoryFileInfo" style="document" />
@@ -1683,10 +1549,6 @@
     </wsdl:operation>
     <wsdl:operation name="FileOperationStarted">
       <soap12:operation soapAction="http://tempuri.org/IGinService/FileOperationStarted" style="document" />
-      <wsdl:input>
-        <wsp:PolicyReference URI="#WSDualHttpBinding_IGinService_FileOperationStarted_Input_policy" />
-        <soap12:body use="literal" />
-      </wsdl:input>
       <wsdl:output>
         <wsp:PolicyReference URI="#WSDualHttpBinding_IGinService_FileOperationStarted_output_policy" />
         <soap12:body use="literal" />
@@ -1694,10 +1556,6 @@
     </wsdl:operation>
     <wsdl:operation name="FileOperationFinished">
       <soap12:operation soapAction="http://tempuri.org/IGinService/FileOperationFinished" style="document" />
-      <wsdl:input>
-        <wsp:PolicyReference URI="#WSDualHttpBinding_IGinService_FileOperationFinished_Input_policy" />
-        <soap12:body use="literal" />
-      </wsdl:input>
       <wsdl:output>
         <wsp:PolicyReference URI="#WSDualHttpBinding_IGinService_FileOperationFinished_output_policy" />
         <soap12:body use="literal" />
@@ -1705,10 +1563,6 @@
     </wsdl:operation>
     <wsdl:operation name="FileOperationProgress">
       <soap12:operation soapAction="http://tempuri.org/IGinService/FileOperationProgress" style="document" />
-      <wsdl:input>
-        <wsp:PolicyReference URI="#WSDualHttpBinding_IGinService_FileOperationProgress_Input_policy" />
-        <soap12:body use="literal" />
-      </wsdl:input>
       <wsdl:output>
         <wsp:PolicyReference URI="#WSDualHttpBinding_IGinService_FileOperationProgress_output_policy" />
         <soap12:body use="literal" />
@@ -1716,10 +1570,6 @@
     </wsdl:operation>
     <wsdl:operation name="GinServiceError">
       <soap12:operation soapAction="http://tempuri.org/IGinService/GinServiceError" style="document" />
-      <wsdl:input>
-        <wsp:PolicyReference URI="#WSDualHttpBinding_IGinService_GinServiceError_Input_policy" />
-        <soap12:body use="literal" />
-      </wsdl:input>
       <wsdl:output>
         <wsp:PolicyReference URI="#WSDualHttpBinding_IGinService_GinServiceError_output_policy" />
         <soap12:body use="literal" />

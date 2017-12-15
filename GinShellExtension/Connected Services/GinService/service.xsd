@@ -70,11 +70,6 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <xs:element name="DeleteRepositoryResponse">
-    <xs:complexType>
-      <xs:sequence />
-    </xs:complexType>
-  </xs:element>
   <xs:element name="UnmmountAllRepositories">
     <xs:complexType>
       <xs:sequence />
@@ -100,6 +95,11 @@
       <xs:sequence>
         <xs:element minOccurs="0" name="LoginResult" type="xs:boolean" />
       </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Logout">
+    <xs:complexType>
+      <xs:sequence />
     </xs:complexType>
   </xs:element>
   <xs:element name="GetRepositoryList">
@@ -191,11 +191,6 @@
       <xs:sequence />
     </xs:complexType>
   </xs:element>
-  <xs:element name="DownloadAllUpdateInfoResponse">
-    <xs:complexType>
-      <xs:sequence />
-    </xs:complexType>
-  </xs:element>
   <xs:element name="GetRepositoryFileInfo">
     <xs:complexType>
       <xs:sequence>
@@ -282,11 +277,6 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <xs:element name="FileOperationStartedResponse">
-    <xs:complexType>
-      <xs:sequence />
-    </xs:complexType>
-  </xs:element>
   <xs:element name="FileOperationFinished">
     <xs:complexType>
       <xs:sequence>
@@ -294,11 +284,6 @@
         <xs:element minOccurs="0" name="repository" nillable="true" type="xs:string" />
         <xs:element minOccurs="0" name="success" type="xs:boolean" />
       </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="FileOperationFinishedResponse">
-    <xs:complexType>
-      <xs:sequence />
     </xs:complexType>
   </xs:element>
   <xs:element name="FileOperationProgress">
@@ -312,21 +297,11 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <xs:element name="FileOperationProgressResponse">
-    <xs:complexType>
-      <xs:sequence />
-    </xs:complexType>
-  </xs:element>
   <xs:element name="GinServiceError">
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="message" nillable="true" type="xs:string" />
       </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="GinServiceErrorResponse">
-    <xs:complexType>
-      <xs:sequence />
     </xs:complexType>
   </xs:element>
 </xs:schema>

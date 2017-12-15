@@ -74,11 +74,11 @@
     <Compile Include="Custom Controls\FileTransferProgress.Designer.cs">
       <DependentUpon>FileTransferProgress.cs</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\GetGINCmdline.cs">
+    <Compile Include="Dialogs\GetGINCmdlineDlg.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Dialogs\GetGINCmdline.Designer.cs">
-      <DependentUpon>GetGINCmdline.cs</DependentUpon>
+    <Compile Include="Dialogs\GetGINCmdlineDlg.Designer.cs">
+      <DependentUpon>GetGINCmdlineDlg.cs</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\GetRepoNameDlg.cs">
       <SubType>Form</SubType>
@@ -86,17 +86,23 @@
     <Compile Include="Dialogs\GetRepoNameDlg.Designer.cs">
       <DependentUpon>GetRepoNameDlg.cs</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\GetUserCredentials.cs">
+    <Compile Include="Dialogs\GetUserCredentialsDlg.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Dialogs\GetUserCredentials.Designer.cs">
-      <DependentUpon>GetUserCredentials.cs</DependentUpon>
+    <Compile Include="Dialogs\GetUserCredentialsDlg.Designer.cs">
+      <DependentUpon>GetUserCredentialsDlg.cs</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\GlobalOptionsDlg.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Dialogs\GlobalOptionsDlg.Designer.cs">
       <DependentUpon>GlobalOptionsDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\RepoManagementDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\RepoManagementDlg.Designer.cs">
+      <DependentUpon>RepoManagementDlg.cs</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\UploadFilesDlg.cs">
       <SubType>Form</SubType>
@@ -113,39 +119,36 @@
     </Compile>
     <Compile Include="NativeMethods.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Dialogs\ProgressDisplay.cs">
+    <Compile Include="Dialogs\ProgressDisplayDlg.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Dialogs\ProgressDisplay.Designer.cs">
-      <DependentUpon>ProgressDisplay.cs</DependentUpon>
+    <Compile Include="Dialogs\ProgressDisplayDlg.Designer.cs">
+      <DependentUpon>ProgressDisplayDlg.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Dialogs\RepoManagement.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\RepoManagement.Designer.cs">
-      <DependentUpon>RepoManagement.cs</DependentUpon>
-    </Compile>
     <EmbeddedResource Include="Custom Controls\FileTransferProgress.resx">
       <DependentUpon>FileTransferProgress.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\GetGINCmdline.en.resx">
-      <DependentUpon>GetGINCmdline.cs</DependentUpon>
+    <EmbeddedResource Include="Dialogs\GetGINCmdlineDlg.en.resx">
+      <DependentUpon>GetGINCmdlineDlg.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\GetGINCmdline.resx">
-      <DependentUpon>GetGINCmdline.cs</DependentUpon>
+    <EmbeddedResource Include="Dialogs\GetGINCmdlineDlg.resx">
+      <DependentUpon>GetGINCmdlineDlg.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\GetRepoNameDlg.resx">
       <DependentUpon>GetRepoNameDlg.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\GetUserCredentials.resx">
-      <DependentUpon>GetUserCredentials.cs</DependentUpon>
+    <EmbeddedResource Include="Dialogs\GetUserCredentialsDlg.resx">
+      <DependentUpon>GetUserCredentialsDlg.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\GlobalOptionsDlg.resx">
       <DependentUpon>GlobalOptionsDlg.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\RepoManagement.en.resx">
-      <DependentUpon>RepoManagement.cs</DependentUpon>
+    <EmbeddedResource Include="Dialogs\RepoManagementDlg.en.resx">
+      <DependentUpon>RepoManagementDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\RepoManagementDlg.resx">
+      <DependentUpon>RepoManagementDlg.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\UploadFilesDlg.en.resx">
       <DependentUpon>UploadFilesDlg.cs</DependentUpon>
@@ -156,8 +159,8 @@
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\ProgressDisplay.resx">
-      <DependentUpon>ProgressDisplay.cs</DependentUpon>
+    <EmbeddedResource Include="Dialogs\ProgressDisplayDlg.resx">
+      <DependentUpon>ProgressDisplayDlg.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -169,9 +172,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="Dialogs\RepoManagement.resx">
-      <DependentUpon>RepoManagement.cs</DependentUpon>
-    </EmbeddedResource>
     <None Include="Connected Services\GinService\Arrays.xsd">
       <SubType>Designer</SubType>
     </None>

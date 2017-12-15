@@ -1,6 +1,6 @@
 ﻿namespace GinClientApp.Dialogs
 {
-    partial class ProgressDisplay
+    partial class ProgressDisplayDlg
     {
         /// <summary>
         /// Required designer variable.

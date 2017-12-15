@@ -6,7 +6,7 @@ using GinClientApp.Properties;
 
 namespace GinClientApp.Dialogs
 {
-    public partial class GetUserCredentials : Form
+    public partial class GetUserCredentialsDlg : Form
     {
         private GinServiceClient _client;
         private GinApplicationContext _parent;
@@ -20,7 +20,7 @@ namespace GinClientApp.Dialogs
             _client.InnerDuplexChannel.OperationTimeout = TimeSpan.MaxValue;
         }
 
-        public GetUserCredentials(GinApplicationContext parent)
+        public GetUserCredentialsDlg(GinApplicationContext parent)
         {
             InitializeComponent();
             _parent = parent;
