@@ -186,6 +186,7 @@ namespace GinClientLibrary
         /// <returns></returns>
         public bool RetrieveFile(string filePath)
         {
+            OnFileOperationStarted(new FileOperationEventArgs() { File = filePath });
             GetActualFilename(filePath, out var directoryName, out var filename);
 
             lock (this)
@@ -196,10 +197,14 @@ namespace GinClientLibrary
 
                 ReadRepoStatus();
 
-                if (!string.IsNullOrEmpty(error))
+                var result = string.IsNullOrEmpty(error);
+
+                if (result)
+                    OnFileOperationCompleted(new FileOperationEventArgs() { File = filePath, Success = true });
+                else
                     OnFileOperationError(error);
 
-                return string.IsNullOrEmpty(error);
+                return result;
             }
         }
 
@@ -214,16 +219,21 @@ namespace GinClientLibrary
 
             lock (this)
             {
+                OnFileOperationStarted(new FileOperationEventArgs(){File = filePath});
                 GetCommandLineOutputEvent("cmd.exe", "/C gin.exe upload \"" + filename + "\" --json", directoryName,
                     out var error);
 
 
                 ReadRepoStatus();
 
-                if (!string.IsNullOrEmpty(error))
+                var result = string.IsNullOrEmpty(error);
+                
+                if (result)
+                    OnFileOperationCompleted(new FileOperationEventArgs() {File = filePath, Success = true});
+                else
                     OnFileOperationError(error);
 
-                return string.IsNullOrEmpty(error);
+                return result;
             }
         }
 
@@ -292,19 +302,31 @@ namespace GinClientLibrary
 
                 if (PhysicalDirectory.IsEmpty())
                 {
+                    OnFileOperationStarted(new FileOperationEventArgs(){File = Address});
+
                     GetCommandLineOutputEvent("cmd.exe", "/C gin.exe get " + Address + " --json",
                         PhysicalDirectory.Parent.FullName, out var error);
 
-                    if (!string.IsNullOrEmpty(error))
+                    var result = string.IsNullOrEmpty(error);
+
+                    if (result)
+                        OnFileOperationCompleted(new FileOperationEventArgs() { File = Address, Success = true });
+                    else
                         OnFileOperationError(error);
                 }
 
                 if (performFullCheckout)
                 {
+                    OnFileOperationStarted(new FileOperationEventArgs() { File = Address });
+
                     GetCommandLineOutputEvent("cmd.exe", "/C gin.exe download --content --json",
                         PhysicalDirectory.Parent.FullName, out var error);
 
-                    if (!string.IsNullOrEmpty(error))
+                    var result = string.IsNullOrEmpty(error);
+
+                    if (result)
+                        OnFileOperationCompleted(new FileOperationEventArgs() { File = Address, Success = true });
+                    else
                         OnFileOperationError(error);
                 }
             }

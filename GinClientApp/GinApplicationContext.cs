@@ -40,7 +40,7 @@ namespace GinClientApp
             }
         }
 
-        private ProgressDisplayDlg progressDisplay;
+        private ProgressDisplayDlg _progressDisplayDlg;
 
         private void RecreateClient()
         {
@@ -330,14 +330,15 @@ namespace GinClientApp
             }
         }
 
-        private void EditRepoMenuItemHandler(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
         void IGinServiceCallback.FileOperationFinished(string filename, string repository, bool success)
         {
-            //progressDisplay?.RemoveFileTransfer(filename);
+            _progressDisplayDlg.NestingLevel--;
+
+            if (_progressDisplayDlg.NestingLevel == 0)
+            {
+                _progressDisplayDlg.Close();
+                _progressDisplayDlg = null;
+            }
         }
 
         void IGinServiceCallback.FileOperationStarted(string filename, string repository)
@@ -347,11 +348,12 @@ namespace GinClientApp
                 string.Format(Resources.GinApplicationContext_FileOperation_Retrieving, Path.GetFileName(filename), repository);
             _trayIcon.ShowBalloonTip(5000);
 
-            //if (progressDisplay == null)
-            //    progressDisplay = new ProgressDisplay();
-
-            //progressDisplay.AddFileTransfer(filename);
-            //progressDisplay.Show();
+            if (_progressDisplayDlg == null)
+                _progressDisplayDlg = new ProgressDisplayDlg() {NestingLevel = 1};
+            else
+                _progressDisplayDlg.NestingLevel++;
+            
+            _progressDisplayDlg.Show();
         }
 
         void IGinServiceCallback.FileOperationProgress(string filename, string repository, int progress,
@@ -360,7 +362,7 @@ namespace GinClientApp
             Console.WriteLine("Filename: {0}, Repo: {1}, Progress: {2}, Speed: {3}, State: {4}", filename, repository,
                 progress, speed, state);
 
-            //progressDisplay?.SetProgressBarState(filename, state, progress, speed);
+            _progressDisplayDlg?.SetProgressBarState(filename, state, progress, speed);
         }
 
         void IGinServiceCallback.GinServiceError(string message)

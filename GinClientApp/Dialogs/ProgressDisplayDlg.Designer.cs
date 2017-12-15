@@ -28,25 +28,45 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.fileTransferProgress1 = new GinClientApp.Custom_Controls.FileTransferProgress();
             this.SuspendLayout();
             // 
-            // ProgressDisplay
+            // fileTransferProgress1
+            // 
+            this.fileTransferProgress1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.fileTransferProgress1.AutoSize = true;
+            this.fileTransferProgress1.Filename = "";
+            this.fileTransferProgress1.Location = new System.Drawing.Point(12, 13);
+            this.fileTransferProgress1.Name = "fileTransferProgress1";
+            this.fileTransferProgress1.Progress = 0;
+            this.fileTransferProgress1.Size = new System.Drawing.Size(337, 105);
+            this.fileTransferProgress1.Speed = "";
+            this.fileTransferProgress1.State = "";
+            this.fileTransferProgress1.TabIndex = 0;
+            // 
+            // ProgressDisplayDlg
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.ClientSize = new System.Drawing.Size(361, 130);
+            this.Controls.Add(this.fileTransferProgress1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
-            this.Name = "ProgressDisplay";
+            this.Name = "ProgressDisplayDlg";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Gin File Operations in Progress";
             this.Load += new System.EventHandler(this.ProgressDisplay_Load);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
+
+        private Custom_Controls.FileTransferProgress fileTransferProgress1;
     }
 }

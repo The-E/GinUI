@@ -12,6 +12,8 @@ namespace GinClientApp.Dialogs
         private readonly Dictionary<string, FileTransferProgress> _progressbars =
             new Dictionary<string, FileTransferProgress>();
 
+        public int NestingLevel;
+
         public ProgressDisplayDlg()
         {
             InitializeComponent();
@@ -21,58 +23,25 @@ namespace GinClientApp.Dialogs
         {
         }
 
-        public void AddFileTransfer(string filename)
-        {
-            lock (this)
-            {
-                var progBar = new FileTransferProgress();
-                progBar.Filename = Path.GetFileName(filename);
-                progBar.Dock = DockStyle.Bottom;
-                _progressbars.Add(filename, progBar);
-                Controls.Add(progBar);
-            }
-        }
 
-        public void RemoveFileTransfer(string filename)
-        {
-            lock (this)
-            {
-                if (_progressbars.ContainsKey(filename))
-                {
-                    var progBar = _progressbars[filename];
-                    Controls.Remove(progBar);
-                    _progressbars.Remove(filename);
-                    progBar.Dispose();
-                }
-
-                if (_progressbars.Count == 0)
-                    Close();
-            }
-        }
-
+        private delegate void SetProgressBarStateDelegate(string filename, string state, int progress, string rate);
+        
         public void SetProgressBarState(string filename, string state, int progress, string rate)
         {
-            lock (this)
+            if (InvokeRequired)
             {
-                if (_progressbars.ContainsKey(filename))
-                {
-                    var progBar = _progressbars[filename];
-
-                    progBar.Progress = progress;
-                    progBar.State = state;
-                    progBar.Speed = rate;
-
-                    var totalProgress = 0;
-
-                    foreach (var prog in _progressbars.Values)
-                        totalProgress += prog.Progress;
-
-                    totalProgress /= _progressbars.Values.Count;
-
-                    TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
-                    TaskbarManager.Instance.SetProgressValue(totalProgress, 100);
-                }
+                Invoke(new SetProgressBarStateDelegate(SetProgressBarState), filename, state, progress, rate);
             }
+            else
+            {
+                fileTransferProgress1.Filename = filename;
+                fileTransferProgress1.State = state;
+                fileTransferProgress1.Progress = progress;
+                fileTransferProgress1.Speed = rate;
+
+                TaskbarManager.Instance.SetProgressValue(progress, 100);
+            }
+
         }
     }
 }
