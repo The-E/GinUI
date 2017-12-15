@@ -52,7 +52,13 @@ namespace GinClientApp
 
         public GinApplicationContext()
         {
+            _trayIcon = new NotifyIcon
+            {
+                Visible = true,
+                Icon = Resources.gin_icon_desaturated
+            };
 
+            _client = new GinServiceClient(new InstanceContext(this));
             var saveFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
                                @"\g-node\GinWindowsClient";
             if (!Directory.Exists(saveFilePath))
@@ -176,14 +182,10 @@ namespace GinClientApp
 
             #endregion
 
-            _trayIcon = new NotifyIcon
-            {
-                ContextMenu = new ContextMenu(BuildContextMenu()),
-                Visible = true,
-                Icon = new Icon("gin_icon.ico")
-            };
-
+            
             _trayIcon.DoubleClick += _trayIcon_DoubleClick;
+            _trayIcon.ContextMenu = new ContextMenu(BuildContextMenu());
+            _trayIcon.Icon = Resources.gin_icon;
             _updateIntervalTimer?.Start();
         }
 

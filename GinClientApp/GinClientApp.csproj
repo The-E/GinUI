@@ -205,15 +205,16 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="gin_icon_desaturated.ico" />
     <None Include="Connected Services\GinService\configuration91.svcinfo" />
     <None Include="Connected Services\GinService\configuration.svcinfo" />
     <None Include="Connected Services\GinService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
-    <Content Include="gin_icon.ico">
+    <EmbeddedResource Include="gin_icon.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GinClientLibrary\GinClientLibrary.csproj">
@@ -226,6 +227,9 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Connected Services\GinService\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

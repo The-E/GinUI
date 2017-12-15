@@ -79,6 +79,26 @@ namespace GinClientApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon gin_icon {
+            get {
+                object obj = ResourceManager.GetObject("gin_icon", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon gin_icon_desaturated {
+            get {
+                object obj = ResourceManager.GetObject("gin_icon_desaturated", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error while trying to access Gin Client Service.
         /// </summary>
         internal static string GinApplicationContext_Error_while_trying_to_access_Gin_Client_Service {
