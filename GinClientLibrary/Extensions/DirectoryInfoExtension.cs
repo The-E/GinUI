@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace GinClientLibrary.Extensions
 {
-    internal static class DirectoryInfoExtension
+    public static class DirectoryInfoExtension
     {
         public static void Empty(this DirectoryInfo directory)
         {

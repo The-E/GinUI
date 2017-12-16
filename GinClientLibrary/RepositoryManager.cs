@@ -349,5 +349,10 @@ namespace GinClientLibrary
                 return 0;
             }
         }
+
+        public string GetRemoteRepoList()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -146,6 +146,12 @@ namespace GinClientApp.GinService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/GetGinCliVersion", ReplyAction="http://tempuri.org/IGinService/GetGinCliVersionResponse")]
         System.Threading.Tasks.Task<string> GetGinCliVersionAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/GetRemoteRepositoryList", ReplyAction="http://tempuri.org/IGinService/GetRemoteRepositoryListResponse")]
+        string GetRemoteRepositoryList();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/GetRemoteRepositoryList", ReplyAction="http://tempuri.org/IGinService/GetRemoteRepositoryListResponse")]
+        System.Threading.Tasks.Task<string> GetRemoteRepositoryListAsync();
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -366,6 +372,14 @@ namespace GinClientApp.GinService {
         
         public System.Threading.Tasks.Task<string> GetGinCliVersionAsync() {
             return base.Channel.GetGinCliVersionAsync();
+        }
+        
+        public string GetRemoteRepositoryList() {
+            return base.Channel.GetRemoteRepositoryList();
+        }
+        
+        public System.Threading.Tasks.Task<string> GetRemoteRepositoryListAsync() {
+            return base.Channel.GetRemoteRepositoryListAsync();
         }
     }
 }

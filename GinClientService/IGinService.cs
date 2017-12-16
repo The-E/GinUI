@@ -160,6 +160,9 @@ namespace GinService
 
         [OperationContract]
         string GetGinCliVersion();
+
+        [OperationContract]
+        string GetRemoteRepositoryList();
     }
 
     [SuppressMessage("ReSharper", "OperationContractWithoutServiceContract")]

@@ -38,8 +38,8 @@
             this.metroLabel3 = new MetroFramework.Controls.MetroLabel();
             this.mTxBRepoName = new MetroFramework.Controls.MetroTextBox();
             this.metroLabel4 = new MetroFramework.Controls.MetroLabel();
-            this.metroButton1 = new MetroFramework.Controls.MetroButton();
-            this.metroButton2 = new MetroFramework.Controls.MetroButton();
+            this.mBtnOK = new MetroFramework.Controls.MetroButton();
+            this.mBtnCancel = new MetroFramework.Controls.MetroButton();
             this.SuspendLayout();
             // 
             // mBtnPickRepoMountpointDir
@@ -51,6 +51,7 @@
             this.mBtnPickRepoMountpointDir.TabIndex = 30;
             this.mBtnPickRepoMountpointDir.Text = "...";
             this.mBtnPickRepoMountpointDir.UseSelectable = true;
+            this.mBtnPickRepoMountpointDir.Click += new System.EventHandler(this.mBtnPickRepoMountpointDir_Click);
             // 
             // mBtnPickRepoCheckoutDir
             // 
@@ -61,6 +62,7 @@
             this.mBtnPickRepoCheckoutDir.TabIndex = 28;
             this.mBtnPickRepoCheckoutDir.Text = "...";
             this.mBtnPickRepoCheckoutDir.UseSelectable = true;
+            this.mBtnPickRepoCheckoutDir.Click += new System.EventHandler(this.mBtnPickRepoCheckoutDir_Click);
             // 
             // metroLabel1
             // 
@@ -105,6 +107,8 @@
             this.mTxBRepoAddress.UseSelectable = true;
             this.mTxBRepoAddress.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.mTxBRepoAddress.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
+            this.mTxBRepoAddress.TextChanged += new System.EventHandler(this.mTxBRepoAddress_TextChanged);
+            this.mTxBRepoAddress.Leave += new System.EventHandler(this.mTxBRepoAddress_Leave);
             // 
             // mTxBRepoMountpoint
             // 
@@ -215,6 +219,7 @@
             this.mTxBRepoName.MaxLength = 32767;
             this.mTxBRepoName.Name = "mTxBRepoName";
             this.mTxBRepoName.PasswordChar = '\0';
+            this.mTxBRepoName.ReadOnly = true;
             this.mTxBRepoName.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.mTxBRepoName.SelectedText = "";
             this.mTxBRepoName.SelectionLength = 0;
@@ -226,6 +231,7 @@
             this.mTxBRepoName.UseSelectable = true;
             this.mTxBRepoName.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.mTxBRepoName.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
+            this.mTxBRepoName.TextChanged += new System.EventHandler(this.mTxBRepoName_TextChanged);
             // 
             // metroLabel4
             // 
@@ -236,31 +242,33 @@
             this.metroLabel4.TabIndex = 24;
             this.metroLabel4.Text = "Name";
             // 
-            // metroButton1
+            // mBtnOK
             // 
-            this.metroButton1.Location = new System.Drawing.Point(25, 184);
-            this.metroButton1.Name = "metroButton1";
-            this.metroButton1.Size = new System.Drawing.Size(75, 23);
-            this.metroButton1.TabIndex = 32;
-            this.metroButton1.Text = "OK";
-            this.metroButton1.UseSelectable = true;
+            this.mBtnOK.Location = new System.Drawing.Point(25, 184);
+            this.mBtnOK.Name = "mBtnOK";
+            this.mBtnOK.Size = new System.Drawing.Size(75, 23);
+            this.mBtnOK.TabIndex = 32;
+            this.mBtnOK.Text = "OK";
+            this.mBtnOK.UseSelectable = true;
+            this.mBtnOK.Click += new System.EventHandler(this.mBtnOK_Click);
             // 
-            // metroButton2
+            // mBtnCancel
             // 
-            this.metroButton2.Location = new System.Drawing.Point(106, 184);
-            this.metroButton2.Name = "metroButton2";
-            this.metroButton2.Size = new System.Drawing.Size(75, 23);
-            this.metroButton2.TabIndex = 33;
-            this.metroButton2.Text = "Cancel";
-            this.metroButton2.UseSelectable = true;
+            this.mBtnCancel.Location = new System.Drawing.Point(106, 184);
+            this.mBtnCancel.Name = "mBtnCancel";
+            this.mBtnCancel.Size = new System.Drawing.Size(75, 23);
+            this.mBtnCancel.TabIndex = 33;
+            this.mBtnCancel.Text = "Cancel";
+            this.mBtnCancel.UseSelectable = true;
+            this.mBtnCancel.Click += new System.EventHandler(this.mBtnCancel_Click);
             // 
-            // metroCreateNewRepoDlg
+            // MetroCreateNewRepoDlg
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(524, 226);
-            this.Controls.Add(this.metroButton2);
-            this.Controls.Add(this.metroButton1);
+            this.Controls.Add(this.mBtnCancel);
+            this.Controls.Add(this.mBtnOK);
             this.Controls.Add(this.mBtnPickRepoMountpointDir);
             this.Controls.Add(this.mBtnPickRepoCheckoutDir);
             this.Controls.Add(this.metroLabel1);
@@ -271,7 +279,7 @@
             this.Controls.Add(this.metroLabel3);
             this.Controls.Add(this.mTxBRepoName);
             this.Controls.Add(this.metroLabel4);
-            this.Name = "metroCreateNewRepoDlg";
+            this.Name = "MetroCreateNewRepoDlg";
             this.Text = "Please enter Repository details";
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -289,7 +297,7 @@
         private MetroFramework.Controls.MetroLabel metroLabel3;
         private MetroFramework.Controls.MetroTextBox mTxBRepoName;
         private MetroFramework.Controls.MetroLabel metroLabel4;
-        private MetroFramework.Controls.MetroButton metroButton1;
-        private MetroFramework.Controls.MetroButton metroButton2;
+        private MetroFramework.Controls.MetroButton mBtnOK;
+        private MetroFramework.Controls.MetroButton mBtnCancel;
     }
 }
