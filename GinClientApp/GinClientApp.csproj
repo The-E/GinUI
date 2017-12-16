@@ -35,6 +35,15 @@
     <ApplicationIcon>gin_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MetroFramework, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MetroModernUI.1.4.0.0\lib\net\MetroFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="MetroFramework.Design, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MetroModernUI.1.4.0.0\lib\net\MetroFramework.Design.dll</HintPath>
+    </Reference>
+    <Reference Include="MetroFramework.Fonts, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MetroModernUI.1.4.0.0\lib\net\MetroFramework.Fonts.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.WindowsAPICodePack-Core.1.1.0.2\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
     </Reference>
@@ -92,11 +101,29 @@
     <Compile Include="Dialogs\GetUserCredentialsDlg.Designer.cs">
       <DependentUpon>GetUserCredentialsDlg.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\GetUserCredentialsMetro.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\GetUserCredentialsMetro.Designer.cs">
+      <DependentUpon>GetUserCredentialsMetro.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\GlobalOptionsDlg.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Dialogs\GlobalOptionsDlg.Designer.cs">
       <DependentUpon>GlobalOptionsDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\metroCreateNewRepoDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\metroCreateNewRepoDlg.Designer.cs">
+      <DependentUpon>metroCreateNewRepoDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\MetroOptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\MetroOptions.Designer.cs">
+      <DependentUpon>MetroOptions.cs</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\RepoManagementDlg.cs">
       <SubType>Form</SubType>
@@ -111,6 +138,7 @@
       <DependentUpon>UploadFilesDlg.cs</DependentUpon>
     </Compile>
     <Compile Include="GinApplicationContext.cs" />
+    <Compile Include="GlobalOptions.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -141,8 +169,17 @@
     <EmbeddedResource Include="Dialogs\GetUserCredentialsDlg.resx">
       <DependentUpon>GetUserCredentialsDlg.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\GetUserCredentialsMetro.resx">
+      <DependentUpon>GetUserCredentialsMetro.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\GlobalOptionsDlg.resx">
       <DependentUpon>GlobalOptionsDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\metroCreateNewRepoDlg.resx">
+      <DependentUpon>metroCreateNewRepoDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\MetroOptions.resx">
+      <DependentUpon>MetroOptions.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\RepoManagementDlg.en.resx">
       <DependentUpon>RepoManagementDlg.cs</DependentUpon>

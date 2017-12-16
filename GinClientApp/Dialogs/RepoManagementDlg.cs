@@ -14,7 +14,6 @@ namespace GinClientApp.Dialogs
     public partial class RepoManagementDlg : Form
     {
         private readonly GinApplicationContext.UserCredentials _credentials;
-        private readonly GinApplicationContext.GlobalOptions _options;
         private List<GinRepositoryData> _repositories;
         private readonly GinApplicationContext _parent;
 
@@ -24,11 +23,10 @@ namespace GinClientApp.Dialogs
         private bool _suppressEvents;
         
 
-        public RepoManagementDlg(GinApplicationContext.GlobalOptions options,
+        public RepoManagementDlg(
             GinApplicationContext.UserCredentials credentials, GinApplicationContext parent)
         {
             InitializeComponent();
-            _options = options;
             _credentials = credentials;
             _parent = parent;
         }

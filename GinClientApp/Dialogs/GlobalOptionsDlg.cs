@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
-using static GinClientApp.GinApplicationContext;
-using static GinClientApp.GinApplicationContext.GlobalOptions;
+using static GinClientApp.GlobalOptions;
 
 namespace GinClientApp.Dialogs
 {

@@ -19,26 +19,7 @@ namespace GinClientApp
         public GinServiceClient ServiceClient;
         private readonly NotifyIcon _trayIcon;
         private readonly UserCredentials _credentials;
-        private GlobalOptions _options;
         private Timer _updateIntervalTimer;
-
-        public class GlobalOptions
-        {
-            public int RepositoryUpdateInterval { get; set; }
-            public CheckoutOption RepositoryCheckoutOption { get; set; }
-
-            public enum CheckoutOption
-            {
-                AnnexCheckout,
-                FullCheckout
-            }
-
-            public GlobalOptions()
-            {
-                RepositoryUpdateInterval = 15;
-                RepositoryCheckoutOption = CheckoutOption.AnnexCheckout;
-            }
-        }
 
         private ProgressDisplayDlg _progressDisplayDlg;
 
@@ -66,37 +47,14 @@ namespace GinClientApp
 
             #region Read options
 
-            if (File.Exists(saveFilePath + @"\GlobalOptionsDlg.json"))
+            if (!GlobalOptions.Load())
             {
-                try
-                {
-                    var text = File.OpenText(saveFilePath + @"\GlobalOptionsDlg.json").ReadToEnd();
-                    _options = JsonConvert.DeserializeObject<GlobalOptions>(text);
-                }
-                catch
-                {
-                    var optionsDlg = new GlobalOptionsDlg(new GlobalOptions());
-                    var res = optionsDlg.ShowDialog();
-
-                    _options = res == DialogResult.OK ? optionsDlg.Options : new GlobalOptions();
-                }
-            }
-            else
-            {
-                var optionsDlg = new GlobalOptionsDlg(new GlobalOptions());
-                var res = optionsDlg.ShowDialog();
-
-                _options = res == DialogResult.OK ? optionsDlg.Options : new GlobalOptions();
-
-                var fs = File.CreateText(saveFilePath + @"\GlobalOptionsDlg.json");
-                fs.Write(JsonConvert.SerializeObject(_options));
-                fs.Flush();
-                fs.Close();
+                //TODO: Display options dialog here
             }
 
-            if (_options.RepositoryUpdateInterval > 0)
+            if (GlobalOptions.Instance.RepositoryUpdateInterval > 0)
             {
-                _updateIntervalTimer = new Timer(_options.RepositoryUpdateInterval * 1000) {AutoReset = true};
+                _updateIntervalTimer = new Timer(GlobalOptions.Instance.RepositoryUpdateInterval * 1000) {AutoReset = true};
                 _updateIntervalTimer.Elapsed += (sender, args) =>
                 {
                     ServiceClient.DownloadAllUpdateInfo();
@@ -164,7 +122,7 @@ namespace GinClientApp
                     foreach (var repo in repos)
                     {
                         ServiceClient.AddRepository(repo.PhysicalDirectory.FullName, repo.Mountpoint.FullName, repo.Name,
-                            repo.Address, _options.RepositoryCheckoutOption == GlobalOptions.CheckoutOption.FullCheckout, false);
+                            repo.Address, GlobalOptions.Instance.RepositoryCheckoutOption == GlobalOptions.CheckoutOption.FullCheckout, false);
                     }
                 }
                 catch (Exception e)
@@ -249,25 +207,27 @@ namespace GinClientApp
 
         private void ShowOptionsMenuItemHandler(object sender, EventArgs e)
         {
-            var optionsDlg = new GlobalOptionsDlg(_options);
+            var optionsDlg = new GlobalOptionsDlg(GlobalOptions.Instance);
             var res = optionsDlg.ShowDialog();
 
-            if (res == DialogResult.OK)
-            {
-                _options = optionsDlg.Options;
-                if (_options.RepositoryUpdateInterval <= 0) return;
+            if (res != DialogResult.OK) return;
 
-                if (_updateIntervalTimer == null)
-                {
-                    _updateIntervalTimer = new Timer(_options.RepositoryUpdateInterval * 1000) { AutoReset = true };
-                    _updateIntervalTimer.Elapsed += (sender1, args) => { 
-                        ServiceClient.DownloadAllUpdateInfo();
-                    };
-                }
-                _updateIntervalTimer.Stop();
-                _updateIntervalTimer.Interval = _options.RepositoryUpdateInterval * 1000;
-                _updateIntervalTimer.Start();
+            if (GlobalOptions.Instance.RepositoryUpdateInterval <= 0)
+            {
+                _updateIntervalTimer?.Stop();
+                return;
             }
+
+            if (_updateIntervalTimer == null)
+            {
+                _updateIntervalTimer = new Timer(GlobalOptions.Instance.RepositoryUpdateInterval * 1000) { AutoReset = true };
+                _updateIntervalTimer.Elapsed += (sender1, args) => { 
+                    ServiceClient.DownloadAllUpdateInfo();
+                };
+            }
+            _updateIntervalTimer.Stop();
+            _updateIntervalTimer.Interval = GlobalOptions.Instance.RepositoryUpdateInterval * 1000;
+            _updateIntervalTimer.Start();
         }
 
         private void UpdateRepoMenuItemHandler(object sender, EventArgs e)
@@ -279,7 +239,7 @@ namespace GinClientApp
 
         private void ManageRepositoriesMenuItemHandler(object sender, EventArgs e)
         {
-            var repomanager = new RepoManagementDlg(_options, _credentials, this);
+            var repomanager = new RepoManagementDlg(_credentials, this);
             repomanager.Closed += (o, args) => { if (_trayIcon!= null) _trayIcon.ContextMenu = new ContextMenu(BuildContextMenu()); };
             repomanager.ShowDialog();
             
@@ -291,8 +251,8 @@ namespace GinClientApp
             {
                 ServiceClient.AddRepository(repo.PhysicalDirectory.FullName, repo.Mountpoint.FullName, repo.Name,
                     repo.Address,
-                    _options.RepositoryCheckoutOption ==
-                    GinApplicationContext.GlobalOptions.CheckoutOption.FullCheckout, repo.CreateNew);
+                    GlobalOptions.Instance.RepositoryCheckoutOption ==
+                    GlobalOptions.CheckoutOption.FullCheckout, repo.CreateNew);
 
                 repo.CreateNew = false;
             }
