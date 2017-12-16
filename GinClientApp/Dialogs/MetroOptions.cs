@@ -20,6 +20,7 @@ namespace GinClientApp.Dialogs
     public partial class MetroOptions : MetroFramework.Forms.MetroForm
     {
         private readonly GlobalOptions _storedOptions;
+        private readonly UserCredentials _storedCredentials;
         private readonly GinApplicationContext _parentContext;
 
         public MetroOptions(GinApplicationContext parentContext)
@@ -45,7 +46,8 @@ namespace GinClientApp.Dialogs
             mTxBGinCliVersion.Text = parentContext.ServiceClient.GetGinCliVersion();
             mTxBGinService.Text = "";
 
-            _storedOptions = (GlobalOptions)GlobalOptions.Instance.Clone();
+            _storedOptions = (GlobalOptions) GlobalOptions.Instance.Clone();
+            _storedCredentials = (UserCredentials) UserCredentials.Instance.Clone();
         }
 
         private void FillRepoList()
@@ -117,24 +119,14 @@ namespace GinClientApp.Dialogs
             if (createNewDlg.ShowDialog() == DialogResult.Cancel) return;
 
             repoData = createNewDlg.RepositoryData;
-            mLblWorking.Text = "Working...";
-            mLblWorking.Visible = true;
-            mProgWorking.Visible = true;
-            mProgWorking.Spinning = true;
+            StartShowProgress();
 
-            if (_parentContext.ServiceClient.AddRepository(repoData.PhysicalDirectory.FullName,
+            _parentContext.ServiceClient.AddRepository(repoData.PhysicalDirectory.FullName,
                 repoData.Mountpoint.FullName, repoData.Name, repoData.Address,
                 GlobalOptions.Instance.RepositoryCheckoutOption == GlobalOptions.CheckoutOption.FullCheckout,
-                repoData.CreateNew))
-            {
-                mLblWorking.Visible = false;
-                mProgWorking.Visible = false;
-            }
-            else
-            {
-                mLblWorking.Text = "Error";
-                mProgWorking.Spinning = false;
-            }
+                repoData.CreateNew);
+
+            StopShowProgress();
 
             FillRepoList();
         }
@@ -148,24 +140,15 @@ namespace GinClientApp.Dialogs
             if (createNewDlg.ShowDialog() == DialogResult.Cancel) return;
 
             repoData = createNewDlg.RepositoryData;
-            mLblWorking.Text = "Working...";
-            mLblWorking.Visible = true;
-            mProgWorking.Visible = true;
-            mProgWorking.Spinning = true;
+            StartShowProgress();
 
-            if (_parentContext.ServiceClient.AddRepository(repoData.PhysicalDirectory.FullName,
+            _parentContext.ServiceClient.CreateNewRepository(repoData.Name);
+            _parentContext.ServiceClient.AddRepository(repoData.PhysicalDirectory.FullName,
                 repoData.Mountpoint.FullName, repoData.Name, repoData.Address,
                 GlobalOptions.Instance.RepositoryCheckoutOption == GlobalOptions.CheckoutOption.FullCheckout,
-                repoData.CreateNew))
-            {
-                mLblWorking.Visible = false;
-                mProgWorking.Visible = false;
-            }
-            else
-            {
-                mLblWorking.Text = "Error";
-                mProgWorking.Spinning = false;
-            }
+                repoData.CreateNew);
+           
+            StopShowProgress();
 
             FillRepoList();
         }
@@ -175,12 +158,61 @@ namespace GinClientApp.Dialogs
             if (mLVwRepositories.SelectedItems.Count == 0) return;
 
             var repo = mLVwRepositories.SelectedItems[0].SubItems[0].Text;
-            var res = MetroMessageBox.Show(this, "This will delete the repository " + repo + " and all associated data. Do you wish to continue?", 
+            var res = MetroMessageBox.Show(this,
+                $"This will delete the repository {repo} and all associated data. Do you wish to continue?", 
                 Resources.GinClientApp_Gin_Client_Warning, MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
             if (res == DialogResult.Cancel) return;
 
             _parentContext.ServiceClient.DeleteRepository(repo);
             FillRepoList();
+        }
+
+        private void StartShowProgress()
+        {
+            mLblWorking.Visible = true;
+            mProgWorking.Visible = true;
+            mProgWorking.Spinning = true;
+        }
+
+        private void StopShowProgress()
+        {
+            mLblWorking.Visible   = false;
+            mProgWorking.Visible  = false;
+            mProgWorking.Spinning = false;
+        }
+
+        private bool AttemptLogin()
+        {
+            if (!string.IsNullOrEmpty(mTxBUsername.Text) && !string.IsNullOrEmpty(mTxBPassword.Text))
+            {
+                _parentContext.ServiceClient.Logout();
+                if (_parentContext.ServiceClient.Login(mTxBUsername.Text, mTxBPassword.Text))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private void mTxBPassword_Leave(object sender, EventArgs e)
+        {
+            mLblStatus.Visible = false;
+
+            if (AttemptLogin()) return;
+
+            mLblStatus.Text = "The entered username/password combination is not valid!";
+            mLblStatus.Visible = true;
+        }
+
+        private void mTxBUsername_Leave(object sender, EventArgs e)
+        {
+            mLblStatus.Visible = false;
+
+            if (AttemptLogin()) return;
+
+            mLblStatus.Text = "The entered username/password combination is not valid!";
+            mLblStatus.Visible = true;
         }
     }
 }

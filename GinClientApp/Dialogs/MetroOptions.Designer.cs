@@ -96,7 +96,7 @@
             this.mTabCtrl.Location = new System.Drawing.Point(24, 64);
             this.mTabCtrl.Name = "mTabCtrl";
             this.mTabCtrl.SelectedIndex = 0;
-            this.mTabCtrl.Size = new System.Drawing.Size(448, 289);
+            this.mTabCtrl.Size = new System.Drawing.Size(492, 294);
             this.mTabCtrl.TabIndex = 0;
             this.mTabCtrl.UseSelectable = true;
             // 
@@ -105,7 +105,7 @@
             this.tpUser.Controls.Add(this.metroPanel1);
             this.tpUser.Location = new System.Drawing.Point(4, 38);
             this.tpUser.Name = "tpUser";
-            this.tpUser.Size = new System.Drawing.Size(440, 247);
+            this.tpUser.Size = new System.Drawing.Size(484, 252);
             this.tpUser.TabIndex = 0;
             this.tpUser.Text = "Login";
             this.tpUser.Visible = false;
@@ -125,7 +125,7 @@
             this.metroPanel1.HorizontalScrollbarSize = 10;
             this.metroPanel1.Location = new System.Drawing.Point(0, 0);
             this.metroPanel1.Name = "metroPanel1";
-            this.metroPanel1.Size = new System.Drawing.Size(440, 247);
+            this.metroPanel1.Size = new System.Drawing.Size(484, 252);
             this.metroPanel1.TabIndex = 0;
             this.metroPanel1.VerticalScrollbarBarColor = true;
             this.metroPanel1.VerticalScrollbarHighlightOnWheel = false;
@@ -169,12 +169,13 @@
             this.mTxBPassword.SelectionLength = 0;
             this.mTxBPassword.SelectionStart = 0;
             this.mTxBPassword.ShortcutsEnabled = true;
-            this.mTxBPassword.Size = new System.Drawing.Size(296, 23);
+            this.mTxBPassword.Size = new System.Drawing.Size(340, 23);
             this.mTxBPassword.TabIndex = 7;
             this.mTxBPassword.Text = "metroTextBox3";
             this.mTxBPassword.UseSelectable = true;
             this.mTxBPassword.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.mTxBPassword.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
+            this.mTxBPassword.Leave += new System.EventHandler(this.mTxBPassword_Leave);
             // 
             // mTxBUsername
             // 
@@ -203,12 +204,13 @@
             this.mTxBUsername.SelectionLength = 0;
             this.mTxBUsername.SelectionStart = 0;
             this.mTxBUsername.ShortcutsEnabled = true;
-            this.mTxBUsername.Size = new System.Drawing.Size(296, 23);
+            this.mTxBUsername.Size = new System.Drawing.Size(340, 23);
             this.mTxBUsername.TabIndex = 6;
             this.mTxBUsername.Text = "metroTextBox2";
             this.mTxBUsername.UseSelectable = true;
             this.mTxBUsername.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.mTxBUsername.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
+            this.mTxBUsername.Leave += new System.EventHandler(this.mTxBUsername_Leave);
             // 
             // mTxBServerAddress
             // 
@@ -237,7 +239,7 @@
             this.mTxBServerAddress.SelectionLength = 0;
             this.mTxBServerAddress.SelectionStart = 0;
             this.mTxBServerAddress.ShortcutsEnabled = true;
-            this.mTxBServerAddress.Size = new System.Drawing.Size(296, 23);
+            this.mTxBServerAddress.Size = new System.Drawing.Size(340, 23);
             this.mTxBServerAddress.TabIndex = 5;
             this.mTxBServerAddress.Text = "gin.g-node.org";
             this.mTxBServerAddress.UseSelectable = true;
@@ -466,15 +468,13 @@
             this.tpRepositories.Controls.Add(this.metroPanel3);
             this.tpRepositories.Location = new System.Drawing.Point(4, 38);
             this.tpRepositories.Name = "tpRepositories";
-            this.tpRepositories.Size = new System.Drawing.Size(440, 247);
+            this.tpRepositories.Size = new System.Drawing.Size(484, 252);
             this.tpRepositories.TabIndex = 2;
             this.tpRepositories.Text = "Repositories";
             this.tpRepositories.Visible = false;
             // 
             // metroPanel3
             // 
-            this.metroPanel3.Controls.Add(this.mLblWorking);
-            this.metroPanel3.Controls.Add(this.mProgWorking);
             this.metroPanel3.Controls.Add(this.mBtnCreateNew);
             this.metroPanel3.Controls.Add(this.mBtnCheckout);
             this.metroPanel3.Controls.Add(this.mBtnRemove);
@@ -486,7 +486,7 @@
             this.metroPanel3.HorizontalScrollbarSize = 10;
             this.metroPanel3.Location = new System.Drawing.Point(0, 0);
             this.metroPanel3.Name = "metroPanel3";
-            this.metroPanel3.Size = new System.Drawing.Size(440, 247);
+            this.metroPanel3.Size = new System.Drawing.Size(484, 252);
             this.metroPanel3.TabIndex = 0;
             this.metroPanel3.VerticalScrollbarBarColor = true;
             this.metroPanel3.VerticalScrollbarHighlightOnWheel = false;
@@ -495,7 +495,7 @@
             // mBtnCreateNew
             // 
             this.mBtnCreateNew.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.mBtnCreateNew.Location = new System.Drawing.Point(105, 221);
+            this.mBtnCreateNew.Location = new System.Drawing.Point(105, 226);
             this.mBtnCreateNew.Name = "mBtnCreateNew";
             this.mBtnCreateNew.Size = new System.Drawing.Size(75, 23);
             this.mBtnCreateNew.TabIndex = 16;
@@ -506,7 +506,7 @@
             // mBtnCheckout
             // 
             this.mBtnCheckout.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.mBtnCheckout.Location = new System.Drawing.Point(24, 221);
+            this.mBtnCheckout.Location = new System.Drawing.Point(24, 226);
             this.mBtnCheckout.Name = "mBtnCheckout";
             this.mBtnCheckout.Size = new System.Drawing.Size(75, 23);
             this.mBtnCheckout.TabIndex = 15;
@@ -517,7 +517,7 @@
             // mBtnRemove
             // 
             this.mBtnRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.mBtnRemove.Location = new System.Drawing.Point(188, 221);
+            this.mBtnRemove.Location = new System.Drawing.Point(188, 226);
             this.mBtnRemove.Name = "mBtnRemove";
             this.mBtnRemove.Size = new System.Drawing.Size(75, 23);
             this.mBtnRemove.TabIndex = 14;
@@ -551,7 +551,7 @@
             this.mLVwRepositories.Location = new System.Drawing.Point(24, 33);
             this.mLVwRepositories.Name = "mLVwRepositories";
             this.mLVwRepositories.OwnerDraw = true;
-            this.mLVwRepositories.Size = new System.Drawing.Size(413, 182);
+            this.mLVwRepositories.Size = new System.Drawing.Size(457, 187);
             this.mLVwRepositories.TabIndex = 2;
             this.mLVwRepositories.UseCompatibleStateImageBehavior = false;
             this.mLVwRepositories.UseSelectable = true;
@@ -738,7 +738,7 @@
             // mBtnOK
             // 
             this.mBtnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.mBtnOK.Location = new System.Drawing.Point(28, 355);
+            this.mBtnOK.Location = new System.Drawing.Point(28, 360);
             this.mBtnOK.Name = "mBtnOK";
             this.mBtnOK.Size = new System.Drawing.Size(75, 23);
             this.mBtnOK.TabIndex = 1;
@@ -749,7 +749,7 @@
             // mBtnCancel
             // 
             this.mBtnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.mBtnCancel.Location = new System.Drawing.Point(110, 355);
+            this.mBtnCancel.Location = new System.Drawing.Point(110, 360);
             this.mBtnCancel.Name = "mBtnCancel";
             this.mBtnCancel.Size = new System.Drawing.Size(75, 23);
             this.mBtnCancel.TabIndex = 2;
@@ -759,7 +759,8 @@
             // 
             // mProgWorking
             // 
-            this.mProgWorking.Location = new System.Drawing.Point(414, 221);
+            this.mProgWorking.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.mProgWorking.Location = new System.Drawing.Point(486, 360);
             this.mProgWorking.Maximum = 100;
             this.mProgWorking.Name = "mProgWorking";
             this.mProgWorking.Size = new System.Drawing.Size(23, 23);
@@ -769,8 +770,9 @@
             // 
             // mLblWorking
             // 
+            this.mLblWorking.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.mLblWorking.AutoSize = true;
-            this.mLblWorking.Location = new System.Drawing.Point(341, 221);
+            this.mLblWorking.Location = new System.Drawing.Point(413, 360);
             this.mLblWorking.Name = "mLblWorking";
             this.mLblWorking.Size = new System.Drawing.Size(67, 19);
             this.mLblWorking.TabIndex = 18;
@@ -780,8 +782,10 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(493, 392);
+            this.ClientSize = new System.Drawing.Size(537, 397);
+            this.Controls.Add(this.mLblWorking);
             this.Controls.Add(this.mBtnCancel);
+            this.Controls.Add(this.mProgWorking);
             this.Controls.Add(this.mBtnOK);
             this.Controls.Add(this.mTabCtrl);
             this.Name = "MetroOptions";
@@ -801,6 +805,7 @@
             this.metroPanel4.ResumeLayout(false);
             this.metroPanel4.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 

@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace GinClientApp
 {
-    public class UserCredentials
+    public class UserCredentials : ICloneable
     {
         private static UserCredentials _instance;
         public static UserCredentials Instance => _instance ?? (_instance = new UserCredentials());
@@ -59,6 +59,11 @@ namespace GinClientApp
             {
                 fwriter.Write(JsonConvert.SerializeObject(_instance));
             }
+        }
+
+        public object Clone()
+        {
+            return new UserCredentials() {Username = this.Username, Password = this.Password};
         }
     }
 }

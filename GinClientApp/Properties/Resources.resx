@@ -211,6 +211,23 @@ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
 SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+This program uses the following third-party Software:
+
+1. Dokan (http://dokan-dev.github.io/)
+Copyright (C) 2015 - 2017 Adrien J. &lt;liryna.stark@gmail.com&gt; and Maxime C. &lt;maxime@islog.com&gt;
+Copyright (C) 2007 - 2011 Hiroki Asakawa &lt;info@dokan-dev.net&gt;
+2. DokanNet 
+Copyright (c) 2007 Hiroki Asakawa
+3. MetroModernUI
+Copyright (c) 2016 Dennis Magno
+4. Newtonsoft.Json
+Copyright (c) 2007 James Newton-King
+5. SharpShell
+Copyright (c) 2014 Dave Kerr
+6. WindowsAPICodePack
+Copyright (c) Microsoft
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</value>
   </data>
 </root>
