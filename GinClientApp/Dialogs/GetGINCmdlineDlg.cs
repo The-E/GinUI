@@ -9,17 +9,15 @@ namespace GinClientApp.Dialogs
     {
         public string RepositoryName { get; private set; }
         public bool CreateNew { get; private set; }
-        private GinApplicationContext.UserCredentials _credentials;
 
         [DllImport("user32.dll")]
         private static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
 
 
-        public GetGinCmdline(GinApplicationContext.UserCredentials credentials)
+        public GetGinCmdline()
         {
             InitializeComponent();
             SendMessage(txtRepoName.Handle, 0x1501, 1, "<username>/<repository>");
-            _credentials = credentials;
         }
 
         private void txtCommandLine_TextChanged(object sender, EventArgs e)

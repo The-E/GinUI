@@ -162,6 +162,35 @@ namespace GinClientLibrary
             return Repositories.Any(repo => repo.Mountpoint.IsEqualTo(dInfo));
         }
 
+        public string GetGinCliVersion()
+        {
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    FileName = "cmd.exe",
+                    WorkingDirectory = @"C:\",
+                    Arguments = @"/C gin.exe --version",
+                    CreateNoWindow = true,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    RedirectStandardInput = true,
+                    UseShellExecute = false
+                }
+            };
+
+            process.OutputDataReceived += Process_OutputDataReceived;
+            Output.Clear();
+            process.Start();
+            process.BeginOutputReadLine();
+            var error = process.StandardError.ReadToEnd();
+
+            process.WaitForExit();
+
+            return Output.ToString();
+        }
+
         public bool IsManagedPath(string filePath)
         {
             return Repositories.Any(repo => filePath.Contains(repo.Mountpoint.FullName));

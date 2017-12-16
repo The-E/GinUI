@@ -267,6 +267,12 @@ namespace GinShellExtension.GinService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/DownloadFiles", ReplyAction="http://tempuri.org/IGinService/DownloadFilesResponse")]
         System.Threading.Tasks.Task DownloadFilesAsync(string[] filePaths);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/GetGinCliVersion", ReplyAction="http://tempuri.org/IGinService/GetGinCliVersionResponse")]
+        string GetGinCliVersion();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/GetGinCliVersion", ReplyAction="http://tempuri.org/IGinService/GetGinCliVersionResponse")]
+        System.Threading.Tasks.Task<string> GetGinCliVersionAsync();
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -479,6 +485,14 @@ namespace GinShellExtension.GinService {
         
         public System.Threading.Tasks.Task DownloadFilesAsync(string[] filePaths) {
             return base.Channel.DownloadFilesAsync(filePaths);
+        }
+        
+        public string GetGinCliVersion() {
+            return base.Channel.GetGinCliVersion();
+        }
+        
+        public System.Threading.Tasks.Task<string> GetGinCliVersionAsync() {
+            return base.Channel.GetGinCliVersionAsync();
         }
     }
 }

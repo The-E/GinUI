@@ -1,6 +1,6 @@
 ﻿namespace GinClientApp.Dialogs
 {
-    partial class metroCreateNewRepoDlg
+    partial class MetroCreateNewRepoDlg
     {
         /// <summary>
         /// Required designer variable.

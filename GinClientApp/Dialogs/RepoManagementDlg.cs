@@ -13,7 +13,6 @@ namespace GinClientApp.Dialogs
 {
     public partial class RepoManagementDlg : Form
     {
-        private readonly GinApplicationContext.UserCredentials _credentials;
         private List<GinRepositoryData> _repositories;
         private readonly GinApplicationContext _parent;
 
@@ -23,11 +22,9 @@ namespace GinClientApp.Dialogs
         private bool _suppressEvents;
         
 
-        public RepoManagementDlg(
-            GinApplicationContext.UserCredentials credentials, GinApplicationContext parent)
+        public RepoManagementDlg(GinApplicationContext parent)
         {
             InitializeComponent();
-            _credentials = credentials;
             _parent = parent;
         }
 
@@ -100,7 +97,7 @@ namespace GinClientApp.Dialogs
 
         private void btnAddNew_Click(object sender, EventArgs e)
         {
-            var getcmdlinedlg = new GetGinCmdline(_credentials);
+            var getcmdlinedlg = new GetGinCmdline();
             var result = getcmdlinedlg.ShowDialog();
 
             if (result == DialogResult.OK)

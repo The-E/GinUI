@@ -61,53 +61,27 @@ namespace GinClientApp
                 };
             }
 
+            GlobalOptions.Save();
+
             #endregion
 
             #region Login
-            bool loggedIn = false;
-            if (File.Exists(saveFilePath + @"\Credentials.json"))
+
+            if (!UserCredentials.Load())
             {
-                try
-                {
-                    var text = File.OpenText(saveFilePath + @"\Credentials.json").ReadToEnd();
-                    _credentials = JsonConvert.DeserializeObject<UserCredentials>(text);
-                    
-                    if (!ServiceClient.Login(_credentials.Username, _credentials.Password))
-                    {
-                        MessageBox.Show(Resources.GinApplicationContext_Error_while_trying_to_log_in_to_GIN, Resources.GinApplicationContext_Gin_Client_Error,
-                            MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                    else
-                    {
-                        loggedIn = true;
-                    }
-                }
-                catch (Exception e)
-                {
-                    loggedIn = false;
-                }
-            }
-            else
-            {
-                var loginDlg = new GetUserCredentialsDlg(this);
-                var loginResult = loginDlg.ShowDialog();
-
-                if (loginResult == DialogResult.OK)
-                {
-                    var credentials =
-                        new UserCredentials() {Username = loginDlg.Username, Password = loginDlg.Password };
-
-                    var fstream = File.CreateText(saveFilePath + @"\Credentials.json");
-                    fstream.Write(JsonConvert.SerializeObject(credentials));
-                    fstream.Flush();
-                    fstream.Close();
-
-                    loggedIn = true;
-                }
+                //TODO: Ask for credentials here
             }
 
-            if (!loggedIn)
-                Exit(null, new EventArgs());
+            if (!ServiceClient.Login(UserCredentials.Instance.Username, UserCredentials.Instance.Password))
+            {
+                MessageBox.Show(Resources.GinApplicationContext_Error_while_trying_to_log_in_to_GIN, Resources.GinApplicationContext_Gin_Client_Error,
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                //TODO: Ask for correct credentials, retry until correct or user exits
+            }
+
+            UserCredentials.Save();
+            
             #endregion
 
             #region Set up repositories
@@ -239,7 +213,7 @@ namespace GinClientApp
 
         private void ManageRepositoriesMenuItemHandler(object sender, EventArgs e)
         {
-            var repomanager = new RepoManagementDlg(_credentials, this);
+            var repomanager = new RepoManagementDlg(this);
             repomanager.Closed += (o, args) => { if (_trayIcon!= null) _trayIcon.ContextMenu = new ContextMenu(BuildContextMenu()); };
             repomanager.ShowDialog();
             
@@ -349,12 +323,6 @@ namespace GinClientApp
             }
 
             Application.Exit();
-        }
-
-        public struct UserCredentials
-        {
-            public string Username { get; set; }
-            public string Password { get; set; }
         }
     }
 }

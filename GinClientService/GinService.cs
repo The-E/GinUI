@@ -181,5 +181,9 @@ namespace GinService
             }
         }
 
+        string IGinService.GetGinCliVersion()
+        {
+            return RepositoryManager.Instance.GetGinCliVersion();
+        }
     }
 }

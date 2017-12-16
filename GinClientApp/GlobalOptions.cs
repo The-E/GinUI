@@ -10,11 +10,15 @@ using Newtonsoft.Json;
 
 namespace GinClientApp
 {
-    public class GlobalOptions
+    public class GlobalOptions : ICloneable
     {
         private static GlobalOptions _instance;
 
-        public static GlobalOptions Instance => _instance ?? (_instance = new GlobalOptions());
+        public static GlobalOptions Instance
+        {
+            get => _instance ?? (_instance = new GlobalOptions());
+            set => _instance = value;
+        }
 
         public int RepositoryUpdateInterval { get; set; }
         public CheckoutOption RepositoryCheckoutOption { get; set; }
@@ -74,6 +78,17 @@ namespace GinClientApp
                 _instance = new GlobalOptions();
                 return false;
             }
+        }
+
+        public object Clone()
+        {
+            return new GlobalOptions()
+            {
+                DefaultCheckoutDir = this.DefaultCheckoutDir,
+                DefaultMountpointDir = this.DefaultMountpointDir,
+                RepositoryUpdateInterval = this.RepositoryUpdateInterval,
+                RepositoryCheckoutOption = this.RepositoryCheckoutOption
+            };
         }
     }
 }

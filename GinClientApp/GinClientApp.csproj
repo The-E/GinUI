@@ -113,11 +113,11 @@
     <Compile Include="Dialogs\GlobalOptionsDlg.Designer.cs">
       <DependentUpon>GlobalOptionsDlg.cs</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\metroCreateNewRepoDlg.cs">
+    <Compile Include="Dialogs\MetroCreateNewRepoDlg.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Dialogs\metroCreateNewRepoDlg.Designer.cs">
-      <DependentUpon>metroCreateNewRepoDlg.cs</DependentUpon>
+    <Compile Include="Dialogs\MetroCreateNewRepoDlg.Designer.cs">
+      <DependentUpon>MetroCreateNewRepoDlg.cs</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\MetroOptions.cs">
       <SubType>Form</SubType>
@@ -154,6 +154,7 @@
       <DependentUpon>ProgressDisplayDlg.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserCredentials.cs" />
     <EmbeddedResource Include="Custom Controls\FileTransferProgress.resx">
       <DependentUpon>FileTransferProgress.cs</DependentUpon>
     </EmbeddedResource>
@@ -175,8 +176,8 @@
     <EmbeddedResource Include="Dialogs\GlobalOptionsDlg.resx">
       <DependentUpon>GlobalOptionsDlg.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\metroCreateNewRepoDlg.resx">
-      <DependentUpon>metroCreateNewRepoDlg.cs</DependentUpon>
+    <EmbeddedResource Include="Dialogs\MetroCreateNewRepoDlg.resx">
+      <DependentUpon>MetroCreateNewRepoDlg.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\MetroOptions.resx">
       <DependentUpon>MetroOptions.cs</DependentUpon>

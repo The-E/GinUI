@@ -157,6 +157,9 @@ namespace GinService
 
         [OperationContract]
         void DownloadFiles(IEnumerable<string> filePaths);
+
+        [OperationContract]
+        string GetGinCliVersion();
     }
 
     [SuppressMessage("ReSharper", "OperationContractWithoutServiceContract")]
