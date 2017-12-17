@@ -14,6 +14,7 @@ using Timer = System.Timers.Timer;
 
 namespace GinClientApp
 {
+    [CallbackBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant)]
     public class GinApplicationContext : ApplicationContext, IGinServiceCallback
     {
         public GinServiceClient ServiceClient;
@@ -255,7 +256,12 @@ namespace GinClientApp
             if (res == DialogResult.OK)
             {
                 _options = optionsDlg.Options;
-                if (_options.RepositoryUpdateInterval <= 0) return;
+                if (_options.RepositoryUpdateInterval <= 0)
+                {
+                    _updateIntervalTimer?.Stop();
+                    _updateIntervalTimer = null;
+                    return;
+                }
 
                 if (_updateIntervalTimer == null)
                 {
@@ -334,11 +340,10 @@ namespace GinClientApp
         {
             _progressDisplayDlg.NestingLevel--;
 
-            if (_progressDisplayDlg.NestingLevel == 0)
-            {
-                _progressDisplayDlg.Close();
-                _progressDisplayDlg = null;
-            }
+            if (_progressDisplayDlg.NestingLevel != 0) return;
+
+            _progressDisplayDlg.Invoke(new Action(() => _progressDisplayDlg.Close()));
+            _progressDisplayDlg = null;
         }
 
         void IGinServiceCallback.FileOperationStarted(string filename, string repository)
@@ -361,7 +366,7 @@ namespace GinClientApp
         {
             Console.WriteLine("Filename: {0}, Repo: {1}, Progress: {2}, Speed: {3}, State: {4}", filename, repository,
                 progress, speed, state);
-
+            
             _progressDisplayDlg?.SetProgressBarState(filename, state, progress, speed);
         }
 
@@ -386,6 +391,7 @@ namespace GinClientApp
             {
                 ServiceClient.UnmmountAllRepositories();
                 ServiceClient.Logout();
+                ServiceClient.Close();
             }
 
             Application.Exit();
