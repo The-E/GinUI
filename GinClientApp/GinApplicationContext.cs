@@ -237,13 +237,13 @@ namespace GinClientApp
 
         void IGinServiceCallback.FileOperationFinished(string filename, string repository, bool success)
         {
-            _progressDisplayDlg.NestingLevel--;
+            //_progressDisplayDlg.NestingLevel--;
 
-            if (_progressDisplayDlg.NestingLevel == 0)
-            {
-                _progressDisplayDlg.Close();
-                _progressDisplayDlg = null;
-            }
+            //if (_progressDisplayDlg.NestingLevel == 0)
+            //{
+            //    _progressDisplayDlg.Close();
+            //    _progressDisplayDlg = null;
+            //}
         }
 
         void IGinServiceCallback.FileOperationStarted(string filename, string repository)
@@ -253,12 +253,12 @@ namespace GinClientApp
                 string.Format(Resources.GinApplicationContext_FileOperation_Retrieving, Path.GetFileName(filename), repository);
             _trayIcon.ShowBalloonTip(5000);
 
-            if (_progressDisplayDlg == null)
-                _progressDisplayDlg = new ProgressDisplayDlg() {NestingLevel = 1};
-            else
-                _progressDisplayDlg.NestingLevel++;
+            //if (_progressDisplayDlg == null)
+            //    _progressDisplayDlg = new ProgressDisplayDlg() {NestingLevel = 1};
+            //else
+            //    _progressDisplayDlg.NestingLevel++;
             
-            _progressDisplayDlg.Show();
+            //_progressDisplayDlg.Show();
         }
 
         void IGinServiceCallback.FileOperationProgress(string filename, string repository, int progress,

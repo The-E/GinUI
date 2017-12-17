@@ -95,7 +95,6 @@
             this.mTxBRepoAddress.MaxLength = 32767;
             this.mTxBRepoAddress.Name = "mTxBRepoAddress";
             this.mTxBRepoAddress.PasswordChar = '\0';
-            this.mTxBRepoAddress.ReadOnly = true;
             this.mTxBRepoAddress.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.mTxBRepoAddress.SelectedText = "";
             this.mTxBRepoAddress.SelectionLength = 0;
@@ -132,6 +131,7 @@
             this.mTxBRepoMountpoint.MaxLength = 32767;
             this.mTxBRepoMountpoint.Name = "mTxBRepoMountpoint";
             this.mTxBRepoMountpoint.PasswordChar = '\0';
+            this.mTxBRepoMountpoint.ReadOnly = true;
             this.mTxBRepoMountpoint.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.mTxBRepoMountpoint.SelectedText = "";
             this.mTxBRepoMountpoint.SelectionLength = 0;
@@ -219,7 +219,6 @@
             this.mTxBRepoName.MaxLength = 32767;
             this.mTxBRepoName.Name = "mTxBRepoName";
             this.mTxBRepoName.PasswordChar = '\0';
-            this.mTxBRepoName.ReadOnly = true;
             this.mTxBRepoName.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.mTxBRepoName.SelectedText = "";
             this.mTxBRepoName.SelectionLength = 0;

@@ -32,6 +32,7 @@ namespace GinClientApp.Dialogs
             mTabCtrl.TabIndex = (int) startPage;
 
             mLblStatus.Visible = false;
+            mLblWorking.Visible = false;
             mProgWorking.Visible = false;
 
             mTxBUsername.DataBindings.Add("Text", UserCredentials.Instance, "Username");
@@ -61,15 +62,19 @@ namespace GinClientApp.Dialogs
                 mLVwRepositories.Items.Add(new ListViewItem(new[]
                     {repo.Name, repo.PhysicalDirectory.FullName, repo.Mountpoint.FullName, repo.Address}));
             }
+            mLVwRepositories.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
         }
 
 
         private void mBtnOK_Click(object sender, EventArgs e)
         {
+            DialogResult = DialogResult.OK;
             GlobalOptions.Save();
             UserCredentials.Save();
 
             SaveRepoList();
+
+            Close();
         }
 
         private void UpdateDefaultdir(ref DirectoryInfo directory, MetroTextBox txtBox)
@@ -108,11 +113,15 @@ namespace GinClientApp.Dialogs
 
         private void mBtnCancel_Click(object sender, EventArgs e)
         {
+            DialogResult = DialogResult.Cancel;
+
             GlobalOptions.Instance = _storedOptions;
             UserCredentials.Instance = _storedCredentials;
 
             GlobalOptions.Save();
             UserCredentials.Save();
+
+            Close();
         }
 
         private void mBtnCheckout_Click(object sender, EventArgs e)

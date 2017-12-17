@@ -56,7 +56,7 @@
             this.mBtnCheckout = new MetroFramework.Controls.MetroButton();
             this.mBtnRemove = new MetroFramework.Controls.MetroButton();
             this.metroLabel10 = new MetroFramework.Controls.MetroLabel();
-            this.mLVwRepositories = new MetroFramework.Controls.MetroListView();
+            this.mLVwRepositories = new System.Windows.Forms.ListView();
             this.colHdName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colHdMountpoint = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colHdCheckoutDir = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -95,7 +95,7 @@
             this.mTabCtrl.Controls.Add(this.About);
             this.mTabCtrl.Location = new System.Drawing.Point(24, 64);
             this.mTabCtrl.Name = "mTabCtrl";
-            this.mTabCtrl.SelectedIndex = 1;
+            this.mTabCtrl.SelectedIndex = 2;
             this.mTabCtrl.Size = new System.Drawing.Size(492, 294);
             this.mTabCtrl.TabIndex = 0;
             this.mTabCtrl.UseSelectable = true;
@@ -546,34 +546,38 @@
             this.colHdMountpoint,
             this.colHdCheckoutDir,
             this.colHdAddress});
-            this.mLVwRepositories.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.mLVwRepositories.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.mLVwRepositories.FullRowSelect = true;
             this.mLVwRepositories.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.mLVwRepositories.HideSelection = false;
             this.mLVwRepositories.LabelWrap = false;
             this.mLVwRepositories.Location = new System.Drawing.Point(24, 33);
+            this.mLVwRepositories.MultiSelect = false;
             this.mLVwRepositories.Name = "mLVwRepositories";
-            this.mLVwRepositories.OwnerDraw = true;
             this.mLVwRepositories.Size = new System.Drawing.Size(457, 187);
             this.mLVwRepositories.TabIndex = 2;
             this.mLVwRepositories.UseCompatibleStateImageBehavior = false;
-            this.mLVwRepositories.UseSelectable = true;
-            this.mLVwRepositories.View = System.Windows.Forms.View.List;
+            this.mLVwRepositories.View = System.Windows.Forms.View.Details;
             // 
             // colHdName
             // 
             this.colHdName.Text = "Name";
+            this.colHdName.Width = 200;
             // 
             // colHdMountpoint
             // 
             this.colHdMountpoint.Text = "Mountpoint";
+            this.colHdMountpoint.Width = 200;
             // 
             // colHdCheckoutDir
             // 
             this.colHdCheckoutDir.Text = "Checkout Directory";
+            this.colHdCheckoutDir.Width = 200;
             // 
             // colHdAddress
             // 
             this.colHdAddress.Text = "Address";
+            this.colHdAddress.Width = 200;
             // 
             // About
             // 
@@ -780,7 +784,7 @@
             this.mLblWorking.TabIndex = 18;
             this.mLblWorking.Text = "Working...";
             // 
-            // MetroOptions
+            // MetroOptionsDlg
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -790,7 +794,7 @@
             this.Controls.Add(this.mProgWorking);
             this.Controls.Add(this.mBtnOK);
             this.Controls.Add(this.mTabCtrl);
-            this.Name = "MetroOptions";
+            this.Name = "MetroOptionsDlg";
             this.Text = "Options";
             this.Theme = MetroFramework.MetroThemeStyle.Default;
             this.mTabCtrl.ResumeLayout(false);
@@ -849,7 +853,7 @@
         private MetroFramework.Controls.MetroButton mBtnCheckout;
         private MetroFramework.Controls.MetroButton mBtnRemove;
         private MetroFramework.Controls.MetroLabel metroLabel10;
-        private MetroFramework.Controls.MetroListView mLVwRepositories;
+        private System.Windows.Forms.ListView mLVwRepositories;
         private System.Windows.Forms.ColumnHeader colHdName;
         private System.Windows.Forms.ColumnHeader colHdMountpoint;
         private System.Windows.Forms.ColumnHeader colHdCheckoutDir;
