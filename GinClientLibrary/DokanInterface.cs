@@ -325,10 +325,7 @@ namespace GinClientLibrary
                             if (fileisAnnexed)
                             {
                                 var a = info.TryResetTimeout(30000); //Annex operations take time; 
-                                OnFileOperationStarted(new FileOperationEventArgs {Success = false, File = fileName});
                                 var success = _repository.RetrieveFile(filePath);
-                                OnFileOperationCompleted(
-                                    new FileOperationEventArgs {Success = success, File = fileName});
                             }
                         }
                         else

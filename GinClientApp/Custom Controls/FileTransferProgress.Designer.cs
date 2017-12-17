@@ -39,9 +39,11 @@
             // 
             // progressBar
             // 
+            this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBar.Location = new System.Drawing.Point(3, 3);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(329, 23);
+            this.progressBar.Size = new System.Drawing.Size(324, 23);
             this.progressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.progressBar.TabIndex = 0;
             // 
@@ -100,6 +102,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
             this.Controls.Add(this.labelSpeed);
             this.Controls.Add(this.labelState);
             this.Controls.Add(this.labelFilename);
@@ -108,7 +111,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.progressBar);
             this.Name = "FileTransferProgress";
-            this.Size = new System.Drawing.Size(335, 97);
+            this.Size = new System.Drawing.Size(330, 99);
             this.Load += new System.EventHandler(this.FileTransferProgress_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

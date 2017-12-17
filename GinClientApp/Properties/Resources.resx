@@ -171,4 +171,86 @@
   <data name="GinApplicationContext_Gin_Service_has_stopped_communicating_" xml:space="preserve">
     <value>Gin Service has stopped communicating.</value>
   </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="gin_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\gin_icon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="gin_icon_desaturated" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\gin_icon_desaturated.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="gin_icon_desaturated1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\gin_icon_desaturated.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="License_Text" xml:space="preserve">
+    <value>BSD 3-Clause License
+
+Copyright (c) 2017, German Neuroinformatics Node (G-Node)
+                    
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of the copyright holder nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+This program uses the following third-party Software:
+
+1. Dokan (http://dokan-dev.github.io/)
+Copyright (C) 2015 - 2017 Adrien J. &lt;liryna.stark@gmail.com&gt; and Maxime C. &lt;maxime@islog.com&gt;
+Copyright (C) 2007 - 2011 Hiroki Asakawa &lt;info@dokan-dev.net&gt;
+2. DokanNet 
+Copyright (c) 2007 Hiroki Asakawa
+3. MetroModernUI
+Copyright (c) 2016 Dennis Magno
+4. Newtonsoft.Json
+Copyright (c) 2007 James Newton-King
+5. SharpShell
+Copyright (c) 2014 Dave Kerr
+6. WindowsAPICodePack
+Copyright (c) Microsoft</value>
+  </data>
+  <data name="Options_CheckSanity_No_checkout_address_has_been_entered_" xml:space="preserve">
+    <value>No checkout address has been entered.</value>
+  </data>
+  <data name="Options_CheckSanity_The_checkout_address_is_not_properly_formatted" xml:space="preserve">
+    <value>The checkout address is not properly formatted. Do you wish to create a new repository with the name {0} instead?</value>
+  </data>
+  <data name="Options_CheckSanity_The_checkout_directory_already_exists" xml:space="preserve">
+    <value>The checkout directory already exists. Do you wish to delete it?</value>
+  </data>
+  <data name="Options_CheckSanity_The_mountpoint_directory_already_exists" xml:space="preserve">
+    <value>The mountpoint directory already exists. Do you wish to delete it?</value>
+  </data>
+  <data name="Options_CheckSanity_The_mountpoint_and_checkout_directory_can_not_be_subdirectories" xml:space="preserve">
+    <value>The mountpoint and checkout directory can not be subdirectories of each other.</value>
+  </data>
+  <data name="Options__username___repository_" xml:space="preserve">
+    <value>&lt;username&gt;/&lt;repository&gt;</value>
+  </data>
+  <data name="GetUserCredentials_The_entered_Username_Password_combination_is_invalid" xml:space="preserve">
+    <value>The entered Username/Password combination is invalid</value>
+  </data>
+  <data name="Options_This_will_delete_the_repository" xml:space="preserve">
+    <value>This will delete the repository {0} and all associated data. Do you wish to continue?</value>
+  </data>
 </root>

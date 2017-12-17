@@ -79,6 +79,45 @@ namespace GinClientApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The entered Username/Password combination is invalid.
+        /// </summary>
+        internal static string GetUserCredentials_The_entered_Username_Password_combination_is_invalid {
+            get {
+                return ResourceManager.GetString("GetUserCredentials_The_entered_Username_Password_combination_is_invalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon gin_icon {
+            get {
+                object obj = ResourceManager.GetObject("gin_icon", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon gin_icon_desaturated {
+            get {
+                object obj = ResourceManager.GetObject("gin_icon_desaturated", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap gin_icon_desaturated1 {
+            get {
+                object obj = ResourceManager.GetObject("gin_icon_desaturated1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error while trying to access Gin Client Service.
         /// </summary>
         internal static string GinApplicationContext_Error_while_trying_to_access_Gin_Client_Service {
@@ -210,6 +249,92 @@ namespace GinClientApp.Properties {
         internal static string GinClientApp_Gin_Client_Warning {
             get {
                 return ResourceManager.GetString("GinClientApp_Gin_Client_Warning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to BSD 3-Clause License
+        ///
+        ///Copyright (c) 2017, German Neuroinformatics Node (G-Node)
+        ///                    
+        ///All rights reserved.
+        ///
+        ///Redistribution and use in source and binary forms, with or without
+        ///modification, are permitted provided that the following conditions are met:
+        ///
+        ///* Redistributions of source code must retain the above copyright notice, this
+        ///  list of conditions and the following disclaimer.
+        ///
+        ///* Redistributions in binary form must reproduce the above copyright notice,
+        ///  this list of conditions  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string License_Text {
+            get {
+                return ResourceManager.GetString("License_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;username&gt;/&lt;repository&gt;.
+        /// </summary>
+        internal static string Options__username___repository_ {
+            get {
+                return ResourceManager.GetString("Options__username___repository_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No checkout address has been entered..
+        /// </summary>
+        internal static string Options_CheckSanity_No_checkout_address_has_been_entered_ {
+            get {
+                return ResourceManager.GetString("Options_CheckSanity_No_checkout_address_has_been_entered_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The checkout address is not properly formatted. Do you wish to create a new repository with the name {0} instead?.
+        /// </summary>
+        internal static string Options_CheckSanity_The_checkout_address_is_not_properly_formatted {
+            get {
+                return ResourceManager.GetString("Options_CheckSanity_The_checkout_address_is_not_properly_formatted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The checkout directory already exists. Do you wish to delete it?.
+        /// </summary>
+        internal static string Options_CheckSanity_The_checkout_directory_already_exists {
+            get {
+                return ResourceManager.GetString("Options_CheckSanity_The_checkout_directory_already_exists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The mountpoint and checkout directory can not be subdirectories of each other..
+        /// </summary>
+        internal static string Options_CheckSanity_The_mountpoint_and_checkout_directory_can_not_be_subdirectories {
+            get {
+                return ResourceManager.GetString("Options_CheckSanity_The_mountpoint_and_checkout_directory_can_not_be_subdirectori" +
+                        "es", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The mountpoint directory already exists. Do you wish to delete it?.
+        /// </summary>
+        internal static string Options_CheckSanity_The_mountpoint_directory_already_exists {
+            get {
+                return ResourceManager.GetString("Options_CheckSanity_The_mountpoint_directory_already_exists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This will delete the repository {0} and all associated data. Do you wish to continue?.
+        /// </summary>
+        internal static string Options_This_will_delete_the_repository {
+            get {
+                return ResourceManager.GetString("Options_This_will_delete_the_repository", resourceCulture);
             }
         }
         
