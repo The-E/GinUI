@@ -227,7 +227,24 @@ Copyright (c) 2007 James Newton-King
 5. SharpShell
 Copyright (c) 2014 Dave Kerr
 6. WindowsAPICodePack
-Copyright (c) Microsoft
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</value>
+Copyright (c) Microsoft</value>
+  </data>
+  <data name="Options_CheckSanity_No_checkout_address_has_been_entered_" xml:space="preserve">
+    <value>No checkout address has been entered.</value>
+  </data>
+  <data name="Options_CheckSanity_The_checkout_address_is_not_properly_formatted" xml:space="preserve">
+    <value>The checkout address is not properly formatted. Do you wish to create a new repository with the name {0} instead?</value>
+  </data>
+  <data name="Options_CheckSanity_The_checkout_directory_already_exists" xml:space="preserve">
+    <value>The checkout directory already exists. Do you wish to delete it?</value>
+  </data>
+  <data name="Options_CheckSanity_The_mountpoint_directory_already_exists" xml:space="preserve">
+    <value>The mountpoint directory already exists. Do you wish to delete it?</value>
+  </data>
+  <data name="Options_CheckSanity_The_mountpoint_and_checkout_directory_can_not_be_subdirectories" xml:space="preserve">
+    <value>The mountpoint and checkout directory can not be subdirectories of each other.</value>
+  </data>
+  <data name="Options__username___repository_" xml:space="preserve">
+    <value>&lt;username&gt;/&lt;repository&gt;</value>
   </data>
 </root>

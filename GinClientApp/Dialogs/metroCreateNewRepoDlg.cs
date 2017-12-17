@@ -19,7 +19,8 @@ namespace GinClientApp.Dialogs
     public partial class MetroCreateNewRepoDlg : MetroFramework.Forms.MetroForm
     {
         [DllImport("user32.dll")]
-        private static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
+        private static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam,
+            [MarshalAs(UnmanagedType.LPWStr)] string lParam);
 
         public GinRepositoryData RepositoryData { get; }
 
@@ -34,14 +35,14 @@ namespace GinClientApp.Dialogs
             mTxBRepoCheckoutDir.Text = data.PhysicalDirectory.FullName;
             mTxBRepoMountpoint.Text = data.Mountpoint.FullName;
 
-            SendMessage(mTxBRepoAddress.Handle, 0x1501, 1, "<username>/<repository>");
+            SendMessage(mTxBRepoAddress.Handle, 0x1501, 1, Resources.Options__username___repository_);
         }
 
         private bool CheckSanity()
         {
             if (string.IsNullOrEmpty(mTxBRepoAddress.Text))
             {
-                MetroMessageBox.Show(this, "No checkout address has been entered.",
+                MetroMessageBox.Show(this, Resources.Options_CheckSanity_No_checkout_address_has_been_entered_,
                     Resources.GinClientApp_Gin_Client_Warning, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
@@ -49,9 +50,8 @@ namespace GinClientApp.Dialogs
             if (!mTxBRepoAddress.Text.Contains('/') && !RepositoryData.CreateNew)
             {
                 var result = MetroMessageBox.Show(this,
-                    "The checkout address is not properly formatted. Do you wish to create a new repository with the name " +
-                    mTxBRepoAddress.Text + " instead?", Resources.GinClientApp_Gin_Client_Warning,
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    string.Format(Resources.Options_CheckSanity_The_checkout_address_is_not_properly_formatted, mTxBRepoAddress.Text), 
+                    Resources.GinClientApp_Gin_Client_Warning, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                 RepositoryData.CreateNew = result == DialogResult.Yes;
                 RepositoryData.Name = RepositoryData.Address;
@@ -61,7 +61,9 @@ namespace GinClientApp.Dialogs
 
             if (Directory.Exists(RepositoryData.PhysicalDirectory.FullName))
             {
-                var result = MetroMessageBox.Show(this, "The checkout directory already exists. Do you wish to delete it?", Resources.GinClientApp_Gin_Client_Warning, MessageBoxButtons.YesNo);
+                var result = MetroMessageBox.Show(this,
+                    Resources.Options_CheckSanity_The_checkout_directory_already_exists,
+                    Resources.GinClientApp_Gin_Client_Warning, MessageBoxButtons.YesNo, MessageBoxIcon.Error);
                 if (result == DialogResult.Yes)
                 {
                     RepositoryData.PhysicalDirectory.Empty();
@@ -72,13 +74,25 @@ namespace GinClientApp.Dialogs
 
             if (Directory.Exists(RepositoryData.Mountpoint.FullName))
             {
-                var result = MetroMessageBox.Show(this, "The mountpoint directory already exists. Do you wish to delete it?", Resources.GinClientApp_Gin_Client_Warning, MessageBoxButtons.YesNo);
+                var result = MetroMessageBox.Show(this,
+                    Resources.Options_CheckSanity_The_mountpoint_directory_already_exists,
+                    Resources.GinClientApp_Gin_Client_Warning, MessageBoxButtons.YesNo, MessageBoxIcon.Error);
                 if (result == DialogResult.Yes)
                 {
                     RepositoryData.Mountpoint.Empty();
                     Directory.Delete(RepositoryData.Mountpoint.FullName);
                 }
                 else return false;
+            }
+
+            if (RepositoryData.Mountpoint.FullName.Contains(RepositoryData.PhysicalDirectory.FullName) ||
+                RepositoryData.PhysicalDirectory.FullName.Contains(RepositoryData.Mountpoint.FullName))
+            {
+                MetroMessageBox.Show(this,
+                    Resources.Options_CheckSanity_The_mountpoint_and_checkout_directory_can_not_be_subdirectories,
+                    Resources.GinClientApp_Gin_Client_Warning, MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                return false;
             }
 
             return true;
@@ -118,9 +132,11 @@ namespace GinClientApp.Dialogs
             {
                 RepositoryData.Name = strings[1];
                 if (RepositoryData.PhysicalDirectory.IsEqualTo(GlobalOptions.Instance.DefaultCheckoutDir))
-                    RepositoryData.PhysicalDirectory = new DirectoryInfo(RepositoryData.PhysicalDirectory.FullName + @"\" + RepositoryData.Name);
+                    RepositoryData.PhysicalDirectory =
+                        new DirectoryInfo(RepositoryData.PhysicalDirectory.FullName + @"\" + RepositoryData.Name);
                 if (RepositoryData.Mountpoint.IsEqualTo(GlobalOptions.Instance.DefaultMountpointDir))
-                    RepositoryData.Mountpoint = new DirectoryInfo(RepositoryData.Mountpoint.FullName + @"\" + RepositoryData.Name);
+                    RepositoryData.Mountpoint =
+                        new DirectoryInfo(RepositoryData.Mountpoint.FullName + @"\" + RepositoryData.Name);
 
                 mTxBRepoName.Text = RepositoryData.Name;
                 mTxBRepoCheckoutDir.Text = RepositoryData.PhysicalDirectory.FullName;

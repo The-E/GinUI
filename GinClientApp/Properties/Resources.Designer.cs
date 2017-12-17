@@ -266,6 +266,61 @@ namespace GinClientApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;username&gt;/&lt;repository&gt;.
+        /// </summary>
+        internal static string Options__username___repository_ {
+            get {
+                return ResourceManager.GetString("Options__username___repository_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No checkout address has been entered..
+        /// </summary>
+        internal static string Options_CheckSanity_No_checkout_address_has_been_entered_ {
+            get {
+                return ResourceManager.GetString("Options_CheckSanity_No_checkout_address_has_been_entered_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The checkout address is not properly formatted. Do you wish to create a new repository with the name {0} instead?.
+        /// </summary>
+        internal static string Options_CheckSanity_The_checkout_address_is_not_properly_formatted {
+            get {
+                return ResourceManager.GetString("Options_CheckSanity_The_checkout_address_is_not_properly_formatted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The checkout directory already exists. Do you wish to delete it?.
+        /// </summary>
+        internal static string Options_CheckSanity_The_checkout_directory_already_exists {
+            get {
+                return ResourceManager.GetString("Options_CheckSanity_The_checkout_directory_already_exists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The mountpoint and checkout directory can not be subdirectories of each other..
+        /// </summary>
+        internal static string Options_CheckSanity_The_mountpoint_and_checkout_directory_can_not_be_subdirectories {
+            get {
+                return ResourceManager.GetString("Options_CheckSanity_The_mountpoint_and_checkout_directory_can_not_be_subdirectori" +
+                        "es", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The mountpoint directory already exists. Do you wish to delete it?.
+        /// </summary>
+        internal static string Options_CheckSanity_The_mountpoint_directory_already_exists {
+            get {
+                return ResourceManager.GetString("Options_CheckSanity_The_mountpoint_directory_already_exists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This will delete the selected Repository and all associated data. Continue?.
         /// </summary>
         internal static string RepoManagement_Delete_repository {
