@@ -89,7 +89,7 @@ namespace GinClientLibrary
                         WindowStyle = ProcessWindowStyle.Hidden,
                         FileName = "cmd.exe",
                         WorkingDirectory = @"C:\",
-                        Arguments = "/C gin.exe create " + repoName,
+                        Arguments = "/C gin.exe create " + repoName + " --no-clone",
                         CreateNoWindow = true,
                         RedirectStandardOutput = true,
                         RedirectStandardError = true,
@@ -160,6 +160,35 @@ namespace GinClientLibrary
             var dInfo = new DirectoryInfo(filePath);
 
             return Repositories.Any(repo => repo.Mountpoint.IsEqualTo(dInfo));
+        }
+
+        public string GetGinCliVersion()
+        {
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    FileName = "cmd.exe",
+                    WorkingDirectory = @"C:\",
+                    Arguments = @"/C gin.exe --version",
+                    CreateNoWindow = true,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    RedirectStandardInput = true,
+                    UseShellExecute = false
+                }
+            };
+
+            process.OutputDataReceived += Process_OutputDataReceived;
+            Output.Clear();
+            process.Start();
+            process.BeginOutputReadLine();
+            var error = process.StandardError.ReadToEnd();
+
+            process.WaitForExit();
+
+            return Output.ToString();
         }
 
         public bool IsManagedPath(string filePath)
@@ -319,6 +348,11 @@ namespace GinClientLibrary
 
                 return 0;
             }
+        }
+
+        public string GetRemoteRepoList()
+        {
+            throw new NotImplementedException();
         }
     }
 }

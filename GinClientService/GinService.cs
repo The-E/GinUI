@@ -181,5 +181,21 @@ namespace GinService
             }
         }
 
+        string IGinService.GetGinCliVersion()
+        {
+            return RepositoryManager.Instance.GetGinCliVersion();
+        }
+
+        public string GetRemoteRepositoryList()
+        {
+            return RepositoryManager.Instance.GetRemoteRepoList();
+        }
+
+        
+        public void EndSession()
+        {
+            RepositoryManager.Instance.UnmountAllRepositories();
+            RepositoryManager.Instance.Logout();
+        }
     }
 }
