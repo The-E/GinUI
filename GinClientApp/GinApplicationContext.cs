@@ -3,13 +3,19 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.ServiceModel;
+using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Interop;
 using GinClientApp.Dialogs;
+using GinClientApp.Dialogs.ProgressDialog;
 using GinClientApp.GinService;
 using GinClientApp.Properties;
 using GinClientLibrary;
 using Newtonsoft.Json;
+using Application = System.Windows.Forms.Application;
+using MessageBox = System.Windows.Forms.MessageBox;
 using Timer = System.Timers.Timer;
 
 namespace GinClientApp
@@ -17,40 +23,12 @@ namespace GinClientApp
     [CallbackBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant)]
     public class GinApplicationContext : ApplicationContext, IGinServiceCallback
     {
-        public GinServiceClient ServiceClient;
+        public readonly GinServiceClient ServiceClient;
         private readonly NotifyIcon _trayIcon;
-        private readonly UserCredentials _credentials;
-        private GlobalOptions _options;
         private Timer _updateIntervalTimer;
 
-        public class GlobalOptions
-        {
-            public int RepositoryUpdateInterval { get; set; }
-            public CheckoutOption RepositoryCheckoutOption { get; set; }
-
-            public enum CheckoutOption
-            {
-                AnnexCheckout,
-                FullCheckout
-            }
-
-            public GlobalOptions()
-            {
-                RepositoryUpdateInterval = 15;
-                RepositoryCheckoutOption = CheckoutOption.AnnexCheckout;
-            }
-        }
-
-        private ProgressDisplayDlg _progressDisplayDlg;
-
-        private void RecreateClient()
-        {
-            ServiceClient = new GinServiceClient(new InstanceContext(this));
-            ServiceClient.InnerDuplexChannel.Faulted += InnerChannelOnFaulted;
-            ServiceClient.InnerChannel.OperationTimeout = TimeSpan.MaxValue;
-            ServiceClient.InnerDuplexChannel.OperationTimeout = TimeSpan.MaxValue;
-        }
-
+        private ProgressDialog _progressDlg;
+        
         public GinApplicationContext()
         {
             _trayIcon = new NotifyIcon
@@ -65,92 +43,52 @@ namespace GinClientApp
             if (!Directory.Exists(saveFilePath))
                 Directory.CreateDirectory(saveFilePath);
 
+            #region Login
+
+            if (!UserCredentials.Load())
+            {
+                var getUserCreds = new MetroGetUserCredentialsDlg(this);
+                var result = getUserCreds.ShowDialog(); //The Dialog will log us in and save the user credentials
+
+                if (result == DialogResult.Cancel) Exit(this, EventArgs.Empty);
+            }
+            else if (!ServiceClient.Login(UserCredentials.Instance.Username, UserCredentials.Instance.Password))
+            {
+                MessageBox.Show(Resources.GinApplicationContext_Error_while_trying_to_log_in_to_GIN, Resources.GinApplicationContext_Gin_Client_Error,
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                var getUserCreds = new MetroGetUserCredentialsDlg(this);
+                var result = getUserCreds.ShowDialog(); //The Dialog will log us in and save the user credentials
+
+                if (result == DialogResult.Cancel) Exit(this, EventArgs.Empty);
+            }
+
+            UserCredentials.Save();
+
+            #endregion
+
             #region Read options
 
-            if (File.Exists(saveFilePath + @"\GlobalOptionsDlg.json"))
+            if (!GlobalOptions.Load())
             {
-                try
-                {
-                    var text = File.OpenText(saveFilePath + @"\GlobalOptionsDlg.json").ReadToEnd();
-                    _options = JsonConvert.DeserializeObject<GlobalOptions>(text);
-                }
-                catch
-                {
-                    var optionsDlg = new GlobalOptionsDlg(new GlobalOptions());
-                    var res = optionsDlg.ShowDialog();
+                var optionsDlg = new MetroOptionsDlg(this, MetroOptionsDlg.Page.GlobalOptions);
+                var result = optionsDlg.ShowDialog();
 
-                    _options = res == DialogResult.OK ? optionsDlg.Options : new GlobalOptions();
-                }
-            }
-            else
-            {
-                var optionsDlg = new GlobalOptionsDlg(new GlobalOptions());
-                var res = optionsDlg.ShowDialog();
-
-                _options = res == DialogResult.OK ? optionsDlg.Options : new GlobalOptions();
-
-                var fs = File.CreateText(saveFilePath + @"\GlobalOptionsDlg.json");
-                fs.Write(JsonConvert.SerializeObject(_options));
-                fs.Flush();
-                fs.Close();
+                if (result == DialogResult.Cancel)
+                    Exit(this, EventArgs.Empty);
             }
 
-            if (_options.RepositoryUpdateInterval > 0)
+            if (GlobalOptions.Instance.RepositoryUpdateInterval > 0)
             {
-                _updateIntervalTimer = new Timer(_options.RepositoryUpdateInterval * 1000) {AutoReset = true};
+                _updateIntervalTimer = new Timer(GlobalOptions.Instance.RepositoryUpdateInterval * 1000) {AutoReset = true};
                 _updateIntervalTimer.Elapsed += (sender, args) =>
                 {
                     ServiceClient.DownloadAllUpdateInfo();
                 };
             }
 
-            #endregion
+            GlobalOptions.Save();
 
-            #region Login
-            bool loggedIn = false;
-            if (File.Exists(saveFilePath + @"\Credentials.json"))
-            {
-                try
-                {
-                    var text = File.OpenText(saveFilePath + @"\Credentials.json").ReadToEnd();
-                    _credentials = JsonConvert.DeserializeObject<UserCredentials>(text);
-                    
-                    if (!ServiceClient.Login(_credentials.Username, _credentials.Password))
-                    {
-                        MessageBox.Show(Resources.GinApplicationContext_Error_while_trying_to_log_in_to_GIN, Resources.GinApplicationContext_Gin_Client_Error,
-                            MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                    else
-                    {
-                        loggedIn = true;
-                    }
-                }
-                catch (Exception e)
-                {
-                    loggedIn = false;
-                }
-            }
-            else
-            {
-                var loginDlg = new GetUserCredentialsDlg(this);
-                var loginResult = loginDlg.ShowDialog();
-
-                if (loginResult == DialogResult.OK)
-                {
-                    var credentials =
-                        new UserCredentials() {Username = loginDlg.Username, Password = loginDlg.Password };
-
-                    var fstream = File.CreateText(saveFilePath + @"\Credentials.json");
-                    fstream.Write(JsonConvert.SerializeObject(credentials));
-                    fstream.Flush();
-                    fstream.Close();
-
-                    loggedIn = true;
-                }
-            }
-
-            if (!loggedIn)
-                Exit(null, new EventArgs());
             #endregion
 
             #region Set up repositories
@@ -165,7 +103,7 @@ namespace GinClientApp
                     foreach (var repo in repos)
                     {
                         ServiceClient.AddRepository(repo.PhysicalDirectory.FullName, repo.Mountpoint.FullName, repo.Name,
-                            repo.Address, _options.RepositoryCheckoutOption == GlobalOptions.CheckoutOption.FullCheckout, false);
+                            repo.Address, GlobalOptions.Instance.RepositoryCheckoutOption == GlobalOptions.CheckoutOption.FullCheckout, false);
                     }
                 }
                 catch (Exception e)
@@ -237,7 +175,7 @@ namespace GinClientApp
             if (!files.Any())
                 return; //Nothing to upload here
 
-            var uploadfiledlg = new UploadFilesDlg(files);
+            var uploadfiledlg = new MetroUploadFilesDlg(files);
             var res = uploadfiledlg.ShowDialog();
 
             if (res == DialogResult.Cancel) return;
@@ -250,30 +188,27 @@ namespace GinClientApp
 
         private void ShowOptionsMenuItemHandler(object sender, EventArgs e)
         {
-            var optionsDlg = new GlobalOptionsDlg(_options);
+            var optionsDlg = new MetroOptionsDlg(this, MetroOptionsDlg.Page.GlobalOptions);
             var res = optionsDlg.ShowDialog();
 
-            if (res == DialogResult.OK)
-            {
-                _options = optionsDlg.Options;
-                if (_options.RepositoryUpdateInterval <= 0)
-                {
-                    _updateIntervalTimer?.Stop();
-                    _updateIntervalTimer = null;
-                    return;
-                }
+            if (res != DialogResult.OK) return;
 
-                if (_updateIntervalTimer == null)
-                {
-                    _updateIntervalTimer = new Timer(_options.RepositoryUpdateInterval * 1000) { AutoReset = true };
-                    _updateIntervalTimer.Elapsed += (sender1, args) => { 
-                        ServiceClient.DownloadAllUpdateInfo();
-                    };
-                }
-                _updateIntervalTimer.Stop();
-                _updateIntervalTimer.Interval = _options.RepositoryUpdateInterval * 1000;
-                _updateIntervalTimer.Start();
+            if (GlobalOptions.Instance.RepositoryUpdateInterval <= 0)
+            {
+                _updateIntervalTimer?.Stop();
+                return;
             }
+
+            if (_updateIntervalTimer == null)
+            {
+                _updateIntervalTimer = new Timer(GlobalOptions.Instance.RepositoryUpdateInterval * 1000) { AutoReset = true };
+                _updateIntervalTimer.Elapsed += (sender1, args) => { 
+                    ServiceClient.DownloadAllUpdateInfo();
+                };
+            }
+            _updateIntervalTimer.Stop();
+            _updateIntervalTimer.Interval = GlobalOptions.Instance.RepositoryUpdateInterval * 1000;
+            _updateIntervalTimer.Start();
         }
 
         private void UpdateRepoMenuItemHandler(object sender, EventArgs e)
@@ -285,37 +220,9 @@ namespace GinClientApp
 
         private void ManageRepositoriesMenuItemHandler(object sender, EventArgs e)
         {
-            var repomanager = new RepoManagementDlg(_options, _credentials, this);
+            var repomanager = new MetroOptionsDlg(this, MetroOptionsDlg.Page.Repositories);
             repomanager.Closed += (o, args) => { if (_trayIcon!= null) _trayIcon.ContextMenu = new ContextMenu(BuildContextMenu()); };
             repomanager.ShowDialog();
-            
-            ServiceClient.UnmmountAllRepositories();
-
-            if (repomanager.Repositories.Count == 0) return;
-
-            foreach (var repo in repomanager.Repositories)
-            {
-                ServiceClient.AddRepository(repo.PhysicalDirectory.FullName, repo.Mountpoint.FullName, repo.Name,
-                    repo.Address,
-                    _options.RepositoryCheckoutOption ==
-                    GinApplicationContext.GlobalOptions.CheckoutOption.FullCheckout, repo.CreateNew);
-
-                repo.CreateNew = false;
-            }
-            var saveFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
-                           @"\g-node\GinWindowsClient\SavedRepositories.json";
-
-            if (!Directory.Exists(Path.GetDirectoryName(saveFile)))
-                Directory.CreateDirectory(Path.GetDirectoryName(saveFile));
-
-            if (File.Exists(saveFile))
-                File.Delete(saveFile);
-
-
-            var fs = File.CreateText(saveFile);
-            fs.Write(JsonConvert.SerializeObject(repomanager.Repositories));
-            fs.Flush();
-            fs.Close();
         }
 
         private void UnmountRepoMenuItemHandler(object sender, EventArgs e)
@@ -326,7 +233,6 @@ namespace GinClientApp
             if (string.CompareOrdinal(Resources.GinApplicationContext_Unmount, mItem.Text) == 0)
             {
                 ServiceClient.UnmountRepository(repo.Name);
-
                 mItem.Text = Resources.GinApplicationContext_Mount;
             }
             else
@@ -336,14 +242,37 @@ namespace GinClientApp
             }
         }
 
+        /*
+         *		
+        void ProgressDialogTestWithCancelButtonAndProgressDisplay()
+		{
+			// Easy way to pass data to the async method
+			int millisecondsTimeout = 250;
+
+			ProgressDialogResult result = ProgressDialog.Execute(this, "Loading data", () => {
+
+				for(int i = 1; i <= 20; i++)
+				{
+					ProgressDialog.Current.ReportWithCancellationCheck(i * 5, "Executing step {0}/20...", i);
+
+					Thread.Sleep(millisecondsTimeout);
+				}
+
+			}, new ProgressDialogSettings(true, true, false));
+
+			if(result.Cancelled)
+				MessageBox.Show("ProgressDialog cancelled.");
+			else if(result.OperationFailed)
+				MessageBox.Show("ProgressDialog failed.");
+			else
+				MessageBox.Show("ProgressDialog successfully executed.");
+		} 
+         */
+
+
         void IGinServiceCallback.FileOperationFinished(string filename, string repository, bool success)
         {
-            _progressDisplayDlg.NestingLevel--;
-
-            if (_progressDisplayDlg.NestingLevel != 0) return;
-
-            _progressDisplayDlg.Invoke(new Action(() => _progressDisplayDlg.Close()));
-            _progressDisplayDlg = null;
+            
         }
 
         void IGinServiceCallback.FileOperationStarted(string filename, string repository)
@@ -353,13 +282,17 @@ namespace GinClientApp
                 string.Format(Resources.GinApplicationContext_FileOperation_Retrieving, Path.GetFileName(filename), repository);
             _trayIcon.ShowBalloonTip(5000);
 
-            if (_progressDisplayDlg == null)
-                _progressDisplayDlg = new ProgressDisplayDlg() {NestingLevel = 1};
-            else
-                _progressDisplayDlg.NestingLevel++;
-            
-            _progressDisplayDlg.Show();
+            var hwndSource = HwndSource.FromHwnd(GetDesktopWindow());
+            if (hwndSource != null)
+                ProgressDialog.Execute(hwndSource.RootVisual as Window, "Gin operation in progress", () =>
+                {
+
+                });
+
         }
+
+        [DllImport("user32.dll", EntryPoint = "GetDesktopWindow")]
+        private static extern IntPtr GetDesktopWindow();
 
         void IGinServiceCallback.FileOperationProgress(string filename, string repository, int progress,
             string speed, string state)
@@ -367,7 +300,8 @@ namespace GinClientApp
             Console.WriteLine("Filename: {0}, Repo: {1}, Progress: {2}, Speed: {3}, State: {4}", filename, repository,
                 progress, speed, state);
             
-            _progressDisplayDlg?.SetProgressBarState(filename, state, progress, speed);
+            ProgressDialog.Current?.Report(progress, "Filename: {0}, Repo: {1}, Progress: {2}, Speed: {3}, State: {4}", filename, repository,
+                    progress, speed, state);
         }
 
         void IGinServiceCallback.GinServiceError(string message)
@@ -389,18 +323,10 @@ namespace GinClientApp
 
             if (ServiceClient != null && ServiceClient.InnerChannel.State != CommunicationState.Faulted)
             {
-                ServiceClient.UnmmountAllRepositories();
-                ServiceClient.Logout();
-                ServiceClient.Close();
+                ServiceClient.EndSession();
             }
 
             Application.Exit();
-        }
-
-        public struct UserCredentials
-        {
-            public string Username { get; set; }
-            public string Password { get; set; }
         }
     }
 }
