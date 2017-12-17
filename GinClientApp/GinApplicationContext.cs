@@ -3,13 +3,19 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.ServiceModel;
+using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Interop;
 using GinClientApp.Dialogs;
+using GinClientApp.Dialogs.ProgressDialog;
 using GinClientApp.GinService;
 using GinClientApp.Properties;
 using GinClientLibrary;
 using Newtonsoft.Json;
+using Application = System.Windows.Forms.Application;
+using MessageBox = System.Windows.Forms.MessageBox;
 using Timer = System.Timers.Timer;
 
 namespace GinClientApp
@@ -20,7 +26,7 @@ namespace GinClientApp
         private readonly NotifyIcon _trayIcon;
         private Timer _updateIntervalTimer;
 
-        private ProgressDisplayDlg _progressDisplayDlg;
+        private ProgressDialog _progressDlg;
         
         public GinApplicationContext()
         {
@@ -235,15 +241,37 @@ namespace GinClientApp
             }
         }
 
+        /*
+         *		
+        void ProgressDialogTestWithCancelButtonAndProgressDisplay()
+		{
+			// Easy way to pass data to the async method
+			int millisecondsTimeout = 250;
+
+			ProgressDialogResult result = ProgressDialog.Execute(this, "Loading data", () => {
+
+				for(int i = 1; i <= 20; i++)
+				{
+					ProgressDialog.Current.ReportWithCancellationCheck(i * 5, "Executing step {0}/20...", i);
+
+					Thread.Sleep(millisecondsTimeout);
+				}
+
+			}, new ProgressDialogSettings(true, true, false));
+
+			if(result.Cancelled)
+				MessageBox.Show("ProgressDialog cancelled.");
+			else if(result.OperationFailed)
+				MessageBox.Show("ProgressDialog failed.");
+			else
+				MessageBox.Show("ProgressDialog successfully executed.");
+		} 
+         */
+
+
         void IGinServiceCallback.FileOperationFinished(string filename, string repository, bool success)
         {
-            //_progressDisplayDlg.NestingLevel--;
-
-            //if (_progressDisplayDlg.NestingLevel == 0)
-            //{
-            //    _progressDisplayDlg.Close();
-            //    _progressDisplayDlg = null;
-            //}
+            
         }
 
         void IGinServiceCallback.FileOperationStarted(string filename, string repository)
@@ -253,21 +281,26 @@ namespace GinClientApp
                 string.Format(Resources.GinApplicationContext_FileOperation_Retrieving, Path.GetFileName(filename), repository);
             _trayIcon.ShowBalloonTip(5000);
 
-            //if (_progressDisplayDlg == null)
-            //    _progressDisplayDlg = new ProgressDisplayDlg() {NestingLevel = 1};
-            //else
-            //    _progressDisplayDlg.NestingLevel++;
-            
-            //_progressDisplayDlg.Show();
+            var hwndSource = HwndSource.FromHwnd(GetDesktopWindow());
+            if (hwndSource != null)
+                ProgressDialog.Execute(hwndSource.RootVisual as Window, "Gin operation in progress", () =>
+                {
+
+                });
+
         }
+
+        [DllImport("user32.dll", EntryPoint = "GetDesktopWindow")]
+        private static extern IntPtr GetDesktopWindow();
 
         void IGinServiceCallback.FileOperationProgress(string filename, string repository, int progress,
             string speed, string state)
         {
             Console.WriteLine("Filename: {0}, Repo: {1}, Progress: {2}, Speed: {3}, State: {4}", filename, repository,
                 progress, speed, state);
-
-            _progressDisplayDlg?.SetProgressBarState(filename, state, progress, speed);
+            
+            ProgressDialog.Current?.Report(progress, "Filename: {0}, Repo: {1}, Progress: {2}, Speed: {3}, State: {4}", filename, repository,
+                    progress, speed, state);
         }
 
         void IGinServiceCallback.GinServiceError(string message)

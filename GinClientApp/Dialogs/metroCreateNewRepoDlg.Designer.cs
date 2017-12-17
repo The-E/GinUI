@@ -48,7 +48,7 @@
             this.mBtnPickRepoMountpointDir.Location = new System.Drawing.Point(491, 117);
             this.mBtnPickRepoMountpointDir.Name = "mBtnPickRepoMountpointDir";
             this.mBtnPickRepoMountpointDir.Size = new System.Drawing.Size(22, 23);
-            this.mBtnPickRepoMountpointDir.TabIndex = 30;
+            this.mBtnPickRepoMountpointDir.TabIndex = 3;
             this.mBtnPickRepoMountpointDir.Text = "...";
             this.mBtnPickRepoMountpointDir.UseSelectable = true;
             this.mBtnPickRepoMountpointDir.Click += new System.EventHandler(this.mBtnPickRepoMountpointDir_Click);
@@ -59,7 +59,7 @@
             this.mBtnPickRepoCheckoutDir.Location = new System.Drawing.Point(491, 89);
             this.mBtnPickRepoCheckoutDir.Name = "mBtnPickRepoCheckoutDir";
             this.mBtnPickRepoCheckoutDir.Size = new System.Drawing.Size(22, 23);
-            this.mBtnPickRepoCheckoutDir.TabIndex = 28;
+            this.mBtnPickRepoCheckoutDir.TabIndex = 2;
             this.mBtnPickRepoCheckoutDir.Text = "...";
             this.mBtnPickRepoCheckoutDir.UseSelectable = true;
             this.mBtnPickRepoCheckoutDir.Click += new System.EventHandler(this.mBtnPickRepoCheckoutDir_Click);
@@ -67,7 +67,7 @@
             // metroLabel1
             // 
             this.metroLabel1.AutoSize = true;
-            this.metroLabel1.Location = new System.Drawing.Point(23, 146);
+            this.metroLabel1.Location = new System.Drawing.Point(23, 60);
             this.metroLabel1.Name = "metroLabel1";
             this.metroLabel1.Size = new System.Drawing.Size(123, 19);
             this.metroLabel1.TabIndex = 31;
@@ -91,7 +91,7 @@
             this.mTxBRepoAddress.CustomButton.Visible = false;
             this.mTxBRepoAddress.Lines = new string[] {
         "metroTextBox5"};
-            this.mTxBRepoAddress.Location = new System.Drawing.Point(152, 146);
+            this.mTxBRepoAddress.Location = new System.Drawing.Point(152, 60);
             this.mTxBRepoAddress.MaxLength = 32767;
             this.mTxBRepoAddress.Name = "mTxBRepoAddress";
             this.mTxBRepoAddress.PasswordChar = '\0';
@@ -101,7 +101,7 @@
             this.mTxBRepoAddress.SelectionStart = 0;
             this.mTxBRepoAddress.ShortcutsEnabled = true;
             this.mTxBRepoAddress.Size = new System.Drawing.Size(361, 23);
-            this.mTxBRepoAddress.TabIndex = 31;
+            this.mTxBRepoAddress.TabIndex = 1;
             this.mTxBRepoAddress.Text = "metroTextBox5";
             this.mTxBRepoAddress.UseSelectable = true;
             this.mTxBRepoAddress.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
@@ -139,6 +139,7 @@
             this.mTxBRepoMountpoint.ShortcutsEnabled = true;
             this.mTxBRepoMountpoint.Size = new System.Drawing.Size(333, 23);
             this.mTxBRepoMountpoint.TabIndex = 29;
+            this.mTxBRepoMountpoint.TabStop = false;
             this.mTxBRepoMountpoint.Text = "metroTextBox4";
             this.mTxBRepoMountpoint.UseSelectable = true;
             this.mTxBRepoMountpoint.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
@@ -182,7 +183,8 @@
             this.mTxBRepoCheckoutDir.SelectionStart = 0;
             this.mTxBRepoCheckoutDir.ShortcutsEnabled = true;
             this.mTxBRepoCheckoutDir.Size = new System.Drawing.Size(333, 23);
-            this.mTxBRepoCheckoutDir.TabIndex = 27;
+            this.mTxBRepoCheckoutDir.TabIndex = 2;
+            this.mTxBRepoCheckoutDir.TabStop = false;
             this.mTxBRepoCheckoutDir.Text = "metroTextBox3";
             this.mTxBRepoCheckoutDir.UseSelectable = true;
             this.mTxBRepoCheckoutDir.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
@@ -215,7 +217,7 @@
             this.mTxBRepoName.CustomButton.Visible = false;
             this.mTxBRepoName.Lines = new string[] {
         "metroTextBox2"};
-            this.mTxBRepoName.Location = new System.Drawing.Point(152, 60);
+            this.mTxBRepoName.Location = new System.Drawing.Point(152, 146);
             this.mTxBRepoName.MaxLength = 32767;
             this.mTxBRepoName.Name = "mTxBRepoName";
             this.mTxBRepoName.PasswordChar = '\0';
@@ -225,7 +227,7 @@
             this.mTxBRepoName.SelectionStart = 0;
             this.mTxBRepoName.ShortcutsEnabled = true;
             this.mTxBRepoName.Size = new System.Drawing.Size(361, 23);
-            this.mTxBRepoName.TabIndex = 25;
+            this.mTxBRepoName.TabIndex = 4;
             this.mTxBRepoName.Text = "metroTextBox2";
             this.mTxBRepoName.UseSelectable = true;
             this.mTxBRepoName.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
@@ -235,7 +237,7 @@
             // metroLabel4
             // 
             this.metroLabel4.AutoSize = true;
-            this.metroLabel4.Location = new System.Drawing.Point(23, 60);
+            this.metroLabel4.Location = new System.Drawing.Point(25, 146);
             this.metroLabel4.Name = "metroLabel4";
             this.metroLabel4.Size = new System.Drawing.Size(45, 19);
             this.metroLabel4.TabIndex = 24;
@@ -246,7 +248,7 @@
             this.mBtnOK.Location = new System.Drawing.Point(25, 184);
             this.mBtnOK.Name = "mBtnOK";
             this.mBtnOK.Size = new System.Drawing.Size(75, 23);
-            this.mBtnOK.TabIndex = 32;
+            this.mBtnOK.TabIndex = 5;
             this.mBtnOK.Text = "OK";
             this.mBtnOK.UseSelectable = true;
             this.mBtnOK.Click += new System.EventHandler(this.mBtnOK_Click);
@@ -256,7 +258,7 @@
             this.mBtnCancel.Location = new System.Drawing.Point(106, 184);
             this.mBtnCancel.Name = "mBtnCancel";
             this.mBtnCancel.Size = new System.Drawing.Size(75, 23);
-            this.mBtnCancel.TabIndex = 33;
+            this.mBtnCancel.TabIndex = 6;
             this.mBtnCancel.Text = "Cancel";
             this.mBtnCancel.UseSelectable = true;
             this.mBtnCancel.Click += new System.EventHandler(this.mBtnCancel_Click);
