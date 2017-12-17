@@ -1,6 +1,6 @@
 ﻿namespace GinClientApp.Dialogs
 {
-    partial class MetroOptions
+    partial class MetroOptionsDlg
     {
         /// <summary>
         /// Required designer variable.

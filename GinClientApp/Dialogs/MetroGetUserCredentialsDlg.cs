@@ -11,11 +11,11 @@ using GinClientApp.Properties;
 
 namespace GinClientApp.Dialogs
 {
-    public partial class GetUserCredentialsMetro : MetroFramework.Forms.MetroForm
+    public partial class MetroGetUserCredentialsDlg : MetroFramework.Forms.MetroForm
     {
         private GinApplicationContext _parentContext;
         
-        public GetUserCredentialsMetro(GinApplicationContext parentContext)
+        public MetroGetUserCredentialsDlg(GinApplicationContext parentContext)
         {
             InitializeComponent();
             metroLabel1.TabStop = false;

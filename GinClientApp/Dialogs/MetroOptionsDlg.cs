@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace GinClientApp.Dialogs
 {
-    public partial class MetroOptions : MetroFramework.Forms.MetroForm
+    public partial class MetroOptionsDlg : MetroFramework.Forms.MetroForm
     {
         private readonly GlobalOptions _storedOptions;
         private readonly UserCredentials _storedCredentials;
@@ -23,7 +23,7 @@ namespace GinClientApp.Dialogs
             About
         }
 
-        public MetroOptions(GinApplicationContext parentContext, Page startPage)
+        public MetroOptionsDlg(GinApplicationContext parentContext, Page startPage)
         {
             InitializeComponent();
 

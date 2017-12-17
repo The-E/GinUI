@@ -1,6 +1,6 @@
 ﻿namespace GinClientApp.Dialogs
 {
-    partial class GetUserCredentialsMetro
+    partial class MetroGetUserCredentialsDlg
     {
         /// <summary>
         /// Required designer variable.

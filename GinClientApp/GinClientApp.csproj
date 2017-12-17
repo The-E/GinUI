@@ -83,11 +83,11 @@
     <Compile Include="Custom Controls\FileTransferProgress.Designer.cs">
       <DependentUpon>FileTransferProgress.cs</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\GetUserCredentialsMetro.cs">
+    <Compile Include="Dialogs\MetroGetUserCredentialsDlg.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Dialogs\GetUserCredentialsMetro.Designer.cs">
-      <DependentUpon>GetUserCredentialsMetro.cs</DependentUpon>
+    <Compile Include="Dialogs\MetroGetUserCredentialsDlg.Designer.cs">
+      <DependentUpon>MetroGetUserCredentialsDlg.cs</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\MetroCreateNewRepoDlg.cs">
       <SubType>Form</SubType>
@@ -95,17 +95,17 @@
     <Compile Include="Dialogs\MetroCreateNewRepoDlg.Designer.cs">
       <DependentUpon>MetroCreateNewRepoDlg.cs</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\MetroOptions.cs">
+    <Compile Include="Dialogs\MetroOptionsDlg.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Dialogs\MetroOptions.Designer.cs">
-      <DependentUpon>MetroOptions.cs</DependentUpon>
+    <Compile Include="Dialogs\MetroOptionsDlg.Designer.cs">
+      <DependentUpon>MetroOptionsDlg.cs</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\UploadFilesDlg.cs">
+    <Compile Include="Dialogs\MetroUploadFilesDlg.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Dialogs\UploadFilesDlg.Designer.cs">
-      <DependentUpon>UploadFilesDlg.cs</DependentUpon>
+    <Compile Include="Dialogs\MetroUploadFilesDlg.Designer.cs">
+      <DependentUpon>MetroUploadFilesDlg.cs</DependentUpon>
     </Compile>
     <Compile Include="GinApplicationContext.cs" />
     <Compile Include="GlobalOptions.cs" />
@@ -128,20 +128,17 @@
     <EmbeddedResource Include="Custom Controls\FileTransferProgress.resx">
       <DependentUpon>FileTransferProgress.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\GetUserCredentialsMetro.resx">
-      <DependentUpon>GetUserCredentialsMetro.cs</DependentUpon>
+    <EmbeddedResource Include="Dialogs\MetroGetUserCredentialsDlg.resx">
+      <DependentUpon>MetroGetUserCredentialsDlg.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\MetroCreateNewRepoDlg.resx">
       <DependentUpon>MetroCreateNewRepoDlg.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\MetroOptions.resx">
-      <DependentUpon>MetroOptions.cs</DependentUpon>
+    <EmbeddedResource Include="Dialogs\MetroOptionsDlg.resx">
+      <DependentUpon>MetroOptionsDlg.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\UploadFilesDlg.en.resx">
-      <DependentUpon>UploadFilesDlg.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\UploadFilesDlg.resx">
-      <DependentUpon>UploadFilesDlg.cs</DependentUpon>
+    <EmbeddedResource Include="Dialogs\MetroUploadFilesDlg.resx">
+      <DependentUpon>MetroUploadFilesDlg.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -219,7 +216,7 @@
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="gin_icon_desaturated.png" />
+    <EmbeddedResource Include="gin_icon_desaturated.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

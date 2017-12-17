@@ -16,9 +16,8 @@ namespace GinClientApp
 {
     public class GinApplicationContext : ApplicationContext, IGinServiceCallback
     {
-        public GinServiceClient ServiceClient;
+        public readonly GinServiceClient ServiceClient;
         private readonly NotifyIcon _trayIcon;
-        private readonly UserCredentials _credentials;
         private Timer _updateIntervalTimer;
 
         private ProgressDisplayDlg _progressDisplayDlg;
@@ -41,7 +40,7 @@ namespace GinClientApp
 
             if (!UserCredentials.Load())
             {
-                var getUserCreds = new GetUserCredentialsMetro(this);
+                var getUserCreds = new MetroGetUserCredentialsDlg(this);
                 var result = getUserCreds.ShowDialog(); //The Dialog will log us in and save the user credentials
 
                 if (result == DialogResult.Cancel) Exit(this, EventArgs.Empty);
@@ -51,7 +50,7 @@ namespace GinClientApp
                 MessageBox.Show(Resources.GinApplicationContext_Error_while_trying_to_log_in_to_GIN, Resources.GinApplicationContext_Gin_Client_Error,
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                var getUserCreds = new GetUserCredentialsMetro(this);
+                var getUserCreds = new MetroGetUserCredentialsDlg(this);
                 var result = getUserCreds.ShowDialog(); //The Dialog will log us in and save the user credentials
 
                 if (result == DialogResult.Cancel) Exit(this, EventArgs.Empty);
@@ -65,7 +64,7 @@ namespace GinClientApp
 
             if (!GlobalOptions.Load())
             {
-                var optionsDlg = new MetroOptions(this, MetroOptions.Page.GlobalOptions);
+                var optionsDlg = new MetroOptionsDlg(this, MetroOptionsDlg.Page.GlobalOptions);
                 var result = optionsDlg.ShowDialog();
 
                 if (result == DialogResult.Cancel)
@@ -169,7 +168,7 @@ namespace GinClientApp
             if (!files.Any())
                 return; //Nothing to upload here
 
-            var uploadfiledlg = new UploadFilesDlg(files);
+            var uploadfiledlg = new MetroUploadFilesDlg(files);
             var res = uploadfiledlg.ShowDialog();
 
             if (res == DialogResult.Cancel) return;
@@ -182,7 +181,7 @@ namespace GinClientApp
 
         private void ShowOptionsMenuItemHandler(object sender, EventArgs e)
         {
-            var optionsDlg = new MetroOptions(this, MetroOptions.Page.GlobalOptions);
+            var optionsDlg = new MetroOptionsDlg(this, MetroOptionsDlg.Page.GlobalOptions);
             var res = optionsDlg.ShowDialog();
 
             if (res != DialogResult.OK) return;
@@ -214,7 +213,7 @@ namespace GinClientApp
 
         private void ManageRepositoriesMenuItemHandler(object sender, EventArgs e)
         {
-            var repomanager = new MetroOptions(this, MetroOptions.Page.Repositories);
+            var repomanager = new MetroOptionsDlg(this, MetroOptionsDlg.Page.Repositories);
             repomanager.Closed += (o, args) => { if (_trayIcon!= null) _trayIcon.ContextMenu = new ContextMenu(BuildContextMenu()); };
             repomanager.ShowDialog();
         }
