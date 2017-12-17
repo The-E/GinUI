@@ -83,35 +83,11 @@
     <Compile Include="Custom Controls\FileTransferProgress.Designer.cs">
       <DependentUpon>FileTransferProgress.cs</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\GetGINCmdlineDlg.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\GetGINCmdlineDlg.Designer.cs">
-      <DependentUpon>GetGINCmdlineDlg.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\GetRepoNameDlg.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\GetRepoNameDlg.Designer.cs">
-      <DependentUpon>GetRepoNameDlg.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\GetUserCredentialsDlg.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\GetUserCredentialsDlg.Designer.cs">
-      <DependentUpon>GetUserCredentialsDlg.cs</DependentUpon>
-    </Compile>
     <Compile Include="Dialogs\GetUserCredentialsMetro.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Dialogs\GetUserCredentialsMetro.Designer.cs">
       <DependentUpon>GetUserCredentialsMetro.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\GlobalOptionsDlg.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\GlobalOptionsDlg.Designer.cs">
-      <DependentUpon>GlobalOptionsDlg.cs</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\MetroCreateNewRepoDlg.cs">
       <SubType>Form</SubType>
@@ -124,12 +100,6 @@
     </Compile>
     <Compile Include="Dialogs\MetroOptions.Designer.cs">
       <DependentUpon>MetroOptions.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\RepoManagementDlg.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\RepoManagementDlg.Designer.cs">
-      <DependentUpon>RepoManagementDlg.cs</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\UploadFilesDlg.cs">
       <SubType>Form</SubType>
@@ -158,35 +128,14 @@
     <EmbeddedResource Include="Custom Controls\FileTransferProgress.resx">
       <DependentUpon>FileTransferProgress.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\GetGINCmdlineDlg.en.resx">
-      <DependentUpon>GetGINCmdlineDlg.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\GetGINCmdlineDlg.resx">
-      <DependentUpon>GetGINCmdlineDlg.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\GetRepoNameDlg.resx">
-      <DependentUpon>GetRepoNameDlg.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\GetUserCredentialsDlg.resx">
-      <DependentUpon>GetUserCredentialsDlg.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\GetUserCredentialsMetro.resx">
       <DependentUpon>GetUserCredentialsMetro.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\GlobalOptionsDlg.resx">
-      <DependentUpon>GlobalOptionsDlg.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\MetroCreateNewRepoDlg.resx">
       <DependentUpon>MetroCreateNewRepoDlg.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\MetroOptions.resx">
       <DependentUpon>MetroOptions.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\RepoManagementDlg.en.resx">
-      <DependentUpon>RepoManagementDlg.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\RepoManagementDlg.resx">
-      <DependentUpon>RepoManagementDlg.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\UploadFilesDlg.en.resx">
       <DependentUpon>UploadFilesDlg.cs</DependentUpon>

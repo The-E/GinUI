@@ -34,6 +34,7 @@
             this.mTxBPassword = new MetroFramework.Controls.MetroTextBox();
             this.mBtnOk = new MetroFramework.Controls.MetroButton();
             this.mBtnCancel = new MetroFramework.Controls.MetroButton();
+            this.mLblWarning = new MetroFramework.Controls.MetroLabel();
             this.SuspendLayout();
             // 
             // mTxBUsername
@@ -126,6 +127,7 @@
             this.mBtnOk.TabIndex = 4;
             this.mBtnOk.Text = "OK";
             this.mBtnOk.UseSelectable = true;
+            this.mBtnOk.Click += new System.EventHandler(this.mBtnOk_Click);
             // 
             // mBtnCancel
             // 
@@ -135,6 +137,18 @@
             this.mBtnCancel.TabIndex = 5;
             this.mBtnCancel.Text = "Cancel";
             this.mBtnCancel.UseSelectable = true;
+            this.mBtnCancel.Click += new System.EventHandler(this.mBtnCancel_Click);
+            // 
+            // mLblWarning
+            // 
+            this.mLblWarning.AutoSize = true;
+            this.mLblWarning.ForeColor = System.Drawing.Color.DarkRed;
+            this.mLblWarning.Location = new System.Drawing.Point(24, 64);
+            this.mLblWarning.Name = "mLblWarning";
+            this.mLblWarning.Size = new System.Drawing.Size(199, 19);
+            this.mLblWarning.TabIndex = 6;
+            this.mLblWarning.Text = "This space reserved for warnings";
+            this.mLblWarning.UseCustomForeColor = true;
             // 
             // GetUserCredentialsMetro
             // 
@@ -142,6 +156,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BorderStyle = MetroFramework.Forms.MetroFormBorderStyle.FixedSingle;
             this.ClientSize = new System.Drawing.Size(387, 205);
+            this.Controls.Add(this.mLblWarning);
             this.Controls.Add(this.mBtnCancel);
             this.Controls.Add(this.mBtnOk);
             this.Controls.Add(this.mTxBPassword);
@@ -164,5 +179,6 @@
         private MetroFramework.Controls.MetroTextBox mTxBPassword;
         private MetroFramework.Controls.MetroButton mBtnOk;
         private MetroFramework.Controls.MetroButton mBtnCancel;
+        private MetroFramework.Controls.MetroLabel mLblWarning;
     }
 }

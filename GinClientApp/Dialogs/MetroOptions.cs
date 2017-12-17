@@ -1,13 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using GinClientApp.Properties;
 using GinClientLibrary;
@@ -23,11 +15,21 @@ namespace GinClientApp.Dialogs
         private readonly UserCredentials _storedCredentials;
         private readonly GinApplicationContext _parentContext;
 
-        public MetroOptions(GinApplicationContext parentContext)
+        public enum Page
+        {
+            Login,
+            GlobalOptions,
+            Repositories,
+            About
+        }
+
+        public MetroOptions(GinApplicationContext parentContext, Page startPage)
         {
             InitializeComponent();
 
             _parentContext = parentContext;
+
+            mTabCtrl.TabIndex = (int) startPage;
 
             mLblStatus.Visible = false;
             mProgWorking.Visible = false;
@@ -64,9 +66,10 @@ namespace GinClientApp.Dialogs
 
         private void mBtnOK_Click(object sender, EventArgs e)
         {
-            //TODO: Data validation
-
             GlobalOptions.Save();
+            UserCredentials.Save();
+
+            SaveRepoList();
         }
 
         private void UpdateDefaultdir(ref DirectoryInfo directory, MetroTextBox txtBox)
@@ -106,8 +109,10 @@ namespace GinClientApp.Dialogs
         private void mBtnCancel_Click(object sender, EventArgs e)
         {
             GlobalOptions.Instance = _storedOptions;
+            UserCredentials.Instance = _storedCredentials;
 
             GlobalOptions.Save();
+            UserCredentials.Save();
         }
 
         private void mBtnCheckout_Click(object sender, EventArgs e)
@@ -129,6 +134,28 @@ namespace GinClientApp.Dialogs
             StopShowProgress();
 
             FillRepoList();
+
+            SaveRepoList();
+        }
+
+        private void SaveRepoList()
+        {
+            var repos = JsonConvert.DeserializeObject<GinRepositoryData[]>(_parentContext.ServiceClient.GetRepositoryList());
+
+            var saveFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
+                           @"\g-node\GinWindowsClient\SavedRepositories.json";
+
+            if (!Directory.Exists(Path.GetDirectoryName(saveFile)))
+                Directory.CreateDirectory(Path.GetDirectoryName(saveFile));
+
+            if (File.Exists(saveFile))
+                File.Delete(saveFile);
+
+
+            var fs = File.CreateText(saveFile);
+            fs.Write(JsonConvert.SerializeObject(repos));
+            fs.Flush();
+            fs.Close();
         }
 
         private void mBtnCreateNew_Click(object sender, EventArgs e)
@@ -159,7 +186,7 @@ namespace GinClientApp.Dialogs
 
             var repo = mLVwRepositories.SelectedItems[0].SubItems[0].Text;
             var res = MetroMessageBox.Show(this,
-                $"This will delete the repository {repo} and all associated data. Do you wish to continue?", 
+                string.Format(Resources.Options_This_will_delete_the_repository, repo), 
                 Resources.GinClientApp_Gin_Client_Warning, MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
             if (res == DialogResult.Cancel) return;
 
@@ -201,7 +228,7 @@ namespace GinClientApp.Dialogs
 
             if (AttemptLogin()) return;
 
-            mLblStatus.Text = "The entered username/password combination is not valid!";
+            mLblStatus.Text = Resources.GetUserCredentials_The_entered_Username_Password_combination_is_invalid;
             mLblStatus.Visible = true;
         }
 
@@ -211,8 +238,33 @@ namespace GinClientApp.Dialogs
 
             if (AttemptLogin()) return;
 
-            mLblStatus.Text = "The entered username/password combination is not valid!";
+            mLblStatus.Text = Resources.GetUserCredentials_The_entered_Username_Password_combination_is_invalid;
             mLblStatus.Visible = true;
+        }
+
+        private void metroComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (mCBxRepoUpdates.SelectedIndex)
+            {
+                case 0:
+                    GlobalOptions.Instance.RepositoryUpdateInterval = 0;
+                    break;
+                case 1:
+                    GlobalOptions.Instance.RepositoryUpdateInterval = 5;
+                    break;
+                case 2:
+                    GlobalOptions.Instance.RepositoryUpdateInterval = 15;
+                    break;
+                case 3:
+                    GlobalOptions.Instance.RepositoryUpdateInterval = 30;
+                    break;
+                case 4:
+                    GlobalOptions.Instance.RepositoryUpdateInterval = 60;
+                    break;
+                default:
+                    GlobalOptions.Instance.RepositoryUpdateInterval = 0;
+                    break;
+            }
         }
     }
 }

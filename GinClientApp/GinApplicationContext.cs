@@ -22,15 +22,7 @@ namespace GinClientApp
         private Timer _updateIntervalTimer;
 
         private ProgressDisplayDlg _progressDisplayDlg;
-
-        private void RecreateClient()
-        {
-            ServiceClient = new GinServiceClient(new InstanceContext(this));
-            ServiceClient.InnerDuplexChannel.Faulted += InnerChannelOnFaulted;
-            ServiceClient.InnerChannel.OperationTimeout = TimeSpan.MaxValue;
-            ServiceClient.InnerDuplexChannel.OperationTimeout = TimeSpan.MaxValue;
-        }
-
+        
         public GinApplicationContext()
         {
             _trayIcon = new NotifyIcon
@@ -45,11 +37,39 @@ namespace GinClientApp
             if (!Directory.Exists(saveFilePath))
                 Directory.CreateDirectory(saveFilePath);
 
+            #region Login
+
+            if (!UserCredentials.Load())
+            {
+                var getUserCreds = new GetUserCredentialsMetro(this);
+                var result = getUserCreds.ShowDialog(); //The Dialog will log us in and save the user credentials
+
+                if (result == DialogResult.Cancel) Exit(this, EventArgs.Empty);
+            }
+            else if (!ServiceClient.Login(UserCredentials.Instance.Username, UserCredentials.Instance.Password))
+            {
+                MessageBox.Show(Resources.GinApplicationContext_Error_while_trying_to_log_in_to_GIN, Resources.GinApplicationContext_Gin_Client_Error,
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                var getUserCreds = new GetUserCredentialsMetro(this);
+                var result = getUserCreds.ShowDialog(); //The Dialog will log us in and save the user credentials
+
+                if (result == DialogResult.Cancel) Exit(this, EventArgs.Empty);
+            }
+
+            UserCredentials.Save();
+
+            #endregion
+
             #region Read options
 
             if (!GlobalOptions.Load())
             {
-                //TODO: Display options dialog here
+                var optionsDlg = new MetroOptions(this, MetroOptions.Page.GlobalOptions);
+                var result = optionsDlg.ShowDialog();
+
+                if (result == DialogResult.Cancel)
+                    Exit(this, EventArgs.Empty);
             }
 
             if (GlobalOptions.Instance.RepositoryUpdateInterval > 0)
@@ -63,25 +83,6 @@ namespace GinClientApp
 
             GlobalOptions.Save();
 
-            #endregion
-
-            #region Login
-
-            if (!UserCredentials.Load())
-            {
-                //TODO: Ask for credentials here
-            }
-
-            if (!ServiceClient.Login(UserCredentials.Instance.Username, UserCredentials.Instance.Password))
-            {
-                MessageBox.Show(Resources.GinApplicationContext_Error_while_trying_to_log_in_to_GIN, Resources.GinApplicationContext_Gin_Client_Error,
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                //TODO: Ask for correct credentials, retry until correct or user exits
-            }
-
-            UserCredentials.Save();
-            
             #endregion
 
             #region Set up repositories
@@ -181,7 +182,7 @@ namespace GinClientApp
 
         private void ShowOptionsMenuItemHandler(object sender, EventArgs e)
         {
-            var optionsDlg = new GlobalOptionsDlg(GlobalOptions.Instance);
+            var optionsDlg = new MetroOptions(this, MetroOptions.Page.GlobalOptions);
             var res = optionsDlg.ShowDialog();
 
             if (res != DialogResult.OK) return;
@@ -213,37 +214,9 @@ namespace GinClientApp
 
         private void ManageRepositoriesMenuItemHandler(object sender, EventArgs e)
         {
-            var repomanager = new RepoManagementDlg(this);
+            var repomanager = new MetroOptions(this, MetroOptions.Page.Repositories);
             repomanager.Closed += (o, args) => { if (_trayIcon!= null) _trayIcon.ContextMenu = new ContextMenu(BuildContextMenu()); };
             repomanager.ShowDialog();
-            
-            ServiceClient.UnmmountAllRepositories();
-
-            if (repomanager.Repositories.Count == 0) return;
-
-            foreach (var repo in repomanager.Repositories)
-            {
-                ServiceClient.AddRepository(repo.PhysicalDirectory.FullName, repo.Mountpoint.FullName, repo.Name,
-                    repo.Address,
-                    GlobalOptions.Instance.RepositoryCheckoutOption ==
-                    GlobalOptions.CheckoutOption.FullCheckout, repo.CreateNew);
-
-                repo.CreateNew = false;
-            }
-            var saveFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
-                           @"\g-node\GinWindowsClient\SavedRepositories.json";
-
-            if (!Directory.Exists(Path.GetDirectoryName(saveFile)))
-                Directory.CreateDirectory(Path.GetDirectoryName(saveFile));
-
-            if (File.Exists(saveFile))
-                File.Delete(saveFile);
-
-
-            var fs = File.CreateText(saveFile);
-            fs.Write(JsonConvert.SerializeObject(repomanager.Repositories));
-            fs.Flush();
-            fs.Close();
         }
 
         private void UnmountRepoMenuItemHandler(object sender, EventArgs e)
@@ -254,7 +227,6 @@ namespace GinClientApp
             if (string.CompareOrdinal(Resources.GinApplicationContext_Unmount, mItem.Text) == 0)
             {
                 ServiceClient.UnmountRepository(repo.Name);
-
                 mItem.Text = Resources.GinApplicationContext_Mount;
             }
             else

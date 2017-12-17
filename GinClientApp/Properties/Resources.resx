@@ -247,4 +247,10 @@ Copyright (c) Microsoft</value>
   <data name="Options__username___repository_" xml:space="preserve">
     <value>&lt;username&gt;/&lt;repository&gt;</value>
   </data>
+  <data name="GetUserCredentials_The_entered_Username_Password_combination_is_invalid" xml:space="preserve">
+    <value>The entered Username/Password combination is invalid</value>
+  </data>
+  <data name="Options_This_will_delete_the_repository" xml:space="preserve">
+    <value>This will delete the repository {0} and all associated data. Do you wish to continue?</value>
+  </data>
 </root>

@@ -79,6 +79,15 @@ namespace GinClientApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The entered Username/Password combination is invalid.
+        /// </summary>
+        internal static string GetUserCredentials_The_entered_Username_Password_combination_is_invalid {
+            get {
+                return ResourceManager.GetString("GetUserCredentials_The_entered_Username_Password_combination_is_invalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
         internal static System.Drawing.Icon gin_icon {
@@ -317,6 +326,15 @@ namespace GinClientApp.Properties {
         internal static string Options_CheckSanity_The_mountpoint_directory_already_exists {
             get {
                 return ResourceManager.GetString("Options_CheckSanity_The_mountpoint_directory_already_exists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This will delete the repository {0} and all associated data. Do you wish to continue?.
+        /// </summary>
+        internal static string Options_This_will_delete_the_repository {
+            get {
+                return ResourceManager.GetString("Options_This_will_delete_the_repository", resourceCulture);
             }
         }
         

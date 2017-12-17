@@ -11,7 +11,11 @@ namespace GinClientApp
     public class UserCredentials : ICloneable
     {
         private static UserCredentials _instance;
-        public static UserCredentials Instance => _instance ?? (_instance = new UserCredentials());
+        public static UserCredentials Instance
+        {
+            get => _instance ?? (_instance = new UserCredentials());
+            set => _instance = value;
+        }
 
         private UserCredentials()
         {
