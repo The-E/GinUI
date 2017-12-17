@@ -293,6 +293,11 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  <xs:element name="EndSession">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
   <xs:element name="FileOperationStarted">
     <xs:complexType>
       <xs:sequence>

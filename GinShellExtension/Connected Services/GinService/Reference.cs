@@ -184,10 +184,10 @@ namespace GinShellExtension.GinService {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/Login", ReplyAction="http://tempuri.org/IGinService/LoginResponse")]
         System.Threading.Tasks.Task<bool> LoginAsync(string username, string password);
         
-        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, IsTerminating=true, Action="http://tempuri.org/IGinService/Logout")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IGinService/Logout")]
         void Logout();
         
-        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, IsTerminating=true, Action="http://tempuri.org/IGinService/Logout")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IGinService/Logout")]
         System.Threading.Tasks.Task LogoutAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/GetRepositoryList", ReplyAction="http://tempuri.org/IGinService/GetRepositoryListResponse")]
@@ -279,6 +279,12 @@ namespace GinShellExtension.GinService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/GetRemoteRepositoryList", ReplyAction="http://tempuri.org/IGinService/GetRemoteRepositoryListResponse")]
         System.Threading.Tasks.Task<string> GetRemoteRepositoryListAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, IsTerminating=true, Action="http://tempuri.org/IGinService/EndSession")]
+        void EndSession();
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, IsTerminating=true, Action="http://tempuri.org/IGinService/EndSession")]
+        System.Threading.Tasks.Task EndSessionAsync();
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -507,6 +513,14 @@ namespace GinShellExtension.GinService {
         
         public System.Threading.Tasks.Task<string> GetRemoteRepositoryListAsync() {
             return base.Channel.GetRemoteRepositoryListAsync();
+        }
+        
+        public void EndSession() {
+            base.Channel.EndSession();
+        }
+        
+        public System.Threading.Tasks.Task EndSessionAsync() {
+            return base.Channel.EndSessionAsync();
         }
     }
 }
