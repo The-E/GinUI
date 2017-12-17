@@ -40,6 +40,7 @@ namespace GinService
 
         protected override void OnStop()
         {
+            RepositoryManager.Instance.UnmountAllRepositories();
             RepositoryManager.Instance.Logout();
 
             if (_serviceHost == null) return;

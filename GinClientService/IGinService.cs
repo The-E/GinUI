@@ -65,7 +65,7 @@ namespace GinService
         [OperationContract]
         bool Login(string username, string password);
 
-        [OperationContract(IsOneWay = true, IsTerminating = true)]
+        [OperationContract(IsOneWay = true)]
         void Logout();
 
         /// <summary>
@@ -163,6 +163,9 @@ namespace GinService
 
         [OperationContract]
         string GetRemoteRepositoryList();
+
+        [OperationContract(IsOneWay = true, IsTerminating = true)]
+        void EndSession();
     }
 
     [SuppressMessage("ReSharper", "OperationContractWithoutServiceContract")]

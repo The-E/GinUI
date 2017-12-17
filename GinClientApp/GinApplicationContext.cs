@@ -289,8 +289,7 @@ namespace GinClientApp
 
             if (ServiceClient != null && ServiceClient.InnerChannel.State != CommunicationState.Faulted)
             {
-                ServiceClient.UnmmountAllRepositories();
-                ServiceClient.Logout();
+                ServiceClient.EndSession();
             }
 
             Application.Exit();

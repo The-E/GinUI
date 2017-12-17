@@ -190,5 +190,12 @@ namespace GinService
         {
             return RepositoryManager.Instance.GetRemoteRepoList();
         }
+
+        
+        public void EndSession()
+        {
+            RepositoryManager.Instance.UnmountAllRepositories();
+            RepositoryManager.Instance.Logout();
+        }
     }
 }
