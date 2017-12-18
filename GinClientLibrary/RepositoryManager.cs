@@ -77,7 +77,6 @@ namespace GinClientLibrary
 
         public bool CreateNewRepository(string repoName)
         {
-            //TODO: Coordinate with achilleas to get the gin client to accept a --json parameter to gin repos
             //TODO: Return false if a repo with that name already exists
 
             lock (this)
