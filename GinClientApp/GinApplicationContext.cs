@@ -279,7 +279,9 @@ namespace GinClientApp
 
         private void _trayIcon_DoubleClick(object sender, EventArgs e)
         {
-            //TODO: Implement a management interface
+            var repomanager = new MetroOptionsDlg(this, MetroOptionsDlg.Page.Repositories);
+            repomanager.Closed += (o, args) => { if (_trayIcon != null) _trayIcon.ContextMenu = new ContextMenu(BuildContextMenu()); };
+            repomanager.ShowDialog();
         }
 
         private void Exit(object sender, EventArgs e)
