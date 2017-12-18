@@ -253,4 +253,7 @@ Copyright (c) Microsoft</value>
   <data name="Options_This_will_delete_the_repository" xml:space="preserve">
     <value>This will delete the repository {0} and all associated data. Do you wish to continue?</value>
   </data>
+  <data name="GinApplicationContext_About" xml:space="preserve">
+    <value>About</value>
+  </data>
 </root>

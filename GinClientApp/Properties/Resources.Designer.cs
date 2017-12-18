@@ -118,6 +118,15 @@ namespace GinClientApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to About.
+        /// </summary>
+        internal static string GinApplicationContext_About {
+            get {
+                return ResourceManager.GetString("GinApplicationContext_About", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error while trying to access Gin Client Service.
         /// </summary>
         internal static string GinApplicationContext_Error_while_trying_to_access_Gin_Client_Service {

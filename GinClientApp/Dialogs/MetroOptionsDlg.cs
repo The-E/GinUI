@@ -42,6 +42,27 @@ namespace GinClientApp.Dialogs
             mTxBDefaultMountpoint.Text = GlobalOptions.Instance.DefaultMountpointDir.FullName;
             mTglDownloadAnnex.Checked = GlobalOptions.Instance.RepositoryCheckoutOption ==
                                         GlobalOptions.CheckoutOption.FullCheckout;
+            switch (GlobalOptions.Instance.RepositoryUpdateInterval)
+            {
+                case 0:
+                    mCBxRepoUpdates.SelectedIndex = 0;
+                    break;
+                case 5:
+                    mCBxRepoUpdates.SelectedIndex = 1;
+                    break;
+                case 15:
+                    mCBxRepoUpdates.SelectedIndex = 2;
+                    break;
+                case 30:
+                    mCBxRepoUpdates.SelectedIndex = 3;
+                    break;
+                case 60:
+                    mCBxRepoUpdates.SelectedIndex = 4;
+                    break;
+                default:
+                    mCBxRepoUpdates.SelectedIndex = 0;
+                    break;
+            }
 
             FillRepoList();
 

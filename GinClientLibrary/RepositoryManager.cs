@@ -352,7 +352,31 @@ namespace GinClientLibrary
 
         public string GetRemoteRepoList()
         {
-            throw new NotImplementedException();
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    FileName = "cmd.exe",
+                    WorkingDirectory = @"C:\",
+                    Arguments = @"/C gin.exe repos --json",
+                    CreateNoWindow = true,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    RedirectStandardInput = true,
+                    UseShellExecute = false
+                }
+            };
+
+            process.OutputDataReceived += Process_OutputDataReceived;
+            Output.Clear();
+            process.Start();
+            process.BeginOutputReadLine();
+            var error = process.StandardError.ReadToEnd();
+
+            process.WaitForExit();
+
+            return Output.ToString();
         }
     }
 }
