@@ -145,18 +145,18 @@ namespace GinClientApp.Dialogs
             Close();
         }
 
-        private void mBtnCheckout_Click(object sender, EventArgs e)
+        private async void mBtnCheckout_Click(object sender, EventArgs e)
         {
             var repoData = new GinRepositoryData(GlobalOptions.Instance.DefaultCheckoutDir, GlobalOptions.Instance.DefaultMountpointDir, "", "", false);
 
-            var createNewDlg = new MetroCreateNewRepoDlg(repoData);
+            var createNewDlg = new MetroCreateNewRepoDlg(repoData, _parentContext);
 
             if (createNewDlg.ShowDialog() == DialogResult.Cancel) return;
 
             repoData = createNewDlg.RepositoryData;
             StartShowProgress();
 
-            _parentContext.ServiceClient.AddRepository(repoData.PhysicalDirectory.FullName,
+            var result = await _parentContext.ServiceClient.AddRepositoryAsync(repoData.PhysicalDirectory.FullName,
                 repoData.Mountpoint.FullName, repoData.Name, repoData.Address,
                 GlobalOptions.Instance.RepositoryCheckoutOption == GlobalOptions.CheckoutOption.FullCheckout,
                 repoData.CreateNew);

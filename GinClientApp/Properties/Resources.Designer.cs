@@ -61,6 +61,15 @@ namespace GinClientApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open the repository browser.
+        /// </summary>
+        internal static string CreateNewRepoDlg_Open_the_repository_browser {
+            get {
+                return ResourceManager.GetString("CreateNewRepoDlg_Open_the_repository_browser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Login failed.
         /// </summary>
         internal static string GetUserCredentials_Login_Failed {
@@ -280,6 +289,24 @@ namespace GinClientApp.Properties {
         internal static string License_Text {
             get {
                 return ResourceManager.GetString("License_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose a directory for the checkout.
+        /// </summary>
+        internal static string MetroCreateNewRepoDlg_Choose_a_directory_for_the_checkout {
+            get {
+                return ResourceManager.GetString("MetroCreateNewRepoDlg_Choose_a_directory_for_the_checkout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose a directory for the mountpoint.
+        /// </summary>
+        internal static string MetroCreateNewRepoDlg_Choose_a_directory_for_the_mountpoint {
+            get {
+                return ResourceManager.GetString("MetroCreateNewRepoDlg_Choose_a_directory_for_the_mountpoint", resourceCulture);
             }
         }
         

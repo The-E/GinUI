@@ -256,4 +256,13 @@ Copyright (c) Microsoft</value>
   <data name="GinApplicationContext_About" xml:space="preserve">
     <value>About</value>
   </data>
+  <data name="CreateNewRepoDlg_Open_the_repository_browser" xml:space="preserve">
+    <value>Open the repository browser</value>
+  </data>
+  <data name="MetroCreateNewRepoDlg_Choose_a_directory_for_the_checkout" xml:space="preserve">
+    <value>Choose a directory for the checkout</value>
+  </data>
+  <data name="MetroCreateNewRepoDlg_Choose_a_directory_for_the_mountpoint" xml:space="preserve">
+    <value>Choose a directory for the mountpoint</value>
+  </data>
 </root>
