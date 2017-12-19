@@ -18,7 +18,9 @@ namespace GinClientApp.Dialogs
 
         public GinRepositoryData RepositoryData { get; }
 
-        public MetroCreateNewRepoDlg(GinRepositoryData data)
+        private GinApplicationContext _appContext;
+
+        public MetroCreateNewRepoDlg(GinRepositoryData data, GinApplicationContext appContext)
         {
             InitializeComponent();
 
@@ -30,6 +32,12 @@ namespace GinClientApp.Dialogs
             mTxBRepoMountpoint.Text = data.Mountpoint.FullName;
 
             SendMessage(mTxBRepoAddress.Handle, 0x1501, 1, Resources.Options__username___repository_);
+
+            createNewRepoToolTip.SetToolTip(mBtnRepoBrowser, Resources.CreateNewRepoDlg_Open_the_repository_browser);
+            createNewRepoToolTip.SetToolTip(mBtnPickRepoCheckoutDir, Resources.MetroCreateNewRepoDlg_Choose_a_directory_for_the_checkout);
+            createNewRepoToolTip.SetToolTip(mBtnPickRepoMountpointDir, Resources.MetroCreateNewRepoDlg_Choose_a_directory_for_the_mountpoint);
+
+            _appContext = appContext;
         }
 
         private bool CheckSanity()
@@ -170,6 +178,16 @@ namespace GinClientApp.Dialogs
             }
 
             mTxBRepoMountpoint.Text = RepositoryData.Mountpoint.FullName;
+        }
+
+        private void mBtnRepoBrowser_Click(object sender, EventArgs e)
+        {
+            var repoBrowser = new MetroRepoBrowser(_appContext);
+
+            if (repoBrowser.ShowDialog() == DialogResult.OK)
+            {
+                mTxBRepoAddress.Text = repoBrowser.SelectedRepository;
+            }
         }
     }
 }

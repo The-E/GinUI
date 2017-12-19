@@ -81,7 +81,7 @@ namespace GinClientApp.Dialogs
             foreach (var repo in repos)
             {
                 mLVwRepositories.Items.Add(new ListViewItem(new[]
-                    {repo.Name, repo.PhysicalDirectory.FullName, repo.Mountpoint.FullName, repo.Address}));
+                    {repo.Name, repo.Mountpoint.FullName, repo.PhysicalDirectory.FullName, repo.Address}));
             }
             mLVwRepositories.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
         }
@@ -188,19 +188,19 @@ namespace GinClientApp.Dialogs
             fs.Close();
         }
 
-        private void mBtnCreateNew_Click(object sender, EventArgs e)
+        private async void mBtnCreateNew_Click(object sender, EventArgs e)
         {
             var repoData = new GinRepositoryData(GlobalOptions.Instance.DefaultCheckoutDir, GlobalOptions.Instance.DefaultMountpointDir, "", "", true);
 
-            var createNewDlg = new MetroCreateNewRepoDlg(repoData);
+            var createNewDlg = new MetroCreateNewRepoDlg(repoData, _parentContext);
 
             if (createNewDlg.ShowDialog() == DialogResult.Cancel) return;
 
             repoData = createNewDlg.RepositoryData;
             StartShowProgress();
 
-            _parentContext.ServiceClient.CreateNewRepository(repoData.Name);
-            _parentContext.ServiceClient.AddRepository(repoData.PhysicalDirectory.FullName,
+            await _parentContext.ServiceClient.CreateNewRepositoryAsync(repoData.Name);
+            await _parentContext.ServiceClient.AddRepositoryAsync(repoData.PhysicalDirectory.FullName,
                 repoData.Mountpoint.FullName, repoData.Name, repoData.Address,
                 GlobalOptions.Instance.RepositoryCheckoutOption == GlobalOptions.CheckoutOption.FullCheckout,
                 repoData.CreateNew);
@@ -229,6 +229,9 @@ namespace GinClientApp.Dialogs
             mLblWorking.Visible = true;
             mProgWorking.Visible = true;
             mProgWorking.Spinning = true;
+
+            mBtnOK.Enabled = false;
+            mBtnCancel.Enabled = false;
         }
 
         private void StopShowProgress()
@@ -236,6 +239,9 @@ namespace GinClientApp.Dialogs
             mLblWorking.Visible   = false;
             mProgWorking.Visible  = false;
             mProgWorking.Spinning = false;
+
+            mBtnOK.Enabled = true;
+            mBtnCancel.Enabled = true;
         }
 
         private bool AttemptLogin()
