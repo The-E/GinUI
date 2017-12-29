@@ -192,7 +192,7 @@ namespace GinClientApp.Dialogs
         {
             var repoData = new GinRepositoryData(GlobalOptions.Instance.DefaultCheckoutDir, GlobalOptions.Instance.DefaultMountpointDir, "", "", true);
 
-            var createNewDlg = new MetroCreateNewRepoDlg(repoData);
+            var createNewDlg = new MetroCreateNewRepoDlg(repoData, _parentContext);
 
             if (createNewDlg.ShowDialog() == DialogResult.Cancel) return;
 
