@@ -23,7 +23,8 @@ namespace GinService
             _service = new ServiceInstaller
             {
                 ServiceName = "GinClientService",
-                StartType = ServiceStartMode.Automatic,
+                Description = "Provides background services for the Gin infrastructure",
+                StartType = ServiceStartMode.Automatic
             };
             
             Installers.Add(_process);

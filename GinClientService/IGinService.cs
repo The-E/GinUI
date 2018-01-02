@@ -77,6 +77,14 @@ namespace GinService
         string GetRepositoryList();
 
         /// <summary>
+        /// Get the RepoData for the repo specified by name
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>A JSON representation of a GinRepositoryData structure</returns>
+        [OperationContract]
+        string GetRepositoryInfo(string name);
+
+        /// <summary>
         /// Updates the stored information for the Repository indicated by repoName
         /// </summary>
         /// <param name="repoName">The previous name of the repository</param>

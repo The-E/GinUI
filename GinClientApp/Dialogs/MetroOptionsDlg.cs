@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows.Forms;
 using GinClientApp.Properties;
 using GinClientLibrary;
+using GinClientLibrary.Extensions;
 using MetroFramework;
 using MetroFramework.Controls;
 using Newtonsoft.Json;
@@ -219,8 +220,9 @@ namespace GinClientApp.Dialogs
                 string.Format(Resources.Options_This_will_delete_the_repository, repo), 
                 Resources.GinClientApp_Gin_Client_Warning, MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
             if (res == DialogResult.Cancel) return;
-
+            
             _parentContext.ServiceClient.DeleteRepository(repo);
+
             FillRepoList();
         }
 

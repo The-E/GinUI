@@ -67,6 +67,12 @@ namespace GinService
             return JsonConvert.SerializeObject(result);
         }
 
+        string IGinService.GetRepositoryInfo(string name)
+        {
+            var result = RepositoryManager.Instance.GetRepoByName(name) as GinRepositoryData;
+            return JsonConvert.SerializeObject(result);
+        }
+
         bool IGinService.Login(string username, string password)
         {
             return RepositoryManager.Instance.Login(username, password);

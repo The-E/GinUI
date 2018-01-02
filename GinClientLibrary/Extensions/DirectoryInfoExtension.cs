@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace GinClientLibrary.Extensions
 {
@@ -8,10 +9,29 @@ namespace GinClientLibrary.Extensions
     {
         public static void Empty(this DirectoryInfo directory)
         {
-            foreach (var file in directory.GetFiles()) file.Delete();
-            foreach (var subDirectory in directory.GetDirectories()) subDirectory.Delete(true);
+            File.SetAttributes(directory.FullName, File.GetAttributes(directory.FullName) & ~(FileAttributes.Hidden | FileAttributes.ReadOnly));
+
+            foreach (var file in directory.GetFiles("*", SearchOption.AllDirectories))
+                try
+                {
+                    File.SetAttributes(file.FullName, FileAttributes.Normal);
+                    file.Delete();
+                }
+                catch
+                {
+                }
+
+            foreach (var subDirectory in directory.GetDirectories())
+                try
+                {
+                    File.SetAttributes(subDirectory.FullName, FileAttributes.Normal);
+                    subDirectory.Delete(true);
+                }
+                catch
+                {
+                }
         }
-        
+
         public static bool IsEmpty(this DirectoryInfo directory)
         {
             if (!Directory.Exists(directory.FullName))
