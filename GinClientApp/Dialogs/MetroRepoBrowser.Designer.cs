@@ -113,7 +113,7 @@
             this.mTxBRepoDescription.Multiline = true;
             this.mTxBRepoDescription.Name = "mTxBRepoDescription";
             this.mTxBRepoDescription.PasswordChar = '\0';
-            this.mTxBRepoDescription.PromptText = "Select a repository to see its description";
+            this.mTxBRepoDescription.WaterMark = "Select a repository to see its description";
             this.mTxBRepoDescription.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.mTxBRepoDescription.SelectedText = "";
             this.mTxBRepoDescription.SelectionLength = 0;

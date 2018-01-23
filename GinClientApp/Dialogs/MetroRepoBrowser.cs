@@ -22,16 +22,15 @@ namespace GinClientApp.Dialogs
             InitializeComponent();
 
             var repoListJSON = context.ServiceClient.GetRemoteRepositoryList();
-
             var repoList = JsonConvert.DeserializeObject<RepositoryListing[]>(repoListJSON);
 
             if (!repoList.Any()) return;
 
             _repositories = repoList.OrderByDescending(listing => listing.owner.username).ToArray();
-
             var paths = _repositories.Select(repoListing => repoListing.full_name).ToList();
-
             trVwRepositories.Nodes.Add(MakeTreeFromPaths(paths, "gin.g-node.org"));
+
+            mTxBRepoDescription.Text = "";
         }
 
         TreeNode MakeTreeFromPaths(List<string> paths, string rootNodeName = "", char separator = '/')
@@ -63,7 +62,25 @@ namespace GinClientApp.Dialogs
 
         private void trVwRepositories_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            
+            if (e.Node.Level != 2)
+            {
+                mTxBRepoDescription.Text = "";
+                mTxBRepoDescription.WaterMark = "Select a repository to see its description";
+                return;
+            }
+
+            SelectedRepository = e.Node.Parent.Text + "/" + e.Node.Text;
+
+            var repo = from rep in _repositories
+                where string.Compare(rep.full_name, SelectedRepository, StringComparison.InvariantCultureIgnoreCase) ==
+                      0
+                select rep;
+
+            var description = repo.First().description;
+            if (string.IsNullOrEmpty(description))
+                mTxBRepoDescription.WaterMark = "This repository has no description.";
+            else
+                mTxBRepoDescription.Text = repo.First().description;
         }
     }
 }

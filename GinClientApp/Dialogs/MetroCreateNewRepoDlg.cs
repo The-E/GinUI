@@ -187,6 +187,7 @@ namespace GinClientApp.Dialogs
             if (repoBrowser.ShowDialog() == DialogResult.OK)
             {
                 mTxBRepoAddress.Text = repoBrowser.SelectedRepository;
+                mTxBRepoAddress_Leave(null, EventArgs.Empty);
             }
         }
     }
