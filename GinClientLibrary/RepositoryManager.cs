@@ -260,6 +260,10 @@ namespace GinClientLibrary
 
         public void AddRepository(DirectoryInfo physicalDirectory, DirectoryInfo mountpoint, string name, string commandline, bool performFullCheckout, bool createNew)
         {
+            //Repository already exists
+            if (Repositories.Any(repository => string.Compare(repository.Name, name, StringComparison.InvariantCultureIgnoreCase) == 0))
+                return;
+
             var repo = new GinRepository(
                 physicalDirectory,
                 mountpoint,
