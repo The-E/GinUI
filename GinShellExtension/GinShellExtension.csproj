@@ -34,7 +34,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>GinShellExtension.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>TempKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Apex.WinForms, Version=1.6.0.0, Culture=neutral, PublicKeyToken=98d06957926c086d, processorArchitecture=MSIL">
@@ -89,6 +89,7 @@
     </None>
     <None Include="GinShellExtension.pfx" />
     <None Include="packages.config" />
+    <None Include="TempKey.snk" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
