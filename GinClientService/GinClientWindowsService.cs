@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System.Configuration.Install;
+using System.Diagnostics;
+using System.Reflection;
 using System.ServiceModel;
 using System.ServiceProcess;
 using GinClientLibrary;
@@ -15,9 +17,34 @@ namespace GinService
             ServiceName = "GinService";
         }
 
-        public static void Main()
+        public static void Main(string[] args)
         {
-            Run(new GinClientWindowsService());
+            if (System.Environment.UserInteractive)
+            {
+
+                if (args.Length > 0)
+                {
+                    switch (args[0])
+                    {
+                        case "-install":
+                            {
+                                ManagedInstallerClass.InstallHelper(new string[] { Assembly.GetExecutingAssembly().Location });
+                                break;
+                            }
+                        case "-uninstall":
+                            {
+                                ManagedInstallerClass.InstallHelper(new string[] { "/u", Assembly.GetExecutingAssembly().Location });
+                                break;
+                            }
+                    }
+                }
+            }
+            else
+            {
+                ServiceBase[] ServicesToRun;
+                ServicesToRun = new ServiceBase[] { new GinClientWindowsService() };
+                ServiceBase.Run(ServicesToRun);
+            }
         }
 
         protected override void OnStart(string[] args)

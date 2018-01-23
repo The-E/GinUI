@@ -20,12 +20,7 @@ namespace GinShellExtension
 
         protected override bool CanShowMenu()
         {
-            var iContext = new InstanceContext(this);
-            var myBinding = new WSDualHttpBinding();
-            var myEndpoint = new EndpointAddress("http://localhost:8733/Design_Time_Addresses/GinService/");
-            var myChannelFactory = new DuplexChannelFactory<IGinService>(iContext, myBinding, myEndpoint);
-
-            var client = myChannelFactory.CreateChannel();
+            var client = CreateServiceClient();
 
             try
             {
@@ -49,12 +44,7 @@ namespace GinShellExtension
 
             var baseItem = new ToolStripMenuItem("Gin Repository");
 
-            var iContext = new InstanceContext(this);
-            var myBinding = new WSDualHttpBinding();
-            var myEndpoint = new EndpointAddress("http://localhost:8733/Design_Time_Addresses/GinService/");
-            var myChannelFactory = new DuplexChannelFactory<IGinService>(iContext, myBinding, myEndpoint);
-
-            var client = myChannelFactory.CreateChannel();
+            var client = CreateServiceClient();
 
             try
             {
@@ -94,12 +84,7 @@ namespace GinShellExtension
 
         private void RepoUpdate(object sender, EventArgs eventArgs)
         {
-            var iContext = new InstanceContext(this);
-            var myBinding = new WSDualHttpBinding();
-            var myEndpoint = new EndpointAddress("http://localhost:8733/Design_Time_Addresses/GinService/");
-            var myChannelFactory = new DuplexChannelFactory<IGinService>(iContext, myBinding, myEndpoint);
-
-            var client = myChannelFactory.CreateChannel();
+            var client = CreateServiceClient();
 
             client.UpdateRepositories(SelectedItemPaths.ToArray());
             ((ICommunicationObject) client).Close();
@@ -107,12 +92,7 @@ namespace GinShellExtension
 
         private void RepoUpload(object sender, EventArgs eventArgs)
         {
-            var iContext = new InstanceContext(this);
-            var myBinding = new WSDualHttpBinding();
-            var myEndpoint = new EndpointAddress("http://localhost:8733/Design_Time_Addresses/GinService/");
-            var myChannelFactory = new DuplexChannelFactory<IGinService>(iContext, myBinding, myEndpoint);
-
-            var client = myChannelFactory.CreateChannel();
+            var client = CreateServiceClient();
 
             client.UploadRepositories(SelectedItemPaths.ToArray());
             ((ICommunicationObject)client).Close();
@@ -120,14 +100,21 @@ namespace GinShellExtension
 
         private void FileDownload(object sender, EventArgs eventArgs)
         {
-            var myBinding = new WSDualHttpBinding();
-            var myEndpoint = new EndpointAddress("http://localhost:8733/Design_Time_Addresses/GinService/");
-            var myChannelFactory = new ChannelFactory<IGinService>(myBinding, myEndpoint);
-
-            var client = myChannelFactory.CreateChannel();
+            var client = CreateServiceClient();
 
             client.DownloadFiles(SelectedItemPaths.ToArray());
             ((ICommunicationObject)client).Close();
+        }
+
+        private IGinService CreateServiceClient()
+        {
+            var iContext = new InstanceContext(this);
+            var myBinding = new WSDualHttpBinding();
+            var myEndpoint = new EndpointAddress("http://localhost:8733/Design_Time_Addresses/GinService/");
+            var myChannelFactory = new DuplexChannelFactory<IGinService>(iContext, myBinding, myEndpoint);
+
+            var client = myChannelFactory.CreateChannel();
+            return client;
         }
 
         //Implementing IGinServiceCallback here, but don't actually do anything with it.
