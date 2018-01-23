@@ -191,7 +191,7 @@ namespace GinClientLibrary
 
             lock (this)
             {
-                GetCommandLineOutputEvent("cmd.exe", "/C gin.exe get-content \"" + filename + "\" --json", directoryName,
+                GetCommandLineOutputEvent("cmd.exe", "/C gin.exe get-content --json \"" + filename + "\"", directoryName,
                     out var error);
                 
 
@@ -220,7 +220,7 @@ namespace GinClientLibrary
             lock (this)
             {
                 OnFileOperationStarted(new FileOperationEventArgs(){File = filePath});
-                GetCommandLineOutputEvent("cmd.exe", "/C gin.exe upload \"" + filename + "\" --json", directoryName,
+                GetCommandLineOutputEvent("cmd.exe", "/C gin.exe upload --json \"" + filename + "\"", directoryName,
                     out var error);
 
 
@@ -304,7 +304,7 @@ namespace GinClientLibrary
                 {
                     OnFileOperationStarted(new FileOperationEventArgs(){File = Address});
 
-                    GetCommandLineOutputEvent("cmd.exe", "/C gin.exe get " + Address + " --json",
+                    GetCommandLineOutputEvent("cmd.exe", "/C gin.exe get --json " + Address,
                         PhysicalDirectory.Parent.FullName, out var error);
 
                     var result = string.IsNullOrEmpty(error);
@@ -319,7 +319,7 @@ namespace GinClientLibrary
                 {
                     OnFileOperationStarted(new FileOperationEventArgs() { File = Address });
 
-                    GetCommandLineOutputEvent("cmd.exe", "/C gin.exe download --content --json",
+                    GetCommandLineOutputEvent("cmd.exe", "/C gin.exe download --json --content",
                         PhysicalDirectory.Parent.FullName, out var error);
 
                     var result = string.IsNullOrEmpty(error);
