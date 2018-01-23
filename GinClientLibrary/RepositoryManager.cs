@@ -77,7 +77,6 @@ namespace GinClientLibrary
 
         public bool CreateNewRepository(string repoName)
         {
-            //TODO: Coordinate with achilleas to get the gin client to accept a --json parameter to gin repos
             //TODO: Return false if a repo with that name already exists
 
             lock (this)
@@ -352,7 +351,41 @@ namespace GinClientLibrary
 
         public string GetRemoteRepoList()
         {
-            throw new NotImplementedException();
+            return GetCommandLineOutput("cmd.exe", @"/C gin.exe repos --json --all", @"C:\", out string error);
+        }
+
+        private object _thisLock = new object();
+        private string GetCommandLineOutput(string program, string commandline, string workingDirectory,
+            out string error)
+        {
+            lock (_thisLock)
+            {
+                var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        FileName = program,
+                        WorkingDirectory = workingDirectory,
+                        Arguments = commandline,
+                        CreateNoWindow = true,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false
+                    }
+                };
+
+                process.OutputDataReceived += Process_OutputDataReceived;
+                Output.Clear();
+                process.Start();
+                process.BeginOutputReadLine();
+                error = process.StandardError.ReadToEnd();
+                process.WaitForExit();
+
+                var output = Output.ToString();
+                Output.Clear();
+                return output;
+            }
         }
     }
 }

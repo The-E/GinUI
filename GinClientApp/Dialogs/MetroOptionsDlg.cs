@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows.Forms;
 using GinClientApp.Properties;
 using GinClientLibrary;
+using GinClientLibrary.Extensions;
 using MetroFramework;
 using MetroFramework.Controls;
 using Newtonsoft.Json;
@@ -17,7 +18,7 @@ namespace GinClientApp.Dialogs
 
         public enum Page
         {
-            Login,
+            Login = 0,
             GlobalOptions,
             Repositories,
             About
@@ -29,7 +30,7 @@ namespace GinClientApp.Dialogs
 
             _parentContext = parentContext;
 
-            mTabCtrl.TabIndex = (int) startPage;
+            mTabCtrl.SelectTab((int) startPage);
 
             mLblStatus.Visible = false;
             mLblWorking.Visible = false;
@@ -42,6 +43,27 @@ namespace GinClientApp.Dialogs
             mTxBDefaultMountpoint.Text = GlobalOptions.Instance.DefaultMountpointDir.FullName;
             mTglDownloadAnnex.Checked = GlobalOptions.Instance.RepositoryCheckoutOption ==
                                         GlobalOptions.CheckoutOption.FullCheckout;
+            switch (GlobalOptions.Instance.RepositoryUpdateInterval)
+            {
+                case 0:
+                    mCBxRepoUpdates.SelectedIndex = 0;
+                    break;
+                case 5:
+                    mCBxRepoUpdates.SelectedIndex = 1;
+                    break;
+                case 15:
+                    mCBxRepoUpdates.SelectedIndex = 2;
+                    break;
+                case 30:
+                    mCBxRepoUpdates.SelectedIndex = 3;
+                    break;
+                case 60:
+                    mCBxRepoUpdates.SelectedIndex = 4;
+                    break;
+                default:
+                    mCBxRepoUpdates.SelectedIndex = 0;
+                    break;
+            }
 
             FillRepoList();
 
@@ -53,6 +75,11 @@ namespace GinClientApp.Dialogs
             _storedCredentials = (UserCredentials) UserCredentials.Instance.Clone();
         }
 
+        public void SetTab(Page page)
+        {
+            mTabCtrl.SelectTab((int)page);
+        }
+
         private void FillRepoList()
         {
             mLVwRepositories.Items.Clear();
@@ -60,7 +87,7 @@ namespace GinClientApp.Dialogs
             foreach (var repo in repos)
             {
                 mLVwRepositories.Items.Add(new ListViewItem(new[]
-                    {repo.Name, repo.PhysicalDirectory.FullName, repo.Mountpoint.FullName, repo.Address}));
+                    {repo.Name, repo.Mountpoint.FullName, repo.PhysicalDirectory.FullName, repo.Address}));
             }
             mLVwRepositories.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
         }
@@ -124,18 +151,18 @@ namespace GinClientApp.Dialogs
             Close();
         }
 
-        private void mBtnCheckout_Click(object sender, EventArgs e)
+        private async void mBtnCheckout_Click(object sender, EventArgs e)
         {
             var repoData = new GinRepositoryData(GlobalOptions.Instance.DefaultCheckoutDir, GlobalOptions.Instance.DefaultMountpointDir, "", "", false);
 
-            var createNewDlg = new MetroCreateNewRepoDlg(repoData);
+            var createNewDlg = new MetroCreateNewRepoDlg(repoData, _parentContext);
 
             if (createNewDlg.ShowDialog() == DialogResult.Cancel) return;
 
             repoData = createNewDlg.RepositoryData;
             StartShowProgress();
 
-            _parentContext.ServiceClient.AddRepository(repoData.PhysicalDirectory.FullName,
+            var result = await _parentContext.ServiceClient.AddRepositoryAsync(repoData.PhysicalDirectory.FullName,
                 repoData.Mountpoint.FullName, repoData.Name, repoData.Address,
                 GlobalOptions.Instance.RepositoryCheckoutOption == GlobalOptions.CheckoutOption.FullCheckout,
                 repoData.CreateNew);
@@ -167,19 +194,19 @@ namespace GinClientApp.Dialogs
             fs.Close();
         }
 
-        private void mBtnCreateNew_Click(object sender, EventArgs e)
+        private async void mBtnCreateNew_Click(object sender, EventArgs e)
         {
             var repoData = new GinRepositoryData(GlobalOptions.Instance.DefaultCheckoutDir, GlobalOptions.Instance.DefaultMountpointDir, "", "", true);
 
-            var createNewDlg = new MetroCreateNewRepoDlg(repoData);
+            var createNewDlg = new MetroCreateNewRepoDlg(repoData, _parentContext);
 
             if (createNewDlg.ShowDialog() == DialogResult.Cancel) return;
 
             repoData = createNewDlg.RepositoryData;
             StartShowProgress();
 
-            _parentContext.ServiceClient.CreateNewRepository(repoData.Name);
-            _parentContext.ServiceClient.AddRepository(repoData.PhysicalDirectory.FullName,
+            await _parentContext.ServiceClient.CreateNewRepositoryAsync(repoData.Name);
+            await _parentContext.ServiceClient.AddRepositoryAsync(repoData.PhysicalDirectory.FullName,
                 repoData.Mountpoint.FullName, repoData.Name, repoData.Address,
                 GlobalOptions.Instance.RepositoryCheckoutOption == GlobalOptions.CheckoutOption.FullCheckout,
                 repoData.CreateNew);
@@ -198,8 +225,9 @@ namespace GinClientApp.Dialogs
                 string.Format(Resources.Options_This_will_delete_the_repository, repo), 
                 Resources.GinClientApp_Gin_Client_Warning, MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
             if (res == DialogResult.Cancel) return;
-
+            
             _parentContext.ServiceClient.DeleteRepository(repo);
+
             FillRepoList();
         }
 
@@ -208,6 +236,9 @@ namespace GinClientApp.Dialogs
             mLblWorking.Visible = true;
             mProgWorking.Visible = true;
             mProgWorking.Spinning = true;
+
+            mBtnOK.Enabled = false;
+            mBtnCancel.Enabled = false;
         }
 
         private void StopShowProgress()
@@ -215,20 +246,17 @@ namespace GinClientApp.Dialogs
             mLblWorking.Visible   = false;
             mProgWorking.Visible  = false;
             mProgWorking.Spinning = false;
+
+            mBtnOK.Enabled = true;
+            mBtnCancel.Enabled = true;
         }
 
         private bool AttemptLogin()
         {
-            if (!string.IsNullOrEmpty(mTxBUsername.Text) && !string.IsNullOrEmpty(mTxBPassword.Text))
-            {
-                _parentContext.ServiceClient.Logout();
-                if (_parentContext.ServiceClient.Login(mTxBUsername.Text, mTxBPassword.Text))
-                {
-                    return true;
-                }
-            }
+            if (string.IsNullOrEmpty(mTxBUsername.Text) || string.IsNullOrEmpty(mTxBPassword.Text)) return false;
+            _parentContext.ServiceClient.Logout();
 
-            return false;
+            return _parentContext.ServiceClient.Login(mTxBUsername.Text, mTxBPassword.Text);
         }
 
         private void mTxBPassword_Leave(object sender, EventArgs e)

@@ -14,6 +14,7 @@ using Timer = System.Timers.Timer;
 
 namespace GinClientApp
 {
+    [CallbackBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant)]
     public class GinApplicationContext : ApplicationContext, IGinServiceCallback
     {
         public readonly GinServiceClient ServiceClient;
@@ -21,6 +22,7 @@ namespace GinClientApp
         private Timer _updateIntervalTimer;
 
         private ProgressDisplayDlg _progressDisplayDlg;
+        
         
         public GinApplicationContext()
         {
@@ -145,12 +147,19 @@ namespace GinClientApp
                 menuitems.Add(new MenuItem("-"));
 
             menuitems.Add(new MenuItem(Resources.GinApplicationContext_Manage_Repositories, ManageRepositoriesMenuItemHandler));
-
             menuitems.Add(new MenuItem(Resources.GinApplicationContext_Options, ShowOptionsMenuItemHandler));
-
+            menuitems.Add(new MenuItem(Resources.GinApplicationContext_About, ShowAboutMenuItemHandler));
+            menuitems.Add(new MenuItem("-"));
             menuitems.Add(new MenuItem(Resources.GinApplicationContext_Exit, Exit));
 
             return menuitems.ToArray();
+        }
+
+        private void ShowAboutMenuItemHandler(object sender, EventArgs e)
+        {
+            var optionsdlg = new MetroOptionsDlg(this, MetroOptionsDlg.Page.About);
+            optionsdlg.Closed += (o, args) => { if (_trayIcon != null) _trayIcon.ContextMenu = new ContextMenu(BuildContextMenu()); };
+            optionsdlg.Show();
         }
 
         private void UploadRepoMenuItemHandler(object sender, EventArgs e)
@@ -182,6 +191,7 @@ namespace GinClientApp
         private void ShowOptionsMenuItemHandler(object sender, EventArgs e)
         {
             var optionsDlg = new MetroOptionsDlg(this, MetroOptionsDlg.Page.GlobalOptions);
+            optionsDlg.Closed += (o, args) => { if (_trayIcon != null) _trayIcon.ContextMenu = new ContextMenu(BuildContextMenu()); };
             var res = optionsDlg.ShowDialog();
 
             if (res != DialogResult.OK) return;
@@ -278,7 +288,9 @@ namespace GinClientApp
 
         private void _trayIcon_DoubleClick(object sender, EventArgs e)
         {
-            //TODO: Implement a management interface
+            var repomanager = new MetroOptionsDlg(this, MetroOptionsDlg.Page.Repositories);
+            repomanager.Closed += (o, args) => { if (_trayIcon != null) _trayIcon.ContextMenu = new ContextMenu(BuildContextMenu()); };
+            repomanager.ShowDialog();
         }
 
         private void Exit(object sender, EventArgs e)

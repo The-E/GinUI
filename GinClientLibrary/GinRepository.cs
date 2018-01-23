@@ -516,9 +516,6 @@ namespace GinClientLibrary
                     Dokan.RemoveMountPoint(Mountpoint.FullName.Trim('\\'));
                 }
 
-            // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
-            // TODO: set large fields to null.
-
             _disposedValue = true;
         }
 

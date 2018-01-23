@@ -30,16 +30,19 @@ namespace GinClientApp.Dialogs
         {
             if (InvokeRequired)
             {
-                Invoke(new SetProgressBarStateDelegate(SetProgressBarState), filename, state, progress, rate);
+                BeginInvoke(new SetProgressBarStateDelegate(SetProgressBarState), filename, state, progress, rate);
             }
             else
             {
-                fileTransferProgress1.Filename = filename;
-                fileTransferProgress1.State = state;
-                fileTransferProgress1.Progress = progress;
-                fileTransferProgress1.Speed = rate;
+                lock (this)
+                {
+                    fileTransferProgress1.Filename = filename;
+                    fileTransferProgress1.State = state;
+                    fileTransferProgress1.Progress = progress;
+                    fileTransferProgress1.Speed = rate;
 
-                TaskbarManager.Instance.SetProgressValue(progress, 100);
+                    TaskbarManager.Instance.SetProgressValue(progress, 100);
+                }
             }
 
         }

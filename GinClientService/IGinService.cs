@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.ServiceModel;
 using GinClientLibrary;
@@ -76,6 +77,14 @@ namespace GinService
         string GetRepositoryList();
 
         /// <summary>
+        /// Get the RepoData for the repo specified by name
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>A JSON representation of a GinRepositoryData structure</returns>
+        [OperationContract]
+        string GetRepositoryInfo(string name);
+
+        /// <summary>
         /// Updates the stored information for the Repository indicated by repoName
         /// </summary>
         /// <param name="repoName">The previous name of the repository</param>
@@ -149,21 +158,45 @@ namespace GinService
         [OperationContract(IsInitiating = true, IsTerminating = true)]
         bool IsBasePath(string filePath);
 
+        /// <summary>
+        /// Performs a gin download on all specified repositories
+        /// </summary>
+        /// <param name="filePaths"></param>
         [OperationContract]
         void UpdateRepositories(IEnumerable<string> filePaths);
 
+        /// <summary>
+        /// Upload all non-synced files in the specified Repos
+        /// </summary>
+        /// <param name="filePaths"></param>
         [OperationContract]
         void UploadRepositories(IEnumerable<string> filePaths);
 
+        /// <summary>
+        /// Retrieves the specified files from their repositories
+        /// </summary>
+        /// <param name="filePaths"></param>
         [OperationContract]
         void DownloadFiles(IEnumerable<string> filePaths);
 
+        /// <summary>
+        /// Return the output of gin --version
+        /// </summary>
+        /// <returns></returns>
         [OperationContract]
         string GetGinCliVersion();
 
+        /// <summary>
+        /// Returns a JSON representation of a Dictionary(string, string), 
+        /// listing all available Repositories for the current user 
+        /// </summary>
+        /// <returns></returns>
         [OperationContract]
         string GetRemoteRepositoryList();
 
+        /// <summary>
+        /// Ends the session, logs out the current user and unmounts all currently mounted repos
+        /// </summary>
         [OperationContract(IsOneWay = true, IsTerminating = true)]
         void EndSession();
     }
