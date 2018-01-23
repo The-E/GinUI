@@ -23,6 +23,7 @@ namespace GinClientApp
 
         private ProgressDisplayDlg _progressDisplayDlg;
         
+        
         public GinApplicationContext()
         {
             _trayIcon = new NotifyIcon

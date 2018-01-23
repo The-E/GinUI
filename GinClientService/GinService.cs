@@ -192,7 +192,7 @@ namespace GinService
             return RepositoryManager.Instance.GetGinCliVersion();
         }
 
-        public string GetRemoteRepositoryList()
+        string IGinService.GetRemoteRepositoryList()
         {
             return RepositoryManager.Instance.GetRemoteRepoList();
         }

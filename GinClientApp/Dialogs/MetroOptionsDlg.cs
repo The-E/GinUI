@@ -18,7 +18,7 @@ namespace GinClientApp.Dialogs
 
         public enum Page
         {
-            Login,
+            Login = 0,
             GlobalOptions,
             Repositories,
             About
@@ -30,7 +30,7 @@ namespace GinClientApp.Dialogs
 
             _parentContext = parentContext;
 
-            mTabCtrl.TabIndex = (int) startPage;
+            mTabCtrl.SelectTab((int) startPage);
 
             mLblStatus.Visible = false;
             mLblWorking.Visible = false;
@@ -73,6 +73,11 @@ namespace GinClientApp.Dialogs
 
             _storedOptions = (GlobalOptions) GlobalOptions.Instance.Clone();
             _storedCredentials = (UserCredentials) UserCredentials.Instance.Clone();
+        }
+
+        public void SetTab(Page page)
+        {
+            mTabCtrl.SelectTab((int)page);
         }
 
         private void FillRepoList()
