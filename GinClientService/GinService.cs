@@ -11,6 +11,8 @@ namespace GinService
     [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Single, InstanceContextMode = InstanceContextMode.PerSession)]
     public class GinService : IGinService
     {
+
+
         public GinService()
         {
             RepositoryManager.Instance.MountAllRepositories();
