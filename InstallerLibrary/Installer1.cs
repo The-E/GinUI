@@ -21,7 +21,7 @@ namespace InstallerLibrary
     public partial class Installer1 : System.Configuration.Install.Installer
     {
         private static readonly string _ginURL =
-            "https://github.com/G-Node/gin-cli/releases/download/v0.12/gin-cli-0.12-windows-386.zip";
+            "https://web.gin.g-node.org/G-Node/gin-cli-releases/raw/master/gin-cli-latest-windows-386.zip";
 
         public DirectoryInfo Path;
 
@@ -36,11 +36,10 @@ namespace InstallerLibrary
         {
             DirectoryInfo path = new DirectoryInfo(Context.Parameters["assemblypath"]).Parent;
 
-            WebClient wb = new WebClient();
             Directory.CreateDirectory(path.FullName + @"\dokan\");
             Directory.CreateDirectory(path.FullName + @"\gin-cli\");
 
-            wb = new WebClient();
+            var wb = new WebClient();
             wb.DownloadFile(_ginURL, path.FullName + @"\gin-cli\gin-cli-latest-windows-386.zip");
 
             System.IO.Compression.ZipFile.ExtractToDirectory(path.FullName + @"\gin-cli\gin-cli-latest-windows-386.zip",
@@ -50,9 +49,10 @@ namespace InstallerLibrary
             value += ";" + path.FullName + @"\gin-cli\bin";
             value += ";" + path.FullName + @"\gin-cli\git\usr\bin";
             value += ";" + path.FullName + @"\gin-cli\git\bin";
-            System.Environment.SetEnvironmentVariable(name, value, EnvironmentVariableTarget.Machine);
+            System.Environment.SetEnvironmentVariable("PATH", value, EnvironmentVariableTarget.Machine);
 
             StartService("GinClientService");
+            Process.Start(path.FullName + @"\GinClientApp.exe");
         }
 
         public override void Install(IDictionary stateSaver)
