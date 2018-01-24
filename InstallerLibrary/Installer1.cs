@@ -7,16 +7,25 @@ using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.NetworkInformation;
 using System.Reflection;
+using System.Security.Policy;
 using System.ServiceProcess;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace GinClientApp
+namespace InstallerLibrary
 {
     [RunInstaller(true)]
     public partial class Installer1 : System.Configuration.Install.Installer
     {
+        private static readonly string _dokanURL =
+            "https://github.com/dokan-dev/dokany/releases/download/v1.1.0.2000/DokanSetup.exe";
+
+        private static readonly string _ginURL =
+            "https://github.com/G-Node/gin-cli/releases/download/v0.12/gin-cli-0.12-windows-386.zip";
+
         public Installer1()
         {
             InitializeComponent();
@@ -26,21 +35,26 @@ namespace GinClientApp
         {
             base.Install(stateSaver);
 
+            Debugger.Launch();
+
             if (IsServiceRunning("GinClientService"))
                 StopService("GinClientService");
 
             if (IsServiceInstalled("GinClientService"))
             {
-                Uninstall(null);
+                Uninstall(stateSaver);
             }
+
+            
+            DirectoryInfo path = new DirectoryInfo(Context.Parameters["targetdir"]);
 
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
                     WindowStyle = ProcessWindowStyle.Hidden,
-                    FileName = "GinService.exe",
-                    WorkingDirectory = Directory.GetCurrentDirectory(),
+                    FileName = path.FullName + "GinService.exe",
+                    WorkingDirectory = path.FullName,
                     Arguments = "-install",
                     CreateNoWindow = true,
                     RedirectStandardOutput = true,
@@ -55,8 +69,42 @@ namespace GinClientApp
 
             StartService("GinClientService");
 
-            //TODO: Execute Dokan installer
-            //TODO: Unzip gin client
+            //TODO: Download dokan installer
+            WebClient wb = new WebClient();
+            Directory.CreateDirectory(path.FullName + @"dokan\");
+            wb.DownloadFile(_dokanURL, path.FullName + @"dokan\" + "DokanSetup.exe");
+
+            process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    FileName = path.FullName + @"dokan\" + "DokanSetup.exe",
+                    WorkingDirectory = path.FullName,
+                    Arguments = "/install /quiet /norestart",
+                    CreateNoWindow = true,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false
+                }
+            };
+
+            process.Start();
+            process.BeginOutputReadLine();
+            process.WaitForExit();
+
+            //TODO: Download gin client
+            Directory.CreateDirectory(path.FullName + @"gin-cli\");
+            wb.DownloadFile(_ginURL, path.FullName + @"gin -cli\gin-cli-latest-windows-386.zip");
+
+            System.IO.Compression.ZipFile.ExtractToDirectory(path.FullName + @"gin-cli\gin-cli-latest-windows-386.zip",
+                path.FullName + @"gin-cli\");
+            var name = "PATH";
+            var value = System.Environment.GetEnvironmentVariable("PATH");
+            value += ";" + path.FullName + @"gin-cli\bin";
+            value += ";" + path.FullName + @"gin-cli\git\usr\bin";
+            value += ";" + path.FullName + @"gin-cli\git\bin";
+            System.Environment.SetEnvironmentVariable(name, value, EnvironmentVariableTarget.Machine);
         }
 
         public override void Rollback(IDictionary savedState)
@@ -71,6 +119,8 @@ namespace GinClientApp
 
         public override void Uninstall(IDictionary savedState)
         {
+            base.Uninstall(savedState);
+
             if (IsServiceRunning("GinClientService"))
                 StopService("GinClientService");
 

@@ -1,4 +1,4 @@
-﻿namespace GinClientApp
+﻿namespace InstallerLibrary
 {
     partial class Installer1
     {
