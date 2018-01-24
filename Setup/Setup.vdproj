@@ -925,7 +925,7 @@
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B2A8B87675A74704B3D56AF0910229C3"
             {
-            "SourcePath" = "8:..\\..\\..\\..\\Downloads\\DokanSetup.exe"
+            "SourcePath" = "8:Dokan\\DokanSetup.exe"
             "TargetName" = "8:DokanSetup.exe"
             "Tag" = "8:"
             "Folder" = "8:_463D921B042849C2A8DD9D30D236E61D"
