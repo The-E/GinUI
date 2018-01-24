@@ -20,41 +20,62 @@ namespace InstallerLibrary
     [RunInstaller(true)]
     public partial class Installer1 : System.Configuration.Install.Installer
     {
-        private static readonly string _dokanURL =
-            "https://github.com/dokan-dev/dokany/releases/download/v1.1.0.2000/DokanSetup.exe";
-
         private static readonly string _ginURL =
             "https://github.com/G-Node/gin-cli/releases/download/v0.12/gin-cli-0.12-windows-386.zip";
 
-        public Installer1()
+        public DirectoryInfo Path;
+
+        public Installer1() : base()
         {
             InitializeComponent();
+
+            this.Committed += Installer1_Committed;
+        }
+
+        private void Installer1_Committed(object sender, InstallEventArgs e)
+        {
+            DirectoryInfo path = new DirectoryInfo(Context.Parameters["assemblypath"]).Parent;
+
+            WebClient wb = new WebClient();
+            Directory.CreateDirectory(path.FullName + @"\dokan\");
+            Directory.CreateDirectory(path.FullName + @"\gin-cli\");
+
+            wb = new WebClient();
+            wb.DownloadFile(_ginURL, path.FullName + @"\gin-cli\gin-cli-latest-windows-386.zip");
+
+            System.IO.Compression.ZipFile.ExtractToDirectory(path.FullName + @"\gin-cli\gin-cli-latest-windows-386.zip",
+                path.FullName + @"\gin-cli\");
+            var name = "PATH";
+            var value = System.Environment.GetEnvironmentVariable("PATH");
+            value += ";" + path.FullName + @"\gin-cli\bin";
+            value += ";" + path.FullName + @"\gin-cli\git\usr\bin";
+            value += ";" + path.FullName + @"\gin-cli\git\bin";
+            System.Environment.SetEnvironmentVariable(name, value, EnvironmentVariableTarget.Machine);
+
+            StartService("GinClientService");
         }
 
         public override void Install(IDictionary stateSaver)
         {
             base.Install(stateSaver);
-
-            Debugger.Launch();
-
+            
             if (IsServiceRunning("GinClientService"))
                 StopService("GinClientService");
 
             if (IsServiceInstalled("GinClientService"))
             {
-                Uninstall(stateSaver);
+                Uninstallservice();
             }
-
             
-            DirectoryInfo path = new DirectoryInfo(Context.Parameters["targetdir"]);
+            Path = new DirectoryInfo(Context.Parameters["targetdir"]);
 
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
                     WindowStyle = ProcessWindowStyle.Hidden,
-                    FileName = path.FullName + "GinService.exe",
-                    WorkingDirectory = path.FullName,
+                    FileName = Path.FullName + "GinService.exe",
+                    WorkingDirectory = Path.FullName,
                     Arguments = "-install",
                     CreateNoWindow = true,
                     RedirectStandardOutput = true,
@@ -67,21 +88,14 @@ namespace InstallerLibrary
             process.BeginOutputReadLine();
             process.WaitForExit();
 
-            StartService("GinClientService");
-
-            //TODO: Download dokan installer
-            WebClient wb = new WebClient();
-            Directory.CreateDirectory(path.FullName + @"dokan\");
-            wb.DownloadFile(_dokanURL, path.FullName + @"dokan\" + "DokanSetup.exe");
-
             process = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
                     WindowStyle = ProcessWindowStyle.Hidden,
-                    FileName = path.FullName + @"dokan\" + "DokanSetup.exe",
-                    WorkingDirectory = path.FullName,
-                    Arguments = "/install /quiet /norestart",
+                    FileName = Path.FullName + "GinClientApp.exe",
+                    WorkingDirectory = Path.FullName,
+                    Arguments = "-install",
                     CreateNoWindow = true,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
@@ -92,19 +106,6 @@ namespace InstallerLibrary
             process.Start();
             process.BeginOutputReadLine();
             process.WaitForExit();
-
-            //TODO: Download gin client
-            Directory.CreateDirectory(path.FullName + @"gin-cli\");
-            wb.DownloadFile(_ginURL, path.FullName + @"gin -cli\gin-cli-latest-windows-386.zip");
-
-            System.IO.Compression.ZipFile.ExtractToDirectory(path.FullName + @"gin-cli\gin-cli-latest-windows-386.zip",
-                path.FullName + @"gin-cli\");
-            var name = "PATH";
-            var value = System.Environment.GetEnvironmentVariable("PATH");
-            value += ";" + path.FullName + @"gin-cli\bin";
-            value += ";" + path.FullName + @"gin-cli\git\usr\bin";
-            value += ";" + path.FullName + @"gin-cli\git\bin";
-            System.Environment.SetEnvironmentVariable(name, value, EnvironmentVariableTarget.Machine);
         }
 
         public override void Rollback(IDictionary savedState)
@@ -121,9 +122,16 @@ namespace InstallerLibrary
         {
             base.Uninstall(savedState);
 
+            Debugger.Launch();
+
             if (IsServiceRunning("GinClientService"))
                 StopService("GinClientService");
 
+            Uninstallservice();
+        }
+
+        private void Uninstallservice()
+        {
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo
