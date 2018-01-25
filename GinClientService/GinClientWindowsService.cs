@@ -13,8 +13,7 @@ namespace GinService
 
         public GinClientWindowsService()
         {
-            // Name the Windows Service
-            ServiceName = "GinService";
+            InitializeComponent();
         }
 
         public static void Main(string[] args)
@@ -49,9 +48,6 @@ namespace GinService
 
         protected override void OnStart(string[] args)
         {
-            //TODO: Remove before release!
-            Debugger.Launch();
-
             RepositoryManager.Instance.Logout();
 
             _serviceHost?.Close();

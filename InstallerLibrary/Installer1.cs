@@ -32,6 +32,8 @@ namespace InstallerLibrary
             this.Committed += Installer1_Committed;
         }
 
+        private volatile bool _downloadComplete;
+
         private void Installer1_Committed(object sender, InstallEventArgs e)
         {
             DirectoryInfo path = new DirectoryInfo(Context.Parameters["assemblypath"]).Parent;
@@ -39,8 +41,14 @@ namespace InstallerLibrary
             Directory.CreateDirectory(path.FullName + @"\dokan\");
             Directory.CreateDirectory(path.FullName + @"\gin-cli\");
 
+            _downloadComplete = false;
             var wb = new WebClient();
-            wb.DownloadFile(_ginURL, path.FullName + @"\gin-cli\gin-cli-latest-windows-386.zip");
+            wb.DownloadFileCompleted += Wb_DownloadFileCompleted;
+            wb.DownloadProgressChanged += WbOnDownloadProgressChanged;
+            wb.DownloadFileAsync(new Uri(_ginURL), path.FullName + @"\gin-cli\gin-cli-latest-windows-386.zip");
+
+            while (!_downloadComplete)
+                Thread.Sleep(500);
 
             System.IO.Compression.ZipFile.ExtractToDirectory(path.FullName + @"\gin-cli\gin-cli-latest-windows-386.zip",
                 path.FullName + @"\gin-cli\");
@@ -53,6 +61,16 @@ namespace InstallerLibrary
 
             StartService("GinClientService");
             Process.Start(path.FullName + @"\GinClientApp.exe");
+        }
+
+        private void WbOnDownloadProgressChanged(object sender, DownloadProgressChangedEventArgs downloadProgressChangedEventArgs)
+        {
+            Console.WriteLine(downloadProgressChangedEventArgs.ProgressPercentage);
+        }
+
+        private void Wb_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            _downloadComplete = true;
         }
 
         public override void Install(IDictionary stateSaver)
@@ -87,25 +105,6 @@ namespace InstallerLibrary
             process.Start();
             process.BeginOutputReadLine();
             process.WaitForExit();
-
-            process = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    WindowStyle = ProcessWindowStyle.Hidden,
-                    FileName = Path.FullName + "GinClientApp.exe",
-                    WorkingDirectory = Path.FullName,
-                    Arguments = "-install",
-                    CreateNoWindow = true,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false
-                }
-            };
-
-            process.Start();
-            process.BeginOutputReadLine();
-            process.WaitForExit();
         }
 
         public override void Rollback(IDictionary savedState)
@@ -121,9 +120,7 @@ namespace InstallerLibrary
         public override void Uninstall(IDictionary savedState)
         {
             base.Uninstall(savedState);
-
-            Debugger.Launch();
-
+            
             if (IsServiceRunning("GinClientService"))
                 StopService("GinClientService");
 
@@ -132,13 +129,16 @@ namespace InstallerLibrary
 
         private void Uninstallservice()
         {
+            Debugger.Launch();
+            DirectoryInfo path = new DirectoryInfo(Context.Parameters["assemblypath"]).Parent;
+
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
                     WindowStyle = ProcessWindowStyle.Hidden,
-                    FileName = "GinService.exe",
-                    WorkingDirectory = Directory.GetCurrentDirectory(),
+                    FileName = path.FullName + "GinService.exe",
+                    WorkingDirectory = path.FullName,
                     Arguments = "-uninstall",
                     CreateNoWindow = true,
                     RedirectStandardOutput = true,
