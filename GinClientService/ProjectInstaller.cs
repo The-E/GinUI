@@ -44,7 +44,7 @@ namespace GinService
             // 
             // serviceInstaller1
             // 
-            this._serviceInstaller1.ServiceName = "Gin Client Service";
+            this._serviceInstaller1.ServiceName = "GinClientService";
             // 
             // ProjectInstaller
             // 
