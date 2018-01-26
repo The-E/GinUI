@@ -196,6 +196,12 @@ namespace GinShellExtension.GinService {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/GetRepositoryList", ReplyAction="http://tempuri.org/IGinService/GetRepositoryListResponse")]
         System.Threading.Tasks.Task<string> GetRepositoryListAsync();
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/GetRepositoryInfo", ReplyAction="http://tempuri.org/IGinService/GetRepositoryInfoResponse")]
+        string GetRepositoryInfo(string name);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/GetRepositoryInfo", ReplyAction="http://tempuri.org/IGinService/GetRepositoryInfoResponse")]
+        System.Threading.Tasks.Task<string> GetRepositoryInfoAsync(string name);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UpdateRepository", ReplyAction="http://tempuri.org/IGinService/UpdateRepositoryResponse")]
         bool UpdateRepository(string repoName, GinShellExtension.GinService.GinRepositoryData data);
         
@@ -279,6 +285,12 @@ namespace GinShellExtension.GinService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/GetRemoteRepositoryList", ReplyAction="http://tempuri.org/IGinService/GetRemoteRepositoryListResponse")]
         System.Threading.Tasks.Task<string> GetRemoteRepositoryListAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IGinService/SetEnvironmentVariables")]
+        void SetEnvironmentVariables(string AppDataPath, string LocalAppDataPath);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IGinService/SetEnvironmentVariables")]
+        System.Threading.Tasks.Task SetEnvironmentVariablesAsync(string AppDataPath, string LocalAppDataPath);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, IsTerminating=true, Action="http://tempuri.org/IGinService/EndSession")]
         void EndSession();
@@ -403,6 +415,14 @@ namespace GinShellExtension.GinService {
             return base.Channel.GetRepositoryListAsync();
         }
         
+        public string GetRepositoryInfo(string name) {
+            return base.Channel.GetRepositoryInfo(name);
+        }
+        
+        public System.Threading.Tasks.Task<string> GetRepositoryInfoAsync(string name) {
+            return base.Channel.GetRepositoryInfoAsync(name);
+        }
+        
         public bool UpdateRepository(string repoName, GinShellExtension.GinService.GinRepositoryData data) {
             return base.Channel.UpdateRepository(repoName, data);
         }
@@ -513,6 +533,14 @@ namespace GinShellExtension.GinService {
         
         public System.Threading.Tasks.Task<string> GetRemoteRepositoryListAsync() {
             return base.Channel.GetRemoteRepositoryListAsync();
+        }
+        
+        public void SetEnvironmentVariables(string AppDataPath, string LocalAppDataPath) {
+            base.Channel.SetEnvironmentVariables(AppDataPath, LocalAppDataPath);
+        }
+        
+        public System.Threading.Tasks.Task SetEnvironmentVariablesAsync(string AppDataPath, string LocalAppDataPath) {
+            return base.Channel.SetEnvironmentVariablesAsync(AppDataPath, LocalAppDataPath);
         }
         
         public void EndSession() {

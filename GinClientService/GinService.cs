@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.ServiceModel;
@@ -199,8 +200,13 @@ namespace GinService
             return RepositoryManager.Instance.GetRemoteRepoList();
         }
 
-        
-        public void EndSession()
+        void IGinService.SetEnvironmentVariables(string AppDataPath, string LocalAppDataPath)
+        {
+            System.Environment.SetEnvironmentVariable("GIN_CONFIG_DIR", AppDataPath, EnvironmentVariableTarget.Machine);
+            System.Environment.SetEnvironmentVariable("GIN_LOG_DIR", LocalAppDataPath, EnvironmentVariableTarget.Machine);
+        }
+
+        void IGinService.EndSession()
         {
             RepositoryManager.Instance.UnmountAllRepositories();
             RepositoryManager.Instance.Logout();

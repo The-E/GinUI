@@ -38,6 +38,10 @@ namespace GinClientApp
             if (!Directory.Exists(saveFilePath))
                 Directory.CreateDirectory(saveFilePath);
 
+            #region Environment Variables
+            ServiceClient.SetEnvironmentVariables(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\g-node\gin\", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\g-node\gin\");
+            #endregion
+
             #region Login
 
             if (!UserCredentials.Load())
@@ -75,7 +79,7 @@ namespace GinClientApp
 
             if (GlobalOptions.Instance.RepositoryUpdateInterval > 0)
             {
-                _updateIntervalTimer = new Timer(GlobalOptions.Instance.RepositoryUpdateInterval * 1000) {AutoReset = true};
+                _updateIntervalTimer = new Timer(GlobalOptions.Instance.RepositoryUpdateInterval * 1000 * 60) {AutoReset = true};
                 _updateIntervalTimer.Elapsed += (sender, args) =>
                 {
                     ServiceClient.DownloadAllUpdateInfo();
