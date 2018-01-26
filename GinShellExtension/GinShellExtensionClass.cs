@@ -58,6 +58,10 @@ namespace GinShellExtension
             {
                 ((ICommunicationObject)client).Abort();
             }
+
+            menu.Items.Add(new ToolStripSeparator());
+            menu.Items.Add(baseItem);
+            menu.Items.Add(new ToolStripSeparator());
             return menu;
         }
 
@@ -82,34 +86,34 @@ namespace GinShellExtension
             return mItems.ToArray();
         }
 
-        private void RepoUpdate(object sender, EventArgs eventArgs)
+        private async void RepoUpdate(object sender, EventArgs eventArgs)
         {
             var client = CreateServiceClient();
 
-            client.UpdateRepositories(SelectedItemPaths.ToArray());
+            await client.UpdateRepositoriesAsync(SelectedItemPaths.ToArray());
             ((ICommunicationObject) client).Close();
         }
 
-        private void RepoUpload(object sender, EventArgs eventArgs)
+        private async void RepoUpload(object sender, EventArgs eventArgs)
         {
             var client = CreateServiceClient();
 
-            client.UploadRepositories(SelectedItemPaths.ToArray());
+            await client.UploadRepositoriesAsync(SelectedItemPaths.ToArray());
             ((ICommunicationObject)client).Close();
         }
 
-        private void FileDownload(object sender, EventArgs eventArgs)
+        private async void FileDownload(object sender, EventArgs eventArgs)
         {
             var client = CreateServiceClient();
 
-            client.DownloadFiles(SelectedItemPaths.ToArray());
+            await client.DownloadFilesAsync(SelectedItemPaths.ToArray());
             ((ICommunicationObject)client).Close();
         }
 
         private IGinService CreateServiceClient()
         {
             var iContext = new InstanceContext(this);
-            var myBinding = new WSDualHttpBinding();
+            var myBinding = new WSDualHttpBinding() { ClientBaseAddress = new Uri(@"http://localhost:8741/Design_Time_Addresses/GinService/")};
             var myEndpoint = new EndpointAddress("http://localhost:8733/Design_Time_Addresses/GinService/");
             var myChannelFactory = new DuplexChannelFactory<IGinService>(iContext, myBinding, myEndpoint);
 
