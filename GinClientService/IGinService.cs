@@ -195,6 +195,14 @@ namespace GinService
         string GetRemoteRepositoryList();
 
         /// <summary>
+        /// Sets the GIN_CONFIG_DIR and GIN_LOG_DIR environment variables for the service
+        /// </summary>
+        /// <param name="AppDataPath"></param>
+        /// <param name="LocalAppDataPath"></param>
+        [OperationContract(IsOneWay = true)]
+        void SetEnvironmentVariables(string AppDataPath, string LocalAppDataPath);
+
+        /// <summary>
         /// Ends the session, logs out the current user and unmounts all currently mounted repos
         /// </summary>
         [OperationContract(IsOneWay = true, IsTerminating = true)]

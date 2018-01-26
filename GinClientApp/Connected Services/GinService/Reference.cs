@@ -159,6 +159,12 @@ namespace GinClientApp.GinService {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/GetRemoteRepositoryList", ReplyAction="http://tempuri.org/IGinService/GetRemoteRepositoryListResponse")]
         System.Threading.Tasks.Task<string> GetRemoteRepositoryListAsync();
         
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IGinService/SetEnvironmentVariables")]
+        void SetEnvironmentVariables(string AppDataPath, string LocalAppDataPath);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IGinService/SetEnvironmentVariables")]
+        System.Threading.Tasks.Task SetEnvironmentVariablesAsync(string AppDataPath, string LocalAppDataPath);
+        
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, IsTerminating=true, Action="http://tempuri.org/IGinService/EndSession")]
         void EndSession();
         
@@ -400,6 +406,14 @@ namespace GinClientApp.GinService {
         
         public System.Threading.Tasks.Task<string> GetRemoteRepositoryListAsync() {
             return base.Channel.GetRemoteRepositoryListAsync();
+        }
+        
+        public void SetEnvironmentVariables(string AppDataPath, string LocalAppDataPath) {
+            base.Channel.SetEnvironmentVariables(AppDataPath, LocalAppDataPath);
+        }
+        
+        public System.Threading.Tasks.Task SetEnvironmentVariablesAsync(string AppDataPath, string LocalAppDataPath) {
+            return base.Channel.SetEnvironmentVariablesAsync(AppDataPath, LocalAppDataPath);
         }
         
         public void EndSession() {

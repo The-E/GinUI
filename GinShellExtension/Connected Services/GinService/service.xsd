@@ -114,6 +114,20 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  <xs:element name="GetRepositoryInfo">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="name" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetRepositoryInfoResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="GetRepositoryInfoResult" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
   <xs:element name="UpdateRepository">
     <xs:complexType>
       <xs:sequence>
@@ -290,6 +304,14 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="GetRemoteRepositoryListResult" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="SetEnvironmentVariables">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="AppDataPath" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="LocalAppDataPath" nillable="true" type="xs:string" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
