@@ -59,6 +59,21 @@ namespace InstallerLibrary
             value += ";" + path.FullName + @"\gin-cli\git\bin";
             System.Environment.SetEnvironmentVariable("PATH", value, EnvironmentVariableTarget.Machine);
 
+            string arguments;
+            var domain = System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().DomainName;
+            if (string.IsNullOrEmpty(domain))
+                arguments = @"http add urlacl url=http://+:8738/Design_Time_Addresses/GinService/ user=%COMPUTERNAME%\%USERNAME%";
+            else
+                arguments = @"http add urlacl url=http://+:8738/Design_Time_Addresses/GinService/ user=" + domain + @"\%USERNAME%";
+            
+            ProcessStartInfo procStartInfo = new ProcessStartInfo("netsh", arguments);
+
+            procStartInfo.RedirectStandardOutput = true;
+            procStartInfo.UseShellExecute = false;
+            procStartInfo.CreateNoWindow = true;
+
+            Process.Start(procStartInfo);
+
             StartService("GinClientService");
             Process.Start(path.FullName + @"\GinClientApp.exe");
         }
