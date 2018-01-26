@@ -58,6 +58,10 @@ namespace GinShellExtension
             {
                 ((ICommunicationObject)client).Abort();
             }
+
+            menu.Items.Add(new ToolStripSeparator());
+            menu.Items.Add(baseItem);
+            menu.Items.Add(new ToolStripSeparator());
             return menu;
         }
 
@@ -109,7 +113,7 @@ namespace GinShellExtension
         private IGinService CreateServiceClient()
         {
             var iContext = new InstanceContext(this);
-            var myBinding = new WSDualHttpBinding();
+            var myBinding = new WSDualHttpBinding() { ClientBaseAddress = new Uri(@"http://localhost:8741/Design_Time_Addresses/GinService/")};
             var myEndpoint = new EndpointAddress("http://localhost:8733/Design_Time_Addresses/GinService/");
             var myChannelFactory = new DuplexChannelFactory<IGinService>(iContext, myBinding, myEndpoint);
 
