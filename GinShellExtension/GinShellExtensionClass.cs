@@ -16,7 +16,24 @@ namespace GinShellExtension
     public class GinShellExtensionClass : SharpContextMenu, IGinServiceCallback
     {
         private bool _clientFaulted;
-        
+
+        //Implementing IGinServiceCallback here, but don't actually do anything with it.
+        public void FileOperationStarted(string filename, string repository)
+        {
+        }
+
+        public void FileOperationFinished(string filename, string repository, bool success)
+        {
+        }
+
+        public void FileOperationProgress(string filename, string repository, int progress, string speed, string state)
+        {
+        }
+
+        public void GinServiceError(string message)
+        {
+        }
+
 
         protected override bool CanShowMenu()
         {
@@ -32,14 +49,13 @@ namespace GinShellExtension
             }
             catch
             {
-                ((ICommunicationObject)client).Abort();
+                ((ICommunicationObject) client).Abort();
                 return false;
             }
         }
 
         protected override ContextMenuStrip CreateMenu()
         {
-
             var menu = new ContextMenuStrip();
 
             var baseItem = new ToolStripMenuItem("Gin Repository");
@@ -56,7 +72,7 @@ namespace GinShellExtension
             }
             catch
             {
-                ((ICommunicationObject)client).Abort();
+                ((ICommunicationObject) client).Abort();
             }
 
             menu.Items.Add(new ToolStripSeparator());
@@ -69,7 +85,7 @@ namespace GinShellExtension
         {
             var mItems = new List<ToolStripItem>
             {
-                new ToolStripMenuItem("Download File", null, FileDownload),
+                new ToolStripMenuItem("Download File", null, FileDownload)
             };
 
             return mItems.ToArray();
@@ -99,7 +115,7 @@ namespace GinShellExtension
             var client = ServiceClient.CreateServiceClient(this, 8741);
 
             await client.UploadRepositoriesAsync(SelectedItemPaths.ToArray());
-            ((ICommunicationObject)client).Close();
+            ((ICommunicationObject) client).Close();
         }
 
         private async void FileDownload(object sender, EventArgs eventArgs)
@@ -107,24 +123,7 @@ namespace GinShellExtension
             var client = ServiceClient.CreateServiceClient(this, 8741);
 
             await client.DownloadFilesAsync(SelectedItemPaths.ToArray());
-            ((ICommunicationObject)client).Close();
-        }
-
-        //Implementing IGinServiceCallback here, but don't actually do anything with it.
-        public void FileOperationStarted(string filename, string repository)
-        {
-        }
-
-        public void FileOperationFinished(string filename, string repository, bool success)
-        {
-        }
-
-        public void FileOperationProgress(string filename, string repository, int progress, string speed, string state)
-        {
-        }
-
-        public void GinServiceError(string message)
-        {
+            ((ICommunicationObject) client).Close();
         }
     }
 }

@@ -14,7 +14,6 @@ namespace GinClientLibrary
 {
     /// <summary>
     ///     Manages all repositories. Responsible for mounting, unmounting, deleting and creating repositories on disk.
-    /// 
     /// </summary>
     public class RepositoryManager
     {
@@ -30,14 +29,11 @@ namespace GinClientLibrary
             GinRepository.FileOperationErrorEventArgs message);
 
         private static RepositoryManager _instance;
+        private static readonly StringBuilder Output = new StringBuilder("");
+
+        private readonly object _thisLock = new object();
 
         private List<GinRepository> _repositories;
-        private static readonly StringBuilder Output = new StringBuilder("");
-        private void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
-        {
-            if (!IsNullOrEmpty(e.Data))
-                Output.AppendLine(e.Data);
-        }
 
         private RepositoryManager()
         {
@@ -46,6 +42,12 @@ namespace GinClientLibrary
         public static RepositoryManager Instance => _instance ?? (_instance = new RepositoryManager());
 
         public List<GinRepository> Repositories => _repositories ?? (_repositories = new List<GinRepository>());
+
+        private void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            if (!IsNullOrEmpty(e.Data))
+                Output.AppendLine(e.Data);
+        }
 
         public GinRepository GetRepoByName(string name)
         {
@@ -71,7 +73,7 @@ namespace GinClientLibrary
                         UseShellExecute = false
                     }
                 };
-                
+
                 process.Start();
             }
         }
@@ -128,17 +130,22 @@ namespace GinClientLibrary
                 process.BeginOutputReadLine();
                 process.StandardInput.WriteLine(password);
                 var error = process.StandardError.ReadToEnd();
-                
+
                 process.WaitForExit();
 
                 if (IsNullOrEmpty(error)) return true;
-                Instance.OnRepositoryOperationError(null, new GinRepository.FileOperationErrorEventArgs() { RepositoryName = "RepositoryManager", Message = error });
+                Instance.OnRepositoryOperationError(null,
+                    new GinRepository.FileOperationErrorEventArgs
+                    {
+                        RepositoryName = "RepositoryManager",
+                        Message = error
+                    });
                 return false;
             }
         }
 
         /// <summary>
-        /// Given a file path, return the GinRepository instance managing that path, or null if no such path can be found
+        ///     Given a file path, return the GinRepository instance managing that path, or null if no such path can be found
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
@@ -148,7 +155,7 @@ namespace GinClientLibrary
         }
 
         /// <summary>
-        /// Returns true if the passed path is the root directory of a repository, false otherwise
+        ///     Returns true if the passed path is the root directory of a repository, false otherwise
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
@@ -191,7 +198,7 @@ namespace GinClientLibrary
         }
 
         /// <summary>
-        /// Returns true if the given path is a path managed by the Repomanager
+        ///     Returns true if the given path is a path managed by the Repomanager
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
@@ -201,7 +208,7 @@ namespace GinClientLibrary
         }
 
         /// <summary>
-        /// Get the file status of every file in a repository
+        ///     Get the file status of every file in a repository
         /// </summary>
         /// <param name="ginRepository"></param>
         /// <returns></returns>
@@ -211,7 +218,7 @@ namespace GinClientLibrary
         }
 
         /// <summary>
-        /// Mount a repository
+        ///     Mount a repository
         /// </summary>
         /// <param name="repo"></param>
         public void MountRepository(GinRepository repo)
@@ -226,7 +233,7 @@ namespace GinClientLibrary
         }
 
         /// <summary>
-        /// Update the repository indicated by "repoName" with new RepositoryData.
+        ///     Update the repository indicated by "repoName" with new RepositoryData.
         /// </summary>
         /// <param name="repoName"></param>
         /// <param name="data"></param>
@@ -274,10 +281,12 @@ namespace GinClientLibrary
             }
         }
 
-        public void AddRepository(DirectoryInfo physicalDirectory, DirectoryInfo mountpoint, string name, string commandline, bool performFullCheckout, bool createNew)
+        public void AddRepository(DirectoryInfo physicalDirectory, DirectoryInfo mountpoint, string name,
+            string commandline, bool performFullCheckout, bool createNew)
         {
             //Repository already exists
-            if (Repositories.Any(repository => string.Compare(repository.Name, name, StringComparison.InvariantCultureIgnoreCase) == 0))
+            if (Repositories.Any(repository =>
+                Compare(repository.Name, name, StringComparison.InvariantCultureIgnoreCase) == 0))
                 return;
 
             var repo = new GinRepository(
@@ -350,31 +359,11 @@ namespace GinClientLibrary
             RepositoryOperationError?.Invoke(sender, message);
         }
 
-
-        //{"filename":"gin-cli-0.12dev.deb","state":"Downloading","progress":"","rate":"","err":""}
-        private struct fileOpProgress
-        {
-            public string filename { get; set; }
-            public string state { get; set; }
-            public string progress { get; set; }
-            public string rate { get; set; }
-            public string err { get; set; }
-
-            public int GetProgress()
-            {
-                if (!IsNullOrEmpty(progress))
-                    return int.Parse(progress.Trim('%'));
-
-                return 0;
-            }
-        }
-
         public string GetRemoteRepoList()
         {
-            return GetCommandLineOutput("cmd.exe", @"/C gin.exe repos --json --all", @"C:\", out string error);
+            return GetCommandLineOutput("cmd.exe", @"/C gin.exe repos --json --all", @"C:\", out var error);
         }
 
-        private readonly object _thisLock = new object();
         private string GetCommandLineOutput(string program, string commandline, string workingDirectory,
             out string error)
         {
@@ -405,6 +394,25 @@ namespace GinClientLibrary
                 var output = Output.ToString();
                 Output.Clear();
                 return output;
+            }
+        }
+
+
+        //{"filename":"gin-cli-0.12dev.deb","state":"Downloading","progress":"","rate":"","err":""}
+        private struct fileOpProgress
+        {
+            public string filename { get; set; }
+            public string state { get; set; }
+            public string progress { get; set; }
+            public string rate { get; set; }
+            public string err { get; set; }
+
+            public int GetProgress()
+            {
+                if (!IsNullOrEmpty(progress))
+                    return int.Parse(progress.Trim('%'));
+
+                return 0;
             }
         }
     }

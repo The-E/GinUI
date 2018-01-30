@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Windows.Forms;
 using GinClientApp.Custom_Controls;
 using Microsoft.WindowsAPICodePack.Taskbar;
@@ -23,17 +22,11 @@ namespace GinClientApp.Dialogs
         {
         }
 
-
-        private delegate void SetProgressBarStateDelegate(string filename, string state, int progress, string rate);
-        
         public void SetProgressBarState(string filename, string state, int progress, string rate)
         {
             if (InvokeRequired)
-            {
                 BeginInvoke(new SetProgressBarStateDelegate(SetProgressBarState), filename, state, progress, rate);
-            }
             else
-            {
                 lock (this)
                 {
                     fileTransferProgress1.Filename = filename;
@@ -43,8 +36,9 @@ namespace GinClientApp.Dialogs
 
                     TaskbarManager.Instance.SetProgressValue(progress, 100);
                 }
-            }
-
         }
+
+
+        private delegate void SetProgressBarStateDelegate(string filename, string state, int progress, string rate);
     }
 }

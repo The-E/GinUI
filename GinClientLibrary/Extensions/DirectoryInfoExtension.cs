@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 
 namespace GinClientLibrary.Extensions
 {
@@ -9,7 +8,8 @@ namespace GinClientLibrary.Extensions
     {
         public static void Empty(this DirectoryInfo directory)
         {
-            File.SetAttributes(directory.FullName, File.GetAttributes(directory.FullName) & ~(FileAttributes.Hidden | FileAttributes.ReadOnly));
+            File.SetAttributes(directory.FullName,
+                File.GetAttributes(directory.FullName) & ~(FileAttributes.Hidden | FileAttributes.ReadOnly));
 
             foreach (var file in directory.GetFiles("*", SearchOption.AllDirectories))
                 try

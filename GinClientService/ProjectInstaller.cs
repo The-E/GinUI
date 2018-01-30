@@ -10,9 +10,9 @@ namespace GinService
     public class ProjectInstaller : Installer
     {
         private readonly ServiceProcessInstaller _process;
-        private ServiceProcessInstaller _serviceProcessInstaller1;
-        private ServiceInstaller _serviceInstaller1;
         private readonly ServiceInstaller _service;
+        private ServiceInstaller _serviceInstaller1;
+        private ServiceProcessInstaller _serviceProcessInstaller1;
 
         public ProjectInstaller()
         {
@@ -26,32 +26,33 @@ namespace GinService
                 Description = "Provides background services for the Gin infrastructure",
                 StartType = ServiceStartMode.Automatic
             };
-            
+
             Installers.Add(_process);
             Installers.Add(_service);
         }
 
         private void InitializeComponent()
         {
-            this._serviceProcessInstaller1 = new System.ServiceProcess.ServiceProcessInstaller();
-            this._serviceInstaller1 = new System.ServiceProcess.ServiceInstaller();
+            _serviceProcessInstaller1 = new ServiceProcessInstaller();
+            _serviceInstaller1 = new ServiceInstaller();
             // 
             // serviceProcessInstaller1
             // 
-            this._serviceProcessInstaller1.Account = System.ServiceProcess.ServiceAccount.LocalService;
-            this._serviceProcessInstaller1.Password = null;
-            this._serviceProcessInstaller1.Username = null;
+            _serviceProcessInstaller1.Account = ServiceAccount.LocalService;
+            _serviceProcessInstaller1.Password = null;
+            _serviceProcessInstaller1.Username = null;
             // 
             // serviceInstaller1
             // 
-            this._serviceInstaller1.ServiceName = "GinClientService";
+            _serviceInstaller1.ServiceName = "GinClientService";
             // 
             // ProjectInstaller
             // 
-            this.Installers.AddRange(new System.Configuration.Install.Installer[] {
-            this._serviceProcessInstaller1,
-            this._serviceInstaller1});
-
+            Installers.AddRange(new Installer[]
+            {
+                _serviceProcessInstaller1,
+                _serviceInstaller1
+            });
         }
     }
 }

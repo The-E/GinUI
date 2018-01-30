@@ -1,20 +1,15 @@
-﻿using GinClientLibrary;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using GinClientLibrary;
+using MetroFramework.Forms;
+using Newtonsoft.Json;
 
 namespace GinClientApp.Dialogs
 {
-    public partial class MetroRepoBrowser : MetroFramework.Forms.MetroForm
+    public partial class MetroRepoBrowser : MetroForm
     {
-        public string SelectedRepository { get; set; }
         private readonly RepositoryListing[] _repositories;
 
         public MetroRepoBrowser(GinApplicationContext context)
@@ -33,7 +28,9 @@ namespace GinClientApp.Dialogs
             mTxBRepoDescription.Text = "";
         }
 
-        TreeNode MakeTreeFromPaths(List<string> paths, string rootNodeName = "", char separator = '/')
+        public string SelectedRepository { get; set; }
+
+        private TreeNode MakeTreeFromPaths(List<string> paths, string rootNodeName = "", char separator = '/')
         {
             var rootNode = new TreeNode(rootNodeName);
             foreach (var path in paths.Where(x => !string.IsNullOrEmpty(x.Trim())))
@@ -57,7 +54,6 @@ namespace GinClientApp.Dialogs
 
         private void trVwRepositories_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            
         }
 
         private void trVwRepositories_AfterSelect(object sender, TreeViewEventArgs e)

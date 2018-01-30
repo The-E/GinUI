@@ -3,19 +3,15 @@ using System.IO;
 using System.Windows.Forms;
 using GinClientApp.Properties;
 using GinClientLibrary;
-using GinClientLibrary.Extensions;
 using MetroFramework;
 using MetroFramework.Controls;
+using MetroFramework.Forms;
 using Newtonsoft.Json;
 
 namespace GinClientApp.Dialogs
 {
-    public partial class MetroOptionsDlg : MetroFramework.Forms.MetroForm
+    public partial class MetroOptionsDlg : MetroForm
     {
-        private readonly GlobalOptions _storedOptions;
-        private readonly UserCredentials _storedCredentials;
-        private readonly GinApplicationContext _parentContext;
-
         public enum Page
         {
             Login = 0,
@@ -23,6 +19,10 @@ namespace GinClientApp.Dialogs
             Repositories,
             About
         }
+
+        private readonly GinApplicationContext _parentContext;
+        private readonly UserCredentials _storedCredentials;
+        private readonly GlobalOptions _storedOptions;
 
         public MetroOptionsDlg(GinApplicationContext parentContext, Page startPage)
         {
@@ -77,18 +77,17 @@ namespace GinClientApp.Dialogs
 
         public void SetTab(Page page)
         {
-            mTabCtrl.SelectTab((int)page);
+            mTabCtrl.SelectTab((int) page);
         }
 
         private void FillRepoList()
         {
             mLVwRepositories.Items.Clear();
-            var repos = JsonConvert.DeserializeObject<GinRepositoryData[]>(_parentContext.ServiceClient.GetRepositoryList());
+            var repos = JsonConvert.DeserializeObject<GinRepositoryData[]>(_parentContext.ServiceClient
+                .GetRepositoryList());
             foreach (var repo in repos)
-            {
                 mLVwRepositories.Items.Add(new ListViewItem(new[]
                     {repo.Name, repo.Mountpoint.FullName, repo.PhysicalDirectory.FullName, repo.Address}));
-            }
             mLVwRepositories.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
         }
 
@@ -110,7 +109,7 @@ namespace GinClientApp.Dialogs
             {
                 SelectedPath = directory.FullName
             };
-            
+
             if (dlg.ShowDialog() == DialogResult.OK)
                 directory = new DirectoryInfo(dlg.SelectedPath);
 
@@ -153,7 +152,8 @@ namespace GinClientApp.Dialogs
 
         private async void mBtnCheckout_Click(object sender, EventArgs e)
         {
-            var repoData = new GinRepositoryData(GlobalOptions.Instance.DefaultCheckoutDir, GlobalOptions.Instance.DefaultMountpointDir, "", "", false);
+            var repoData = new GinRepositoryData(GlobalOptions.Instance.DefaultCheckoutDir,
+                GlobalOptions.Instance.DefaultMountpointDir, "", "", false);
 
             var createNewDlg = new MetroCreateNewRepoDlg(repoData, _parentContext);
 
@@ -176,7 +176,8 @@ namespace GinClientApp.Dialogs
 
         private void SaveRepoList()
         {
-            var repos = JsonConvert.DeserializeObject<GinRepositoryData[]>(_parentContext.ServiceClient.GetRepositoryList());
+            var repos = JsonConvert.DeserializeObject<GinRepositoryData[]>(_parentContext.ServiceClient
+                .GetRepositoryList());
 
             var saveFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
                            @"\g-node\GinWindowsClient\SavedRepositories.json";
@@ -196,7 +197,8 @@ namespace GinClientApp.Dialogs
 
         private async void mBtnCreateNew_Click(object sender, EventArgs e)
         {
-            var repoData = new GinRepositoryData(GlobalOptions.Instance.DefaultCheckoutDir, GlobalOptions.Instance.DefaultMountpointDir, "", "", true);
+            var repoData = new GinRepositoryData(GlobalOptions.Instance.DefaultCheckoutDir,
+                GlobalOptions.Instance.DefaultMountpointDir, "", "", true);
 
             var createNewDlg = new MetroCreateNewRepoDlg(repoData, _parentContext);
 
@@ -210,7 +212,7 @@ namespace GinClientApp.Dialogs
                 repoData.Mountpoint.FullName, repoData.Name, repoData.Address,
                 GlobalOptions.Instance.RepositoryCheckoutOption == GlobalOptions.CheckoutOption.FullCheckout,
                 repoData.CreateNew);
-           
+
             StopShowProgress();
 
             FillRepoList();
@@ -222,10 +224,10 @@ namespace GinClientApp.Dialogs
 
             var repo = mLVwRepositories.SelectedItems[0].SubItems[0].Text;
             var res = MetroMessageBox.Show(this,
-                string.Format(Resources.Options_This_will_delete_the_repository, repo), 
+                string.Format(Resources.Options_This_will_delete_the_repository, repo),
                 Resources.GinClientApp_Gin_Client_Warning, MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
             if (res == DialogResult.Cancel) return;
-            
+
             _parentContext.ServiceClient.DeleteRepository(repo);
 
             FillRepoList();
@@ -243,8 +245,8 @@ namespace GinClientApp.Dialogs
 
         private void StopShowProgress()
         {
-            mLblWorking.Visible   = false;
-            mProgWorking.Visible  = false;
+            mLblWorking.Visible = false;
+            mProgWorking.Visible = false;
             mProgWorking.Spinning = false;
 
             mBtnOK.Enabled = true;

@@ -1,5 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:import namespace="http://schemas.datacontract.org/2004/07/GinClientLibrary" />
   <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
   <xs:element name="AddRepository">
@@ -132,7 +134,8 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="repoName" nillable="true" type="xs:string" />
-        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/GinClientLibrary" minOccurs="0" name="data" nillable="true" type="q1:GinRepositoryData" />
+        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/GinClientLibrary" minOccurs="0" name="data"
+                    nillable="true" type="q1:GinRepositoryData" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -278,7 +281,8 @@
   <xs:element name="UpdateRepositories">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q2="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="filePaths" nillable="true" type="q2:ArrayOfstring" />
+        <xs:element xmlns:q2="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="filePaths"
+                    nillable="true" type="q2:ArrayOfstring" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -290,7 +294,8 @@
   <xs:element name="UploadRepositories">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q3="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="filePaths" nillable="true" type="q3:ArrayOfstring" />
+        <xs:element xmlns:q3="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="filePaths"
+                    nillable="true" type="q3:ArrayOfstring" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -302,7 +307,8 @@
   <xs:element name="DownloadFiles">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q4="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="filePaths" nillable="true" type="q4:ArrayOfstring" />
+        <xs:element xmlns:q4="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="filePaths"
+                    nillable="true" type="q4:ArrayOfstring" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

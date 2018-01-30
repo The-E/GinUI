@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.ServiceModel;
@@ -10,7 +9,8 @@ using Newtonsoft.Json;
 namespace GinService
 {
     /// <summary>
-    /// Main implementation of IGinService. This maps the functionality described in that interface on the RepositoryManager functionality.
+    ///     Main implementation of IGinService. This maps the functionality described in that interface on the
+    ///     RepositoryManager functionality.
     /// </summary>
     [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Single, InstanceContextMode = InstanceContextMode.PerSession)]
     public class GinService : IGinService
@@ -32,9 +32,10 @@ namespace GinService
 
             //We need to issue a logout at this point to clear any potentially invalid tokens
         }
-        
 
-        bool IGinService.AddRepository(string physicalDirectory, string mountpoint, string name, string commandline, bool performFullCheckout, bool createNew)
+
+        bool IGinService.AddRepository(string physicalDirectory, string mountpoint, string name, string commandline,
+            bool performFullCheckout, bool createNew)
         {
             RepositoryManager.Instance.AddRepository(new DirectoryInfo(physicalDirectory),
                 new DirectoryInfo(mountpoint), name, commandline, performFullCheckout, createNew);
@@ -51,9 +52,7 @@ namespace GinService
             lock (this)
             {
                 foreach (var repo in RepositoryManager.Instance.Repositories)
-                {
                     repo.DownloadUpdateInfo();
-                }
             }
         }
 
@@ -196,9 +195,7 @@ namespace GinService
             var repo = RepositoryManager.Instance.GetRepoByPath(files.First());
 
             foreach (var file in files)
-            {
                 repo.RetrieveFile(file);
-            }
         }
 
         string IGinService.GetGinCliVersion()
@@ -213,8 +210,8 @@ namespace GinService
 
         void IGinService.SetEnvironmentVariables(string AppDataPath, string LocalAppDataPath)
         {
-            System.Environment.SetEnvironmentVariable("GIN_CONFIG_DIR", AppDataPath, EnvironmentVariableTarget.Machine);
-            System.Environment.SetEnvironmentVariable("GIN_LOG_DIR", LocalAppDataPath, EnvironmentVariableTarget.Machine);
+            Environment.SetEnvironmentVariable("GIN_CONFIG_DIR", AppDataPath, EnvironmentVariableTarget.Machine);
+            Environment.SetEnvironmentVariable("GIN_LOG_DIR", LocalAppDataPath, EnvironmentVariableTarget.Machine);
         }
 
         void IGinService.EndSession()

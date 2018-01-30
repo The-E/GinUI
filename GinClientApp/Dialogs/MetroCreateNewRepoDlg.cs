@@ -1,22 +1,20 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using GinClientApp.Properties;
 using GinClientLibrary;
 using GinClientLibrary.Extensions;
 using MetroFramework;
+using MetroFramework.Forms;
 
 namespace GinClientApp.Dialogs
 {
     /// <summary>
-    /// Dialog to create/check out a new Repository
+    ///     Dialog to create/check out a new Repository
     /// </summary>
-    public partial class MetroCreateNewRepoDlg : MetroFramework.Forms.MetroForm
+    public partial class MetroCreateNewRepoDlg : MetroForm
     {
-        public GinRepositoryData RepositoryData { get; }
-
         private readonly GinApplicationContext _appContext;
 
         public MetroCreateNewRepoDlg(GinRepositoryData data, GinApplicationContext appContext)
@@ -32,11 +30,15 @@ namespace GinClientApp.Dialogs
             mTxBRepoAddress.WaterMark = Resources.Options__username___repository_;
 
             createNewRepoToolTip.SetToolTip(mBtnRepoBrowser, Resources.CreateNewRepoDlg_Open_the_repository_browser);
-            createNewRepoToolTip.SetToolTip(mBtnPickRepoCheckoutDir, Resources.MetroCreateNewRepoDlg_Choose_a_directory_for_the_checkout);
-            createNewRepoToolTip.SetToolTip(mBtnPickRepoMountpointDir, Resources.MetroCreateNewRepoDlg_Choose_a_directory_for_the_mountpoint);
+            createNewRepoToolTip.SetToolTip(mBtnPickRepoCheckoutDir,
+                Resources.MetroCreateNewRepoDlg_Choose_a_directory_for_the_checkout);
+            createNewRepoToolTip.SetToolTip(mBtnPickRepoMountpointDir,
+                Resources.MetroCreateNewRepoDlg_Choose_a_directory_for_the_mountpoint);
 
             _appContext = appContext;
         }
+
+        public GinRepositoryData RepositoryData { get; }
 
         private bool CheckSanity()
         {
@@ -50,7 +52,8 @@ namespace GinClientApp.Dialogs
             if (!mTxBRepoAddress.Text.Contains('/') && !RepositoryData.CreateNew)
             {
                 var result = MetroMessageBox.Show(this,
-                    string.Format(Resources.Options_CheckSanity_The_checkout_address_is_not_properly_formatted, mTxBRepoAddress.Text), 
+                    string.Format(Resources.Options_CheckSanity_The_checkout_address_is_not_properly_formatted,
+                        mTxBRepoAddress.Text),
                     Resources.GinClientApp_Gin_Client_Warning, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                 RepositoryData.CreateNew = result == DialogResult.Yes;
@@ -69,7 +72,10 @@ namespace GinClientApp.Dialogs
                     RepositoryData.PhysicalDirectory.Empty();
                     Directory.Delete(RepositoryData.PhysicalDirectory.FullName);
                 }
-                else return false;
+                else
+                {
+                    return false;
+                }
             }
 
             if (Directory.Exists(RepositoryData.Mountpoint.FullName))
@@ -82,7 +88,10 @@ namespace GinClientApp.Dialogs
                     RepositoryData.Mountpoint.Empty();
                     Directory.Delete(RepositoryData.Mountpoint.FullName);
                 }
-                else return false;
+                else
+                {
+                    return false;
+                }
             }
 
             if (RepositoryData.Mountpoint.FullName.Contains(RepositoryData.PhysicalDirectory.FullName) ||
@@ -125,7 +134,7 @@ namespace GinClientApp.Dialogs
         private void mTxBRepoAddress_Leave(object sender, EventArgs e)
         {
             if (!mTxBRepoAddress.Text.Contains('/')) return;
-            
+
             var strings = mTxBRepoAddress.Text.Split('/');
 
             if (strings.Length == 2)
@@ -146,7 +155,7 @@ namespace GinClientApp.Dialogs
 
         private void mBtnPickRepoCheckoutDir_Click(object sender, EventArgs e)
         {
-            var folderBrowser = new FolderBrowserDialog()
+            var folderBrowser = new FolderBrowserDialog
             {
                 SelectedPath = RepositoryData.PhysicalDirectory.FullName
             };
@@ -154,16 +163,14 @@ namespace GinClientApp.Dialogs
             var res = folderBrowser.ShowDialog();
 
             if (res == DialogResult.OK)
-            {
                 RepositoryData.PhysicalDirectory = new DirectoryInfo(folderBrowser.SelectedPath);
-            }
 
             mTxBRepoCheckoutDir.Text = RepositoryData.PhysicalDirectory.FullName;
         }
 
         private void mBtnPickRepoMountpointDir_Click(object sender, EventArgs e)
         {
-            var folderBrowser = new FolderBrowserDialog()
+            var folderBrowser = new FolderBrowserDialog
             {
                 SelectedPath = RepositoryData.Mountpoint.FullName
             };
@@ -171,9 +178,7 @@ namespace GinClientApp.Dialogs
             var res = folderBrowser.ShowDialog();
 
             if (res == DialogResult.OK)
-            {
                 RepositoryData.Mountpoint = new DirectoryInfo(folderBrowser.SelectedPath);
-            }
 
             mTxBRepoMountpoint.Text = RepositoryData.Mountpoint.FullName;
         }

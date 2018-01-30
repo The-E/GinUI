@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GinClientLibrary
 {
     /// <summary>
-    /// Represents the output of gin repos --json
+    ///     Represents the output of gin repos --json
     /// </summary>
     public class Owner
     {

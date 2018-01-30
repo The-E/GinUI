@@ -64,7 +64,6 @@ namespace GinClientLibrary
         {
             this.Mount(_repository.Mountpoint.FullName.Trim('\\'),
                 DokanOptions.DebugMode | DokanOptions.StderrOutput);
-
         }
 
         #endregion
@@ -555,7 +554,6 @@ namespace GinClientLibrary
 
             try
             {
-
                 if (!exist)
                 {
                     info.Context = null;
@@ -566,7 +564,7 @@ namespace GinClientLibrary
                     return Trace(nameof(MoveFile), oldName, info, DokanResult.Success, newName,
                         replace.ToString(CultureInfo.InvariantCulture));
                 }
-                else if (replace)
+                if (replace)
                 {
                     info.Context = null;
 

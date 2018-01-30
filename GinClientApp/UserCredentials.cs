@@ -1,31 +1,33 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace GinClientApp
 {
     /// <summary>
-    /// A singleton class representing the current user's login credentials
+    ///     A singleton class representing the current user's login credentials
     /// </summary>
     public class UserCredentials : ICloneable
     {
         private static UserCredentials _instance;
+
+        private UserCredentials()
+        {
+        }
+
         public static UserCredentials Instance
         {
             get => _instance ?? (_instance = new UserCredentials());
             set => _instance = value;
         }
 
-        private UserCredentials()
-        {
-        }
-
         public string Username { get; set; }
         public string Password { get; set; }
+
+        public object Clone()
+        {
+            return new UserCredentials {Username = Username, Password = Password};
+        }
 
         public static bool Load()
         {
@@ -66,11 +68,6 @@ namespace GinClientApp
             {
                 fwriter.Write(JsonConvert.SerializeObject(_instance));
             }
-        }
-
-        public object Clone()
-        {
-            return new UserCredentials() {Username = this.Username, Password = this.Password};
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.ServiceModel;
 using GinShellExtension.GinService;
-using SharpShell.Attributes;
+using GinShellExtension.Properties;
 using SharpShell.Interop;
 using SharpShell.SharpIconOverlayHandler;
 
@@ -14,48 +14,6 @@ namespace GinShellExtension
     {
         private static string _path;
         private static string _status;
-
-        protected override int GetPriority()
-        {
-            return 90;
-        }
-
-        protected override bool CanShowOverlay(string path, FILE_ATTRIBUTE attributes)
-        {
-            _path = path;
-
-            var client = ServiceClient.CreateServiceClient(this, 8743);
-
-            try
-            {
-                var result = client.IsManagedPathNonTerminating(path);
-                if (result)
-                {
-                    _status = client.GetFileInfo(path);
-                }
-
-                ((ICommunicationObject)client).Close();
-                return result;
-            }
-            catch
-            {
-                ((ICommunicationObject)client).Abort();
-                return false;
-            }
-        }
-
-        protected override Icon GetOverlayIcon()
-        {
-            if (string.Compare(_status, "OnDisk", StringComparison.InvariantCultureIgnoreCase) == 0 ||
-                string.Compare(_status, "OnDiskModified", StringComparison.InvariantCultureIgnoreCase) == 0)
-            {
-                return Properties.Resources.gin_icon;
-            }
-            else
-            {
-                return Properties.Resources.gin_icon_desaturated;
-            }
-        }
 
 
         //Implementing IGinServiceCallback here, but don't actually do anything with it.
@@ -73,6 +31,41 @@ namespace GinShellExtension
 
         public void GinServiceError(string message)
         {
+        }
+
+        protected override int GetPriority()
+        {
+            return 90;
+        }
+
+        protected override bool CanShowOverlay(string path, FILE_ATTRIBUTE attributes)
+        {
+            _path = path;
+
+            var client = ServiceClient.CreateServiceClient(this, 8743);
+
+            try
+            {
+                var result = client.IsManagedPathNonTerminating(path);
+                if (result)
+                    _status = client.GetFileInfo(path);
+
+                ((ICommunicationObject) client).Close();
+                return result;
+            }
+            catch
+            {
+                ((ICommunicationObject) client).Abort();
+                return false;
+            }
+        }
+
+        protected override Icon GetOverlayIcon()
+        {
+            if (string.Compare(_status, "OnDisk", StringComparison.InvariantCultureIgnoreCase) == 0 ||
+                string.Compare(_status, "OnDiskModified", StringComparison.InvariantCultureIgnoreCase) == 0)
+                return Resources.gin_icon;
+            return Resources.gin_icon_desaturated;
         }
     }
 }

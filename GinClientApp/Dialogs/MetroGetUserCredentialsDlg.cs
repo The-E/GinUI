@@ -1,20 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using GinClientApp.Properties;
+using MetroFramework.Forms;
 
 namespace GinClientApp.Dialogs
 {
-    public partial class MetroGetUserCredentialsDlg : MetroFramework.Forms.MetroForm
+    public partial class MetroGetUserCredentialsDlg : MetroForm
     {
-        private GinApplicationContext _parentContext;
-        
+        private readonly GinApplicationContext _parentContext;
+
         public MetroGetUserCredentialsDlg(GinApplicationContext parentContext)
         {
             InitializeComponent();
