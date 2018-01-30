@@ -62,10 +62,15 @@ namespace InstallerLibrary
             string arguments;
             var domain = System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().DomainName;
             if (string.IsNullOrEmpty(domain))
-                arguments = @"http add urlacl url=http://+:8738/Design_Time_Addresses/GinService/ user=%COMPUTERNAME%\%USERNAME%";
+            {
+                arguments =
+                    @"http add urlacl url=http://+:8738/Design_Time_Addresses/GinService/ user=%COMPUTERNAME%\%USERNAME%";
+            }
             else
-                arguments = @"http add urlacl url=http://+:8738/Design_Time_Addresses/GinService/ user=" + domain + @"\%USERNAME%";
-            
+            {
+                arguments = @"http add urlacl url=http://+:8738/Design_Time_Addresses/GinService/ user=" + domain +
+                            @"\%USERNAME%";
+            }
             ProcessStartInfo procStartInfo = new ProcessStartInfo("netsh", arguments);
 
             procStartInfo.RedirectStandardOutput = true;
@@ -144,7 +149,6 @@ namespace InstallerLibrary
 
         private void Uninstallservice()
         {
-            Debugger.Launch();
             DirectoryInfo path = new DirectoryInfo(Context.Parameters["assemblypath"]).Parent;
 
             var process = new Process

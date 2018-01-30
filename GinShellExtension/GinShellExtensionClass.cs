@@ -20,7 +20,7 @@ namespace GinShellExtension
 
         protected override bool CanShowMenu()
         {
-            var client = CreateServiceClient();
+            var client = ServiceClient.CreateServiceClient(this, 8741);
 
             try
             {
@@ -44,7 +44,7 @@ namespace GinShellExtension
 
             var baseItem = new ToolStripMenuItem("Gin Repository");
 
-            var client = CreateServiceClient();
+            var client = ServiceClient.CreateServiceClient(this, 8741);
 
             try
             {
@@ -88,7 +88,7 @@ namespace GinShellExtension
 
         private async void RepoUpdate(object sender, EventArgs eventArgs)
         {
-            var client = CreateServiceClient();
+            var client = ServiceClient.CreateServiceClient(this, 8741);
 
             await client.UpdateRepositoriesAsync(SelectedItemPaths.ToArray());
             ((ICommunicationObject) client).Close();
@@ -96,7 +96,7 @@ namespace GinShellExtension
 
         private async void RepoUpload(object sender, EventArgs eventArgs)
         {
-            var client = CreateServiceClient();
+            var client = ServiceClient.CreateServiceClient(this, 8741);
 
             await client.UploadRepositoriesAsync(SelectedItemPaths.ToArray());
             ((ICommunicationObject)client).Close();
@@ -104,21 +104,10 @@ namespace GinShellExtension
 
         private async void FileDownload(object sender, EventArgs eventArgs)
         {
-            var client = CreateServiceClient();
+            var client = ServiceClient.CreateServiceClient(this, 8741);
 
             await client.DownloadFilesAsync(SelectedItemPaths.ToArray());
             ((ICommunicationObject)client).Close();
-        }
-
-        private IGinService CreateServiceClient()
-        {
-            var iContext = new InstanceContext(this);
-            var myBinding = new WSDualHttpBinding() { ClientBaseAddress = new Uri(@"http://localhost:8741/Design_Time_Addresses/GinService/")};
-            var myEndpoint = new EndpointAddress("http://localhost:8733/Design_Time_Addresses/GinService/");
-            var myChannelFactory = new DuplexChannelFactory<IGinService>(iContext, myBinding, myEndpoint);
-
-            var client = myChannelFactory.CreateChannel();
-            return client;
         }
 
         //Implementing IGinServiceCallback here, but don't actually do anything with it.

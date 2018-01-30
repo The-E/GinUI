@@ -138,6 +138,12 @@ namespace GinService
             return RepositoryManager.Instance.GetRepositoryFileInfo(RepositoryManager.Instance.GetRepoByName(repoName));
         }
 
+        string IGinService.GetFileInfo(string path)
+        {
+            var repo = RepositoryManager.Instance.GetRepoByPath(path);
+            return repo.GetFileStatus(path).ToString();
+        }
+
         bool IGinService.UpdateRepository(string repoName, GinRepositoryData data)
         {
             return RepositoryManager.Instance.UpdateRepository(repoName, data);
@@ -150,6 +156,11 @@ namespace GinService
         }
 
         bool IGinService.IsManagedPath(string filePath)
+        {
+            return RepositoryManager.Instance.IsManagedPath(filePath);
+        }
+
+        bool IGinService.IsManagedPathNonTerminating(string filePath)
         {
             return RepositoryManager.Instance.IsManagedPath(filePath);
         }
@@ -181,7 +192,6 @@ namespace GinService
 
         void IGinService.DownloadFiles(IEnumerable<string> filePaths)
         {
-            Debugger.Launch();
             var files = filePaths as string[] ?? filePaths.ToArray();
             var repo = RepositoryManager.Instance.GetRepoByPath(files.First());
 

@@ -143,12 +143,28 @@ namespace GinService
         string GetRepositoryFileInfo(string repoName);
 
         /// <summary>
+        /// Return a string with the gin status of a given file
+        /// </summary>
+        /// <param name="path">Fully qualified path to the file</param>
+        /// <returns></returns>
+        [OperationContract]
+        string GetFileInfo(string path);
+
+        /// <summary>
         /// Check whether a given path is part of any managed repository
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
         [OperationContract(IsInitiating = true, IsTerminating = true)]
         bool IsManagedPath(string filePath);
+
+        /// <summary>
+        /// As IsManagedPath, but does not terminate the WCF instance
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        [OperationContract]
+        bool IsManagedPathNonTerminating(string filePath);
 
         /// <summary>
         /// Check whether a given path is a repository base path
