@@ -3,6 +3,11 @@ using System.Runtime.Serialization;
 
 namespace GinClientLibrary
 {
+    /// <summary>
+    /// The data portion of the GinRepository class.
+    /// This is used to communicate between the service and its clients;
+    /// Clients should never instantiate a GinRepository instance.
+    /// </summary>
     [DataContract]
     public class GinRepositoryData
     {

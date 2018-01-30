@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace GinClientLibrary
 {
-
+    /// <summary>
+    /// Represents the output of gin repos --json
+    /// </summary>
     public class Owner
     {
         public int id { get; set; }

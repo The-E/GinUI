@@ -14,15 +14,15 @@ using Timer = System.Timers.Timer;
 
 namespace GinClientApp
 {
+    /// <summary>
+    /// The main application context for the GINUI client.
+    /// </summary>
     [CallbackBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant)]
     public class GinApplicationContext : ApplicationContext, IGinServiceCallback
     {
         public readonly GinServiceClient ServiceClient;
         private readonly NotifyIcon _trayIcon;
         private Timer _updateIntervalTimer;
-
-        private ProgressDisplayDlg _progressDisplayDlg;
-        
         
         public GinApplicationContext()
         {
@@ -39,6 +39,7 @@ namespace GinClientApp
                 Directory.CreateDirectory(saveFilePath);
 
             #region Environment Variables
+            //Tell the service to use the current users' AppData folders for logging and config data
             ServiceClient.SetEnvironmentVariables(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\g-node\gin\", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\g-node\gin\");
             #endregion
 
@@ -139,7 +140,6 @@ namespace GinClientApp
             foreach (var repo in repositories)
             {
                 var mitem = new MenuItem(repo.Name) {Tag = repo};
-                //mitem.MenuItems.Add("Edit", EditRepoMenuItemHandler);
                 mitem.MenuItems.Add(Resources.GinApplicationContext_Upload, UploadRepoMenuItemHandler);
                 mitem.MenuItems.Add(Resources.GinApplicationContext_Unmount, UnmountRepoMenuItemHandler);
                 mitem.MenuItems.Add(Resources.GinApplicationContext_Update, UpdateRepoMenuItemHandler);
@@ -251,13 +251,6 @@ namespace GinClientApp
 
         void IGinServiceCallback.FileOperationFinished(string filename, string repository, bool success)
         {
-            //_progressDisplayDlg.NestingLevel--;
-
-            //if (_progressDisplayDlg.NestingLevel == 0)
-            //{
-            //    _progressDisplayDlg.Close();
-            //    _progressDisplayDlg = null;
-            //}
         }
 
         void IGinServiceCallback.FileOperationStarted(string filename, string repository)
@@ -266,13 +259,7 @@ namespace GinClientApp
             _trayIcon.BalloonTipText =
                 string.Format(Resources.GinApplicationContext_FileOperation_Retrieving, Path.GetFileName(filename), repository);
             _trayIcon.ShowBalloonTip(5000);
-
-            //if (_progressDisplayDlg == null)
-            //    _progressDisplayDlg = new ProgressDisplayDlg() {NestingLevel = 1};
-            //else
-            //    _progressDisplayDlg.NestingLevel++;
             
-            //_progressDisplayDlg.Show();
         }
 
         void IGinServiceCallback.FileOperationProgress(string filename, string repository, int progress,
@@ -280,8 +267,7 @@ namespace GinClientApp
         {
             Console.WriteLine("Filename: {0}, Repo: {1}, Progress: {2}, Speed: {3}, State: {4}", filename, repository,
                 progress, speed, state);
-
-            _progressDisplayDlg?.SetProgressBarState(filename, state, progress, speed);
+            
         }
 
         void IGinServiceCallback.GinServiceError(string message)

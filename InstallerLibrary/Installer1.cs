@@ -43,6 +43,7 @@ namespace InstallerLibrary
 
             _downloadComplete = false;
             var wb = new WebClient();
+            //Download the current gin-cli release and unpack it into our install directory
             wb.DownloadFileCompleted += Wb_DownloadFileCompleted;
             wb.DownloadProgressChanged += WbOnDownloadProgressChanged;
             wb.DownloadFileAsync(new Uri(_ginURL), path.FullName + @"\gin-cli\gin-cli-latest-windows-386.zip");
@@ -52,13 +53,15 @@ namespace InstallerLibrary
 
             System.IO.Compression.ZipFile.ExtractToDirectory(path.FullName + @"\gin-cli\gin-cli-latest-windows-386.zip",
                 path.FullName + @"\gin-cli\");
-            var name = "PATH";
+
+            //Add gin-cli to the system PATH
             var value = System.Environment.GetEnvironmentVariable("PATH");
             value += ";" + path.FullName + @"\gin-cli\bin";
             value += ";" + path.FullName + @"\gin-cli\git\usr\bin";
             value += ";" + path.FullName + @"\gin-cli\git\bin";
             System.Environment.SetEnvironmentVariable("PATH", value, EnvironmentVariableTarget.Machine);
 
+            //Give the client the ability to register a URL to communicate with the service
             string arguments;
             var domain = System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().DomainName;
             if (string.IsNullOrEmpty(domain))
@@ -79,6 +82,7 @@ namespace InstallerLibrary
 
             Process.Start(procStartInfo);
 
+            //Start the service and the client
             StartService("GinClientService");
             Process.Start(path.FullName + @"\GinClientApp.exe");
         }
@@ -96,15 +100,21 @@ namespace InstallerLibrary
         public override void Install(IDictionary stateSaver)
         {
             base.Install(stateSaver);
-            
-            if (IsServiceRunning("GinClientService"))
-                StopService("GinClientService");
 
-            if (IsServiceInstalled("GinClientService"))
+            try
             {
-                Uninstallservice();
+                if (IsServiceRunning("GinClientService"))
+                    StopService("GinClientService");
+
+                if (IsServiceInstalled("GinClientService"))
+                {
+                    Uninstallservice();
+                }
             }
-            
+            catch
+            {
+            }
+
             Path = new DirectoryInfo(Context.Parameters["targetdir"]);
 
             var process = new Process
@@ -140,11 +150,17 @@ namespace InstallerLibrary
         public override void Uninstall(IDictionary savedState)
         {
             base.Uninstall(savedState);
-            
-            if (IsServiceRunning("GinClientService"))
-                StopService("GinClientService");
 
-            Uninstallservice();
+            try
+            {
+                if (IsServiceRunning("GinClientService"))
+                    StopService("GinClientService");
+
+                Uninstallservice();
+            }
+            catch
+            {
+            }
         }
 
         private void Uninstallservice()

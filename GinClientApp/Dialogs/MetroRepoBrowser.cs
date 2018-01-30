@@ -15,14 +15,14 @@ namespace GinClientApp.Dialogs
     public partial class MetroRepoBrowser : MetroFramework.Forms.MetroForm
     {
         public string SelectedRepository { get; set; }
-        private RepositoryListing[] _repositories;
+        private readonly RepositoryListing[] _repositories;
 
         public MetroRepoBrowser(GinApplicationContext context)
         {
             InitializeComponent();
 
-            var repoListJSON = context.ServiceClient.GetRemoteRepositoryList();
-            var repoList = JsonConvert.DeserializeObject<RepositoryListing[]>(repoListJSON);
+            var repoListJson = context.ServiceClient.GetRemoteRepositoryList();
+            var repoList = JsonConvert.DeserializeObject<RepositoryListing[]>(repoListJson);
 
             if (!repoList.Any()) return;
 

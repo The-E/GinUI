@@ -8,6 +8,9 @@ using Newtonsoft.Json;
 
 namespace GinClientApp
 {
+    /// <summary>
+    /// A singleton class representing the current user's login credentials
+    /// </summary>
     public class UserCredentials : ICloneable
     {
         private static UserCredentials _instance;

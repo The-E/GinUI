@@ -12,12 +12,13 @@ using static GinClientLibrary.DokanInterface;
 
 namespace GinClientLibrary
 {
+    /// <summary>
+    /// Represents a GIN repository and implements all actions specific to a repository,
+    /// i.e. file upload, file retrieval, updates etc.
+    /// </summary>
     [DataContract]
-    public class GinRepository : GinRepositoryData, IDisposable
+    public sealed class GinRepository : GinRepositoryData, IDisposable
     {
-        /// <summary>
-        ///     A Dokan driver interface
-        /// </summary>
         private DokanInterface DokanInterface { get; }
 
         public enum FileStatus
@@ -357,7 +358,7 @@ namespace GinClientLibrary
 
         public delegate void FileOperationStartedHandler(object sender, FileOperationEventArgs e);
 
-        protected virtual void OnFileOperationStarted(FileOperationEventArgs e)
+        private void OnFileOperationStarted(FileOperationEventArgs e)
         {
             FileOperationStarted?.Invoke(this, e);
         }
@@ -366,7 +367,7 @@ namespace GinClientLibrary
 
         public delegate void FileOperationCompleteHandler(object sender, FileOperationEventArgs e);
 
-        protected virtual void OnFileOperationCompleted(FileOperationEventArgs e)
+        private void OnFileOperationCompleted(FileOperationEventArgs e)
         {
             FileOperationCompleted?.Invoke(this, e);
         }
@@ -391,7 +392,7 @@ namespace GinClientLibrary
 
         public delegate void FileOperationErrorHandler(object sender, FileOperationErrorEventArgs e);
 
-        protected virtual void OnFileOperationError(string message)
+        private void OnFileOperationError(string message)
         {
             FileOperationError?.Invoke(this,
                 new FileOperationErrorEventArgs {RepositoryName = Name, Message = message});
@@ -497,7 +498,7 @@ namespace GinClientLibrary
 
         public delegate void CmdLineOutputHandler(object sender, string message);
 
-        protected virtual void OnCmdLineOutput(object sender, string message)
+        private void OnCmdLineOutput(object sender, string message)
         {
             FileOperationProgress?.Invoke(sender, message);
         }
@@ -508,7 +509,7 @@ namespace GinClientLibrary
 
         private bool _disposedValue; // To detect redundant calls
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (!_disposedValue)
                 if (disposing)

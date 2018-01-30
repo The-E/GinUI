@@ -13,7 +13,8 @@ using static System.String;
 namespace GinClientLibrary
 {
     /// <summary>
-    ///     Manages all repositories. Responsible for mounting and unmounting.
+    ///     Manages all repositories. Responsible for mounting, unmounting, deleting and creating repositories on disk.
+    /// 
     /// </summary>
     public class RepositoryManager
     {
@@ -77,8 +78,6 @@ namespace GinClientLibrary
 
         public bool CreateNewRepository(string repoName)
         {
-            //TODO: Return false if a repo with that name already exists
-
             lock (this)
             {
                 var process = new Process
@@ -105,15 +104,6 @@ namespace GinClientLibrary
 
         public bool Login(string username, string password)
         {
-            //if you wanna do the POST request in the Windows client separately, you can just 
-            //POST to /api/v1/users/$USERNAME/tokens with data {"name":"gin-cli"} and header 
-            //"content-type: application/json" and "Authorization: Basic <base64 encoded $USERNAME:$PASSWORD>"
-            //default host gin.g-node.org
-            //request returns a token that needs to be saved and attached to future requests
-            //default path %userprofile%\.config\gin\, will be changed to %appdata%\g-node\gin\
-
-            //Also note: In a service context, %userprofile% evaluates to C:\Windows\system32\config\systemprofile\; %AppData% to C:\Windows\system32\config\systemprofile\Appdata\Roaming
-
             lock (this)
             {
                 var process = new Process
@@ -147,11 +137,21 @@ namespace GinClientLibrary
             }
         }
 
+        /// <summary>
+        /// Given a file path, return the GinRepository instance managing that path, or null if no such path can be found
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
         public GinRepository GetRepoByPath(string filePath)
         {
             return Repositories.Find(repo => filePath.Contains(repo.Mountpoint.FullName.Trim('\\')));
         }
 
+        /// <summary>
+        /// Returns true if the passed path is the root directory of a repository, false otherwise
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
         public bool IsBasePath(string filePath)
         {
             var attr = File.GetAttributes(filePath);
@@ -190,31 +190,47 @@ namespace GinClientLibrary
             return Output.ToString();
         }
 
+        /// <summary>
+        /// Returns true if the given path is a path managed by the Repomanager
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
         public bool IsManagedPath(string filePath)
         {
             return Repositories.Any(repo => filePath.Contains(repo.Mountpoint.FullName));
         }
 
+        /// <summary>
+        /// Get the file status of every file in a repository
+        /// </summary>
+        /// <param name="ginRepository"></param>
+        /// <returns></returns>
         public string GetRepositoryFileInfo(GinRepository ginRepository)
         {
             return ginRepository.GetStatusCacheJson();
         }
 
-        public void MountAllRepositories()
-        {
-            foreach (var repo in Repositories)
-                MountRepository(repo);
-        }
-
+        /// <summary>
+        /// Mount a repository
+        /// </summary>
+        /// <param name="repo"></param>
         public void MountRepository(GinRepository repo)
         {
             if (!repo.Mounted)
             {
+                //The Dokan Mount() function, as of Version 1.2, is a blocking operation that does not return
+                //as long as the file path remains mounted.
                 var thread = new Thread(repo.Mount);
                 thread.Start();
             }
         }
 
+        /// <summary>
+        /// Update the repository indicated by "repoName" with new RepositoryData.
+        /// </summary>
+        /// <param name="repoName"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public bool UpdateRepository(string repoName, GinRepositoryData data)
         {
             lock (this)
@@ -358,7 +374,7 @@ namespace GinClientLibrary
             return GetCommandLineOutput("cmd.exe", @"/C gin.exe repos --json --all", @"C:\", out string error);
         }
 
-        private object _thisLock = new object();
+        private readonly object _thisLock = new object();
         private string GetCommandLineOutput(string program, string commandline, string workingDirectory,
             out string error)
         {

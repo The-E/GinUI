@@ -10,15 +10,14 @@ using MetroFramework;
 
 namespace GinClientApp.Dialogs
 {
+    /// <summary>
+    /// Dialog to create/check out a new Repository
+    /// </summary>
     public partial class MetroCreateNewRepoDlg : MetroFramework.Forms.MetroForm
     {
-        [DllImport("user32.dll")]
-        private static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam,
-            [MarshalAs(UnmanagedType.LPWStr)] string lParam);
-
         public GinRepositoryData RepositoryData { get; }
 
-        private GinApplicationContext _appContext;
+        private readonly GinApplicationContext _appContext;
 
         public MetroCreateNewRepoDlg(GinRepositoryData data, GinApplicationContext appContext)
         {
@@ -30,8 +29,7 @@ namespace GinClientApp.Dialogs
             mTxBRepoAddress.Text = data.Address;
             mTxBRepoCheckoutDir.Text = data.PhysicalDirectory.FullName;
             mTxBRepoMountpoint.Text = data.Mountpoint.FullName;
-
-            SendMessage(mTxBRepoAddress.Handle, 0x1501, 1, Resources.Options__username___repository_);
+            mTxBRepoAddress.WaterMark = Resources.Options__username___repository_;
 
             createNewRepoToolTip.SetToolTip(mBtnRepoBrowser, Resources.CreateNewRepoDlg_Open_the_repository_browser);
             createNewRepoToolTip.SetToolTip(mBtnPickRepoCheckoutDir, Resources.MetroCreateNewRepoDlg_Choose_a_directory_for_the_checkout);

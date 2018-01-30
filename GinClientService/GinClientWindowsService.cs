@@ -48,6 +48,7 @@ namespace GinService
 
         protected override void OnStart(string[] args)
         {
+            //Make sure to clear up any remaining user tokens
             RepositoryManager.Instance.Logout();
 
             _serviceHost?.Close();

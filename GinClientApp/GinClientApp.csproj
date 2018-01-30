@@ -133,12 +133,6 @@
     </Compile>
     <Compile Include="GinApplicationContext.cs" />
     <Compile Include="GlobalOptions.cs" />
-    <Compile Include="MainForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="MainForm.Designer.cs">
-      <DependentUpon>MainForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="NativeMethods.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Dialogs\ProgressDisplayDlg.cs">
@@ -166,9 +160,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\MetroUploadFilesDlg.resx">
       <DependentUpon>MetroUploadFilesDlg.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MainForm.resx">
-      <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\ProgressDisplayDlg.resx">
       <DependentUpon>ProgressDisplayDlg.cs</DependentUpon>

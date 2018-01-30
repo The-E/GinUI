@@ -9,14 +9,14 @@ using Newtonsoft.Json;
 
 namespace GinService
 {
+    /// <summary>
+    /// Main implementation of IGinService. This maps the functionality described in that interface on the RepositoryManager functionality.
+    /// </summary>
     [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Single, InstanceContextMode = InstanceContextMode.PerSession)]
     public class GinService : IGinService
     {
-
-
         public GinService()
         {
-            RepositoryManager.Instance.MountAllRepositories();
             var callback = OperationContext.Current.GetCallbackChannel<IGinClientCallback>();
 
             RepositoryManager.Instance.FileRetrievalStarted +=

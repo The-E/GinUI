@@ -23,7 +23,7 @@ namespace GinClientLibrary
         /// <summary>
         ///     The GinRepository linked to this Dokan Interface. Provided mostly for convenience.
         /// </summary>
-        private GinRepository _repository;
+        private readonly GinRepository _repository;
 
         #endregion
 

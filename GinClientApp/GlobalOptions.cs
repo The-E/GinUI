@@ -10,6 +10,9 @@ using Newtonsoft.Json;
 
 namespace GinClientApp
 {
+    /// <summary>
+    /// A Singleton class representing the global options for the client. 
+    /// </summary>
     public class GlobalOptions : ICloneable
     {
         private static GlobalOptions _instance;
@@ -20,9 +23,23 @@ namespace GinClientApp
             set => _instance = value;
         }
 
+        /// <summary>
+        /// The update interval, in minutes.
+        /// </summary>
         public int RepositoryUpdateInterval { get; set; }
+        /// <summary>
+        /// Default behaviour for the client when checking out a GIN repository
+        /// </summary>
         public CheckoutOption RepositoryCheckoutOption { get; set; }
+
+        /// <summary>
+        /// Default directory to put checkouts in.
+        /// </summary>
         public DirectoryInfo DefaultCheckoutDir { get; set; }
+        
+        /// <summary>
+        /// Default directory for Mountpoints
+        /// </summary>
         public DirectoryInfo DefaultMountpointDir { get; set; }
 
 
