@@ -15,12 +15,27 @@ namespace GinShellExtension
     [COMServerAssociation(AssociationType.Directory)]
     public class GinShellExtensionClass : SharpContextMenu, IGinServiceCallback
     {
-        private bool _clientFaulted;
-        
+        //Implementing IGinServiceCallback here, but don't actually do anything with it.
+        public void FileOperationStarted(string filename, string repository)
+        {
+        }
+
+        public void FileOperationFinished(string filename, string repository, bool success)
+        {
+        }
+
+        public void FileOperationProgress(string filename, string repository, int progress, string speed, string state)
+        {
+        }
+
+        public void GinServiceError(string message)
+        {
+        }
+
 
         protected override bool CanShowMenu()
         {
-            var client = CreateServiceClient();
+            var client = ServiceClient.CreateServiceClient(this, 8741);
 
             try
             {
@@ -32,19 +47,18 @@ namespace GinShellExtension
             }
             catch
             {
-                ((ICommunicationObject)client).Abort();
+                ((ICommunicationObject) client).Abort();
                 return false;
             }
         }
 
         protected override ContextMenuStrip CreateMenu()
         {
-
             var menu = new ContextMenuStrip();
 
             var baseItem = new ToolStripMenuItem("Gin Repository");
 
-            var client = CreateServiceClient();
+            var client = ServiceClient.CreateServiceClient(this, 8741);
 
             try
             {
@@ -56,8 +70,12 @@ namespace GinShellExtension
             }
             catch
             {
-                ((ICommunicationObject)client).Abort();
+                ((ICommunicationObject) client).Abort();
             }
+
+            menu.Items.Add(new ToolStripSeparator());
+            menu.Items.Add(baseItem);
+            menu.Items.Add(new ToolStripSeparator());
             return menu;
         }
 
@@ -65,7 +83,7 @@ namespace GinShellExtension
         {
             var mItems = new List<ToolStripItem>
             {
-                new ToolStripMenuItem("Download File", null, FileDownload),
+                new ToolStripMenuItem("Download File", null, FileDownload)
             };
 
             return mItems.ToArray();
@@ -82,56 +100,28 @@ namespace GinShellExtension
             return mItems.ToArray();
         }
 
-        private void RepoUpdate(object sender, EventArgs eventArgs)
+        private async void RepoUpdate(object sender, EventArgs eventArgs)
         {
-            var client = CreateServiceClient();
+            var client = ServiceClient.CreateServiceClient(this, 8741);
 
-            client.UpdateRepositories(SelectedItemPaths.ToArray());
+            await client.UpdateRepositoriesAsync(SelectedItemPaths.ToArray());
             ((ICommunicationObject) client).Close();
         }
 
-        private void RepoUpload(object sender, EventArgs eventArgs)
+        private async void RepoUpload(object sender, EventArgs eventArgs)
         {
-            var client = CreateServiceClient();
+            var client = ServiceClient.CreateServiceClient(this, 8741);
 
-            client.UploadRepositories(SelectedItemPaths.ToArray());
-            ((ICommunicationObject)client).Close();
+            await client.UploadRepositoriesAsync(SelectedItemPaths.ToArray());
+            ((ICommunicationObject) client).Close();
         }
 
-        private void FileDownload(object sender, EventArgs eventArgs)
+        private async void FileDownload(object sender, EventArgs eventArgs)
         {
-            var client = CreateServiceClient();
+            var client = ServiceClient.CreateServiceClient(this, 8741);
 
-            client.DownloadFiles(SelectedItemPaths.ToArray());
-            ((ICommunicationObject)client).Close();
-        }
-
-        private IGinService CreateServiceClient()
-        {
-            var iContext = new InstanceContext(this);
-            var myBinding = new WSDualHttpBinding();
-            var myEndpoint = new EndpointAddress("http://localhost:8733/Design_Time_Addresses/GinService/");
-            var myChannelFactory = new DuplexChannelFactory<IGinService>(iContext, myBinding, myEndpoint);
-
-            var client = myChannelFactory.CreateChannel();
-            return client;
-        }
-
-        //Implementing IGinServiceCallback here, but don't actually do anything with it.
-        public void FileOperationStarted(string filename, string repository)
-        {
-        }
-
-        public void FileOperationFinished(string filename, string repository, bool success)
-        {
-        }
-
-        public void FileOperationProgress(string filename, string repository, int progress, string speed, string state)
-        {
-        }
-
-        public void GinServiceError(string message)
-        {
+            await client.DownloadFilesAsync(SelectedItemPaths.ToArray());
+            ((ICommunicationObject) client).Close();
         }
     }
 }

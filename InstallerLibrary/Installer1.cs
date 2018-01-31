@@ -1,48 +1,48 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration.Install;
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
-using System.Reflection;
-using System.Security.Policy;
 using System.ServiceProcess;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace InstallerLibrary
 {
     [RunInstaller(true)]
-    public partial class Installer1 : System.Configuration.Install.Installer
+    public partial class Installer1 : Installer
     {
         private static readonly string _ginURL =
             "https://web.gin.g-node.org/G-Node/gin-cli-releases/raw/master/gin-cli-latest-windows-386.zip";
 
+        private volatile bool _downloadComplete;
+
         public DirectoryInfo Path;
 
-        public Installer1() : base()
+        public Installer1()
         {
             InitializeComponent();
 
-            this.Committed += Installer1_Committed;
+            Committed += Installer1_Committed;
         }
-
-        private volatile bool _downloadComplete;
 
         private void Installer1_Committed(object sender, InstallEventArgs e)
         {
-            DirectoryInfo path = new DirectoryInfo(Context.Parameters["assemblypath"]).Parent;
+            var path = new DirectoryInfo(Context.Parameters["assemblypath"]).Parent;
+
+            if (Directory.Exists(path.FullName + @"\gin-cli\"))
+                Directory.Delete(path.FullName + @"\gin-cli\", true);
 
             Directory.CreateDirectory(path.FullName + @"\dokan\");
             Directory.CreateDirectory(path.FullName + @"\gin-cli\");
 
             _downloadComplete = false;
             var wb = new WebClient();
+            //Download the current gin-cli release and unpack it into our install directory
             wb.DownloadFileCompleted += Wb_DownloadFileCompleted;
             wb.DownloadProgressChanged += WbOnDownloadProgressChanged;
             wb.DownloadFileAsync(new Uri(_ginURL), path.FullName + @"\gin-cli\gin-cli-latest-windows-386.zip");
@@ -50,35 +50,76 @@ namespace InstallerLibrary
             while (!_downloadComplete)
                 Thread.Sleep(500);
 
-            System.IO.Compression.ZipFile.ExtractToDirectory(path.FullName + @"\gin-cli\gin-cli-latest-windows-386.zip",
+            ZipFile.ExtractToDirectory(path.FullName + @"\gin-cli\gin-cli-latest-windows-386.zip",
                 path.FullName + @"\gin-cli\");
-            var name = "PATH";
-            var value = System.Environment.GetEnvironmentVariable("PATH");
+
+            //Add gin-cli to the system PATH
+            var value = Environment.GetEnvironmentVariable("PATH");
             value += ";" + path.FullName + @"\gin-cli\bin";
             value += ";" + path.FullName + @"\gin-cli\git\usr\bin";
             value += ";" + path.FullName + @"\gin-cli\git\bin";
-            System.Environment.SetEnvironmentVariable("PATH", value, EnvironmentVariableTarget.Machine);
+            Environment.SetEnvironmentVariable("PATH", value, EnvironmentVariableTarget.Machine);
 
+            Debugger.Launch();
+            //Give the client the ability to register a URL to communicate with the service
             string arguments;
-            var domain = System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().DomainName;
+            var domain = IPGlobalProperties.GetIPGlobalProperties().DomainName;
             if (string.IsNullOrEmpty(domain))
-                arguments = @"http add urlacl url=http://+:8738/Design_Time_Addresses/GinService/ user=%COMPUTERNAME%\%USERNAME%";
+                arguments =
+                    @"http add urlacl url=http://+:8738/GinService/GinUI/ user=%COMPUTERNAME%\%USERNAME%";
             else
-                arguments = @"http add urlacl url=http://+:8738/Design_Time_Addresses/GinService/ user=" + domain + @"\%USERNAME%";
-            
-            ProcessStartInfo procStartInfo = new ProcessStartInfo("netsh", arguments);
+                arguments = @"http add urlacl url=http://+:8738/GinService/GinUI/ user=" + domain +
+                            @"\%USERNAME%";
+            var procStartInfo = new ProcessStartInfo("netsh", arguments);
 
             procStartInfo.RedirectStandardOutput = true;
             procStartInfo.UseShellExecute = false;
             procStartInfo.CreateNoWindow = true;
 
-            Process.Start(procStartInfo);
+            var process = new Process {StartInfo = procStartInfo};
+            process.Start();
+            process.WaitForExit();
 
+            //Do the same for the Shell Extension
+            if (string.IsNullOrEmpty(domain))
+                arguments =
+                    @"http add urlacl url=http://+:8738/GinService/ShellExtension/8743/ user=%COMPUTERNAME%\%USERNAME%";
+            else
+                arguments = @"http add urlacl url=http://+:8738/GinService/ShellExtension/8743/ user=" + domain +
+                            @"\%USERNAME%";
+            procStartInfo = new ProcessStartInfo("netsh", arguments);
+
+            procStartInfo.RedirectStandardOutput = true;
+            procStartInfo.UseShellExecute = false;
+            procStartInfo.CreateNoWindow = true;
+
+            process = new Process { StartInfo = procStartInfo };
+            process.Start();
+            process.WaitForExit();
+
+            if (string.IsNullOrEmpty(domain))
+                arguments =
+                    @"http add urlacl url=http://+:8738/GinService/ShellExtension/8741/ user=%COMPUTERNAME%\%USERNAME%";
+            else
+                arguments = @"http add urlacl url=http://+:8738/GinService/ShellExtension/8741/ user=" + domain +
+                            @"\%USERNAME%";
+            procStartInfo = new ProcessStartInfo("netsh", arguments);
+
+            procStartInfo.RedirectStandardOutput = true;
+            procStartInfo.UseShellExecute = false;
+            procStartInfo.CreateNoWindow = true;
+
+            process = new Process { StartInfo = procStartInfo };
+            process.Start();
+            process.WaitForExit();
+
+            //Start the service and the client
             StartService("GinClientService");
             Process.Start(path.FullName + @"\GinClientApp.exe");
         }
 
-        private void WbOnDownloadProgressChanged(object sender, DownloadProgressChangedEventArgs downloadProgressChangedEventArgs)
+        private void WbOnDownloadProgressChanged(object sender,
+            DownloadProgressChangedEventArgs downloadProgressChangedEventArgs)
         {
             Console.WriteLine(downloadProgressChangedEventArgs.ProgressPercentage);
         }
@@ -91,15 +132,19 @@ namespace InstallerLibrary
         public override void Install(IDictionary stateSaver)
         {
             base.Install(stateSaver);
-            
-            if (IsServiceRunning("GinClientService"))
-                StopService("GinClientService");
 
-            if (IsServiceInstalled("GinClientService"))
+            try
             {
-                Uninstallservice();
+                if (IsServiceRunning("GinClientService"))
+                    StopService("GinClientService");
+
+                if (IsServiceInstalled("GinClientService"))
+                    Uninstallservice();
             }
-            
+            catch
+            {
+            }
+
             Path = new DirectoryInfo(Context.Parameters["targetdir"]);
 
             var process = new Process
@@ -135,17 +180,22 @@ namespace InstallerLibrary
         public override void Uninstall(IDictionary savedState)
         {
             base.Uninstall(savedState);
-            
-            if (IsServiceRunning("GinClientService"))
-                StopService("GinClientService");
 
-            Uninstallservice();
+            try
+            {
+                if (IsServiceRunning("GinClientService"))
+                    StopService("GinClientService");
+
+                Uninstallservice();
+            }
+            catch
+            {
+            }
         }
 
         private void Uninstallservice()
         {
-            Debugger.Launch();
-            DirectoryInfo path = new DirectoryInfo(Context.Parameters["assemblypath"]).Parent;
+            var path = new DirectoryInfo(Context.Parameters["assemblypath"]).Parent;
 
             var process = new Process
             {
@@ -169,8 +219,9 @@ namespace InstallerLibrary
 
         public static ServiceController GetService(string serviceName)
         {
-            ServiceController[] services = ServiceController.GetServices();
-            return services.FirstOrDefault(_ => string.Compare(_.ServiceName, serviceName, StringComparison.InvariantCultureIgnoreCase) == 0);
+            var services = ServiceController.GetServices();
+            return services.FirstOrDefault(_ =>
+                string.Compare(_.ServiceName, serviceName, StringComparison.InvariantCultureIgnoreCase) == 0);
         }
 
         public static bool IsServiceRunning(string serviceName)
@@ -179,17 +230,15 @@ namespace InstallerLibrary
             uint counter = 0;
             do
             {
-                ServiceController service = GetService(serviceName);
+                var service = GetService(serviceName);
                 if (service == null)
-                {
                     return false;
-                }
 
                 Thread.Sleep(100);
                 status = service.Status;
             } while (!(status == ServiceControllerStatus.Stopped ||
                        status == ServiceControllerStatus.Running) &&
-                     (++counter < 30));
+                     ++counter < 30);
             return status == ServiceControllerStatus.Running;
         }
 
@@ -200,11 +249,9 @@ namespace InstallerLibrary
 
         public static void StartService(string serviceName)
         {
-            ServiceController controller = GetService(serviceName);
+            var controller = GetService(serviceName);
             if (controller == null)
-            {
                 return;
-            }
 
             controller.Start();
             controller.WaitForStatus(ServiceControllerStatus.Running);
@@ -212,11 +259,9 @@ namespace InstallerLibrary
 
         public static void StopService(string serviceName)
         {
-            ServiceController controller = GetService(serviceName);
+            var controller = GetService(serviceName);
             if (controller == null)
-            {
                 return;
-            }
 
             controller.Stop();
             controller.WaitForStatus(ServiceControllerStatus.Stopped);

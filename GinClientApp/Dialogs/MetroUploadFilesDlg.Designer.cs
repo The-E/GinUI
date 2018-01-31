@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MetroUploadFilesDlg));
             this.mLvwFiles = new MetroFramework.Controls.MetroListView();
             this.mBtnOK = new MetroFramework.Controls.MetroButton();
             this.mBtnCancel = new MetroFramework.Controls.MetroButton();
@@ -78,6 +79,7 @@
             this.Controls.Add(this.mBtnCancel);
             this.Controls.Add(this.mBtnOK);
             this.Controls.Add(this.mLvwFiles);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MetroUploadFilesDlg";
             this.Text = "Files to upload";
             this.Load += new System.EventHandler(this.MetroUploadFilesDlg_Load);

@@ -3,10 +3,16 @@ using System.Runtime.Serialization;
 
 namespace GinClientLibrary
 {
+    /// <summary>
+    ///     The data portion of the GinRepository class.
+    ///     This is used to communicate between the service and its clients;
+    ///     Clients should never instantiate a GinRepository instance.
+    /// </summary>
     [DataContract]
     public class GinRepositoryData
     {
-        public GinRepositoryData(DirectoryInfo physicalDirectory, DirectoryInfo mountPoint, string repoName, string repoAddress, bool createNew)
+        public GinRepositoryData(DirectoryInfo physicalDirectory, DirectoryInfo mountPoint, string repoName,
+            string repoAddress, bool createNew)
         {
             PhysicalDirectory = physicalDirectory;
             Mountpoint = mountPoint;

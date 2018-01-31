@@ -117,11 +117,23 @@ namespace GinClientApp.GinService {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/GetRepositoryFileInfo", ReplyAction="http://tempuri.org/IGinService/GetRepositoryFileInfoResponse")]
         System.Threading.Tasks.Task<string> GetRepositoryFileInfoAsync(string repoName);
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/GetFileInfo", ReplyAction="http://tempuri.org/IGinService/GetFileInfoResponse")]
+        string GetFileInfo(string path);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/GetFileInfo", ReplyAction="http://tempuri.org/IGinService/GetFileInfoResponse")]
+        System.Threading.Tasks.Task<string> GetFileInfoAsync(string path);
+        
         [System.ServiceModel.OperationContractAttribute(IsTerminating=true, Action="http://tempuri.org/IGinService/IsManagedPath", ReplyAction="http://tempuri.org/IGinService/IsManagedPathResponse")]
         bool IsManagedPath(string filePath);
         
         [System.ServiceModel.OperationContractAttribute(IsTerminating=true, Action="http://tempuri.org/IGinService/IsManagedPath", ReplyAction="http://tempuri.org/IGinService/IsManagedPathResponse")]
         System.Threading.Tasks.Task<bool> IsManagedPathAsync(string filePath);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/IsManagedPathNonTerminating", ReplyAction="http://tempuri.org/IGinService/IsManagedPathNonTerminatingResponse")]
+        bool IsManagedPathNonTerminating(string filePath);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/IsManagedPathNonTerminating", ReplyAction="http://tempuri.org/IGinService/IsManagedPathNonTerminatingResponse")]
+        System.Threading.Tasks.Task<bool> IsManagedPathNonTerminatingAsync(string filePath);
         
         [System.ServiceModel.OperationContractAttribute(IsTerminating=true, Action="http://tempuri.org/IGinService/IsBasePath", ReplyAction="http://tempuri.org/IGinService/IsBasePathResponse")]
         bool IsBasePath(string filePath);
@@ -352,12 +364,28 @@ namespace GinClientApp.GinService {
             return base.Channel.GetRepositoryFileInfoAsync(repoName);
         }
         
+        public string GetFileInfo(string path) {
+            return base.Channel.GetFileInfo(path);
+        }
+        
+        public System.Threading.Tasks.Task<string> GetFileInfoAsync(string path) {
+            return base.Channel.GetFileInfoAsync(path);
+        }
+        
         public bool IsManagedPath(string filePath) {
             return base.Channel.IsManagedPath(filePath);
         }
         
         public System.Threading.Tasks.Task<bool> IsManagedPathAsync(string filePath) {
             return base.Channel.IsManagedPathAsync(filePath);
+        }
+        
+        public bool IsManagedPathNonTerminating(string filePath) {
+            return base.Channel.IsManagedPathNonTerminating(filePath);
+        }
+        
+        public System.Threading.Tasks.Task<bool> IsManagedPathNonTerminatingAsync(string filePath) {
+            return base.Channel.IsManagedPathNonTerminatingAsync(filePath);
         }
         
         public bool IsBasePath(string filePath) {

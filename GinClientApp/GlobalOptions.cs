@@ -1,18 +1,33 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using GinClientApp.Dialogs;
 using Newtonsoft.Json;
 
 namespace GinClientApp
 {
+    /// <summary>
+    ///     A Singleton class representing the global options for the client.
+    /// </summary>
     public class GlobalOptions : ICloneable
     {
+        public enum CheckoutOption
+        {
+            AnnexCheckout,
+            FullCheckout
+        }
+
         private static GlobalOptions _instance;
+
+        private GlobalOptions()
+        {
+            RepositoryUpdateInterval = 15;
+            RepositoryCheckoutOption = CheckoutOption.AnnexCheckout;
+            DefaultCheckoutDir =
+                new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
+                                  @"\g-node\GinWindowsClient\Repositories");
+            DefaultMountpointDir =
+                new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) +
+                                  @"\Gin Repositories");
+        }
 
         public static GlobalOptions Instance
         {
@@ -20,24 +35,35 @@ namespace GinClientApp
             set => _instance = value;
         }
 
+        /// <summary>
+        ///     The update interval, in minutes.
+        /// </summary>
         public int RepositoryUpdateInterval { get; set; }
+
+        /// <summary>
+        ///     Default behaviour for the client when checking out a GIN repository
+        /// </summary>
         public CheckoutOption RepositoryCheckoutOption { get; set; }
+
+        /// <summary>
+        ///     Default directory to put checkouts in.
+        /// </summary>
         public DirectoryInfo DefaultCheckoutDir { get; set; }
+
+        /// <summary>
+        ///     Default directory for Mountpoints
+        /// </summary>
         public DirectoryInfo DefaultMountpointDir { get; set; }
 
-
-        public enum CheckoutOption
+        public object Clone()
         {
-            AnnexCheckout,
-            FullCheckout
-        }
-
-        private GlobalOptions()
-        {
-            RepositoryUpdateInterval = 15;
-            RepositoryCheckoutOption = CheckoutOption.AnnexCheckout;
-            DefaultCheckoutDir = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\g-node\GinWindowsClient\Repositories");
-            DefaultMountpointDir = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + @"\Gin Repositories");
+            return new GlobalOptions
+            {
+                DefaultCheckoutDir = DefaultCheckoutDir,
+                DefaultMountpointDir = DefaultMountpointDir,
+                RepositoryUpdateInterval = RepositoryUpdateInterval,
+                RepositoryCheckoutOption = RepositoryCheckoutOption
+            };
         }
 
         public static void Save()
@@ -57,7 +83,7 @@ namespace GinClientApp
         public static bool Load()
         {
             var saveFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
-                              @"\g-node\GinWindowsClient\GlobalOptionsDlg.json";
+                               @"\g-node\GinWindowsClient\GlobalOptionsDlg.json";
             if (!Directory.Exists(Path.GetDirectoryName(saveFilePath)))
                 Directory.CreateDirectory(Path.GetDirectoryName(saveFilePath));
 
@@ -78,17 +104,6 @@ namespace GinClientApp
                 _instance = new GlobalOptions();
                 return false;
             }
-        }
-
-        public object Clone()
-        {
-            return new GlobalOptions()
-            {
-                DefaultCheckoutDir = this.DefaultCheckoutDir,
-                DefaultMountpointDir = this.DefaultMountpointDir,
-                RepositoryUpdateInterval = this.RepositoryUpdateInterval,
-                RepositoryCheckoutOption = this.RepositoryCheckoutOption
-            };
         }
     }
 }

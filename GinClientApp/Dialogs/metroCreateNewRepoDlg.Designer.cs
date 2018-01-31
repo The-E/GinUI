@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MetroCreateNewRepoDlg));
             this.mBtnPickRepoMountpointDir = new MetroFramework.Controls.MetroButton();
             this.mBtnPickRepoCheckoutDir = new MetroFramework.Controls.MetroButton();
             this.metroLabel1 = new MetroFramework.Controls.MetroLabel();
@@ -98,7 +99,7 @@
             this.mTxBRepoAddress.MaxLength = 32767;
             this.mTxBRepoAddress.Name = "mTxBRepoAddress";
             this.mTxBRepoAddress.PasswordChar = '\0';
-            this.mTxBRepoAddress.PromptText = "<username>/<repository>";
+            this.mTxBRepoAddress.WaterMark = "<username>/<repository>";
             this.mTxBRepoAddress.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.mTxBRepoAddress.SelectedText = "";
             this.mTxBRepoAddress.SelectionLength = 0;
@@ -297,6 +298,7 @@
             this.Controls.Add(this.metroLabel3);
             this.Controls.Add(this.mTxBRepoName);
             this.Controls.Add(this.metroLabel4);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MetroCreateNewRepoDlg";
             this.Text = "Please enter Repository details";
             this.ResumeLayout(false);

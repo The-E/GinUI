@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MetroGetUserCredentialsDlg));
             this.mTxBUsername = new MetroFramework.Controls.MetroTextBox();
             this.metroLabel1 = new MetroFramework.Controls.MetroLabel();
             this.metroLabel2 = new MetroFramework.Controls.MetroLabel();
@@ -150,7 +151,7 @@
             this.mLblWarning.Text = "This space reserved for warnings";
             this.mLblWarning.UseCustomForeColor = true;
             // 
-            // GetUserCredentialsMetro
+            // MetroGetUserCredentialsDlg
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -163,7 +164,8 @@
             this.Controls.Add(this.metroLabel2);
             this.Controls.Add(this.metroLabel1);
             this.Controls.Add(this.mTxBUsername);
-            this.Name = "GetUserCredentialsMetro";
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "MetroGetUserCredentialsDlg";
             this.Resizable = false;
             this.Text = "Please enter your login details";
             this.ResumeLayout(false);

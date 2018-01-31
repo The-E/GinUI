@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MetroOptionsDlg));
             this.mTabCtrl = new MetroFramework.Controls.MetroTabControl();
             this.tpUser = new System.Windows.Forms.TabPage();
             this.metroPanel1 = new MetroFramework.Controls.MetroPanel();
@@ -794,6 +795,7 @@
             this.Controls.Add(this.mProgWorking);
             this.Controls.Add(this.mBtnOK);
             this.Controls.Add(this.mTabCtrl);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MetroOptionsDlg";
             this.Text = "Options";
             this.Theme = MetroFramework.MetroThemeStyle.Default;
