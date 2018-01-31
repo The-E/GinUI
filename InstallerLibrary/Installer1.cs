@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.ServiceProcess;
+using System.Text;
 using System.Threading;
 
 namespace InstallerLibrary
@@ -61,20 +62,30 @@ namespace InstallerLibrary
             Environment.SetEnvironmentVariable("PATH", value, EnvironmentVariableTarget.Machine);
             
             //Give the client the ability to register a URL to communicate with the service
-            var domain = IPGlobalProperties.GetIPGlobalProperties().DomainName;
-            if (string.IsNullOrEmpty(domain))
-                domain = "%COMPUTERNAME";
 
-            var procStartInfo = new ProcessStartInfo("netsh", @"http add urlacl url=http://+:8738/GinService/ user=" + domain +
-                                                              @"\%USERNAME% delegate=yes");
-
-            procStartInfo.RedirectStandardOutput = true;
-            procStartInfo.UseShellExecute = false;
-            procStartInfo.CreateNoWindow = true;
+            var procStartInfo = new ProcessStartInfo("cmd.exe", "/C netsh http add urlacl url=http://+:8738/GinService/ user=\"" + Environment.UserDomainName +
+                                                               "\\" + Environment.UserName + "\" delegate=yes")
+            {
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
 
             var process = new Process {StartInfo = procStartInfo};
+            StringBuilder Output = new StringBuilder();
+            process.OutputDataReceived += (o, args) =>
+            {
+                if (!string.IsNullOrEmpty(args.Data))
+                    Output.AppendLine(args.Data);
+            };
+            Output.Clear();
             process.Start();
+            process.BeginOutputReadLine();
             process.WaitForExit();
+
+            var output = Output.ToString();
+            Output.Clear();
+
 
             //Start the service and the client
             StartService("GinClientService");
