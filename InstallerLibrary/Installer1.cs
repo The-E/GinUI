@@ -62,54 +62,18 @@ namespace InstallerLibrary
 
             Debugger.Launch();
             //Give the client the ability to register a URL to communicate with the service
-            string arguments;
             var domain = IPGlobalProperties.GetIPGlobalProperties().DomainName;
             if (string.IsNullOrEmpty(domain))
-                arguments =
-                    @"http add urlacl url=http://+:8738/GinService/GinUI/ user=%COMPUTERNAME%\%USERNAME%";
-            else
-                arguments = @"http add urlacl url=http://+:8738/GinService/GinUI/ user=" + domain +
-                            @"\%USERNAME%";
-            var procStartInfo = new ProcessStartInfo("netsh", arguments);
+                domain = "%COMPUTERNAME";
+
+            var procStartInfo = new ProcessStartInfo("netsh", @"http add urlacl url=http://+:8738/GinService/ user=" + domain +
+                                                              @"\%USERNAME% delegate=yes");
 
             procStartInfo.RedirectStandardOutput = true;
             procStartInfo.UseShellExecute = false;
             procStartInfo.CreateNoWindow = true;
 
             var process = new Process {StartInfo = procStartInfo};
-            process.Start();
-            process.WaitForExit();
-
-            //Do the same for the Shell Extension
-            if (string.IsNullOrEmpty(domain))
-                arguments =
-                    @"http add urlacl url=http://+:8738/GinService/ShellExtension/8743/ user=%COMPUTERNAME%\%USERNAME%";
-            else
-                arguments = @"http add urlacl url=http://+:8738/GinService/ShellExtension/8743/ user=" + domain +
-                            @"\%USERNAME%";
-            procStartInfo = new ProcessStartInfo("netsh", arguments);
-
-            procStartInfo.RedirectStandardOutput = true;
-            procStartInfo.UseShellExecute = false;
-            procStartInfo.CreateNoWindow = true;
-
-            process = new Process { StartInfo = procStartInfo };
-            process.Start();
-            process.WaitForExit();
-
-            if (string.IsNullOrEmpty(domain))
-                arguments =
-                    @"http add urlacl url=http://+:8738/GinService/ShellExtension/8741/ user=%COMPUTERNAME%\%USERNAME%";
-            else
-                arguments = @"http add urlacl url=http://+:8738/GinService/ShellExtension/8741/ user=" + domain +
-                            @"\%USERNAME%";
-            procStartInfo = new ProcessStartInfo("netsh", arguments);
-
-            procStartInfo.RedirectStandardOutput = true;
-            procStartInfo.UseShellExecute = false;
-            procStartInfo.CreateNoWindow = true;
-
-            process = new Process { StartInfo = procStartInfo };
             process.Start();
             process.WaitForExit();
 
