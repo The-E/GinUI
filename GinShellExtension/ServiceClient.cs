@@ -11,9 +11,9 @@ namespace GinShellExtension
             var iContext = new InstanceContext(context);
             var myBinding = new WSDualHttpBinding
             {
-                ClientBaseAddress = new Uri(@"http://localhost:" + port + "/Design_Time_Addresses/GinService/")
+                ClientBaseAddress = new Uri(@"http://localhost:8738/GinService/ShellExtension/" + port)
             };
-            var myEndpoint = new EndpointAddress("http://localhost:8733/Design_Time_Addresses/GinService/");
+            var myEndpoint = new EndpointAddress("http://localhost:8733/GinService/");
             var myChannelFactory = new DuplexChannelFactory<IGinService>(iContext, myBinding, myEndpoint);
 
             var client = myChannelFactory.CreateChannel();

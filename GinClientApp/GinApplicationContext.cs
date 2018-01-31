@@ -108,7 +108,7 @@ namespace GinClientApp
                             GlobalOptions.Instance.RepositoryCheckoutOption ==
                             GlobalOptions.CheckoutOption.FullCheckout, false);
                 }
-                catch (Exception e)
+                catch
                 {
                 }
             else

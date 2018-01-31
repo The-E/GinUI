@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MetroRepoBrowser));
             this.trVwRepositories = new System.Windows.Forms.TreeView();
             this.mBtnCheckout = new MetroFramework.Controls.MetroButton();
             this.mBtnCancel = new MetroFramework.Controls.MetroButton();
@@ -138,6 +139,7 @@
             this.Controls.Add(this.mBtnCancel);
             this.Controls.Add(this.mBtnCheckout);
             this.Controls.Add(this.trVwRepositories);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MetroRepoBrowser";
             this.Text = "Repository Browser";
             this.ResumeLayout(false);

@@ -15,8 +15,6 @@ namespace GinShellExtension
     [COMServerAssociation(AssociationType.Directory)]
     public class GinShellExtensionClass : SharpContextMenu, IGinServiceCallback
     {
-        private bool _clientFaulted;
-
         //Implementing IGinServiceCallback here, but don't actually do anything with it.
         public void FileOperationStarted(string filename, string repository)
         {

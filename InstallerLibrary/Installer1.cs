@@ -34,6 +34,9 @@ namespace InstallerLibrary
         {
             var path = new DirectoryInfo(Context.Parameters["assemblypath"]).Parent;
 
+            if (Directory.Exists(path.FullName + @"\gin-cli\"))
+                Directory.Delete(path.FullName + @"\gin-cli\", true);
+
             Directory.CreateDirectory(path.FullName + @"\dokan\");
             Directory.CreateDirectory(path.FullName + @"\gin-cli\");
 
@@ -57,14 +60,15 @@ namespace InstallerLibrary
             value += ";" + path.FullName + @"\gin-cli\git\bin";
             Environment.SetEnvironmentVariable("PATH", value, EnvironmentVariableTarget.Machine);
 
+            Debugger.Launch();
             //Give the client the ability to register a URL to communicate with the service
             string arguments;
             var domain = IPGlobalProperties.GetIPGlobalProperties().DomainName;
             if (string.IsNullOrEmpty(domain))
                 arguments =
-                    @"http add urlacl url=http://+:8738/Design_Time_Addresses/GinService/ user=%COMPUTERNAME%\%USERNAME%";
+                    @"http add urlacl url=http://+:8738/GinService/GinUI/ user=%COMPUTERNAME%\%USERNAME%";
             else
-                arguments = @"http add urlacl url=http://+:8738/Design_Time_Addresses/GinService/ user=" + domain +
+                arguments = @"http add urlacl url=http://+:8738/GinService/GinUI/ user=" + domain +
                             @"\%USERNAME%";
             var procStartInfo = new ProcessStartInfo("netsh", arguments);
 
@@ -72,7 +76,42 @@ namespace InstallerLibrary
             procStartInfo.UseShellExecute = false;
             procStartInfo.CreateNoWindow = true;
 
-            Process.Start(procStartInfo);
+            var process = new Process {StartInfo = procStartInfo};
+            process.Start();
+            process.WaitForExit();
+
+            //Do the same for the Shell Extension
+            if (string.IsNullOrEmpty(domain))
+                arguments =
+                    @"http add urlacl url=http://+:8738/GinService/ShellExtension/8743/ user=%COMPUTERNAME%\%USERNAME%";
+            else
+                arguments = @"http add urlacl url=http://+:8738/GinService/ShellExtension/8743/ user=" + domain +
+                            @"\%USERNAME%";
+            procStartInfo = new ProcessStartInfo("netsh", arguments);
+
+            procStartInfo.RedirectStandardOutput = true;
+            procStartInfo.UseShellExecute = false;
+            procStartInfo.CreateNoWindow = true;
+
+            process = new Process { StartInfo = procStartInfo };
+            process.Start();
+            process.WaitForExit();
+
+            if (string.IsNullOrEmpty(domain))
+                arguments =
+                    @"http add urlacl url=http://+:8738/GinService/ShellExtension/8741/ user=%COMPUTERNAME%\%USERNAME%";
+            else
+                arguments = @"http add urlacl url=http://+:8738/GinService/ShellExtension/8741/ user=" + domain +
+                            @"\%USERNAME%";
+            procStartInfo = new ProcessStartInfo("netsh", arguments);
+
+            procStartInfo.RedirectStandardOutput = true;
+            procStartInfo.UseShellExecute = false;
+            procStartInfo.CreateNoWindow = true;
+
+            process = new Process { StartInfo = procStartInfo };
+            process.Start();
+            process.WaitForExit();
 
             //Start the service and the client
             StartService("GinClientService");
