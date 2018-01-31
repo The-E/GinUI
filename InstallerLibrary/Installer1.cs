@@ -59,8 +59,7 @@ namespace InstallerLibrary
             value += ";" + path.FullName + @"\gin-cli\git\usr\bin";
             value += ";" + path.FullName + @"\gin-cli\git\bin";
             Environment.SetEnvironmentVariable("PATH", value, EnvironmentVariableTarget.Machine);
-
-            Debugger.Launch();
+            
             //Give the client the ability to register a URL to communicate with the service
             var domain = IPGlobalProperties.GetIPGlobalProperties().DomainName;
             if (string.IsNullOrEmpty(domain))
