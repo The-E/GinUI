@@ -62,15 +62,12 @@ namespace InstallerLibrary
 
             Debugger.Launch();
             //Give the client the ability to register a URL to communicate with the service
-            string arguments;
             var domain = IPGlobalProperties.GetIPGlobalProperties().DomainName;
             if (string.IsNullOrEmpty(domain))
-                arguments =
-                    @"http add urlacl url=http://+:8738/GinService/ user=%COMPUTERNAME%\%USERNAME% delegate=yes";
-            else
-                arguments = @"http add urlacl url=http://+:8738/GinService/ user=" + domain +
-                            @"\%USERNAME% delegate=yes";
-            var procStartInfo = new ProcessStartInfo("netsh", arguments);
+                domain = "%COMPUTERNAME";
+
+            var procStartInfo = new ProcessStartInfo("netsh", @"http add urlacl url=http://+:8738/GinService/ user=" + domain +
+                                                              @"\%USERNAME% delegate=yes");
 
             procStartInfo.RedirectStandardOutput = true;
             procStartInfo.UseShellExecute = false;
