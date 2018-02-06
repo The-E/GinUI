@@ -12,7 +12,7 @@ namespace GinService
     ///     Main implementation of IGinService. This maps the functionality described in that interface on the
     ///     RepositoryManager functionality.
     /// </summary>
-    [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Single, InstanceContextMode = InstanceContextMode.PerSession)]
+    [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Multiple, InstanceContextMode = InstanceContextMode.PerSession)]
     public class GinService : IGinService
     {
         public GinService()
@@ -20,15 +20,50 @@ namespace GinService
             var callback = OperationContext.Current.GetCallbackChannel<IGinClientCallback>();
 
             RepositoryManager.Instance.FileRetrievalStarted +=
-                (sender, repo, file) => callback.FileOperationStarted(file, repo.Name);
+                (sender, repo, file) =>
+                {
+                    try
+                    {
+                        callback.FileOperationStarted(file, repo.Name);
+                    }
+                    catch
+                    {
+                    }
+                };
             RepositoryManager.Instance.FileRetrievalCompleted +=
-                (sender, repo, file, success) => callback.FileOperationFinished(file, repo.Name, success);
+                (sender, repo, file, success) =>
+                {
+                    try
+                    {
+                        callback.FileOperationFinished(file, repo.Name, success);
+                    }
+                    catch
+                    {
+                    }
+                };
             RepositoryManager.Instance.FileOperationProgress +=
                 (filename, repo, progress, speed, state) =>
-                    callback.FileOperationProgress(filename, repo.Name, progress, speed, state);
+                {
+                    try
+                    {
+                        callback.FileOperationProgress(filename, repo.Name, progress, speed, state);
+                    }
+                    catch
+                    {
+                    }
+                };
             RepositoryManager.Instance.RepositoryOperationError += (sender, message) =>
-                callback.GinServiceError("Error while performing GIN action on Repository " + message.RepositoryName +
-                                         ": " + message.Message);
+            {
+                try
+                {
+                    callback.GinServiceError("Error while performing GIN action on Repository " +
+                                             message.RepositoryName +
+                                             ": " + message.Message);
+                }
+                catch
+                {
+                }
+            };
 
             //We need to issue a logout at this point to clear any potentially invalid tokens
         }
@@ -127,7 +162,7 @@ namespace GinService
                 var repo = RepositoryManager.Instance.GetRepoByName(repoName);
                 RepositoryManager.Instance.DeleteRepository(repo);
             }
-            catch (Exception e)
+            catch
             {
             }
         }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -10,6 +9,7 @@ using GinShellExtension.Properties;
 using Newtonsoft.Json;
 using SharpShell.Interop;
 using SharpShell.SharpIconOverlayHandler;
+using GinRepositoryData = GinClientLibrary.GinRepositoryData;
 
 namespace GinShellExtension
 {
@@ -50,10 +50,10 @@ namespace GinShellExtension
 
             try
             {
-                var repos = JsonConvert.DeserializeObject<GinClientLibrary.GinRepositoryData[]>(client.GetRepositoryList());
+                var repos = JsonConvert.DeserializeObject<GinRepositoryData[]>(client.GetRepositoryList());
                 var directory = new DirectoryInfo(path);
                 var result = false;
-                GinClientLibrary.GinRepositoryData data;
+                GinRepositoryData data;
 
                 foreach (var repo in repos)
                 {
@@ -77,7 +77,8 @@ namespace GinShellExtension
 
         protected override Icon GetOverlayIcon()
         {
-            if (_fstatus.ContainsKey(_path) && (_fstatus[_path] == GinRepository.FileStatus.OnDisk || _fstatus[_path] == GinRepository.FileStatus.OnDiskModified))
+            if (_fstatus.ContainsKey(_path) && (_fstatus[_path] == GinRepository.FileStatus.OnDisk ||
+                                                _fstatus[_path] == GinRepository.FileStatus.OnDiskModified))
                 return Resources.gin_icon;
             return Resources.gin_icon_desaturated;
         }

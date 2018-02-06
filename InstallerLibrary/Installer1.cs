@@ -7,7 +7,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
-using System.Net.NetworkInformation;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading;
@@ -33,6 +32,7 @@ namespace InstallerLibrary
 
         private void Installer1_Committed(object sender, InstallEventArgs e)
         {
+            Debugger.Launch();
             var path = new DirectoryInfo(Context.Parameters["assemblypath"]).Parent;
 
             if (Directory.Exists(path.FullName + @"\gin-cli\"))
@@ -60,11 +60,12 @@ namespace InstallerLibrary
             value += ";" + path.FullName + @"\gin-cli\git\usr\bin";
             value += ";" + path.FullName + @"\gin-cli\git\bin";
             Environment.SetEnvironmentVariable("PATH", value, EnvironmentVariableTarget.Machine);
-            
+
             //Give the client the ability to register a URL to communicate with the service
 
-            var procStartInfo = new ProcessStartInfo("cmd.exe", "/C netsh http add urlacl url=http://+:8738/GinService/ user=\"" + Environment.UserDomainName +
-                                                               "\\" + Environment.UserName + "\" delegate=yes")
+            var procStartInfo = new ProcessStartInfo("cmd.exe",
+                "/C netsh http add urlacl url=http://+:8738/GinService/ user=\"" + Environment.UserDomainName +
+                "\\" + Environment.UserName + "\" delegate=yes")
             {
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
@@ -72,7 +73,7 @@ namespace InstallerLibrary
             };
 
             var process = new Process {StartInfo = procStartInfo};
-            StringBuilder Output = new StringBuilder();
+            var Output = new StringBuilder();
             process.OutputDataReceived += (o, args) =>
             {
                 if (!string.IsNullOrEmpty(args.Data))
@@ -82,7 +83,7 @@ namespace InstallerLibrary
             process.Start();
             process.BeginOutputReadLine();
             process.WaitForExit();
-            
+
             Output.Clear();
 
             //Start the service and the client
@@ -172,7 +173,7 @@ namespace InstallerLibrary
                 CreateNoWindow = true
             };
 
-            var process = new Process { StartInfo = procStartInfo };
+            var process = new Process {StartInfo = procStartInfo};
             var Output = new StringBuilder();
             process.OutputDataReceived += (o, args) =>
             {
@@ -194,7 +195,11 @@ namespace InstallerLibrary
             foreach (var entry in entries)
             {
                 if (entry.Contains("gin-cli"))
+                {
+                    if (Directory.Exists(entry))
+                        Directory.Delete(entry, true);
                     continue;
+                }
 
                 newPath.Append(entry + ";");
             }

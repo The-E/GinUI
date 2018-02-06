@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ServiceModel;
-using System.ServiceModel.Channels;
 using GinShellExtension.GinService;
 
 namespace GinShellExtension
@@ -13,11 +12,10 @@ namespace GinShellExtension
             var myBinding = new WSDualHttpBinding
             {
                 ClientBaseAddress = new Uri(@"http://localhost:8738/GinService/ShellExtension/" + port)
-                
             };
             var endpointIdentity = EndpointIdentity.CreateDnsIdentity("localhost");
-            var myEndpoint = new EndpointAddress(new Uri("http://localhost:8733/GinService/"), endpointIdentity, new AddressHeader[]{});
-            
+            var myEndpoint = new EndpointAddress(new Uri("http://localhost:8733/GinService/"), endpointIdentity);
+
             var myChannelFactory = new DuplexChannelFactory<IGinService>(iContext, myBinding, myEndpoint);
 
             var client = myChannelFactory.CreateChannel();
