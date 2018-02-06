@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.ServiceModel;
+using GinClientLibrary;
 using GinShellExtension.GinService;
 using GinShellExtension.Properties;
+using Newtonsoft.Json;
 using SharpShell.Interop;
 using SharpShell.SharpIconOverlayHandler;
 
@@ -14,7 +18,7 @@ namespace GinShellExtension
     {
         private static string _path;
         private static string _status;
-
+        private Dictionary<string, GinRepository.FileStatus> _fstatus;
 
         //Implementing IGinServiceCallback here, but don't actually do anything with it.
         public void FileOperationStarted(string filename, string repository)
@@ -46,11 +50,22 @@ namespace GinShellExtension
 
             try
             {
-                var result = client.IsManagedPathNonTerminating(path);
-                if (result)
-                    _status = client.GetFileInfo(path);
+                var repos = JsonConvert.DeserializeObject<GinClientLibrary.GinRepositoryData[]>(client.GetRepositoryList());
+                var directory = new DirectoryInfo(path);
+                var result = false;
+                GinClientLibrary.GinRepositoryData data;
+
+                foreach (var repo in repos)
+                {
+                    if (!path.Contains(repo.Mountpoint.FullName)) continue;
+                    result = true;
+                    _fstatus = JsonConvert.DeserializeObject<
+                        Dictionary<string, GinRepository.FileStatus>>(client.GetRepositoryFileInfo(repo.Name));
+                    break;
+                }
 
                 ((ICommunicationObject) client).Close();
+
                 return result;
             }
             catch
@@ -62,8 +77,7 @@ namespace GinShellExtension
 
         protected override Icon GetOverlayIcon()
         {
-            if (string.Compare(_status, "OnDisk", StringComparison.InvariantCultureIgnoreCase) == 0 ||
-                string.Compare(_status, "OnDiskModified", StringComparison.InvariantCultureIgnoreCase) == 0)
+            if (_fstatus.ContainsKey(_path) && (_fstatus[_path] == GinRepository.FileStatus.OnDisk || _fstatus[_path] == GinRepository.FileStatus.OnDiskModified))
                 return Resources.gin_icon;
             return Resources.gin_icon_desaturated;
         }

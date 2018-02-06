@@ -55,7 +55,7 @@ namespace InstallerLibrary
                 path.FullName + @"\gin-cli\");
 
             //Add gin-cli to the system PATH
-            var value = Environment.GetEnvironmentVariable("PATH");
+            var value = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Machine);
             value += ";" + path.FullName + @"\gin-cli\bin";
             value += ";" + path.FullName + @"\gin-cli\git\usr\bin";
             value += ";" + path.FullName + @"\gin-cli\git\bin";
@@ -82,10 +82,8 @@ namespace InstallerLibrary
             process.Start();
             process.BeginOutputReadLine();
             process.WaitForExit();
-
-            var output = Output.ToString();
+            
             Output.Clear();
-
 
             //Start the service and the client
             StartService("GinClientService");
@@ -165,6 +163,43 @@ namespace InstallerLibrary
             catch
             {
             }
+
+            //remove the shell extension
+            var procStartInfo = new ProcessStartInfo("cmd.exe", "/C srm.exe uninstall GinShellExtension.dll -codebase")
+            {
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            var process = new Process { StartInfo = procStartInfo };
+            var Output = new StringBuilder();
+            process.OutputDataReceived += (o, args) =>
+            {
+                if (!string.IsNullOrEmpty(args.Data))
+                    Output.AppendLine(args.Data);
+            };
+            Output.Clear();
+            process.Start();
+            process.BeginOutputReadLine();
+            process.WaitForExit();
+            Output.Clear();
+
+            //clean up the system path
+            var value = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Machine);
+
+            var entries = value.Split(';');
+            var newPath = new StringBuilder();
+
+            foreach (var entry in entries)
+            {
+                if (entry.Contains("gin-cli"))
+                    continue;
+
+                newPath.Append(entry + ";");
+            }
+
+            Environment.SetEnvironmentVariable("PATH", newPath.ToString(), EnvironmentVariableTarget.Machine);
         }
 
         private void Uninstallservice()
