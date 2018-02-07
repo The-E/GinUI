@@ -28,24 +28,24 @@ The project uses the following nuget packages:
 ## Development Guidelines
 ### Project setup
 The GinClientApp solution is comprised of the following subprojects:
-1. GinClientApp
+1. GinClientApp  
 This contains the source code for the desktop client
-2. GinClientLibrary
+2. GinClientLibrary  
 This project contains common code referenced by the other projects. It also contains the implementation of the Dokan driver interface, GinRepository and RepositoryManager classes the service relies on
-3. GinService
+3. GinService  
 This project contains the source code for the Windows service component
-4. GinShellExtension
+4. GinShellExtension  
 This project contains the source code for the Shell Extension component
-5. InstallerLibrary
+5. InstallerLibrary  
 This project contains the source code for custom actions used within the Setup project
-6. Setup
+6. Setup  
 A Visual Studio Installer project that builds the installer
 
 ### Coding Style
-This project uses ReSharper style throughout.
-Private variables and fields should always be lowercase and preceded by an underscore, i.e. `private int _someint;`
-Wherever possible, use `var` instead of an explicit type.
-Brace style is Allman.
+This project uses ReSharper style throughout.  
+Private variables and fields should always be lowercase and preceded by an underscore, i.e. `private int _someint;`  
+Wherever possible, use `var` instead of an explicit type.  
+Brace style is Allman.  
 
 ### Subproject-specific notes
 #### GinClientApp
