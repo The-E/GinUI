@@ -41,6 +41,12 @@ This project contains the source code for custom actions used within the Setup p
 6. Setup
 A Visual Studio Installer project that builds the installer
 
+### Coding Style
+This project uses ReSharper style throughout.
+Private variables and fields should always be lowercase and preceded by an underscore, i.e. `private int _someint;`
+Wherever possible, use `var` instead of an explicit type.
+Brace style is Allman.
+
 ### Subproject-specific notes
 #### GinClientApp
 The GinClientApp is a Windows Forms-based client. By default, the only UI displayed is the notification area icon created through the GinApplicationContext class. To achieve a more modern look, the MetroModernUI is used.
