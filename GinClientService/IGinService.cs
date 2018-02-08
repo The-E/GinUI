@@ -163,7 +163,7 @@ namespace GinService
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        [OperationContract]
+        [OperationContract(IsInitiating = true)]
         bool IsManagedPathNonTerminating(string filePath);
 
         /// <summary>

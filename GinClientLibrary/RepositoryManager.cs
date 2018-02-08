@@ -46,7 +46,10 @@ namespace GinClientLibrary
         private void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
             if (!IsNullOrEmpty(e.Data))
-                Output.AppendLine(e.Data);
+                lock (_thisLock)
+                {
+                    Output.AppendLine(e.Data);
+                }
         }
 
         public GinRepository GetRepoByName(string name)
@@ -187,14 +190,20 @@ namespace GinClientLibrary
             };
 
             process.OutputDataReceived += Process_OutputDataReceived;
-            Output.Clear();
+            lock (_thisLock)
+            {
+                Output.Clear();
+            }
             process.Start();
             process.BeginOutputReadLine();
             var error = process.StandardError.ReadToEnd();
 
             process.WaitForExit();
 
-            return Output.ToString();
+            lock (_thisLock)
+            {
+                return Output.ToString();
+            }
         }
 
         /// <summary>
