@@ -92,7 +92,9 @@ namespace GinClientLibrary
                         WindowStyle = ProcessWindowStyle.Hidden,
                         FileName = "cmd.exe",
                         WorkingDirectory = @"C:\",
-                        Arguments = "/C gin.exe create " + repoName + " --no-clone",
+                        //TODO: Reenable this line when gin-cli immplements --no-clone 
+                        //Arguments = "/C gin.exe create " + repoName + " --no-clone",
+                        Arguments = "/C gin.exe create " + repoName,
                         CreateNoWindow = true,
                         RedirectStandardOutput = true,
                         RedirectStandardError = true,
@@ -102,6 +104,13 @@ namespace GinClientLibrary
                 };
 
                 process.Start();
+
+                //TODO: Remove this code block when --no-clone is implemented
+                process.WaitForExit();
+
+                var unwantedClone = new DirectoryInfo(@"C:\" + repoName);
+                unwantedClone.Empty();
+                Directory.Delete(@"C:\" + repoName);
             }
 
             return true;
