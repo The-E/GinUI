@@ -124,7 +124,6 @@
     </Compile>
     <Compile Include="GinApplicationContext.cs" />
     <Compile Include="GlobalOptions.cs" />
-    <Compile Include="NativeMethods.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserCredentials.cs" />
