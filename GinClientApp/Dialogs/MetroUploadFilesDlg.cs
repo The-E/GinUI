@@ -20,6 +20,8 @@ namespace GinClientApp.Dialogs
         {
             foreach (var file in _alteredFiles)
                 mLvwFiles.Items.Add(new ListViewItem(file.Key));
+
+            mLvwFiles.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
         }
     }
 }
