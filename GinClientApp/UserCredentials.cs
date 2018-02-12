@@ -47,6 +47,9 @@ namespace GinClientApp
                     _instance = JsonConvert.DeserializeObject<UserCredentials>(text);
                 }
 
+                if (string.IsNullOrEmpty(_instance.Username) || string.IsNullOrEmpty(_instance.Password))
+                    return false;
+
                 return true;
             }
             catch
