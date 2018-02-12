@@ -92,7 +92,7 @@ namespace GinClientLibrary
                         WindowStyle = ProcessWindowStyle.Hidden,
                         FileName = "cmd.exe",
                         WorkingDirectory = @"C:\",
-                        Arguments = "/C gin.exe create " + repoName + " --no-clone",
+                        Arguments = "/C gin.exe create --no-clone " + repoName,
                         CreateNoWindow = true,
                         RedirectStandardOutput = true,
                         RedirectStandardError = true,
