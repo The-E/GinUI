@@ -32,7 +32,6 @@ namespace InstallerLibrary
 
         private void Installer1_Committed(object sender, InstallEventArgs e)
         {
-            Debugger.Launch();
             var path = new DirectoryInfo(Context.Parameters["assemblypath"]).Parent;
 
             if (Directory.Exists(path.FullName + @"\gin-cli\"))
