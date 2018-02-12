@@ -84,10 +84,6 @@ namespace InstallerLibrary
             process.WaitForExit();
 
             Output.Clear();
-
-            //Start the service and the client
-            StartService("GinClientService");
-            Process.Start(path.FullName + @"\GinClientApp.exe");
         }
 
         private void WbOnDownloadProgressChanged(object sender,
