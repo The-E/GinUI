@@ -32,7 +32,6 @@ namespace InstallerLibrary
 
         private void Installer1_Committed(object sender, InstallEventArgs e)
         {
-            Debugger.Launch();
             var path = new DirectoryInfo(Context.Parameters["assemblypath"]).Parent;
 
             if (Directory.Exists(path.FullName + @"\gin-cli\"))
@@ -85,10 +84,6 @@ namespace InstallerLibrary
             process.WaitForExit();
 
             Output.Clear();
-
-            //Start the service and the client
-            StartService("GinClientService");
-            Process.Start(path.FullName + @"\GinClientApp.exe");
         }
 
         private void WbOnDownloadProgressChanged(object sender,
