@@ -21,18 +21,30 @@ namespace GinService
         {
             if (Environment.UserInteractive)
             {
-                Debugger.Launch();
                 if (args.Length > 0)
                     switch (args[0])
                     {
                         case "-install":
                         {
-                            ManagedInstallerClass.InstallHelper(new[] {Assembly.GetExecutingAssembly().Location});
+                            try
+                            {
+                                ManagedInstallerClass.InstallHelper(new[] {Assembly.GetExecutingAssembly().Location});
+                            }
+                            catch
+                            {
+                            }
                             break;
                         }
                         case "-uninstall":
                         {
-                            ManagedInstallerClass.InstallHelper(new[] {"/u", Assembly.GetExecutingAssembly().Location});
+                            try
+                            {
+                                ManagedInstallerClass.InstallHelper(new[]
+                                    {"/u", Assembly.GetExecutingAssembly().Location});
+                            }
+                            catch
+                            {
+                            }
                             break;
                         }
                     }
