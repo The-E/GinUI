@@ -33,12 +33,14 @@ namespace InstallerLibrary
 
         private void Installer1_Committed(object sender, InstallEventArgs e)
         {
-            Debugger.Launch();
             var path = new DirectoryInfo(Context.Parameters["assemblypath"]).Parent;
 
             if (Directory.Exists(path.FullName + @"\gin-cli\"))
+            {
+                var dInfo = new DirectoryInfo(path.FullName + @"\gin-cli\");
+                dInfo.Empty();
                 Directory.Delete(path.FullName + @"\gin-cli\", true);
-
+            }
             Directory.CreateDirectory(path.FullName + @"\dokan\");
             Directory.CreateDirectory(path.FullName + @"\gin-cli\");
 
@@ -88,13 +90,16 @@ namespace InstallerLibrary
             Output.Clear();
 
             //Set the dokan installer to run after reboot
-            var regkey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\RunOnce", true);
+
+            Debugger.Launch();
+            var regkey = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\RunOnce", true);
             if (regkey == null)
             {
-                regkey = Registry.CurrentUser.CreateSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\RunOnce");
+                regkey = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\RunOnce");
             }
-            string startPath = "cmd /C " + path.FullName + @"\dokan\DokanSetup.exe /install /quiet /norestart";
+            string startPath = "cmd /C \"" + path.FullName + "\\dokan\\DokanSetup.exe\" /install /quiet /norestart";
             regkey.SetValue("KeyName", "\"" + startPath + "\"");
+            regkey.Close();
         }
 
         private void WbOnDownloadProgressChanged(object sender,
@@ -285,6 +290,48 @@ namespace InstallerLibrary
 
             controller.Stop();
             controller.WaitForStatus(ServiceControllerStatus.Stopped);
+        }
+    }
+
+    public static class DirectoryInfoExtension
+    {
+        public static void Empty(this DirectoryInfo directory)
+        {
+            File.SetAttributes(directory.FullName,
+                File.GetAttributes(directory.FullName) & ~(FileAttributes.Hidden | FileAttributes.ReadOnly));
+
+            foreach (var file in directory.GetFiles("*", SearchOption.AllDirectories))
+                try
+                {
+                    File.SetAttributes(file.FullName, FileAttributes.Normal);
+                    file.Delete();
+                }
+                catch
+                {
+                }
+
+            foreach (var subDirectory in directory.GetDirectories())
+                try
+                {
+                    File.SetAttributes(subDirectory.FullName, FileAttributes.Normal);
+                    subDirectory.Delete(true);
+                }
+                catch
+                {
+                }
+        }
+
+        public static bool IsEmpty(this DirectoryInfo directory)
+        {
+            if (!Directory.Exists(directory.FullName))
+                return true;
+
+            return !Directory.EnumerateFileSystemEntries(directory.FullName).Any();
+        }
+
+        public static bool IsEqualTo(this DirectoryInfo left, DirectoryInfo right)
+        {
+            return string.Equals(left.FullName, right.FullName, StringComparison.InvariantCultureIgnoreCase);
         }
     }
 }

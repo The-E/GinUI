@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration.Install;
+using System.Diagnostics;
 using System.Reflection;
 using System.ServiceModel;
 using System.ServiceProcess;
@@ -20,6 +21,7 @@ namespace GinService
         {
             if (Environment.UserInteractive)
             {
+                Debugger.Launch();
                 if (args.Length > 0)
                     switch (args[0])
                     {
