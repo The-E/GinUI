@@ -36,7 +36,7 @@ namespace GinClientApp.Dialogs
                         lvi.ToolTipText = "This file has been modified locally.";
                         break;
                     case GinRepository.FileStatus.Unknown:
-                        lvi.ForeColor = Color.Black;
+                        lvi.ForeColor = Color.Blue;
                         lvi.ToolTipText = "This file is currently not tracked by gin";
                         break;
                     case GinRepository.FileStatus.Directory:
