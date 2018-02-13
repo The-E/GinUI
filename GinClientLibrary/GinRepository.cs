@@ -93,7 +93,7 @@ namespace GinClientLibrary
             if (string.CompareOrdinal(status, "NC") == 0)
                 return FileStatus.InAnnex;
             if (string.CompareOrdinal(status, "MD") == 0)
-                return FileStatus.InAnnexModified;
+                return FileStatus.OnDiskModified;
             if (string.CompareOrdinal(status, "LC") == 0)
                 return FileStatus.OnDiskModified;
             if (string.CompareOrdinal(status, "RC") == 0)
