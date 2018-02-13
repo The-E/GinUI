@@ -134,6 +134,8 @@ namespace GinClientLibrary
 
                 if (statusCollection == null) return;
 
+                StatusCache.Clear();
+
                 foreach (var fstatus in statusCollection)
                 {
                     var filePath =
@@ -221,7 +223,7 @@ namespace GinClientLibrary
         {
             string directoryName = PhysicalDirectory.FullName, filename;
 
-            if (!string.IsNullOrEmpty(filePath))
+            if (string.Compare(filePath, "%EMPTYSTRING%", StringComparison.InvariantCulture) != 0)
             {
                 GetActualFilename(filePath, out directoryName, out filename);
                 filename = '"' + filename + '"';
