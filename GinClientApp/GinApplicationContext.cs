@@ -218,7 +218,8 @@ namespace GinClientApp
 
             if (res == DialogResult.Cancel) return;
 
-            ServiceClient.UploadFile(repo.Name, "");
+            //WCF requires that non-optional arguments be non-empty, so we provide a placeholder value
+            ServiceClient.UploadFile(repo.Name, "%EMPTYSTRING%");
         }
 
         private void ShowOptionsMenuItemHandler(object sender, EventArgs e)
