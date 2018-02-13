@@ -206,7 +206,7 @@ namespace GinClientApp
 
             var alteredFiles = from kvp in fstatus
                 where kvp.Value == GinRepository.FileStatus.OnDiskModified ||
-                      kvp.Value == GinRepository.FileStatus.Unknown
+                      kvp.Value == GinRepository.FileStatus.Unknown || kvp.Value == GinRepository.FileStatus.Removed
                 select kvp;
 
             var files = alteredFiles as KeyValuePair<string, GinRepository.FileStatus>[] ?? alteredFiles.ToArray();
