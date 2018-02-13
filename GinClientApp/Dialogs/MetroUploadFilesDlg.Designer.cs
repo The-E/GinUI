@@ -28,10 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.ColumnHeader columnHeader1;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MetroUploadFilesDlg));
             this.mLvwFiles = new MetroFramework.Controls.MetroListView();
             this.mBtnOK = new MetroFramework.Controls.MetroButton();
             this.mBtnCancel = new MetroFramework.Controls.MetroButton();
+            columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // mLvwFiles
@@ -39,8 +41,11 @@
             this.mLvwFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.mLvwFiles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            columnHeader1});
             this.mLvwFiles.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.mLvwFiles.FullRowSelect = true;
+            this.mLvwFiles.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.mLvwFiles.Location = new System.Drawing.Point(24, 64);
             this.mLvwFiles.Name = "mLvwFiles";
             this.mLvwFiles.OwnerDraw = true;
@@ -48,6 +53,7 @@
             this.mLvwFiles.TabIndex = 0;
             this.mLvwFiles.UseCompatibleStateImageBehavior = false;
             this.mLvwFiles.UseSelectable = true;
+            this.mLvwFiles.View = System.Windows.Forms.View.Details;
             // 
             // mBtnOK
             // 
@@ -70,6 +76,10 @@
             this.mBtnCancel.TabIndex = 2;
             this.mBtnCancel.Text = "Cancel";
             this.mBtnCancel.UseSelectable = true;
+            // 
+            // columnHeader1
+            // 
+            columnHeader1.Width = 200;
             // 
             // MetroUploadFilesDlg
             // 
