@@ -219,12 +219,22 @@ namespace GinClientLibrary
         /// <returns></returns>
         public bool UploadFile(string filePath)
         {
-            GetActualFilename(filePath, out var directoryName, out var filename);
+            string directoryName = PhysicalDirectory.FullName, filename;
+
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                GetActualFilename(filePath, out directoryName, out filename);
+                filename = '"' + filename + '"';
+            }
+            else
+            {
+                filename = ".";
+            }
 
             lock (this)
             {
                 OnFileOperationStarted(new FileOperationEventArgs {File = filePath});
-                GetCommandLineOutputEvent("cmd.exe", "/C gin.exe upload --json \"" + filename + "\"", directoryName,
+                GetCommandLineOutputEvent("cmd.exe", "/C gin.exe upload --json " + filename, directoryName,
                     out var error);
 
 

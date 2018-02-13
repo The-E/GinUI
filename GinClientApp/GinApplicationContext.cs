@@ -218,8 +218,7 @@ namespace GinClientApp
 
             if (res == DialogResult.Cancel) return;
 
-            foreach (var file in files)
-                ServiceClient.UploadFile(repo.Name, file.Key);
+            ServiceClient.UploadFile(repo.Name, "");
         }
 
         private void ShowOptionsMenuItemHandler(object sender, EventArgs e)
