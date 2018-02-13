@@ -370,44 +370,31 @@ namespace GinClientLibrary
 
         public string GetRemoteRepoList()
         {
-            return GetCommandLineOutput("cmd.exe", @"/C gin.exe repos --json --all", @"C:\", out var error);
-        }
-
-        private string GetCommandLineOutput(string program, string commandline, string workingDirectory,
-            out string error)
-        {
-            lock (_thisLock)
+            var process = new Process
             {
-                var process = new Process
+                StartInfo = new ProcessStartInfo
                 {
-                    StartInfo = new ProcessStartInfo
-                    {
-                        WindowStyle = ProcessWindowStyle.Hidden,
-                        FileName = program,
-                        WorkingDirectory = workingDirectory,
-                        Arguments = commandline,
-                        CreateNoWindow = true,
-                        RedirectStandardOutput = true,
-                        RedirectStandardError = true,
-                        UseShellExecute = false
-                    }
-                };
-
-                process.OutputDataReceived += Process_OutputDataReceived;
-                Output.Clear();
-                process.Start();
-                process.BeginOutputReadLine();
-                error = process.StandardError.ReadToEnd();
-                process.WaitForExit();
-
-                var output = Output.ToString();
-                Output.Clear();
-                return output;
-            }
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    FileName = "gin.exe",
+                    WorkingDirectory = @"C:\",
+                    Arguments = "repos --json --all",
+                    CreateNoWindow = true,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false
+                }
+            };
+            StringBuilder output = new StringBuilder();
+            process.OutputDataReceived += (sender, args) => { output.AppendLine(args.Data); };
+            
+            process.Start();
+            process.BeginOutputReadLine();
+            process.WaitForExit();
+            
+            return output.ToString();
         }
 
-
-        //{"filename":"gin-cli-0.12dev.deb","state":"Downloading","progress":"","rate":"","err":""}
+        
         private struct fileOpProgress
         {
             public string filename { get; set; }

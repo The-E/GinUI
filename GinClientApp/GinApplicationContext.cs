@@ -20,7 +20,7 @@ namespace GinClientApp
     public class GinApplicationContext : ApplicationContext, IGinServiceCallback
     {
         private readonly NotifyIcon _trayIcon;
-        public readonly GinServiceClient ServiceClient;
+        public GinServiceClient ServiceClient;
         private Timer _updateIntervalTimer;
 
         public GinApplicationContext()
@@ -32,6 +32,7 @@ namespace GinClientApp
             };
 
             ServiceClient = new GinServiceClient(new InstanceContext(this));
+            ServiceClient.InnerChannel.Faulted += InnerChannelOnFaulted;
             var saveFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
                                @"\g-node\GinWindowsClient";
             if (!Directory.Exists(saveFilePath))
@@ -122,6 +123,7 @@ namespace GinClientApp
             _trayIcon.Icon = Resources.gin_icon;
             _updateIntervalTimer?.Start();
         }
+        
 
         void IGinServiceCallback.FileOperationFinished(string filename, string repository, bool success)
         {
@@ -152,9 +154,10 @@ namespace GinClientApp
 
         private void InnerChannelOnFaulted(object sender1, EventArgs eventArgs)
         {
-            MessageBox.Show(Resources.GinApplicationContext_Gin_Service_has_stopped_communicating_,
-                Resources.GinApplicationContext_Gin_Service_Error, MessageBoxButtons.OK);
-            Exit(null, EventArgs.Empty);
+            ServiceClient.Abort();
+            ServiceClient = null;
+
+            ServiceClient = new GinServiceClient(new InstanceContext(this));
         }
 
         private MenuItem[] BuildContextMenu()

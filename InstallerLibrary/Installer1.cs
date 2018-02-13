@@ -287,7 +287,7 @@ namespace InstallerLibrary
             controller.WaitForStatus(ServiceControllerStatus.Stopped);
         }
     }
-
+    
     public static class DirectoryInfoExtension
     {
         public static void Empty(this DirectoryInfo directory)
