@@ -10,6 +10,7 @@ using System.Net;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading;
+using Microsoft.Win32;
 
 namespace InstallerLibrary
 {
@@ -84,6 +85,11 @@ namespace InstallerLibrary
             process.WaitForExit();
 
             Output.Clear();
+
+            //Set the dokan installer to run after reboot
+            RegistryKey regkey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\RunOnce", true);
+            string startPath = path.FullName + @"\dokan\DokanSetup.exe";
+            regkey.SetValue("KeyName", "\"" + startPath + "\"");
         }
 
         private void WbOnDownloadProgressChanged(object sender,
