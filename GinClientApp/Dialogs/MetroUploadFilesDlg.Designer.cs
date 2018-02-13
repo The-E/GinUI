@@ -36,6 +36,10 @@
             columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
+            // columnHeader1
+            // 
+            columnHeader1.Width = 200;
+            // 
             // mLvwFiles
             // 
             this.mLvwFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -49,6 +53,7 @@
             this.mLvwFiles.Location = new System.Drawing.Point(24, 64);
             this.mLvwFiles.Name = "mLvwFiles";
             this.mLvwFiles.OwnerDraw = true;
+            this.mLvwFiles.ShowItemToolTips = true;
             this.mLvwFiles.Size = new System.Drawing.Size(257, 188);
             this.mLvwFiles.TabIndex = 0;
             this.mLvwFiles.UseCompatibleStateImageBehavior = false;
@@ -76,10 +81,6 @@
             this.mBtnCancel.TabIndex = 2;
             this.mBtnCancel.Text = "Cancel";
             this.mBtnCancel.UseSelectable = true;
-            // 
-            // columnHeader1
-            // 
-            columnHeader1.Width = 200;
             // 
             // MetroUploadFilesDlg
             // 
