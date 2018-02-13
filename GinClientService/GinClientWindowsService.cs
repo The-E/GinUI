@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration.Install;
+using System.Diagnostics;
 using System.Reflection;
 using System.ServiceModel;
 using System.ServiceProcess;
@@ -25,12 +26,25 @@ namespace GinService
                     {
                         case "-install":
                         {
-                            ManagedInstallerClass.InstallHelper(new[] {Assembly.GetExecutingAssembly().Location});
+                            try
+                            {
+                                ManagedInstallerClass.InstallHelper(new[] {Assembly.GetExecutingAssembly().Location});
+                            }
+                            catch
+                            {
+                            }
                             break;
                         }
                         case "-uninstall":
                         {
-                            ManagedInstallerClass.InstallHelper(new[] {"/u", Assembly.GetExecutingAssembly().Location});
+                            try
+                            {
+                                ManagedInstallerClass.InstallHelper(new[]
+                                    {"/u", Assembly.GetExecutingAssembly().Location});
+                            }
+                            catch
+                            {
+                            }
                             break;
                         }
                     }
