@@ -68,7 +68,7 @@ namespace InstallerLibrary
             var everyone = new System.Security.Principal.SecurityIdentifier(
                 "S-1-1-0").Translate(typeof(System.Security.Principal.NTAccount)).ToString();
             var procStartInfo = new ProcessStartInfo("cmd.exe",
-                "/C netsh http add urlacl url=http://+:8738/GinService/ user=\"" + everyone + "\" delegate=yes")
+                "/C netsh http add urlacl url=http://+:8738/GinService/ user=\\" + everyone + " delegate=yes")
             {
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
