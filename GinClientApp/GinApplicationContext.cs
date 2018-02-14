@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.ServiceModel;
+using System.ServiceProcess;
+using System.Threading;
 using System.Windows.Forms;
 using GinClientApp.Dialogs;
 using GinClientApp.GinService;
@@ -23,105 +26,136 @@ namespace GinClientApp
         public GinServiceClient ServiceClient;
         private Timer _updateIntervalTimer;
 
+        private bool WaitForService()
+        {
+            try
+            {
+                var sc = new ServiceController("GinClientService");
+                {
+                    while (sc.Status != ServiceControllerStatus.Running)
+                    {
+                        Thread.Sleep(100);
+                    }
+                }
+
+                sc.Close();
+
+                return true;
+            }
+            catch
+            {
+                MessageBox.Show("The GinClientService could not be found on this system. Please rerun the installer.");
+                return false;
+            }
+        }
+
         public GinApplicationContext()
         {
-            _trayIcon = new NotifyIcon
+            if (!WaitForService())
             {
-                Visible = true,
-                Icon = Resources.gin_icon_desaturated
-            };
-
-            ServiceClient = new GinServiceClient(new InstanceContext(this));
-            ServiceClient.InnerChannel.Faulted += InnerChannelOnFaulted;
-            var saveFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
-                               @"\g-node\GinWindowsClient";
-            if (!Directory.Exists(saveFilePath))
-                Directory.CreateDirectory(saveFilePath);
-
-            #region Environment Variables
-
-            //Tell the service to use the current users' AppData folders for logging and config data
-            ServiceClient.SetEnvironmentVariables(
-                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\g-node\gin\",
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\g-node\gin\");
-
-            #endregion
-
-            #region Login
-
-            if (!UserCredentials.Load())
-            {
-                var getUserCreds = new MetroGetUserCredentialsDlg(this);
-                var result = getUserCreds.ShowDialog(); //The Dialog will log us in and save the user credentials
-
-                if (result == DialogResult.Cancel) Exit(this, EventArgs.Empty);
+                Application.Exit();
+                Environment.Exit(1);
             }
-            else if (!ServiceClient.Login(UserCredentials.Instance.Username, UserCredentials.Instance.Password))
-            {
-                MessageBox.Show(Resources.GinApplicationContext_Error_while_trying_to_log_in_to_GIN,
-                    Resources.GinApplicationContext_Gin_Client_Error,
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                var getUserCreds = new MetroGetUserCredentialsDlg(this);
-                var result = getUserCreds.ShowDialog(); //The Dialog will log us in and save the user credentials
-
-                if (result == DialogResult.Cancel) Exit(this, EventArgs.Empty);
-            }
-
-            UserCredentials.Save();
-
-            #endregion
-
-            #region Read options
-
-            if (!GlobalOptions.Load())
-            {
-                var optionsDlg = new MetroOptionsDlg(this, MetroOptionsDlg.Page.GlobalOptions);
-                var result = optionsDlg.ShowDialog();
-
-                if (result == DialogResult.Cancel)
-                    Exit(this, EventArgs.Empty);
-            }
-
-            if (GlobalOptions.Instance.RepositoryUpdateInterval > 0)
-            {
-                _updateIntervalTimer =
-                    new Timer(GlobalOptions.Instance.RepositoryUpdateInterval * 1000 * 60) {AutoReset = true};
-                _updateIntervalTimer.Elapsed += (sender, args) => { ServiceClient.DownloadAllUpdateInfo(); };
-            }
-
-            GlobalOptions.Save();
-
-            #endregion
-
-            #region Set up repositories
-
-            if (File.Exists(saveFilePath + @"\SavedRepositories.json"))
-                try
-                {
-                    var text = File.OpenText(saveFilePath + @"\SavedRepositories.json").ReadToEnd();
-                    var repos = JsonConvert.DeserializeObject<GinRepositoryData[]>(text);
-
-                    foreach (var repo in repos)
-                        ServiceClient.AddRepository(repo.PhysicalDirectory.FullName, repo.Mountpoint.FullName,
-                            repo.Name,
-                            repo.Address,
-                            GlobalOptions.Instance.RepositoryCheckoutOption ==
-                            GlobalOptions.CheckoutOption.FullCheckout, false);
-                }
-                catch
-                {
-                }
             else
-                ManageRepositoriesMenuItemHandler(null, EventArgs.Empty);
+            {
+                _trayIcon = new NotifyIcon
+                {
+                    Visible = true,
+                    Icon = Resources.gin_icon_desaturated
+                };
 
-            #endregion
+                ServiceClient = new GinServiceClient(new InstanceContext(this));
+                ServiceClient.InnerChannel.Faulted += InnerChannelOnFaulted;
+                var saveFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
+                                   @"\g-node\GinWindowsClient";
+                if (!Directory.Exists(saveFilePath))
+                    Directory.CreateDirectory(saveFilePath);
+
+                #region Environment Variables
+
+                //Tell the service to use the current users' AppData folders for logging and config data
+                ServiceClient.SetEnvironmentVariables(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\g-node\gin\",
+                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\g-node\gin\");
+
+                #endregion
+
+                #region Login
+
+                if (!UserCredentials.Load())
+                {
+                    var getUserCreds = new MetroGetUserCredentialsDlg(this);
+                    var result = getUserCreds.ShowDialog(); //The Dialog will log us in and save the user credentials
+
+                    if (result == DialogResult.Cancel) Exit(this, EventArgs.Empty);
+                }
+                else if (!ServiceClient.Login(UserCredentials.Instance.Username, UserCredentials.Instance.Password))
+                {
+                    MessageBox.Show(Resources.GinApplicationContext_Error_while_trying_to_log_in_to_GIN,
+                        Resources.GinApplicationContext_Gin_Client_Error,
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    var getUserCreds = new MetroGetUserCredentialsDlg(this);
+                    var result = getUserCreds.ShowDialog(); //The Dialog will log us in and save the user credentials
+
+                    if (result == DialogResult.Cancel) Exit(this, EventArgs.Empty);
+                }
+
+                UserCredentials.Save();
+
+                #endregion
+
+                #region Read options
+
+                if (!GlobalOptions.Load())
+                {
+                    var optionsDlg = new MetroOptionsDlg(this, MetroOptionsDlg.Page.GlobalOptions);
+                    var result = optionsDlg.ShowDialog();
+
+                    if (result == DialogResult.Cancel)
+                        Exit(this, EventArgs.Empty);
+                }
+
+                if (GlobalOptions.Instance.RepositoryUpdateInterval > 0)
+                {
+                    _updateIntervalTimer =
+                        new Timer(GlobalOptions.Instance.RepositoryUpdateInterval * 1000 * 60) {AutoReset = true};
+                    _updateIntervalTimer.Elapsed += (sender, args) => { ServiceClient.DownloadAllUpdateInfo(); };
+                }
+
+                GlobalOptions.Save();
+
+                #endregion
+
+                #region Set up repositories
+
+                if (File.Exists(saveFilePath + @"\SavedRepositories.json"))
+                    try
+                    {
+                        var text = File.OpenText(saveFilePath + @"\SavedRepositories.json").ReadToEnd();
+                        var repos = JsonConvert.DeserializeObject<GinRepositoryData[]>(text);
+
+                        foreach (var repo in repos)
+                            ServiceClient.AddRepository(repo.PhysicalDirectory.FullName, repo.Mountpoint.FullName,
+                                repo.Name,
+                                repo.Address,
+                                GlobalOptions.Instance.RepositoryCheckoutOption ==
+                                GlobalOptions.CheckoutOption.FullCheckout, false);
+                    }
+                    catch
+                    {
+                    }
+                else
+                    ManageRepositoriesMenuItemHandler(null, EventArgs.Empty);
+
+                #endregion
 
 
-            _trayIcon.DoubleClick += _trayIcon_DoubleClick;
-            _trayIcon.ContextMenu = new ContextMenu(BuildContextMenu());
-            _trayIcon.Icon = Resources.gin_icon;
-            _updateIntervalTimer?.Start();
+                _trayIcon.DoubleClick += _trayIcon_DoubleClick;
+                _trayIcon.ContextMenu = new ContextMenu(BuildContextMenu());
+                _trayIcon.Icon = Resources.gin_icon;
+                _updateIntervalTimer?.Start();
+            }
         }
         
 
