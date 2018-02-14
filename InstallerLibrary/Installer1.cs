@@ -65,10 +65,10 @@ namespace InstallerLibrary
             Environment.SetEnvironmentVariable("PATH", value, EnvironmentVariableTarget.Machine);
 
             //Give the client the ability to register a URL to communicate with the service
-
+            var everyone = new System.Security.Principal.SecurityIdentifier(
+                "S-1-1-0").Translate(typeof(System.Security.Principal.NTAccount)).ToString();
             var procStartInfo = new ProcessStartInfo("cmd.exe",
-                "/C netsh http add urlacl url=http://+:8738/GinService/ user=\"" + Environment.UserDomainName +
-                "\\" + Environment.UserName + "\" delegate=yes")
+                "/C netsh http add urlacl url=http://+:8738/GinService/ user=\\" + everyone + " delegate=yes")
             {
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
