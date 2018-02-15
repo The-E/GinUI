@@ -89,12 +89,12 @@ namespace InstallerLibrary
 
             Output.Clear();
 
-            //Set the dokan installer to run after reboot
+            ////Set the dokan installer to run after reboot
 
-            var regkey = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\RunOnce");
-            string startPath = path.FullName + "\\dokan\\DokanSetup.exe /install /quiet /norestart";
-            regkey.SetValue("KeyName", startPath);
-            regkey.Close();
+            //var regkey = Registry.CurrentUser.CreateSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\RunOnce");
+            //string startPath = path.FullName + "\\dokan\\DokanSetup.exe /install /quiet /norestart";
+            //regkey.SetValue("KeyName", startPath);
+            //regkey.Close();
         }
 
         private void WbOnDownloadProgressChanged(object sender,
