@@ -147,12 +147,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_94E7BE59248C4F8AA331D8F28526DA3E"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_99480A77B6B24401977AE2213B60136E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -1053,7 +1047,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Gin Windows Client"
         "ProductCode" = "8:{2E36548C-6571-42DF-ADAF-D482C3374FF7}"
-        "PackageCode" = "8:{1E3B707B-904F-4315-93C5-2C34B3C502A4}"
+        "PackageCode" = "8:{AC21C1B2-4AFA-4990-863B-C0E1184D3A1D}"
         "UpgradeCode" = "8:{4A6B65BC-75BE-4BDF-A438-3E7CE9B5F93C}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -1677,31 +1671,6 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_94E7BE59248C4F8AA331D8F28526DA3E"
-            {
-            "UseDynamicProperties" = "11:TRUE"
-            "IsDependency" = "11:FALSE"
-            "SourcePath" = "8:MergeModule\\InstallerReboot.msm"
-                "Properties"
-                {
-                    "_7DA1F95C529D4A09ABBC4F79C9196BDD.9E7F75CC712741A69A7FE0AD03D06459"
-                    {
-                    "Name" = "8:_7DA1F95C529D4A09ABBC4F79C9196BDD.9E7F75CC712741A69A7FE0AD03D06459"
-                    "DisplayName" = "8:Module Retargetable Folder"
-                    "Description" = "8:"
-                    "Type" = "3:32769"
-                    "ContextData" = "8:_RetargetableFolder"
-                    "Attributes" = "3:6"
-                    "Setting" = "3:1"
-                    "UsePlugInResources" = "11:FALSE"
-                    }
-                }
-            "LanguageId" = "3:1033"
-            "Exclude" = "11:FALSE"
-            "Folder" = "8:"
-            "Feature" = "8:"
-            "IsolateTo" = "8:"
-            }
         }
         "ProjectOutput"
         {
