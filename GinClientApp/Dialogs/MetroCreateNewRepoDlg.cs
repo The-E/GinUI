@@ -94,8 +94,10 @@ namespace GinClientApp.Dialogs
                 }
             }
 
-            if (RepositoryData.Mountpoint.FullName.Contains(RepositoryData.PhysicalDirectory.FullName) ||
-                RepositoryData.PhysicalDirectory.FullName.Contains(RepositoryData.Mountpoint.FullName))
+            var mpntUri = new Uri(RepositoryData.Mountpoint.FullName + @"\");
+            var pdirUri = new Uri(RepositoryData.PhysicalDirectory.FullName + @"\");
+
+            if (mpntUri.IsBaseOf(pdirUri) || pdirUri.IsBaseOf(mpntUri))
             {
                 MetroMessageBox.Show(this,
                     Resources.Options_CheckSanity_The_mountpoint_and_checkout_directory_can_not_be_subdirectories,
