@@ -78,24 +78,10 @@ namespace GinClientApp.Dialogs
                 }
             }
 
-            if (Directory.Exists(RepositoryData.Mountpoint.FullName))
-            {
-                var result = MetroMessageBox.Show(this,
-                    Resources.Options_CheckSanity_The_mountpoint_directory_already_exists,
-                    Resources.GinClientApp_Gin_Client_Warning, MessageBoxButtons.YesNo, MessageBoxIcon.Error);
-                if (result == DialogResult.Yes)
-                {
-                    RepositoryData.Mountpoint.Empty();
-                    Directory.Delete(RepositoryData.Mountpoint.FullName);
-                }
-                else
-                {
-                    return false;
-                }
-            }
+            var mpntUri = new Uri(RepositoryData.Mountpoint.FullName + @"\");
+            var pdirUri = new Uri(RepositoryData.PhysicalDirectory.FullName + @"\");
 
-            if (RepositoryData.Mountpoint.FullName.Contains(RepositoryData.PhysicalDirectory.FullName) ||
-                RepositoryData.PhysicalDirectory.FullName.Contains(RepositoryData.Mountpoint.FullName))
+            if (mpntUri.IsBaseOf(pdirUri) || pdirUri.IsBaseOf(mpntUri))
             {
                 MetroMessageBox.Show(this,
                     Resources.Options_CheckSanity_The_mountpoint_and_checkout_directory_can_not_be_subdirectories,
