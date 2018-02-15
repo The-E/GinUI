@@ -62,36 +62,11 @@ namespace GinClientApp.Dialogs
                 return result == DialogResult.Yes;
             }
 
-            if (Directory.Exists(RepositoryData.PhysicalDirectory.FullName))
+            if (Directory.EnumerateFileSystemEntries(RepositoryData.Mountpoint.FullName).Any())
             {
-                var result = MetroMessageBox.Show(this,
-                    Resources.Options_CheckSanity_The_checkout_directory_already_exists,
-                    Resources.GinClientApp_Gin_Client_Warning, MessageBoxButtons.YesNo, MessageBoxIcon.Error);
-                if (result == DialogResult.Yes)
-                {
-                    RepositoryData.PhysicalDirectory.Empty();
-                    Directory.Delete(RepositoryData.PhysicalDirectory.FullName);
-                }
-                else
-                {
-                    return false;
-                }
-            }
-
-            if (Directory.Exists(RepositoryData.Mountpoint.FullName))
-            {
-                var result = MetroMessageBox.Show(this,
-                    Resources.Options_CheckSanity_The_mountpoint_directory_already_exists,
-                    Resources.GinClientApp_Gin_Client_Warning, MessageBoxButtons.YesNo, MessageBoxIcon.Error);
-                if (result == DialogResult.Yes)
-                {
-                    RepositoryData.Mountpoint.Empty();
-                    Directory.Delete(RepositoryData.Mountpoint.FullName);
-                }
-                else
-                {
-                    return false;
-                }
+                MetroMessageBox.Show(this, string.Format(Resources.Options_CheckSanity_The_checkout_address_is_not_empty,
+                    RepositoryData.Mountpoint.FullName), Resources.GinClientApp_Gin_Client_Warning, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
             }
 
             var mpntUri = new Uri(RepositoryData.Mountpoint.FullName + @"\");

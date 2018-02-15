@@ -235,6 +235,9 @@ Copyright (c) Microsoft</value>
   <data name="Options_CheckSanity_The_checkout_address_is_not_properly_formatted" xml:space="preserve">
     <value>The checkout address is not properly formatted. Do you wish to create a new repository with the name {0} instead?</value>
   </data>
+  <data name="Options_CheckSanity_The_checkout_address_is_not_empty" xml:space="preserve">
+    <value>The checkout directory {0} must be empty.</value>
+  </data>
   <data name="Options_CheckSanity_The_checkout_directory_already_exists" xml:space="preserve">
     <value>The checkout directory already exists. Do you wish to delete it?</value>
   </data>
