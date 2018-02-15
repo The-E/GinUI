@@ -329,6 +329,15 @@ namespace GinClientApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The checkout directory {0} must be empty..
+        /// </summary>
+        internal static string Options_CheckSanity_The_checkout_address_is_not_empty {
+            get {
+                return ResourceManager.GetString("Options_CheckSanity_The_checkout_address_is_not_empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The checkout address is not properly formatted. Do you wish to create a new repository with the name {0} instead?.
         /// </summary>
         internal static string Options_CheckSanity_The_checkout_address_is_not_properly_formatted {
