@@ -90,7 +90,11 @@ namespace GinClientApp
                     var getUserCreds = new MetroGetUserCredentialsDlg(this);
                     var result = getUserCreds.ShowDialog(); //The Dialog will log us in and save the user credentials
 
-                    if (result == DialogResult.Cancel) Exit(this, EventArgs.Empty);
+                    if (result == DialogResult.Cancel)
+                    {
+                        Exit(this, EventArgs.Empty);
+                        return;
+                    }
                 }
                 else if (!ServiceClient.Login(UserCredentials.Instance.Username, UserCredentials.Instance.Password))
                 {
@@ -101,7 +105,11 @@ namespace GinClientApp
                     var getUserCreds = new MetroGetUserCredentialsDlg(this);
                     var result = getUserCreds.ShowDialog(); //The Dialog will log us in and save the user credentials
 
-                    if (result == DialogResult.Cancel) Exit(this, EventArgs.Empty);
+                    if (result == DialogResult.Cancel)
+                    {
+                        Exit(this, EventArgs.Empty);
+                        return;
+                    }
                 }
 
                 UserCredentials.Save();
@@ -345,7 +353,7 @@ namespace GinClientApp
             if (ServiceClient != null && ServiceClient.InnerChannel.State != CommunicationState.Faulted)
                 ServiceClient.EndSession();
 
-            Application.Exit();
+            Environment.Exit(0);
         }
     }
 }
