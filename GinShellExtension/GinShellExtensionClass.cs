@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.ServiceModel;
+using System.ServiceProcess;
 using System.Windows.Forms;
 using GinShellExtension.GinService;
 using SharpShell.Attributes;
@@ -35,6 +36,17 @@ namespace GinShellExtension
 
         protected override bool CanShowMenu()
         {
+            try
+            {
+                var sc = new ServiceController("GinClientService");
+                if (sc.Status != ServiceControllerStatus.Running)
+                    return false;
+            }
+            catch
+            {
+                return false;
+            }
+
             var client = ServiceClient.CreateServiceClient(this, 8741);
 
             try

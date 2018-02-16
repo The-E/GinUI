@@ -3,6 +3,7 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.ServiceModel;
+using System.ServiceProcess;
 using GinClientLibrary;
 using GinShellExtension.GinService;
 using GinShellExtension.Properties;
@@ -44,6 +45,17 @@ namespace GinShellExtension
 
         protected override bool CanShowOverlay(string path, FILE_ATTRIBUTE attributes)
         {
+            try
+            {
+                var sc = new ServiceController("GinClientService");
+                if (sc.Status != ServiceControllerStatus.Running)
+                    return false;
+            }
+            catch
+            {
+                return false;
+            }
+
             _path = path;
 
             var client = ServiceClient.CreateServiceClient(this, 8743);
