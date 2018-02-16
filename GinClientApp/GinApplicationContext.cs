@@ -11,6 +11,7 @@ using GinClientApp.Dialogs;
 using GinClientApp.GinService;
 using GinClientApp.Properties;
 using GinClientLibrary;
+using Microsoft.Win32;
 using Newtonsoft.Json;
 using Timer = System.Timers.Timer;
 
@@ -58,6 +59,8 @@ namespace GinClientApp
             }
             else
             {
+                SystemEvents.SessionEnded += SystemEvents_SessionEnded;
+
                 _trayIcon = new NotifyIcon
                 {
                     Visible = true,
@@ -157,7 +160,13 @@ namespace GinClientApp
                 _updateIntervalTimer?.Start();
             }
         }
-        
+
+        private void SystemEvents_SessionEnded(object sender, SessionEndedEventArgs e)
+        {
+            SystemEvents.SessionEnded -= SystemEvents_SessionEnded;
+
+            Exit(this, EventArgs.Empty);
+        }
 
         void IGinServiceCallback.FileOperationFinished(string filename, string repository, bool success)
         {
