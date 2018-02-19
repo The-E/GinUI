@@ -954,6 +954,17 @@
             "Property" = "8:ProgramMenuFolder"
                 "Folders"
                 {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_82A54186343D4851B9F2EDE24FE0B0D7"
+                    {
+                    "Name" = "8:G-Node"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_23881FFD63DC42E09E4FD403ACD84462"
+                        "Folders"
+                        {
+                        }
+                    }
                 }
             }
             "{1525181F-901A-416C-8A58-119130FE478E}:_4E09F31146854604A61451EC3180C518"
@@ -1177,6 +1188,20 @@
             "Transitive" = "11:FALSE"
             "Target" = "8:_4F3FE2D1C4A34BCEAEB22F2EB0D48561"
             "Folder" = "8:_4E09F31146854604A61451EC3180C518"
+            "WorkingFolder" = "8:_EE7B67213AFD41EB8591E9C7A6B2A535"
+            "Icon" = "8:"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_716EF09CBCD24B27909DF0F6C4B52494"
+            {
+            "Name" = "8:Windows Client for Gin"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_4F3FE2D1C4A34BCEAEB22F2EB0D48561"
+            "Folder" = "8:_82A54186343D4851B9F2EDE24FE0B0D7"
             "WorkingFolder" = "8:_EE7B67213AFD41EB8591E9C7A6B2A535"
             "Icon" = "8:"
             "Feature" = "8:"
