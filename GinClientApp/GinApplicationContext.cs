@@ -143,15 +143,18 @@ namespace GinClientApp
                 if (File.Exists(saveFilePath + @"\SavedRepositories.json"))
                     try
                     {
-                        var text = File.OpenText(saveFilePath + @"\SavedRepositories.json").ReadToEnd();
-                        var repos = JsonConvert.DeserializeObject<GinRepositoryData[]>(text);
+                        using (var saveFile = File.OpenText(saveFilePath + @"\SavedRepositories.json"))
+                        {
+                            var text = saveFile.ReadToEnd();
+                            var repos = JsonConvert.DeserializeObject<GinRepositoryData[]>(text);
 
-                        foreach (var repo in repos)
-                            ServiceClient.AddRepository(repo.PhysicalDirectory.FullName, repo.Mountpoint.FullName,
-                                repo.Name,
-                                repo.Address,
-                                GlobalOptions.Instance.RepositoryCheckoutOption ==
-                                GlobalOptions.CheckoutOption.FullCheckout, false);
+                            foreach (var repo in repos)
+                                ServiceClient.AddRepository(repo.PhysicalDirectory.FullName, repo.Mountpoint.FullName,
+                                    repo.Name,
+                                    repo.Address,
+                                    GlobalOptions.Instance.RepositoryCheckoutOption ==
+                                    GlobalOptions.CheckoutOption.FullCheckout, false);
+                        }
                     }
                     catch
                     {
