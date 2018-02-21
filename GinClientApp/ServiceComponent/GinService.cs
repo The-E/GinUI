@@ -64,8 +64,6 @@ namespace GinService
                 {
                 }
             };
-
-            //We need to issue a logout at this point to clear any potentially invalid tokens
         }
 
 
@@ -245,8 +243,6 @@ namespace GinService
 
         void IGinService.SetEnvironmentVariables(string AppDataPath, string LocalAppDataPath)
         {
-            Environment.SetEnvironmentVariable("GIN_CONFIG_DIR", AppDataPath, EnvironmentVariableTarget.Machine);
-            Environment.SetEnvironmentVariable("GIN_LOG_DIR", LocalAppDataPath, EnvironmentVariableTarget.Machine);
         }
 
         void IGinService.EndSession()
