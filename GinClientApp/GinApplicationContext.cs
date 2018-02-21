@@ -67,7 +67,14 @@ namespace GinClientApp
                     Icon = Resources.gin_icon_desaturated
                 };
 
-                ServiceClient = new GinServiceClient(new InstanceContext(this));
+                var myBinding = new WSDualHttpBinding
+                {
+                    ClientBaseAddress = new Uri(@"http://localhost:8738/GinService/GinUI/" + Environment.UserName)
+                };
+                var endpointIdentity = EndpointIdentity.CreateDnsIdentity("localhost");
+                var myEndpoint = new EndpointAddress(new Uri("http://localhost:8733/GinClient/"), endpointIdentity);
+
+                ServiceClient = new GinServiceClient(new InstanceContext(this), myBinding, myEndpoint);
                 ServiceClient.InnerChannel.Faulted += InnerChannelOnFaulted;
                 var saveFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
                                    @"\g-node\GinWindowsClient";
@@ -211,7 +218,14 @@ namespace GinClientApp
             ServiceClient.Abort();
             ServiceClient = null;
 
-            ServiceClient = new GinServiceClient(new InstanceContext(this));
+            var myBinding = new WSDualHttpBinding
+            {
+                ClientBaseAddress = new Uri(@"http://localhost:8738/GinService/GinUI/" + Environment.UserName)
+            };
+            var endpointIdentity = EndpointIdentity.CreateDnsIdentity("localhost");
+            var myEndpoint = new EndpointAddress(new Uri("http://localhost:8733/GinClient/"), endpointIdentity);
+
+            ServiceClient = new GinServiceClient(new InstanceContext(this), myBinding, myEndpoint);
         }
 
         private MenuItem[] BuildContextMenu()
@@ -357,6 +371,22 @@ namespace GinClientApp
                 ServiceClient.EndSession();
 
             Environment.Exit(0);
+        }
+
+        private IGinService CreateServiceClient()
+        {
+            var iContext = new InstanceContext(this);
+            var myBinding = new WSDualHttpBinding
+            {
+                ClientBaseAddress = new Uri(@"http://localhost:8738/GinService/GinUI/" + Environment.UserName)
+            };
+            var endpointIdentity = EndpointIdentity.CreateDnsIdentity("localhost");
+            var myEndpoint = new EndpointAddress(new Uri("http://localhost:8733/GinClient/"), endpointIdentity);
+
+            var myChannelFactory = new DuplexChannelFactory<IGinService>(iContext, myBinding, myEndpoint);
+
+            var client = myChannelFactory.CreateChannel();
+            return client;
         }
     }
 }
