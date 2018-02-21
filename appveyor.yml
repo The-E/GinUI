@@ -3,9 +3,7 @@ version: 1.0.{build}
 image: Visual Studio 2017
 shallow_clone: true
 environment:
-  matrix:
-  - PLATFORM: x86
-    CONFIGURATION: Debug
+    RDP: "yes"
 
 install:
     - ps: |
@@ -18,3 +16,9 @@ install:
 
 build_script:
     - '"C:\Program Files (x86)\Microsoft Visual Studio 17\Common7\IDE\devenv.exe" GinClientApp.sln /Rebuild Debug /Project Setup\Setup.vdproj'
+
+on_finish:
+    - ps: |
+        if ($env:RDP -eq "yes") {
+            $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+            }
