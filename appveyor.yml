@@ -1,0 +1,29 @@
+version: 1.0.{build}
+
+image: Visual Studio 2017
+shallow_clone: true
+environment:
+    RDP: "no"
+
+install:
+    - ps: |
+        Write-Host "Downloading Microsoft Visual Studio 2017 Installer Projects..."
+        $vsixPath = "$($env:USERPROFILE)\InstallerProjects.vsix"
+        (new-object net.webclient).DownloadFile('https://visualstudioproductteam.gallerycdn.vsassets.io/extensions/visualstudioproductteam/microsoftvisualstudio2017installerprojects/0.8.5/1517363289019/InstallerProjects.vsix', $vsixPath)
+        Write-Host "Installing..."
+        "`"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VSIXInstaller.exe`" /q /a $vsixPath" | out-file ".\install-vsix.cmd" -Encoding ASCII
+        & .\install-vsix.cmd
+
+build_script:
+    - nuget restore
+    - '"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe" GinClientApp.sln /Rebuild Debug /Project Setup\Setup.vdproj'
+
+artifacts:
+    - path: 'Setup\Debug\*'
+      name: Setup
+
+on_finish:
+    - ps: |
+        if ($env:RDP -eq "yes") {
+            $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+            }
