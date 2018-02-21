@@ -15,7 +15,7 @@ install:
         & .\install-vsix.cmd
 
 build_script:
-    - '"C:\Program Files (x86)\Microsoft Visual Studio 17\Common7\IDE\devenv.exe" GinClientApp.sln /Rebuild Debug /Project Setup\Setup.vdproj'
+    - '"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe" GinClientApp.sln /Rebuild Debug /Project Setup\Setup.vdproj'
 
 on_finish:
     - ps: |
