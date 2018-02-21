@@ -15,7 +15,12 @@ install:
         & .\install-vsix.cmd
 
 build_script:
+    - nuget restore
     - '"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe" GinClientApp.sln /Rebuild Debug /Project Setup\Setup.vdproj'
+
+artifacts:
+    - path: 'Setup\Debug\*'
+      name: Setup
 
 on_finish:
     - ps: |
