@@ -11,6 +11,9 @@ using System.ServiceProcess;
 using System.Text;
 using System.Threading;
 using Microsoft.Win32;
+using Shell32;
+using IWshRuntimeLibrary;
+using File = System.IO.File;
 
 namespace InstallerLibrary
 {
@@ -109,6 +112,32 @@ namespace InstallerLibrary
             process.WaitForExit();
 
             Output.Clear();
+
+            //Create shortcuts in the Startup and Start Menu folders
+            var wsh = new WshShell();
+            IWshRuntimeLibrary.IWshShortcut shortcut = wsh.CreateShortcut(
+                Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup) + @"\GinClientApp.lnk") as IWshRuntimeLibrary.IWshShortcut;
+            shortcut.Arguments = "";
+            shortcut.TargetPath = path.FullName + @"\GinClientApp.exe";
+            shortcut.WindowStyle = 1;
+            shortcut.Description = "Gin Client for Windows";
+            shortcut.WorkingDirectory = path.FullName;
+            shortcut.IconLocation = path.FullName + @"\gin_icon.ico";
+            shortcut.Save();
+
+            if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) + @"\G-Node\"))
+                Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) + @"\G-Node\");
+
+            wsh = new WshShell();
+            shortcut = wsh.CreateShortcut(
+                Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) + @"\G-Node\GinClientApp.lnk") as IWshRuntimeLibrary.IWshShortcut;
+            shortcut.Arguments = "";
+            shortcut.TargetPath = path.FullName + @"\GinClientApp.exe";
+            shortcut.WindowStyle = 1;
+            shortcut.Description = "Gin Client for Windows";
+            shortcut.WorkingDirectory = path.FullName;
+            shortcut.IconLocation = path.FullName + @"\gin_icon.ico";
+            shortcut.Save();
         }
 
         private void WbOnDownloadProgressChanged(object sender,
@@ -181,6 +210,17 @@ namespace InstallerLibrary
             }
 
             Environment.SetEnvironmentVariable("PATH", newPath.ToString(), EnvironmentVariableTarget.User);
+
+            if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup) + @"\GinClientApp.lnk"))
+                File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup) + @"\GinClientApp.lnk");
+            if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) +
+                            @"\G-Node\GinClientApp.lnk"))
+            {
+                File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) +
+                            @"\G-Node\GinClientApp.lnk");
+                Directory.Delete(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) +
+                                 @"\G-Node\");
+            }
         }
         
     }
