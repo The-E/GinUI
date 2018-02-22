@@ -60,13 +60,6 @@ namespace InstallerLibrary
             ZipFile.ExtractToDirectory(path.FullName + @"\gin-cli\gin-cli-latest-windows-386.zip",
                 path.FullName + @"\gin-cli\");
 
-            //Add gin-cli to the system PATH
-            var value = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Machine);
-            value += ";" + path.FullName + @"\gin-cli\bin";
-            value += ";" + path.FullName + @"\gin-cli\git\usr\bin";
-            value += ";" + path.FullName + @"\gin-cli\git\bin";
-            Environment.SetEnvironmentVariable("PATH", value, EnvironmentVariableTarget.Machine);
-
             //Give the client the ability to register a URL to communicate with the service
             var everyone = new System.Security.Principal.SecurityIdentifier(
                 "S-1-1-0").Translate(typeof(System.Security.Principal.NTAccount)).ToString();
@@ -190,26 +183,6 @@ namespace InstallerLibrary
             process.BeginOutputReadLine();
             process.WaitForExit();
             Output.Clear();
-
-            //clean up the system path
-            var value = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Machine);
-
-            var entries = value.Split(';');
-            var newPath = new StringBuilder();
-
-            foreach (var entry in entries)
-            {
-                if (entry.Contains("gin-cli"))
-                {
-                    if (Directory.Exists(entry))
-                        Directory.Delete(entry, true);
-                    continue;
-                }
-
-                newPath.Append(entry + ";");
-            }
-
-            Environment.SetEnvironmentVariable("PATH", newPath.ToString(), EnvironmentVariableTarget.Machine);
 
             if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup) + @"\GinClientApp.lnk"))
                 File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup) + @"\GinClientApp.lnk");
