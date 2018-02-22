@@ -6,7 +6,7 @@ namespace GinClientApp
 {
     internal static class Program
     {
-        static Mutex mutex = new Mutex(true, "{AC8AB48D-C289-445D-B1EB-ABCFF24443ED}");
+        static readonly Mutex Mutex = new Mutex(true, "{AC8AB48D-C289-445D-B1EB-ABCFF24443ED}" + Environment.UserName);
 
         /// <summary>
         ///     The main entry point for the application.
@@ -14,7 +14,7 @@ namespace GinClientApp
         [STAThread]
         private static void Main()
         {
-            if (!mutex.WaitOne(TimeSpan.Zero, true)) return;
+            if (!Mutex.WaitOne(TimeSpan.Zero, true)) return;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new GinApplicationContext());
