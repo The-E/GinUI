@@ -52,7 +52,7 @@ namespace GinShellExtension
             try
             {
                 var result = client.IsManagedPath(SelectedItemPaths.First());
-
+                client.EndSession();
                 ((ICommunicationObject) client).Close();
 
                 return result;

@@ -73,6 +73,7 @@ namespace GinShellExtension
                     break;
                 }
 
+                client.EndSession();
                 ((ICommunicationObject) client).Close();
 
                 return result;

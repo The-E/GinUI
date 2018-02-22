@@ -1639,7 +1639,7 @@
       <wsdl:input wsaw:Action="http://tempuri.org/IGinService/GetFileInfo" message="tns:IGinService_GetFileInfo_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IGinService/GetFileInfoResponse" message="tns:IGinService_GetFileInfo_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation msc:isInitiating="true" msc:isTerminating="true" name="IsManagedPath">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="IsManagedPath">
       <wsdl:input wsaw:Action="http://tempuri.org/IGinService/IsManagedPath" message="tns:IGinService_IsManagedPath_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IGinService/IsManagedPathResponse" message="tns:IGinService_IsManagedPath_OutputMessage" />
     </wsdl:operation>
@@ -1647,7 +1647,7 @@
       <wsdl:input wsaw:Action="http://tempuri.org/IGinService/IsManagedPathNonTerminating" message="tns:IGinService_IsManagedPathNonTerminating_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IGinService/IsManagedPathNonTerminatingResponse" message="tns:IGinService_IsManagedPathNonTerminating_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation msc:isInitiating="true" msc:isTerminating="true" name="IsBasePath">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="IsBasePath">
       <wsdl:input wsaw:Action="http://tempuri.org/IGinService/IsBasePath" message="tns:IGinService_IsBasePath_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IGinService/IsBasePathResponse" message="tns:IGinService_IsBasePath_OutputMessage" />
     </wsdl:operation>

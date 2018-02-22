@@ -155,7 +155,7 @@ namespace GinService
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        [OperationContract(IsInitiating = true, IsTerminating = true)]
+        [OperationContract(IsInitiating = true)]
         bool IsManagedPath(string filePath);
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace GinService
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        [OperationContract(IsInitiating = true, IsTerminating = true)]
+        [OperationContract(IsInitiating = true)]
         bool IsBasePath(string filePath);
 
         /// <summary>
