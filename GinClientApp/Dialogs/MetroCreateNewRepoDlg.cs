@@ -62,11 +62,10 @@ namespace GinClientApp.Dialogs
                 return result == DialogResult.Yes;
             }
 
-            if (Directory.EnumerateFileSystemEntries(RepositoryData.Mountpoint.FullName).Any())
+            if (Directory.EnumerateFileSystemEntries(RepositoryData.PhysicalDirectory.FullName).Any())
             {
                 MetroMessageBox.Show(this, string.Format(Resources.Options_CheckSanity_The_checkout_address_is_not_empty,
-                    RepositoryData.Mountpoint.FullName),
-                    Resources.GinClientApp_Gin_Client_Warning, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    RepositoryData.PhysicalDirectory.FullName), Resources.GinClientApp_Gin_Client_Warning, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
