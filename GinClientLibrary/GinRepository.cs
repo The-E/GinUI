@@ -304,45 +304,34 @@ namespace GinClientLibrary
             if (!Directory.Exists(Mountpoint.FullName))
                 Directory.CreateDirectory(Mountpoint.FullName);
 
-            if (CreateNew)
+            if (PhysicalDirectory.IsEmpty())
             {
-                var result = GetCommandLineOutput("cmd.exe", "/C gin.exe create " + Name,
+                OnFileOperationStarted(new FileOperationEventArgs {File = Address});
+
+                GetCommandLineOutputEvent("cmd.exe", "/C gin.exe get --json " + Address,
                     PhysicalDirectory.Parent.FullName, out var error);
 
-                if (!string.IsNullOrEmpty(error))
+                var result = string.IsNullOrEmpty(error);
+
+                if (result)
+                    OnFileOperationCompleted(new FileOperationEventArgs {File = Address, Success = true});
+                else
                     OnFileOperationError(error);
             }
-            else
+
+            if (performFullCheckout)
             {
-                if (PhysicalDirectory.IsEmpty())
-                {
-                    OnFileOperationStarted(new FileOperationEventArgs {File = Address});
+                OnFileOperationStarted(new FileOperationEventArgs {File = Address});
 
-                    GetCommandLineOutputEvent("cmd.exe", "/C gin.exe get --json " + Address,
-                        PhysicalDirectory.Parent.FullName, out var error);
+                GetCommandLineOutputEvent("cmd.exe", "/C gin.exe download --json --content",
+                    PhysicalDirectory.Parent.FullName, out var error);
 
-                    var result = string.IsNullOrEmpty(error);
+                var result = string.IsNullOrEmpty(error);
 
-                    if (result)
-                        OnFileOperationCompleted(new FileOperationEventArgs {File = Address, Success = true});
-                    else
-                        OnFileOperationError(error);
-                }
-
-                if (performFullCheckout)
-                {
-                    OnFileOperationStarted(new FileOperationEventArgs {File = Address});
-
-                    GetCommandLineOutputEvent("cmd.exe", "/C gin.exe download --json --content",
-                        PhysicalDirectory.Parent.FullName, out var error);
-
-                    var result = string.IsNullOrEmpty(error);
-
-                    if (result)
-                        OnFileOperationCompleted(new FileOperationEventArgs {File = Address, Success = true});
-                    else
-                        OnFileOperationError(error);
-                }
+                if (result)
+                    OnFileOperationCompleted(new FileOperationEventArgs {File = Address, Success = true});
+                else
+                    OnFileOperationError(error);
             }
         }
 
