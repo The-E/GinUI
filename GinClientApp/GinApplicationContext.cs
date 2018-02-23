@@ -49,8 +49,8 @@ namespace GinClientApp
             var myBinding = new WSDualHttpBinding
             {
                 ClientBaseAddress = new Uri(@"http://localhost:8738/GinService/GinUI/" + Environment.UserName),
-                MaxBufferPoolSize = long.MaxValue,
-                MaxReceivedMessageSize = long.MaxValue,
+                MaxBufferPoolSize = int.MaxValue,
+                MaxReceivedMessageSize = int.MaxValue,
                 OpenTimeout = TimeSpan.FromMinutes(1.0),
                 CloseTimeout = TimeSpan.FromMinutes(1.0),
                 ReaderQuotas = new XmlDictionaryReaderQuotas
@@ -208,8 +208,8 @@ namespace GinClientApp
             var myBinding = new WSDualHttpBinding
             {
                 ClientBaseAddress = new Uri(@"http://localhost:8738/GinService/GinUI/" + Environment.UserName),
-                MaxBufferPoolSize = long.MaxValue,
-                MaxReceivedMessageSize = long.MaxValue,
+                MaxBufferPoolSize = int.MaxValue,
+                MaxReceivedMessageSize = int.MaxValue,
                 OpenTimeout = TimeSpan.FromMinutes(1.0),
                 CloseTimeout = TimeSpan.FromMinutes(1.0),
                 ReaderQuotas = new XmlDictionaryReaderQuotas
