@@ -299,10 +299,25 @@ namespace GinClientLibrary
         /// <returns></returns>
         public void CreateDirectories(bool performFullCheckout)
         {
-            if (!Directory.Exists(PhysicalDirectory.FullName))
-                Directory.CreateDirectory(PhysicalDirectory.FullName);
-            if (!Directory.Exists(Mountpoint.FullName))
-                Directory.CreateDirectory(Mountpoint.FullName);
+            try
+            {
+                if (!Directory.Exists(PhysicalDirectory.FullName))
+                    Directory.CreateDirectory(PhysicalDirectory.FullName);
+            }
+            catch (Exception e)
+            {
+                OnFileOperationError("Could not create checkout directory. Exception: " + e.Message + "\n InnerException: " + e.InnerException);
+            }
+
+            try
+            {
+                if (!Directory.Exists(Mountpoint.FullName))
+                    Directory.CreateDirectory(Mountpoint.FullName);
+            }
+            catch (Exception e)
+            {
+                OnFileOperationError("Could not create mountpoint directory. Exception: " + e.Message + "\n InnerException: " + e.InnerException);
+            }
 
             if (PhysicalDirectory.IsEmpty())
             {
