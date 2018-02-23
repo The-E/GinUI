@@ -7,6 +7,7 @@ using System.ServiceModel;
 using System.ServiceProcess;
 using System.Threading;
 using System.Windows.Forms;
+using System.Xml;
 using GinClientApp.Dialogs;
 using GinClientApp.GinService;
 using GinClientApp.Properties;
@@ -47,7 +48,15 @@ namespace GinClientApp
 
             var myBinding = new WSDualHttpBinding
             {
-                ClientBaseAddress = new Uri(@"http://localhost:8738/GinService/GinUI/" + Environment.UserName)
+                ClientBaseAddress = new Uri(@"http://localhost:8738/GinService/GinUI/" + Environment.UserName),
+                MaxBufferPoolSize = long.MaxValue,
+                MaxReceivedMessageSize = long.MaxValue,
+                OpenTimeout = TimeSpan.FromMinutes(1.0),
+                CloseTimeout = TimeSpan.FromMinutes(1.0),
+                ReaderQuotas = new XmlDictionaryReaderQuotas
+                {
+                    MaxArrayLength = int.MaxValue, MaxBytesPerRead = int.MaxValue, MaxDepth = int.MaxValue, MaxNameTableCharCount = int.MaxValue, MaxStringContentLength = int.MaxValue
+                }
             };
             var endpointIdentity = EndpointIdentity.CreateDnsIdentity("localhost");
             var myEndpoint = new EndpointAddress(new Uri("http://localhost:8733/GinService/"), endpointIdentity);
@@ -198,7 +207,19 @@ namespace GinClientApp
 
             var myBinding = new WSDualHttpBinding
             {
-                ClientBaseAddress = new Uri(@"http://localhost:8738/GinService/GinUI/" + Environment.UserName)
+                ClientBaseAddress = new Uri(@"http://localhost:8738/GinService/GinUI/" + Environment.UserName),
+                MaxBufferPoolSize = long.MaxValue,
+                MaxReceivedMessageSize = long.MaxValue,
+                OpenTimeout = TimeSpan.FromMinutes(1.0),
+                CloseTimeout = TimeSpan.FromMinutes(1.0),
+                ReaderQuotas = new XmlDictionaryReaderQuotas
+                {
+                    MaxArrayLength = int.MaxValue,
+                    MaxBytesPerRead = int.MaxValue,
+                    MaxDepth = int.MaxValue,
+                    MaxNameTableCharCount = int.MaxValue,
+                    MaxStringContentLength = int.MaxValue
+                }
             };
             var endpointIdentity = EndpointIdentity.CreateDnsIdentity("localhost");
             var myEndpoint = new EndpointAddress(new Uri("http://localhost:8733/GinService/"), endpointIdentity);
@@ -351,22 +372,6 @@ namespace GinClientApp
             _serviceThread.Abort();
             _serviceThread.Join();
             Environment.Exit(0);
-        }
-
-        private IGinService CreateServiceClient()
-        {
-            var iContext = new InstanceContext(this);
-            var myBinding = new WSDualHttpBinding
-            {
-                ClientBaseAddress = new Uri(@"http://localhost:8738/GinService/GinUI/" + Environment.UserName)
-            };
-            var endpointIdentity = EndpointIdentity.CreateDnsIdentity("localhost");
-            var myEndpoint = new EndpointAddress(new Uri("http://localhost:8733/GinService/"), endpointIdentity);
-
-            var myChannelFactory = new DuplexChannelFactory<IGinService>(iContext, myBinding, myEndpoint);
-
-            var client = myChannelFactory.CreateChannel();
-            return client;
         }
     }
 }
