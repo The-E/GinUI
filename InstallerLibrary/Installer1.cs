@@ -11,6 +11,9 @@ using System.ServiceProcess;
 using System.Text;
 using System.Threading;
 using Microsoft.Win32;
+using Shell32;
+using IWshRuntimeLibrary;
+using File = System.IO.File;
 
 namespace InstallerLibrary
 {
@@ -57,13 +60,6 @@ namespace InstallerLibrary
             ZipFile.ExtractToDirectory(path.FullName + @"\gin-cli\gin-cli-latest-windows-386.zip",
                 path.FullName + @"\gin-cli\");
 
-            //Add gin-cli to the system PATH
-            var value = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Machine);
-            value += ";" + path.FullName + @"\gin-cli\bin";
-            value += ";" + path.FullName + @"\gin-cli\git\usr\bin";
-            value += ";" + path.FullName + @"\gin-cli\git\bin";
-            Environment.SetEnvironmentVariable("PATH", value, EnvironmentVariableTarget.Machine);
-
             //Give the client the ability to register a URL to communicate with the service
             var everyone = new System.Security.Principal.SecurityIdentifier(
                 "S-1-1-0").Translate(typeof(System.Security.Principal.NTAccount)).ToString();
@@ -87,14 +83,54 @@ namespace InstallerLibrary
             process.BeginOutputReadLine();
             process.WaitForExit();
 
+            //Give the user the ability to register the service URL
+            procStartInfo = new ProcessStartInfo("cmd.exe",
+                "/C netsh http add urlacl url=http://+:8733/GinService/ user=\\" + everyone + " delegate=yes")
+            {
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            process = new Process { StartInfo = procStartInfo };
+            Output = new StringBuilder();
+            process.OutputDataReceived += (o, args) =>
+            {
+                if (!string.IsNullOrEmpty(args.Data))
+                    Output.AppendLine(args.Data);
+            };
+            Output.Clear();
+            process.Start();
+            process.BeginOutputReadLine();
+            process.WaitForExit();
+
             Output.Clear();
 
-            ////Set the dokan installer to run after reboot
+            //Create shortcuts in the Startup and Start Menu folders
+            var wsh = new WshShell();
+            IWshRuntimeLibrary.IWshShortcut shortcut = wsh.CreateShortcut(
+                Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup) + @"\GinClientApp.lnk") as IWshRuntimeLibrary.IWshShortcut;
+            shortcut.Arguments = "";
+            shortcut.TargetPath = path.FullName + @"\GinClientApp.exe";
+            shortcut.WindowStyle = 1;
+            shortcut.Description = "Gin Client for Windows";
+            shortcut.WorkingDirectory = path.FullName;
+            shortcut.IconLocation = path.FullName + @"\gin_icon.ico";
+            shortcut.Save();
 
-            //var regkey = Registry.CurrentUser.CreateSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\RunOnce");
-            //string startPath = path.FullName + "\\dokan\\DokanSetup.exe /install /quiet /norestart";
-            //regkey.SetValue("KeyName", startPath);
-            //regkey.Close();
+            if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) + @"\G-Node\"))
+                Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) + @"\G-Node\");
+
+            wsh = new WshShell();
+            shortcut = wsh.CreateShortcut(
+                Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) + @"\G-Node\GinClientApp.lnk") as IWshRuntimeLibrary.IWshShortcut;
+            shortcut.Arguments = "";
+            shortcut.TargetPath = path.FullName + @"\GinClientApp.exe";
+            shortcut.WindowStyle = 1;
+            shortcut.Description = "Gin Client for Windows";
+            shortcut.WorkingDirectory = path.FullName;
+            shortcut.IconLocation = path.FullName + @"\gin_icon.ico";
+            shortcut.Save();
         }
 
         private void WbOnDownloadProgressChanged(object sender,
@@ -111,39 +147,6 @@ namespace InstallerLibrary
         public override void Install(IDictionary stateSaver)
         {
             base.Install(stateSaver);
-
-            try
-            {
-                if (IsServiceRunning("GinClientService"))
-                    StopService("GinClientService");
-
-                if (IsServiceInstalled("GinClientService"))
-                    Uninstallservice();
-            }
-            catch
-            {
-            }
-
-            Path = new DirectoryInfo(Context.Parameters["targetdir"]);
-
-            var process = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    WindowStyle = ProcessWindowStyle.Hidden,
-                    FileName = Path.FullName + "GinService.exe",
-                    WorkingDirectory = Path.FullName,
-                    Arguments = "-install",
-                    CreateNoWindow = true,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false
-                }
-            };
-
-            process.Start();
-            process.BeginOutputReadLine();
-            process.WaitForExit();
         }
 
         public override void Rollback(IDictionary savedState)
@@ -159,17 +162,6 @@ namespace InstallerLibrary
         public override void Uninstall(IDictionary savedState)
         {
             base.Uninstall(savedState);
-
-            try
-            {
-                if (IsServiceRunning("GinClientService"))
-                    StopService("GinClientService");
-
-                Uninstallservice();
-            }
-            catch
-            {
-            }
 
             //remove the shell extension
             var procStartInfo = new ProcessStartInfo("cmd.exe", "/C srm.exe uninstall GinShellExtension.dll -codebase")
@@ -192,100 +184,18 @@ namespace InstallerLibrary
             process.WaitForExit();
             Output.Clear();
 
-            //clean up the system path
-            var value = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Machine);
-
-            var entries = value.Split(';');
-            var newPath = new StringBuilder();
-
-            foreach (var entry in entries)
+            if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup) + @"\GinClientApp.lnk"))
+                File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup) + @"\GinClientApp.lnk");
+            if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) +
+                            @"\G-Node\GinClientApp.lnk"))
             {
-                if (entry.Contains("gin-cli"))
-                {
-                    if (Directory.Exists(entry))
-                        Directory.Delete(entry, true);
-                    continue;
-                }
-
-                newPath.Append(entry + ";");
+                File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) +
+                            @"\G-Node\GinClientApp.lnk");
+                Directory.Delete(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) +
+                                 @"\G-Node\");
             }
-
-            Environment.SetEnvironmentVariable("PATH", newPath.ToString(), EnvironmentVariableTarget.Machine);
         }
-
-        private void Uninstallservice()
-        {
-            var path = new DirectoryInfo(Context.Parameters["assemblypath"]).Parent;
-
-            var process = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    WindowStyle = ProcessWindowStyle.Hidden,
-                    FileName = path.FullName + "GinService.exe",
-                    WorkingDirectory = path.FullName,
-                    Arguments = "-uninstall",
-                    CreateNoWindow = true,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false
-                }
-            };
-
-            process.Start();
-            process.BeginOutputReadLine();
-            process.WaitForExit();
-        }
-
-        public static ServiceController GetService(string serviceName)
-        {
-            var services = ServiceController.GetServices();
-            return services.FirstOrDefault(_ =>
-                string.Compare(_.ServiceName, serviceName, StringComparison.InvariantCultureIgnoreCase) == 0);
-        }
-
-        public static bool IsServiceRunning(string serviceName)
-        {
-            ServiceControllerStatus status;
-            uint counter = 0;
-            do
-            {
-                var service = GetService(serviceName);
-                if (service == null)
-                    return false;
-
-                Thread.Sleep(100);
-                status = service.Status;
-            } while (!(status == ServiceControllerStatus.Stopped ||
-                       status == ServiceControllerStatus.Running) &&
-                     ++counter < 30);
-            return status == ServiceControllerStatus.Running;
-        }
-
-        public static bool IsServiceInstalled(string serviceName)
-        {
-            return GetService(serviceName) != null;
-        }
-
-        public static void StartService(string serviceName)
-        {
-            var controller = GetService(serviceName);
-            if (controller == null)
-                return;
-
-            controller.Start();
-            controller.WaitForStatus(ServiceControllerStatus.Running);
-        }
-
-        public static void StopService(string serviceName)
-        {
-            var controller = GetService(serviceName);
-            if (controller == null)
-                return;
-
-            controller.Stop();
-            controller.WaitForStatus(ServiceControllerStatus.Stopped);
-        }
+        
     }
     
     public static class DirectoryInfoExtension

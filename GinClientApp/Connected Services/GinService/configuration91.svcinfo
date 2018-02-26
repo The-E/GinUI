@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="/h4uQYuCTZ9FzWD3Bb3Y+sPy34g=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="SqkCjohK6o1Qo4B+iu/Sm1NIrkQ=">
   <bindingConfigurations>
     <bindingConfiguration bindingType="wsDualHttpBinding" name="WSDualHttpBinding_IGinService">
       <properties>
@@ -97,10 +97,10 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="WSDualHttpBinding_IGinService" contract="GinService.IGinService" bindingType="wsDualHttpBinding" address="http://localhost:8733/Design_Time_Addresses/GinService/" bindingConfiguration="WSDualHttpBinding_IGinService">
+    <endpoint name="WSDualHttpBinding_IGinService" contract="GinService.IGinService" bindingType="wsDualHttpBinding" address="http://localhost:8733/GinService/" bindingConfiguration="WSDualHttpBinding_IGinService">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>http://localhost:8733/Design_Time_Addresses/GinService/</serializedValue>
+          <serializedValue>http://localhost:8733/GinService/</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />

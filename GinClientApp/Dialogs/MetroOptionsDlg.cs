@@ -162,7 +162,9 @@ namespace GinClientApp.Dialogs
             repoData = createNewDlg.RepositoryData;
             StartShowProgress();
 
-            var result = await _parentContext.ServiceClient.AddRepositoryAsync(repoData.PhysicalDirectory.FullName,
+            if (repoData.CreateNew)
+                await _parentContext.ServiceClient.CreateNewRepositoryAsync(repoData.Name);
+            await _parentContext.ServiceClient.AddRepositoryAsync(repoData.PhysicalDirectory.FullName,
                 repoData.Mountpoint.FullName, repoData.Name, repoData.Address,
                 GlobalOptions.Instance.RepositoryCheckoutOption == GlobalOptions.CheckoutOption.FullCheckout,
                 repoData.CreateNew);

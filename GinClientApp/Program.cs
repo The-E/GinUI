@@ -15,6 +15,15 @@ namespace GinClientApp
         private static void Main()
         {
             if (!Mutex.WaitOne(TimeSpan.Zero, true)) return;
+
+            var path = AppDomain.CurrentDomain.BaseDirectory;
+
+            var value = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Process);
+            value += ";" + path + @"gin-cli\bin";
+            value += ";" + path + @"gin-cli\git\usr\bin";
+            value += ";" + path + @"gin-cli\git\bin";
+            Environment.SetEnvironmentVariable("PATH", value, EnvironmentVariableTarget.Process);
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new GinApplicationContext());

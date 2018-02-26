@@ -18,7 +18,6 @@ namespace GinShellExtension
     public class IconOverlay : SharpIconOverlayHandler, IGinServiceCallback
     {
         private static string _path;
-        private static string _status;
         private Dictionary<string, GinRepository.FileStatus> _fstatus;
 
         //Implementing IGinServiceCallback here, but don't actually do anything with it.
@@ -63,9 +62,7 @@ namespace GinShellExtension
             try
             {
                 var repos = JsonConvert.DeserializeObject<GinRepositoryData[]>(client.GetRepositoryList());
-                var directory = new DirectoryInfo(path);
                 var result = false;
-                GinRepositoryData data;
 
                 foreach (var repo in repos)
                 {
@@ -76,6 +73,7 @@ namespace GinShellExtension
                     break;
                 }
 
+                client.EndSession();
                 ((ICommunicationObject) client).Close();
 
                 return result;

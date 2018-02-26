@@ -47,7 +47,7 @@ namespace GinService
         ///     Completely deletes a repository and all data associated with it
         /// </summary>
         /// <param name="repoName"></param>
-        [OperationContract(IsOneWay = true)]
+        [OperationContract()]
         void DeleteRepository(string repoName);
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace GinService
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        [OperationContract(IsInitiating = true, IsTerminating = true)]
+        [OperationContract(IsInitiating = true)]
         bool IsManagedPath(string filePath);
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace GinService
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        [OperationContract(IsInitiating = true, IsTerminating = true)]
+        [OperationContract(IsInitiating = true)]
         bool IsBasePath(string filePath);
 
         /// <summary>

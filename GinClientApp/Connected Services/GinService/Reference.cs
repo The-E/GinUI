@@ -39,10 +39,10 @@ namespace GinClientApp.GinService {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UnmountRepository", ReplyAction="http://tempuri.org/IGinService/UnmountRepositoryResponse")]
         System.Threading.Tasks.Task<bool> UnmountRepositoryAsync(string repoName);
         
-        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IGinService/DeleteRepository")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/DeleteRepository", ReplyAction="http://tempuri.org/IGinService/DeleteRepositoryResponse")]
         void DeleteRepository(string repoName);
         
-        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IGinService/DeleteRepository")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/DeleteRepository", ReplyAction="http://tempuri.org/IGinService/DeleteRepositoryResponse")]
         System.Threading.Tasks.Task DeleteRepositoryAsync(string repoName);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UnmmountAllRepositories", ReplyAction="http://tempuri.org/IGinService/UnmmountAllRepositoriesResponse")]
@@ -123,10 +123,10 @@ namespace GinClientApp.GinService {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/GetFileInfo", ReplyAction="http://tempuri.org/IGinService/GetFileInfoResponse")]
         System.Threading.Tasks.Task<string> GetFileInfoAsync(string path);
         
-        [System.ServiceModel.OperationContractAttribute(IsTerminating=true, Action="http://tempuri.org/IGinService/IsManagedPath", ReplyAction="http://tempuri.org/IGinService/IsManagedPathResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/IsManagedPath", ReplyAction="http://tempuri.org/IGinService/IsManagedPathResponse")]
         bool IsManagedPath(string filePath);
         
-        [System.ServiceModel.OperationContractAttribute(IsTerminating=true, Action="http://tempuri.org/IGinService/IsManagedPath", ReplyAction="http://tempuri.org/IGinService/IsManagedPathResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/IsManagedPath", ReplyAction="http://tempuri.org/IGinService/IsManagedPathResponse")]
         System.Threading.Tasks.Task<bool> IsManagedPathAsync(string filePath);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/IsManagedPathNonTerminating", ReplyAction="http://tempuri.org/IGinService/IsManagedPathNonTerminatingResponse")]
@@ -135,10 +135,10 @@ namespace GinClientApp.GinService {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/IsManagedPathNonTerminating", ReplyAction="http://tempuri.org/IGinService/IsManagedPathNonTerminatingResponse")]
         System.Threading.Tasks.Task<bool> IsManagedPathNonTerminatingAsync(string filePath);
         
-        [System.ServiceModel.OperationContractAttribute(IsTerminating=true, Action="http://tempuri.org/IGinService/IsBasePath", ReplyAction="http://tempuri.org/IGinService/IsBasePathResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/IsBasePath", ReplyAction="http://tempuri.org/IGinService/IsBasePathResponse")]
         bool IsBasePath(string filePath);
         
-        [System.ServiceModel.OperationContractAttribute(IsTerminating=true, Action="http://tempuri.org/IGinService/IsBasePath", ReplyAction="http://tempuri.org/IGinService/IsBasePathResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/IsBasePath", ReplyAction="http://tempuri.org/IGinService/IsBasePathResponse")]
         System.Threading.Tasks.Task<bool> IsBasePathAsync(string filePath);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UpdateRepositories", ReplyAction="http://tempuri.org/IGinService/UpdateRepositoriesResponse")]

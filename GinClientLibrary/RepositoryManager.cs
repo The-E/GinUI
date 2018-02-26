@@ -331,7 +331,7 @@ namespace GinClientLibrary
                 FileOperationProgress?.Invoke(progress.filename, (GinRepository) sender, progress.GetProgress(),
                     progress.rate, progress.state);
             }
-            catch (Exception e)
+            catch 
             {
             }
         }
