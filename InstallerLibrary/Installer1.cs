@@ -194,6 +194,45 @@ namespace InstallerLibrary
                 Directory.Delete(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) +
                                  @"\G-Node\");
             }
+
+            var path = new DirectoryInfo(savedState["TargetDir"].ToString());
+
+            if (Directory.Exists(path.FullName + @"\gin-cli\"))
+            {
+                var dInfo = new DirectoryInfo(path.FullName + @"\gin-cli\");
+                dInfo.Empty();
+                Directory.Delete(path.FullName + @"\gin-cli\", true);
+            }
+
+            var deleteDlg = new DeleteDataDlg();
+
+            deleteDlg.ShowDialog();
+
+            var configDataPath = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
+                                 @"\g-node\GinWindowsClient\");
+
+            if (!deleteDlg.KeepCheckout)
+            {
+                if (Directory.Exists(configDataPath.FullName + @"\Repositories\"))
+                {
+                    var dInfo = new DirectoryInfo(configDataPath.FullName + @"\Repositories\");
+                    dInfo.Empty();
+                    Directory.Delete(dInfo.FullName, true);
+                }
+            }
+
+            if (!deleteDlg.KeepUserConfig)
+            {
+                if (File.Exists(configDataPath.FullName + @"\GlobalOptionsDlg.json"))
+                    File.Delete(configDataPath.FullName + @"\GlobalOptionsDlg.json");
+            }
+
+            if (!deleteDlg.KeepUserLogin)
+            {
+                if (File.Exists(configDataPath.FullName + @"\UserCredentials.json"))
+                    File.Delete(configDataPath.FullName + @"\UserCredentials.json");
+            }
+
         }
         
     }
