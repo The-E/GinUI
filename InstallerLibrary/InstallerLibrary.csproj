@@ -33,8 +33,10 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -43,6 +45,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DeleteDataDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DeleteDataDlg.Designer.cs">
+      <DependentUpon>DeleteDataDlg.cs</DependentUpon>
+    </Compile>
     <Compile Include="Installer1.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -70,6 +78,11 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DeleteDataDlg.resx">
+      <DependentUpon>DeleteDataDlg.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
