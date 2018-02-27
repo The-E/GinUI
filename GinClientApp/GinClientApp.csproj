@@ -162,20 +162,20 @@
     <EmbeddedResource Include="ServiceComponent\GinClientWindowsService.resx">
       <DependentUpon>GinClientWindowsService.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="Connected Services\GinService\Arrays.xsd">
+    <None Include="Connected Services\GinService\Arrays1.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\GinService\GinClientLibrary.xsd">
+    <None Include="Connected Services\GinService\GinClientLibrary1.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\GinService\service.wsdl" />
-    <None Include="Connected Services\GinService\service.xsd">
+    <None Include="Connected Services\GinService\service1.wsdl" />
+    <None Include="Connected Services\GinService\service2.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\GinService\service1.xsd">
+    <None Include="Connected Services\GinService\service21.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\GinService\System.IO.xsd">
+    <None Include="Connected Services\GinService\System.IO1.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
