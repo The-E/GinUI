@@ -19,15 +19,15 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost:8733/Design_Time_Addresses/GinService/mex" Protocol="mex" SourceId="1" />
+    <MetadataSource Address="http://localhost:8733/GinService/mex" Protocol="mex" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="fdc5ee36-1cd6-4ceb-9d53-9e9bee6b90e0" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/GinService/mex" />
-    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="da4d3e38-7286-45ca-b6fc-1c1079f47ed3" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/GinService/mex" />
-    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="5fca0347-5502-4c46-bf78-16c4c956dce0" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/GinService/mex" />
-    <MetadataFile FileName="GinClientLibrary.xsd" MetadataType="Schema" ID="9d2b4087-fd69-4c71-855f-a1cf988316aa" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/GinService/mex" />
-    <MetadataFile FileName="System.IO.xsd" MetadataType="Schema" ID="93b91ef7-b7bb-464a-a51f-12878068ec8f" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/GinService/mex" />
-    <MetadataFile FileName="Arrays.xsd" MetadataType="Schema" ID="9562ed1a-26b0-4939-ac0d-d5e4b8db8575" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/GinService/mex" />
+    <MetadataFile FileName="service1.wsdl" MetadataType="Wsdl" ID="1286fbc8-fdd4-45ed-abba-960397dfed40" SourceId="1" SourceUrl="http://localhost:8733/GinService/mex" />
+    <MetadataFile FileName="service2.xsd" MetadataType="Schema" ID="314dd50b-5d29-4bcb-a99f-ed7aa498059c" SourceId="1" SourceUrl="http://localhost:8733/GinService/mex" />
+    <MetadataFile FileName="service21.xsd" MetadataType="Schema" ID="a77314b9-acfc-4928-a414-b07bbc765ed8" SourceId="1" SourceUrl="http://localhost:8733/GinService/mex" />
+    <MetadataFile FileName="GinClientLibrary1.xsd" MetadataType="Schema" ID="c280344b-2230-4c81-bc2b-bd7184bff808" SourceId="1" SourceUrl="http://localhost:8733/GinService/mex" />
+    <MetadataFile FileName="System.IO1.xsd" MetadataType="Schema" ID="2478906a-f5ae-4989-af32-3a5241bc7750" SourceId="1" SourceUrl="http://localhost:8733/GinService/mex" />
+    <MetadataFile FileName="Arrays1.xsd" MetadataType="Schema" ID="b8e2e780-0c96-4bae-a913-f7eec06f1a4f" SourceId="1" SourceUrl="http://localhost:8733/GinService/mex" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
