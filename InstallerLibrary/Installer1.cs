@@ -10,9 +10,11 @@ using System.Net;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading;
+using System.Windows.Forms;
 using Microsoft.Win32;
 using Shell32;
 using IWshRuntimeLibrary;
+using Newtonsoft.Json;
 using File = System.IO.File;
 
 namespace InstallerLibrary
@@ -25,112 +27,129 @@ namespace InstallerLibrary
 
         private volatile bool _downloadComplete;
 
-        public DirectoryInfo Path;
-
         public Installer1()
         {
             InitializeComponent();
 
             Committed += Installer1_Committed;
+            AfterUninstall += OnAfterUninstall;
         }
+
+        private void OnAfterUninstall(object sender, InstallEventArgs installEventArgs)
+        {
+        }
+
 
         private void Installer1_Committed(object sender, InstallEventArgs e)
         {
-            var path = new DirectoryInfo(Context.Parameters["assemblypath"]).Parent;
-
-            if (Directory.Exists(path.FullName + @"\gin-cli\"))
+            try
             {
-                var dInfo = new DirectoryInfo(path.FullName + @"\gin-cli\");
-                dInfo.Empty();
-                Directory.Delete(path.FullName + @"\gin-cli\", true);
+                var path = new DirectoryInfo(Context.Parameters["assemblypath"]).Parent;
+
+                if (Directory.Exists(path.FullName + @"\gin-cli\"))
+                {
+                    var dInfo = new DirectoryInfo(path.FullName + @"\gin-cli\");
+                    dInfo.Empty();
+                    Directory.Delete(path.FullName + @"\gin-cli\", true);
+                }
+                Directory.CreateDirectory(path.FullName + @"\dokan\");
+                Directory.CreateDirectory(path.FullName + @"\gin-cli\");
+
+                _downloadComplete = false;
+                var wb = new WebClient();
+                //Download the current gin-cli release and unpack it into our install directory
+                wb.DownloadFileCompleted += Wb_DownloadFileCompleted;
+                wb.DownloadProgressChanged += WbOnDownloadProgressChanged;
+                wb.DownloadFileAsync(new Uri(_ginURL), path.FullName + @"\gin-cli\gin-cli-latest-windows-386.zip");
+
+                while (!_downloadComplete)
+                    Thread.Sleep(500);
+
+                ZipFile.ExtractToDirectory(path.FullName + @"\gin-cli\gin-cli-latest-windows-386.zip",
+                    path.FullName + @"\gin-cli\");
+
+                //Give the client the ability to register a URL to communicate with the service
+                var everyone = new System.Security.Principal.SecurityIdentifier(
+                    "S-1-1-0").Translate(typeof(System.Security.Principal.NTAccount)).ToString();
+                var procStartInfo = new ProcessStartInfo("cmd.exe",
+                    "/C netsh http add urlacl url=http://+:8738/GinService/ user=\\" + everyone + " delegate=yes")
+                {
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+
+                var process = new Process {StartInfo = procStartInfo};
+                var Output = new StringBuilder();
+                process.OutputDataReceived += (o, args) =>
+                {
+                    if (!string.IsNullOrEmpty(args.Data))
+                        Output.AppendLine(args.Data);
+                };
+                Output.Clear();
+                process.Start();
+                process.BeginOutputReadLine();
+                process.WaitForExit();
+
+                //Give the user the ability to register the service URL
+                procStartInfo = new ProcessStartInfo("cmd.exe",
+                    "/C netsh http add urlacl url=http://+:8733/GinService/ user=\\" + everyone + " delegate=yes")
+                {
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+
+                process = new Process {StartInfo = procStartInfo};
+                Output = new StringBuilder();
+                process.OutputDataReceived += (o, args) =>
+                {
+                    if (!string.IsNullOrEmpty(args.Data))
+                        Output.AppendLine(args.Data);
+                };
+                Output.Clear();
+                process.Start();
+                process.BeginOutputReadLine();
+                process.WaitForExit();
+
+                Output.Clear();
+
+                //Create shortcuts in the Startup and Start Menu folders
+                var wsh = new WshShell();
+                IWshRuntimeLibrary.IWshShortcut shortcut = wsh.CreateShortcut(
+                        Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup) + @"\GinClientApp.lnk") as
+                    IWshRuntimeLibrary.IWshShortcut;
+                shortcut.Arguments = "";
+                shortcut.TargetPath = path.FullName + @"\GinClientApp.exe";
+                shortcut.WindowStyle = 1;
+                shortcut.Description = "Gin Client for Windows";
+                shortcut.WorkingDirectory = path.FullName;
+                shortcut.IconLocation = path.FullName + @"\gin_icon.ico";
+                shortcut.Save();
+
+                if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) + @"\G-Node\"))
+                    Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) +
+                                              @"\G-Node\");
+
+                wsh = new WshShell();
+                shortcut = wsh.CreateShortcut(
+                        Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) +
+                        @"\G-Node\GinClientApp.lnk") as
+                    IWshRuntimeLibrary.IWshShortcut;
+                shortcut.Arguments = "";
+                shortcut.TargetPath = path.FullName + @"\GinClientApp.exe";
+                shortcut.WindowStyle = 1;
+                shortcut.Description = "Gin Client for Windows";
+                shortcut.WorkingDirectory = path.FullName;
+                shortcut.IconLocation = path.FullName + @"\gin_icon.ico";
+                shortcut.Save();
+        } catch (Exception exc)
+            {
+                var fs = File.CreateText(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\exc.json");
+                fs.Write(JsonConvert.SerializeObject(exc));
+                fs.Flush();
+                fs.Close();
             }
-            Directory.CreateDirectory(path.FullName + @"\dokan\");
-            Directory.CreateDirectory(path.FullName + @"\gin-cli\");
-
-            _downloadComplete = false;
-            var wb = new WebClient();
-            //Download the current gin-cli release and unpack it into our install directory
-            wb.DownloadFileCompleted += Wb_DownloadFileCompleted;
-            wb.DownloadProgressChanged += WbOnDownloadProgressChanged;
-            wb.DownloadFileAsync(new Uri(_ginURL), path.FullName + @"\gin-cli\gin-cli-latest-windows-386.zip");
-
-            while (!_downloadComplete)
-                Thread.Sleep(500);
-
-            ZipFile.ExtractToDirectory(path.FullName + @"\gin-cli\gin-cli-latest-windows-386.zip",
-                path.FullName + @"\gin-cli\");
-
-            //Give the client the ability to register a URL to communicate with the service
-            var everyone = new System.Security.Principal.SecurityIdentifier(
-                "S-1-1-0").Translate(typeof(System.Security.Principal.NTAccount)).ToString();
-            var procStartInfo = new ProcessStartInfo("cmd.exe",
-                "/C netsh http add urlacl url=http://+:8738/GinService/ user=\\" + everyone + " delegate=yes")
-            {
-                RedirectStandardOutput = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
-
-            var process = new Process {StartInfo = procStartInfo};
-            var Output = new StringBuilder();
-            process.OutputDataReceived += (o, args) =>
-            {
-                if (!string.IsNullOrEmpty(args.Data))
-                    Output.AppendLine(args.Data);
-            };
-            Output.Clear();
-            process.Start();
-            process.BeginOutputReadLine();
-            process.WaitForExit();
-
-            //Give the user the ability to register the service URL
-            procStartInfo = new ProcessStartInfo("cmd.exe",
-                "/C netsh http add urlacl url=http://+:8733/GinService/ user=\\" + everyone + " delegate=yes")
-            {
-                RedirectStandardOutput = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
-
-            process = new Process { StartInfo = procStartInfo };
-            Output = new StringBuilder();
-            process.OutputDataReceived += (o, args) =>
-            {
-                if (!string.IsNullOrEmpty(args.Data))
-                    Output.AppendLine(args.Data);
-            };
-            Output.Clear();
-            process.Start();
-            process.BeginOutputReadLine();
-            process.WaitForExit();
-
-            Output.Clear();
-
-            //Create shortcuts in the Startup and Start Menu folders
-            var wsh = new WshShell();
-            IWshRuntimeLibrary.IWshShortcut shortcut = wsh.CreateShortcut(
-                Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup) + @"\GinClientApp.lnk") as IWshRuntimeLibrary.IWshShortcut;
-            shortcut.Arguments = "";
-            shortcut.TargetPath = path.FullName + @"\GinClientApp.exe";
-            shortcut.WindowStyle = 1;
-            shortcut.Description = "Gin Client for Windows";
-            shortcut.WorkingDirectory = path.FullName;
-            shortcut.IconLocation = path.FullName + @"\gin_icon.ico";
-            shortcut.Save();
-
-            if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) + @"\G-Node\"))
-                Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) + @"\G-Node\");
-
-            wsh = new WshShell();
-            shortcut = wsh.CreateShortcut(
-                Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) + @"\G-Node\GinClientApp.lnk") as IWshRuntimeLibrary.IWshShortcut;
-            shortcut.Arguments = "";
-            shortcut.TargetPath = path.FullName + @"\GinClientApp.exe";
-            shortcut.WindowStyle = 1;
-            shortcut.Description = "Gin Client for Windows";
-            shortcut.WorkingDirectory = path.FullName;
-            shortcut.IconLocation = path.FullName + @"\gin_icon.ico";
-            shortcut.Save();
         }
 
         private void WbOnDownloadProgressChanged(object sender,
@@ -163,78 +182,9 @@ namespace InstallerLibrary
         {
             base.Uninstall(savedState);
 
-            //remove the shell extension
-            var procStartInfo = new ProcessStartInfo("cmd.exe", "/C srm.exe uninstall GinShellExtension.dll -codebase")
-            {
-                RedirectStandardOutput = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
-
-            var process = new Process {StartInfo = procStartInfo};
-            var Output = new StringBuilder();
-            process.OutputDataReceived += (o, args) =>
-            {
-                if (!string.IsNullOrEmpty(args.Data))
-                    Output.AppendLine(args.Data);
-            };
-            Output.Clear();
-            process.Start();
-            process.BeginOutputReadLine();
-            process.WaitForExit();
-            Output.Clear();
-
-            if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup) + @"\GinClientApp.lnk"))
-                File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup) + @"\GinClientApp.lnk");
-            if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) +
-                            @"\G-Node\GinClientApp.lnk"))
-            {
-                File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) +
-                            @"\G-Node\GinClientApp.lnk");
-                Directory.Delete(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) +
-                                 @"\G-Node\");
-            }
-
-            var path = new DirectoryInfo(savedState["TargetDir"].ToString());
-
-            if (Directory.Exists(path.FullName + @"\gin-cli\"))
-            {
-                var dInfo = new DirectoryInfo(path.FullName + @"\gin-cli\");
-                dInfo.Empty();
-                Directory.Delete(path.FullName + @"\gin-cli\", true);
-            }
-
-            var deleteDlg = new DeleteDataDlg();
-
-            deleteDlg.ShowDialog();
-
-            var configDataPath = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
-                                 @"\g-node\GinWindowsClient\");
-
-            if (!deleteDlg.KeepCheckout)
-            {
-                if (Directory.Exists(configDataPath.FullName + @"\Repositories\"))
-                {
-                    var dInfo = new DirectoryInfo(configDataPath.FullName + @"\Repositories\");
-                    dInfo.Empty();
-                    Directory.Delete(dInfo.FullName, true);
-                }
-            }
-
-            if (!deleteDlg.KeepUserConfig)
-            {
-                if (File.Exists(configDataPath.FullName + @"\GlobalOptionsDlg.json"))
-                    File.Delete(configDataPath.FullName + @"\GlobalOptionsDlg.json");
-            }
-
-            if (!deleteDlg.KeepUserLogin)
-            {
-                if (File.Exists(configDataPath.FullName + @"\UserCredentials.json"))
-                    File.Delete(configDataPath.FullName + @"\UserCredentials.json");
-            }
 
         }
-        
+
     }
     
     public static class DirectoryInfoExtension

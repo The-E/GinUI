@@ -81,8 +81,6 @@ namespace GinClientLibrary
                     ? ", " + string.Join(", ", parameters.Select(x => string.Format(DefaultFormatProvider, "{0}", x)))
                     : string.Empty;
 
-                EventLog.WriteEntry(logSource,
-                    DokanFormat($"{method}('{fileName}', {info}{extraParameters}) -> {result}"));
             }
             return result;
         }
@@ -91,10 +89,6 @@ namespace GinClientLibrary
             FileAccess access, FileShare share, FileMode mode, FileOptions options, FileAttributes attributes,
             NtStatus result)
         {
-            if (_doLogging)
-                EventLog.WriteEntry(logSource,
-                    DokanFormat(
-                        $"{method}('{fileName}', {info}, [{access}], [{share}], [{mode}], [{options}], [{attributes}]) -> {result}"));
             return result;
         }
 
@@ -102,10 +96,6 @@ namespace GinClientLibrary
 
         private void InitLogging()
         {
-            var logCategory = "Application";
-
-            if (!EventLog.SourceExists(logSource))
-                EventLog.CreateEventSource(logSource, logCategory);
         }
 
         #endregion

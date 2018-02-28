@@ -7,10 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MetroFramework.Forms;
 
-namespace InstallerLibrary
+namespace GinClientApp.Dialogs
 {
-    public partial class DeleteDataDlg : Form
+    public partial class DeleteDataDlg : MetroForm
     {
         public bool KeepCheckout { get; set; }
         public bool KeepUserConfig { get; set; }

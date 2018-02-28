@@ -12,8 +12,13 @@ namespace GinClientApp
         ///     The main entry point for the application.
         /// </summary>
         [STAThread]
-        private static void Main()
+        private static void Main(string[] args)
         {
+            if (args.Length > 0 && args[0] == "-uninstall")
+            {
+                Installer.DoUninstall();
+                return;
+            }
             if (!Mutex.WaitOne(TimeSpan.Zero, true)) return;
 
             var path = AppDomain.CurrentDomain.BaseDirectory;

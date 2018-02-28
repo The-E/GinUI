@@ -16,7 +16,7 @@
         "Entry"
         {
         "MsmKey" = "8:_0025913BAD564AFF8EED53A54DE8163F"
-        "OwnerKey" = "8:_2C77F2BD22EDD2F399407A6A1C2699F8"
+        "OwnerKey" = "8:_5572612AFED7176861E6B99C9BB76D32"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -69,14 +69,14 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_2C77F2BD22EDD2F399407A6A1C2699F8"
-        "OwnerKey" = "8:_C36126FAAD42419CAB31F7457AF15F74"
+        "MsmKey" = "8:_2D25EA3788788E3D934E78D52B775497"
+        "OwnerKey" = "8:_D941A3CE2C364419AE9E2D59FDD8B9CE"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_2D25EA3788788E3D934E78D52B775497"
-        "OwnerKey" = "8:_D941A3CE2C364419AE9E2D59FDD8B9CE"
+        "MsmKey" = "8:_5572612AFED7176861E6B99C9BB76D32"
+        "OwnerKey" = "8:_C36126FAAD42419CAB31F7457AF15F74"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -184,6 +184,12 @@
         "Entry"
         {
         "MsmKey" = "8:_E59F53A45ED1864A0E099BBCEF192060"
+        "OwnerKey" = "8:_C36126FAAD42419CAB31F7457AF15F74"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_E59F53A45ED1864A0E099BBCEF192060"
         "OwnerKey" = "8:_A09236F1DFBE4E7E8C682A78A93A792A"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -238,7 +244,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_2C77F2BD22EDD2F399407A6A1C2699F8"
+        "OwnerKey" = "8:_5572612AFED7176861E6B99C9BB76D32"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -375,17 +381,17 @@
             "InstallerClass" = "11:TRUE"
             "CustomActionData" = "8:"
             }
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_254E3FEBD1444EBC82152245B16CC8DD"
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_396B5D1CE5B7470FBACA697B937EAC02"
             {
             "Name" = "8:InstallerLibrary.dll"
             "Condition" = "8:"
             "Object" = "8:_C36126FAAD42419CAB31F7457AF15F74"
             "FileType" = "3:1"
-            "InstallAction" = "3:4"
+            "InstallAction" = "3:3"
             "Arguments" = "8:"
             "EntryPoint" = "8:"
             "Sequence" = "3:1"
-            "Identifier" = "8:_C517AB18_B033_44E8_9944_8AD1DB835EB4"
+            "Identifier" = "8:_27921B4D_948E_499D_B67E_E5243F8FFFA7"
             "InstallerClass" = "11:TRUE"
             "CustomActionData" = "8:"
             }
@@ -400,6 +406,20 @@
             "EntryPoint" = "8:"
             "Sequence" = "3:2"
             "Identifier" = "8:_3ED83072_ABC4_4595_90C5_553495B3C18E"
+            "InstallerClass" = "11:FALSE"
+            "CustomActionData" = "8:"
+            }
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_85CDE0C46B434DAC8447751DE5ED37C4"
+            {
+            "Name" = "8:GinclientApp"
+            "Condition" = "8:"
+            "Object" = "8:_D941A3CE2C364419AE9E2D59FDD8B9CE"
+            "FileType" = "3:2"
+            "InstallAction" = "3:4"
+            "Arguments" = "8:-uninstall"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:2"
+            "Identifier" = "8:_345462A9_E0BF_458F_BE4C_D27609EEC4A5"
             "InstallerClass" = "11:FALSE"
             "CustomActionData" = "8:"
             }
@@ -426,9 +446,9 @@
             "InstallAction" = "3:4"
             "Arguments" = "8:uninstall \"[TARGETDIR]\\GinShellExtension.dll\""
             "EntryPoint" = "8:"
-            "Sequence" = "3:2"
+            "Sequence" = "3:1"
             "Identifier" = "8:_3A97B0C0_062F_4A24_9B5C_18E612FAF68F"
-            "InstallerClass" = "11:TRUE"
+            "InstallerClass" = "11:FALSE"
             "CustomActionData" = "8:"
             }
         }
@@ -578,20 +598,20 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2C77F2BD22EDD2F399407A6A1C2699F8"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2D25EA3788788E3D934E78D52B775497"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:System.IO.Compression.FileSystem, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+            "AssemblyAsmDisplayName" = "8:MetroFramework.Design, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_2C77F2BD22EDD2F399407A6A1C2699F8"
+                    "_2D25EA3788788E3D934E78D52B775497"
                     {
-                    "Name" = "8:System.IO.Compression.FileSystem.dll"
+                    "Name" = "8:MetroFramework.Design.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:System.IO.Compression.FileSystem.dll"
+            "SourcePath" = "8:MetroFramework.Design.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_EE7B67213AFD41EB8591E9C7A6B2A535"
@@ -609,20 +629,20 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2D25EA3788788E3D934E78D52B775497"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_5572612AFED7176861E6B99C9BB76D32"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:MetroFramework.Design, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:System.IO.Compression.FileSystem, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
                 "ScatterAssemblies"
                 {
-                    "_2D25EA3788788E3D934E78D52B775497"
+                    "_5572612AFED7176861E6B99C9BB76D32"
                     {
-                    "Name" = "8:MetroFramework.Design.dll"
+                    "Name" = "8:System.IO.Compression.FileSystem.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:MetroFramework.Design.dll"
+            "SourcePath" = "8:System.IO.Compression.FileSystem.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_EE7B67213AFD41EB8591E9C7A6B2A535"
@@ -963,12 +983,12 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Gin Windows Client"
         "ProductCode" = "8:{2E36548C-6571-42DF-ADAF-D482C3374FF7}"
-        "PackageCode" = "8:{FE759572-F2A0-4477-82AF-A3C66330B11A}"
+        "PackageCode" = "8:{3BE1ED01-C893-48BB-AE70-E6D6D64FB86B}"
         "UpgradeCode" = "8:{4A6B65BC-75BE-4BDF-A438-3E7CE9B5F93C}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
-        "DetectNewerInstalledVersion" = "11:TRUE"
+        "DetectNewerInstalledVersion" = "11:FALSE"
         "InstallAllUsers" = "11:FALSE"
         "ProductVersion" = "8:1.0.0"
         "Manufacturer" = "8:G-Node"
