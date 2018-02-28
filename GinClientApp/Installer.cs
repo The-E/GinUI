@@ -16,7 +16,6 @@ namespace GinClientApp
     {
         public static void DoUninstall()
         {
-            Debugger.Launch();
             if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup) + @"\GinClientApp.lnk"))
                 File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup) + @"\GinClientApp.lnk");
             if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) +
