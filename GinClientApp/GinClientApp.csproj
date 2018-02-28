@@ -92,6 +92,12 @@
     <Compile Include="Custom Controls\FileTransferProgress.Designer.cs">
       <DependentUpon>FileTransferProgress.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\DeleteDataDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\DeleteDataDlg.Designer.cs">
+      <DependentUpon>DeleteDataDlg.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\MetroGetUserCredentialsDlg.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -124,6 +130,7 @@
     </Compile>
     <Compile Include="GinApplicationContext.cs" />
     <Compile Include="GlobalOptions.cs" />
+    <Compile Include="Installer.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -133,6 +140,9 @@
     <Compile Include="UserCredentials.cs" />
     <EmbeddedResource Include="Custom Controls\FileTransferProgress.resx">
       <DependentUpon>FileTransferProgress.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\DeleteDataDlg.resx">
+      <DependentUpon>DeleteDataDlg.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\MetroGetUserCredentialsDlg.resx">
       <DependentUpon>MetroGetUserCredentialsDlg.cs</DependentUpon>
