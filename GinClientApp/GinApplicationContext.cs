@@ -236,7 +236,6 @@ namespace GinClientApp
             {
                 var mitem = new MenuItem(repo.Name) {Tag = repo};
                 mitem.MenuItems.Add(Resources.GinApplicationContext_Upload, UploadRepoMenuItemHandler);
-                mitem.MenuItems.Add(Resources.GinApplicationContext_Unmount, UnmountRepoMenuItemHandler);
                 mitem.MenuItems.Add(Resources.GinApplicationContext_Update, UpdateRepoMenuItemHandler);
 
                 menuitems.Add(mitem);
@@ -332,22 +331,6 @@ namespace GinClientApp
                 if (_trayIcon != null) _trayIcon.ContextMenu = new ContextMenu(BuildContextMenu());
             };
             repomanager.ShowDialog();
-        }
-
-        private void UnmountRepoMenuItemHandler(object sender, EventArgs e)
-        {
-            var mItem = (MenuItem) sender;
-            var repo = (GinRepositoryData) mItem.Parent.Tag;
-            if (string.CompareOrdinal(Resources.GinApplicationContext_Unmount, mItem.Text) == 0)
-            {
-                ServiceClient.UnmountRepository(repo.Name);
-                mItem.Text = Resources.GinApplicationContext_Mount;
-            }
-            else
-            {
-                ServiceClient.MountRepository(repo.Name);
-                mItem.Text = Resources.GinApplicationContext_Unmount;
-            }
         }
 
         private void _trayIcon_DoubleClick(object sender, EventArgs e)
