@@ -308,7 +308,8 @@ namespace GinClientLibrary
             repo.FileOperationCompleted += Repo_FileOperationCompleted;
             repo.FileOperationProgress += Repo_FileOperationProgress;
             repo.FileOperationError += RepoOnFileOperationError;
-            repo.CreateDirectories(performFullCheckout);
+            if (!repo.CreateDirectories(performFullCheckout)) return;
+
             MountRepository(repo);
             repo.Initialize();
 
