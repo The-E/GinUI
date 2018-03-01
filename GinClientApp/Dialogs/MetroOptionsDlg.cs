@@ -19,10 +19,15 @@ namespace GinClientApp.Dialogs
             Repositories,
             About
         }
-
+        public event EventHandler RepoListingChanged;
         private readonly GinApplicationContext _parentContext;
         private readonly UserCredentials _storedCredentials;
         private readonly GlobalOptions _storedOptions;
+
+        protected virtual void OnRepoListingChanged()
+        {
+            RepoListingChanged?.Invoke(this, EventArgs.Empty);
+        }
 
         public MetroOptionsDlg(GinApplicationContext parentContext, Page startPage)
         {
@@ -89,6 +94,8 @@ namespace GinClientApp.Dialogs
                 mLVwRepositories.Items.Add(new ListViewItem(new[]
                     {repo.Name, repo.Mountpoint.FullName, repo.PhysicalDirectory.FullName, repo.Address}));
             mLVwRepositories.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+
+            OnRepoListingChanged();
         }
 
 
