@@ -297,7 +297,7 @@ namespace GinClientLibrary
         ///     Creates a new repository folder from scratch
         /// </summary>
         /// <returns></returns>
-        public void CreateDirectories(bool performFullCheckout)
+        public bool CreateDirectories(bool performFullCheckout)
         {
             try
             {
@@ -331,7 +331,10 @@ namespace GinClientLibrary
                 if (result)
                     OnFileOperationCompleted(new FileOperationEventArgs {File = Address, Success = true});
                 else
+                {
                     OnFileOperationError(error);
+                    return false;
+                }
             }
 
             if (performFullCheckout)
@@ -346,8 +349,12 @@ namespace GinClientLibrary
                 if (result)
                     OnFileOperationCompleted(new FileOperationEventArgs {File = Address, Success = true});
                 else
-                    OnFileOperationError(error);
+                { OnFileOperationError(error);
+                    return false;
+                }
             }
+
+            return true;
         }
 
         public void DeleteRepository()
