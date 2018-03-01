@@ -232,6 +232,9 @@ Copyright (c) Microsoft</value>
   <data name="Options_CheckSanity_No_checkout_address_has_been_entered_" xml:space="preserve">
     <value>No checkout address has been entered.</value>
   </data>
+  <data name="Options_CheckSanity_No_private_or_shared_repos" xml:space="preserve">
+    <value>No private or shared repositories with this address exist</value>
+  </data>
   <data name="Options_CheckSanity_The_checkout_address_is_not_properly_formatted" xml:space="preserve">
     <value>The checkout address is not properly formatted. Do you wish to create a new repository with the name {0} instead?</value>
   </data>

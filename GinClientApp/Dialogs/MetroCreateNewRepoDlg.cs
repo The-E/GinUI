@@ -7,6 +7,7 @@ using GinClientLibrary;
 using GinClientLibrary.Extensions;
 using MetroFramework;
 using MetroFramework.Forms;
+using Newtonsoft.Json;
 
 namespace GinClientApp.Dialogs
 {
@@ -42,6 +43,17 @@ namespace GinClientApp.Dialogs
 
         private bool CheckSanity()
         {
+            var repoListJson = _appContext.ServiceClient.GetRemoteRepositoryList();
+            var repoList = JsonConvert.DeserializeObject<RepositoryListing[]>(repoListJson);
+            var paths = repoList.Select(repoListing => repoListing.full_name).ToList();
+
+            if (!paths.Exists(path => path == mTxBRepoAddress.Text))
+            {
+                MetroMessageBox.Show(this, Resources.Options_CheckSanity_No_private_or_shared_repos,
+                    Resources.GinClientApp_Gin_Client_Warning, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
             if (string.IsNullOrEmpty(mTxBRepoAddress.Text))
             {
                 MetroMessageBox.Show(this, Resources.Options_CheckSanity_No_checkout_address_has_been_entered_,
