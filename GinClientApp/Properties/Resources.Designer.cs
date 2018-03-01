@@ -329,6 +329,15 @@ namespace GinClientApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No private or shared repositories with this address exist.
+        /// </summary>
+        internal static string Options_CheckSanity_No_private_or_shared_repos {
+            get {
+                return ResourceManager.GetString("Options_CheckSanity_No_private_or_shared_repos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The checkout directory {0} must be empty..
         /// </summary>
         internal static string Options_CheckSanity_The_checkout_address_is_not_empty {
