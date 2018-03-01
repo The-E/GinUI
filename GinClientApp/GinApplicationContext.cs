@@ -115,6 +115,7 @@ namespace GinClientApp
             if (!GlobalOptions.Load())
             {
                 var optionsDlg = new MetroOptionsDlg(this, MetroOptionsDlg.Page.GlobalOptions);
+                optionsDlg.RepoListingChanged += (o, args) => { _trayIcon.ContextMenu = new ContextMenu(BuildContextMenu()); };
                 var result = optionsDlg.ShowDialog();
 
                 if (result == DialogResult.Cancel)
@@ -257,6 +258,7 @@ namespace GinClientApp
         private void ShowAboutMenuItemHandler(object sender, EventArgs e)
         {
             var optionsdlg = new MetroOptionsDlg(this, MetroOptionsDlg.Page.About);
+            optionsdlg.RepoListingChanged += (o, args) => { _trayIcon.ContextMenu = new ContextMenu(BuildContextMenu()); };
             optionsdlg.Closed += (o, args) =>
             {
                 if (_trayIcon != null) _trayIcon.ContextMenu = new ContextMenu(BuildContextMenu());
@@ -291,6 +293,7 @@ namespace GinClientApp
         private void ShowOptionsMenuItemHandler(object sender, EventArgs e)
         {
             var optionsDlg = new MetroOptionsDlg(this, MetroOptionsDlg.Page.GlobalOptions);
+            optionsDlg.RepoListingChanged += (o, args) => { _trayIcon.ContextMenu = new ContextMenu(BuildContextMenu()); };
             optionsDlg.Closed += (o, args) =>
             {
                 if (_trayIcon != null) _trayIcon.ContextMenu = new ContextMenu(BuildContextMenu());
@@ -326,6 +329,7 @@ namespace GinClientApp
         private void ManageRepositoriesMenuItemHandler(object sender, EventArgs e)
         {
             var repomanager = new MetroOptionsDlg(this, MetroOptionsDlg.Page.Repositories);
+            repomanager.RepoListingChanged += (o, args) => { _trayIcon.ContextMenu = new ContextMenu(BuildContextMenu()); };
             repomanager.Closed += (o, args) =>
             {
                 if (_trayIcon != null) _trayIcon.ContextMenu = new ContextMenu(BuildContextMenu());
@@ -336,6 +340,7 @@ namespace GinClientApp
         private void _trayIcon_DoubleClick(object sender, EventArgs e)
         {
             var repomanager = new MetroOptionsDlg(this, MetroOptionsDlg.Page.Repositories);
+            repomanager.RepoListingChanged += (o, args) => { _trayIcon.ContextMenu = new ContextMenu(BuildContextMenu()); };
             repomanager.Closed += (o, args) =>
             {
                 if (_trayIcon != null) _trayIcon.ContextMenu = new ContextMenu(BuildContextMenu());
