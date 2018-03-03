@@ -307,6 +307,7 @@ namespace GinClientLibrary
             catch (Exception e)
             {
                 OnFileOperationError("Could not create checkout directory. Exception: " + e.Message + "\n InnerException: " + e.InnerException);
+                return false;
             }
 
             try
@@ -317,6 +318,7 @@ namespace GinClientLibrary
             catch (Exception e)
             {
                 OnFileOperationError("Could not create mountpoint directory. Exception: " + e.Message + "\n InnerException: " + e.InnerException);
+                return false;
             }
 
             if (PhysicalDirectory.IsEmpty())
@@ -349,7 +351,8 @@ namespace GinClientLibrary
                 if (result)
                     OnFileOperationCompleted(new FileOperationEventArgs {File = Address, Success = true});
                 else
-                { OnFileOperationError(error);
+                {
+                    OnFileOperationError(error);
                     return false;
                 }
             }
@@ -485,6 +488,12 @@ namespace GinClientLibrary
 
                 var output = Output.ToString();
                 Output.Clear();
+
+                if (process.ExitCode != 0 && string.IsNullOrEmpty(error))
+                {
+                    error = "gin-cli returned error code " + process.ExitCode;
+                }
+
                 return output;
             }
         }
@@ -515,6 +524,11 @@ namespace GinClientLibrary
                 process.BeginOutputReadLine();
                 error = process.StandardError.ReadToEnd();
                 process.WaitForExit();
+
+                if (process.ExitCode != 0 && string.IsNullOrEmpty(error))
+                {
+                    error = "gin-cli returned error code " + process.ExitCode;
+                }
             }
         }
 
