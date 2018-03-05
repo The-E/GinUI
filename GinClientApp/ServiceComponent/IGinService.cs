@@ -85,6 +85,14 @@ namespace GinService
         string GetRepositoryInfo(string name);
 
         /// <summary>
+        ///     Get repository info from the remote server
+        /// </summary>
+        /// <param name="path">The full path to the gin repository (i.e. user/repo)</param>
+        /// <returns></returns>
+        [OperationContract]
+        string GetRemoteRepositoryInfo(string path);
+
+        /// <summary>
         ///     Updates the stored information for the Repository indicated by repoName
         /// </summary>
         /// <param name="repoName">The previous name of the repository</param>
