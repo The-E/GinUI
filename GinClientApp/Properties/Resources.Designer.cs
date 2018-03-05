@@ -320,6 +320,15 @@ namespace GinClientApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not retrieve repository info for this repository. Are you sure the name is spelt correctly?.
+        /// </summary>
+        internal static string Options_CheckSanity_Could_not_retrieve_repo_info {
+            get {
+                return ResourceManager.GetString("Options_CheckSanity_Could_not_retrieve_repo_info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No checkout address has been entered..
         /// </summary>
         internal static string Options_CheckSanity_No_checkout_address_has_been_entered_ {

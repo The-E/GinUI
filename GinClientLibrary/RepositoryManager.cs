@@ -226,6 +226,7 @@ namespace GinClientLibrary
             return ginRepository.GetStatusCacheJson();
         }
 
+
         /// <summary>
         ///     Mount a repository
         /// </summary>
@@ -395,7 +396,37 @@ namespace GinClientLibrary
             return output.ToString();
         }
 
-        
+
+        public string GetRemoteRepositoryInfo(string path)
+        {
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    FileName = "gin.exe",
+                    WorkingDirectory = @"C:\",
+                    Arguments = "repoinfo --json " + path,
+                    CreateNoWindow = true,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false
+                }
+            };
+            StringBuilder output = new StringBuilder();
+            process.OutputDataReceived += (sender, args) => { output.AppendLine(args.Data); };
+
+            process.Start();
+            process.BeginOutputReadLine();
+            var error = process.StandardError.ReadToEnd();
+            process.WaitForExit();
+
+            if (!IsNullOrEmpty(error) || process.ExitCode != 0)
+                return "Error retrieving repository info!";
+            return output.ToString();
+        }
+
+
         private struct fileOpProgress
         {
             public string filename { get; set; }

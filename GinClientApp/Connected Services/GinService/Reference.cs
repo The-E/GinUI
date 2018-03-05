@@ -75,6 +75,12 @@ namespace GinClientApp.GinService {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/GetRepositoryInfo", ReplyAction="http://tempuri.org/IGinService/GetRepositoryInfoResponse")]
         System.Threading.Tasks.Task<string> GetRepositoryInfoAsync(string name);
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/GetRemoteRepositoryInfo", ReplyAction="http://tempuri.org/IGinService/GetRemoteRepositoryInfoResponse")]
+        string GetRemoteRepositoryInfo(string path);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/GetRemoteRepositoryInfo", ReplyAction="http://tempuri.org/IGinService/GetRemoteRepositoryInfoResponse")]
+        System.Threading.Tasks.Task<string> GetRemoteRepositoryInfoAsync(string path);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UpdateRepository", ReplyAction="http://tempuri.org/IGinService/UpdateRepositoryResponse")]
         bool UpdateRepository(string repoName, GinClientLibrary.GinRepositoryData data);
         
@@ -306,6 +312,14 @@ namespace GinClientApp.GinService {
         
         public System.Threading.Tasks.Task<string> GetRepositoryInfoAsync(string name) {
             return base.Channel.GetRepositoryInfoAsync(name);
+        }
+        
+        public string GetRemoteRepositoryInfo(string path) {
+            return base.Channel.GetRemoteRepositoryInfo(path);
+        }
+        
+        public System.Threading.Tasks.Task<string> GetRemoteRepositoryInfoAsync(string path) {
+            return base.Channel.GetRemoteRepositoryInfoAsync(path);
         }
         
         public bool UpdateRepository(string repoName, GinClientLibrary.GinRepositoryData data) {

@@ -108,6 +108,7 @@ namespace GinService
             return JsonConvert.SerializeObject(result);
         }
 
+
         bool IGinService.Login(string username, string password)
         {
             return RepositoryManager.Instance.Login(username, password);
@@ -239,6 +240,12 @@ namespace GinService
         string IGinService.GetRemoteRepositoryList()
         {
             return RepositoryManager.Instance.GetRemoteRepoList();
+        }
+
+
+        string IGinService.GetRemoteRepositoryInfo(string path)
+        {
+            return RepositoryManager.Instance.GetRemoteRepositoryInfo(path);
         }
 
         void IGinService.SetEnvironmentVariables(string AppDataPath, string LocalAppDataPath)
