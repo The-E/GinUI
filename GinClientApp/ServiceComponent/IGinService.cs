@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.ServiceModel;
 using GinClientLibrary;
 
@@ -204,6 +205,13 @@ namespace GinService
         void DownloadFiles(IEnumerable<string> filePaths);
 
         /// <summary>
+        ///     Remove all local content of the files indicated
+        /// </summary>
+        /// <param name="filePaths"></param>
+        [OperationContract]
+        void RemoveLocalContent(IEnumerable<string> filePaths);
+
+        /// <summary>
         ///     Return the output of gin --version
         /// </summary>
         /// <returns></returns>
@@ -231,6 +239,13 @@ namespace GinService
         /// </summary>
         [OperationContract(IsOneWay = true, IsTerminating = true)]
         void EndSession();
+
+        /// <summary>
+        ///     Check if the service is alive
+        /// </summary>
+        /// <returns>true if it is, wcf error otherwise</returns>
+        [OperationContract]
+        bool IsAlive();
     }
 
     [SuppressMessage("ReSharper", "OperationContractWithoutServiceContract")]

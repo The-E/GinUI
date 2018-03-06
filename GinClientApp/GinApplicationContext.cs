@@ -215,6 +215,8 @@ namespace GinClientApp
                 MaxReceivedMessageSize = int.MaxValue,
                 OpenTimeout = TimeSpan.FromMinutes(1.0),
                 CloseTimeout = TimeSpan.FromMinutes(1.0),
+                SendTimeout = TimeSpan.FromHours(1),
+                ReceiveTimeout = TimeSpan.FromHours(1),
                 ReaderQuotas = new XmlDictionaryReaderQuotas
                 {
                     MaxArrayLength = int.MaxValue,

@@ -232,6 +232,17 @@ namespace GinService
                 repo.RetrieveFile(file);
         }
 
+        void IGinService.RemoveLocalContent(IEnumerable<string> filePaths)
+        {
+            var files = filePaths as string[] ?? filePaths.ToArray();
+            var repo = RepositoryManager.Instance.GetRepoByPath(files.First());
+
+            foreach (var file in files)
+            {
+                repo.RemoveFile(file);
+            }
+        }
+
         string IGinService.GetGinCliVersion()
         {
             return RepositoryManager.Instance.GetGinCliVersion();
@@ -256,6 +267,11 @@ namespace GinService
         {
             RepositoryManager.Instance.UnmountAllRepositories();
             RepositoryManager.Instance.Logout();
+        }
+
+        bool IGinService.IsAlive()
+        {
+            return true;
         }
     }
 }

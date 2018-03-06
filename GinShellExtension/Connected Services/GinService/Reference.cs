@@ -165,6 +165,12 @@ namespace GinShellExtension.GinService {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/DownloadFiles", ReplyAction="http://tempuri.org/IGinService/DownloadFilesResponse")]
         System.Threading.Tasks.Task DownloadFilesAsync(string[] filePaths);
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/RemoveLocalContent", ReplyAction="http://tempuri.org/IGinService/RemoveLocalContentResponse")]
+        void RemoveLocalContent(string[] filePaths);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/RemoveLocalContent", ReplyAction="http://tempuri.org/IGinService/RemoveLocalContentResponse")]
+        System.Threading.Tasks.Task RemoveLocalContentAsync(string[] filePaths);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/GetGinCliVersion", ReplyAction="http://tempuri.org/IGinService/GetGinCliVersionResponse")]
         string GetGinCliVersion();
         
@@ -188,6 +194,12 @@ namespace GinShellExtension.GinService {
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, IsTerminating=true, Action="http://tempuri.org/IGinService/EndSession")]
         System.Threading.Tasks.Task EndSessionAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/IsAlive", ReplyAction="http://tempuri.org/IGinService/IsAliveResponse")]
+        bool IsAlive();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/IsAlive", ReplyAction="http://tempuri.org/IGinService/IsAliveResponse")]
+        System.Threading.Tasks.Task<bool> IsAliveAsync();
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -434,6 +446,14 @@ namespace GinShellExtension.GinService {
             return base.Channel.DownloadFilesAsync(filePaths);
         }
         
+        public void RemoveLocalContent(string[] filePaths) {
+            base.Channel.RemoveLocalContent(filePaths);
+        }
+        
+        public System.Threading.Tasks.Task RemoveLocalContentAsync(string[] filePaths) {
+            return base.Channel.RemoveLocalContentAsync(filePaths);
+        }
+        
         public string GetGinCliVersion() {
             return base.Channel.GetGinCliVersion();
         }
@@ -464,6 +484,14 @@ namespace GinShellExtension.GinService {
         
         public System.Threading.Tasks.Task EndSessionAsync() {
             return base.Channel.EndSessionAsync();
+        }
+        
+        public bool IsAlive() {
+            return base.Channel.IsAlive();
+        }
+        
+        public System.Threading.Tasks.Task<bool> IsAliveAsync() {
+            return base.Channel.IsAliveAsync();
         }
     }
 }
