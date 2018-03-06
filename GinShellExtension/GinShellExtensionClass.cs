@@ -38,28 +38,17 @@ namespace GinShellExtension
         {
             try
             {
-                var sc = new ServiceController("GinClientService");
-                if (sc.Status != ServiceControllerStatus.Running)
+                var client = ServiceClient.CreateServiceClient(this, 8741);
+                if (!client.IsAlive())
                     return false;
-            }
-            catch
-            {
-                return false;
-            }
 
-            var client = ServiceClient.CreateServiceClient(this, 8741);
-
-            try
-            {
                 var result = client.IsManagedPath(SelectedItemPaths.First());
-                client.EndSession();
                 ((ICommunicationObject) client).Close();
 
                 return result;
             }
             catch
             {
-                ((ICommunicationObject) client).Abort();
                 return false;
             }
         }
@@ -95,7 +84,8 @@ namespace GinShellExtension
         {
             var mItems = new List<ToolStripItem>
             {
-                new ToolStripMenuItem("Download File", null, FileDownload)
+                new ToolStripMenuItem("Download File", null, FileDownload),
+                new ToolStripMenuItem("Remove local contents", null, FileRemove)
             };
 
             return mItems.ToArray();
@@ -134,6 +124,14 @@ namespace GinShellExtension
 
             await client.DownloadFilesAsync(SelectedItemPaths.ToArray());
             ((ICommunicationObject) client).Close();
+        }
+
+        private async void FileRemove(object sender, EventArgs eventArgs)
+        {
+            var client = ServiceClient.CreateServiceClient(this, 8741);
+
+            await client.RemoveLocalContentAsync(SelectedItemPaths.ToArray());
+            ((ICommunicationObject)client).Close();
         }
     }
 }

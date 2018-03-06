@@ -44,16 +44,8 @@ namespace GinShellExtension
 
         protected override bool CanShowOverlay(string path, FILE_ATTRIBUTE attributes)
         {
-            try
-            {
-                var sc = new ServiceController("GinClientService");
-                if (sc.Status != ServiceControllerStatus.Running)
-                    return false;
-            }
-            catch
-            {
-                return false;
-            }
+
+            return false; //Disable this for now!
 
             _path = path;
 
