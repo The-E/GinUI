@@ -280,7 +280,7 @@ namespace GinClientLibrary
             var fstatus = GetFileStatus(directoryName + "\\" + filename);
             if (fstatus == FileStatus.InAnnex || fstatus == FileStatus.InAnnexModified)
                 return true;
-
+            
             lock (this)
             {
                 GetCommandLineOutput("cmd.exe", "/C gin.exe remove-content \"" + filename + "\"" /*+ " -json"*/,
@@ -290,7 +290,9 @@ namespace GinClientLibrary
 
                 ReadRepoStatus();
 
-                return string.IsNullOrEmpty(error); // If an error happens here, it's most likely due to trying to remove-content on a file already removed
+                return
+                    string.IsNullOrEmpty(
+                        error); // If an error happens here, it's most likely due to trying to remove-content on a file already removed
             }
         }
 
@@ -437,10 +439,23 @@ namespace GinClientLibrary
                 filePath = filePath.Replace(Mountpoint.FullName, PhysicalDirectory.FullName);
             }
 
+            var isDirectory = (File.GetAttributes(filePath) & FileAttributes.Directory) == FileAttributes.Directory;
+
             directoryName = Directory.GetParent(filePath).FullName;
-            filename = Directory.GetFiles(directoryName)
-                .Single(s => string.CompareOrdinal(s.ToUpperInvariant(), filePath.ToUpperInvariant()) == 0);
-            filename = Path.GetFileName(filename);         
+
+            if (isDirectory)
+            {
+                if (!filePath.EndsWith("\\"))
+                    filePath += "\\";
+                    
+                filename = Path.GetDirectoryName(filePath);
+            }
+            else
+            {
+                filename = Directory.GetFiles(directoryName)
+                    .Single(s => string.CompareOrdinal(s.ToUpperInvariant(), filePath.ToUpperInvariant()) == 0);
+                filename = Path.GetFileName(filename);
+            }
         }
 
         private void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
