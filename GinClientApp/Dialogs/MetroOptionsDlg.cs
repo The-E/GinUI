@@ -74,7 +74,6 @@ namespace GinClientApp.Dialogs
 
             mTxBLicense.Text = Resources.License_Text;
             mTxBGinCliVersion.Text = parentContext.ServiceClient.GetGinCliVersion();
-            mTxBGinService.Text = "";
 
             _storedOptions = (GlobalOptions) GlobalOptions.Instance.Clone();
             _storedCredentials = (UserCredentials) UserCredentials.Instance.Clone();

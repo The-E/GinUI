@@ -8,28 +8,34 @@ namespace GinClientLibrary.Extensions
     {
         public static void Empty(this DirectoryInfo directory)
         {
-            File.SetAttributes(directory.FullName,
-                File.GetAttributes(directory.FullName) & ~(FileAttributes.Hidden | FileAttributes.ReadOnly));
+            try
+            {
+                File.SetAttributes(directory.FullName,
+                    File.GetAttributes(directory.FullName) & ~(FileAttributes.Hidden | FileAttributes.ReadOnly));
 
-            foreach (var file in directory.GetFiles("*", SearchOption.AllDirectories))
-                try
-                {
-                    File.SetAttributes(file.FullName, FileAttributes.Normal);
-                    file.Delete();
-                }
-                catch
-                {
-                }
+                foreach (var file in directory.GetFiles("*", SearchOption.AllDirectories))
+                    try
+                    {
+                        File.SetAttributes(file.FullName, FileAttributes.Normal);
+                        file.Delete();
+                    }
+                    catch
+                    {
+                    }
 
-            foreach (var subDirectory in directory.GetDirectories())
-                try
-                {
-                    File.SetAttributes(subDirectory.FullName, FileAttributes.Normal);
-                    subDirectory.Delete(true);
-                }
-                catch
-                {
-                }
+                foreach (var subDirectory in directory.GetDirectories())
+                    try
+                    {
+                        File.SetAttributes(subDirectory.FullName, FileAttributes.Normal);
+                        subDirectory.Delete(true);
+                    }
+                    catch
+                    {
+                    }
+            }
+            catch
+            {
+            }
         }
 
         public static bool IsEmpty(this DirectoryInfo directory)

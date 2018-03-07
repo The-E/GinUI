@@ -366,11 +366,17 @@ namespace GinClientLibrary
 
         public void DeleteRepository()
         {
-            PhysicalDirectory.Empty();
-            Mountpoint.Empty();
+            if (Directory.Exists(PhysicalDirectory.FullName))
+            {
+                PhysicalDirectory.Empty();
+                Directory.Delete(PhysicalDirectory.FullName);
+            }
 
-            Directory.Delete(PhysicalDirectory.FullName);
-            Directory.Delete(Mountpoint.FullName);
+            if (Directory.Exists(Mountpoint.FullName))
+            {
+                Mountpoint.Empty();
+                Directory.Delete(Mountpoint.FullName);
+            }
         }
 
         private struct Filestatus

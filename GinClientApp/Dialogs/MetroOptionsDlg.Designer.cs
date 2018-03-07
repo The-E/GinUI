@@ -66,8 +66,6 @@
             this.metroPanel4 = new MetroFramework.Controls.MetroPanel();
             this.metroLabel6 = new MetroFramework.Controls.MetroLabel();
             this.mTxBLicense = new MetroFramework.Controls.MetroTextBox();
-            this.mTxBGinService = new MetroFramework.Controls.MetroTextBox();
-            this.metroLabel5 = new MetroFramework.Controls.MetroLabel();
             this.mTxBGinCliVersion = new MetroFramework.Controls.MetroTextBox();
             this.metroLabel4 = new MetroFramework.Controls.MetroLabel();
             this.mBtnOK = new MetroFramework.Controls.MetroButton();
@@ -96,7 +94,7 @@
             this.mTabCtrl.Controls.Add(this.About);
             this.mTabCtrl.Location = new System.Drawing.Point(24, 64);
             this.mTabCtrl.Name = "mTabCtrl";
-            this.mTabCtrl.SelectedIndex = 2;
+            this.mTabCtrl.SelectedIndex = 3;
             this.mTabCtrl.Size = new System.Drawing.Size(492, 294);
             this.mTabCtrl.TabIndex = 0;
             this.mTabCtrl.UseSelectable = true;
@@ -593,8 +591,6 @@
             // 
             this.metroPanel4.Controls.Add(this.metroLabel6);
             this.metroPanel4.Controls.Add(this.mTxBLicense);
-            this.metroPanel4.Controls.Add(this.mTxBGinService);
-            this.metroPanel4.Controls.Add(this.metroLabel5);
             this.metroPanel4.Controls.Add(this.mTxBGinCliVersion);
             this.metroPanel4.Controls.Add(this.metroLabel4);
             this.metroPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -612,7 +608,7 @@
             // metroLabel6
             // 
             this.metroLabel6.AutoSize = true;
-            this.metroLabel6.Location = new System.Drawing.Point(16, 74);
+            this.metroLabel6.Location = new System.Drawing.Point(16, 37);
             this.metroLabel6.Name = "metroLabel6";
             this.metroLabel6.Size = new System.Drawing.Size(122, 19);
             this.metroLabel6.TabIndex = 7;
@@ -627,9 +623,9 @@
             // 
             // 
             this.mTxBLicense.CustomButton.Image = null;
-            this.mTxBLicense.CustomButton.Location = new System.Drawing.Point(313, 1);
+            this.mTxBLicense.CustomButton.Location = new System.Drawing.Point(277, 2);
             this.mTxBLicense.CustomButton.Name = "";
-            this.mTxBLicense.CustomButton.Size = new System.Drawing.Size(151, 151);
+            this.mTxBLicense.CustomButton.Size = new System.Drawing.Size(185, 185);
             this.mTxBLicense.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
             this.mTxBLicense.CustomButton.TabIndex = 1;
             this.mTxBLicense.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
@@ -637,7 +633,7 @@
             this.mTxBLicense.CustomButton.Visible = false;
             this.mTxBLicense.Lines = new string[] {
         "metroTextBox1"};
-            this.mTxBLicense.Location = new System.Drawing.Point(16, 96);
+            this.mTxBLicense.Location = new System.Drawing.Point(16, 59);
             this.mTxBLicense.MaxLength = 32767;
             this.mTxBLicense.Multiline = true;
             this.mTxBLicense.Name = "mTxBLicense";
@@ -648,55 +644,12 @@
             this.mTxBLicense.SelectionLength = 0;
             this.mTxBLicense.SelectionStart = 0;
             this.mTxBLicense.ShortcutsEnabled = true;
-            this.mTxBLicense.Size = new System.Drawing.Size(465, 153);
+            this.mTxBLicense.Size = new System.Drawing.Size(465, 190);
             this.mTxBLicense.TabIndex = 6;
             this.mTxBLicense.Text = "metroTextBox1";
             this.mTxBLicense.UseSelectable = true;
             this.mTxBLicense.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.mTxBLicense.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
-            // 
-            // mTxBGinService
-            // 
-            this.mTxBGinService.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            // 
-            // 
-            // 
-            this.mTxBGinService.CustomButton.Image = null;
-            this.mTxBGinService.CustomButton.Location = new System.Drawing.Point(325, 1);
-            this.mTxBGinService.CustomButton.Name = "";
-            this.mTxBGinService.CustomButton.Size = new System.Drawing.Size(21, 21);
-            this.mTxBGinService.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
-            this.mTxBGinService.CustomButton.TabIndex = 1;
-            this.mTxBGinService.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
-            this.mTxBGinService.CustomButton.UseSelectable = true;
-            this.mTxBGinService.CustomButton.Visible = false;
-            this.mTxBGinService.Lines = new string[] {
-        "metroTextBox1"};
-            this.mTxBGinService.Location = new System.Drawing.Point(133, 40);
-            this.mTxBGinService.MaxLength = 32767;
-            this.mTxBGinService.Name = "mTxBGinService";
-            this.mTxBGinService.PasswordChar = '\0';
-            this.mTxBGinService.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.mTxBGinService.SelectedText = "";
-            this.mTxBGinService.SelectionLength = 0;
-            this.mTxBGinService.SelectionStart = 0;
-            this.mTxBGinService.ShortcutsEnabled = true;
-            this.mTxBGinService.Size = new System.Drawing.Size(347, 23);
-            this.mTxBGinService.TabIndex = 5;
-            this.mTxBGinService.Text = "metroTextBox1";
-            this.mTxBGinService.UseSelectable = true;
-            this.mTxBGinService.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
-            this.mTxBGinService.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
-            // 
-            // metroLabel5
-            // 
-            this.metroLabel5.AutoSize = true;
-            this.metroLabel5.Location = new System.Drawing.Point(16, 40);
-            this.metroLabel5.Name = "metroLabel5";
-            this.metroLabel5.Size = new System.Drawing.Size(116, 19);
-            this.metroLabel5.TabIndex = 4;
-            this.metroLabel5.Text = "GinService Version";
             // 
             // mTxBGinCliVersion
             // 
@@ -838,8 +791,6 @@
         private MetroFramework.Controls.MetroPanel metroPanel3;
         private MetroFramework.Controls.MetroPanel metroPanel4;
         private MetroFramework.Controls.MetroTextBox mTxBLicense;
-        private MetroFramework.Controls.MetroTextBox mTxBGinService;
-        private MetroFramework.Controls.MetroLabel metroLabel5;
         private MetroFramework.Controls.MetroTextBox mTxBGinCliVersion;
         private MetroFramework.Controls.MetroLabel metroLabel4;
         private MetroFramework.Controls.MetroButton mBtnPickDefaultMountpointDir;
