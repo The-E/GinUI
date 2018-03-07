@@ -5,6 +5,8 @@ using System.Reflection;
 using System.ServiceModel;
 using System.ServiceProcess;
 using System.Threading;
+using System.Windows.Forms;
+using GinClientApp;
 using GinClientLibrary;
 
 namespace GinService
@@ -12,15 +14,18 @@ namespace GinService
     public class GinClientWindowsService
     {
         private static ServiceHost _serviceHost;
+        private static NotifyIcon _appIcon;
 
-        public GinClientWindowsService()
+        public GinClientWindowsService(NotifyIcon appIcon)
         {
+            _appIcon = appIcon;
         }
 
         public void Start()
         {
             //Make sure to clear up any remaining user tokens
             RepositoryManager.Instance.Logout();
+            RepositoryManager.Instance.AppIcon = _appIcon;
 
             _serviceHost?.Close();
 

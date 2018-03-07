@@ -14,26 +14,8 @@ namespace GinShellExtension
     [ComVisible(true)]
     [COMServerAssociation(AssociationType.AllFiles)]
     [COMServerAssociation(AssociationType.Directory)]
-    public class GinShellExtensionClass : SharpContextMenu, IGinServiceCallback
+    public class GinShellExtensionClass : SharpContextMenu
     {
-        //Implementing IGinServiceCallback here, but don't actually do anything with it.
-        public void FileOperationStarted(string filename, string repository)
-        {
-        }
-
-        public void FileOperationFinished(string filename, string repository, bool success)
-        {
-        }
-
-        public void FileOperationProgress(string filename, string repository, int progress, string speed, string state)
-        {
-        }
-
-        public void GinServiceError(string message)
-        {
-        }
-
-
         protected override bool CanShowMenu()
         {
             try

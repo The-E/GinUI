@@ -116,9 +116,9 @@ namespace InstallerLibrary
 
                 //Create shortcuts in the Startup and Start Menu folders
                 var wsh = new WshShell();
-                IWshRuntimeLibrary.IWshShortcut shortcut = wsh.CreateShortcut(
+                var shortcut = wsh.CreateShortcut(
                         Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup) + @"\GinClientApp.lnk") as
-                    IWshRuntimeLibrary.IWshShortcut;
+                    IWshShortcut;
                 shortcut.Arguments = "";
                 shortcut.TargetPath = path.FullName + @"\GinClientApp.exe";
                 shortcut.WindowStyle = 1;
@@ -127,7 +127,8 @@ namespace InstallerLibrary
                 shortcut.IconLocation = path.FullName + @"\gin_icon.ico";
                 shortcut.Save();
 
-                if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) + @"\G-Node\"))
+                if (!Directory.Exists(
+                    Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) + @"\G-Node\"))
                     Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) +
                                               @"\G-Node\");
 
@@ -135,7 +136,7 @@ namespace InstallerLibrary
                 shortcut = wsh.CreateShortcut(
                         Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) +
                         @"\G-Node\GinClientApp.lnk") as
-                    IWshRuntimeLibrary.IWshShortcut;
+                    IWshShortcut;
                 shortcut.Arguments = "";
                 shortcut.TargetPath = path.FullName + @"\GinClientApp.exe";
                 shortcut.WindowStyle = 1;
@@ -143,7 +144,8 @@ namespace InstallerLibrary
                 shortcut.WorkingDirectory = path.FullName;
                 shortcut.IconLocation = path.FullName + @"\gin_icon.ico";
                 shortcut.Save();
-        } catch (Exception exc)
+            }
+            catch (Exception exc)
             {
                 var fs = File.CreateText(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\exc.json");
                 fs.Write(JsonConvert.SerializeObject(exc));
@@ -181,12 +183,9 @@ namespace InstallerLibrary
         public override void Uninstall(IDictionary savedState)
         {
             base.Uninstall(savedState);
-
-
         }
-
     }
-    
+
     public static class DirectoryInfoExtension
     {
         public static void Empty(this DirectoryInfo directory)

@@ -92,8 +92,6 @@ namespace GinClientLibrary
             return result;
         }
 
-        private static readonly string logSource = "GIN Client Filter Driver Component";
-
         private void InitLogging()
         {
         }

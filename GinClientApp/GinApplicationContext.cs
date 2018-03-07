@@ -24,27 +24,27 @@ namespace GinClientApp
     ///     The main application context for the GINUI client.
     /// </summary>
     [CallbackBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant)]
-    public class GinApplicationContext : ApplicationContext, IGinServiceCallback
+    public class GinApplicationContext : ApplicationContext
     {
         private readonly NotifyIcon _trayIcon;
-        public GinServiceClient ServiceClient;
+        public IGinService ServiceClient;
         private Timer _updateIntervalTimer;
         private Thread _serviceThread;
 
         public GinApplicationContext()
         {
-            var service = new GinClientWindowsService();
-
-            _serviceThread = new Thread(service.Start);
-            _serviceThread.Start();
-
-            SystemEvents.SessionEnded += SystemEvents_SessionEnded;
-
             _trayIcon = new NotifyIcon
             {
                 Visible = true,
                 Icon = Resources.gin_icon_desaturated
             };
+
+            var service = new GinClientWindowsService(_trayIcon);
+
+            _serviceThread = new Thread(service.Start);
+            _serviceThread.Start();
+
+            SystemEvents.SessionEnded += SystemEvents_SessionEnded;
 
             var myBinding = new WSDualHttpBinding
             {
@@ -63,8 +63,9 @@ namespace GinClientApp
             var endpointIdentity = EndpointIdentity.CreateDnsIdentity("localhost");
             var myEndpoint = new EndpointAddress(new Uri("http://localhost:8733/GinService/"), endpointIdentity);
 
-            ServiceClient = new GinServiceClient(new InstanceContext(this), myBinding, myEndpoint);
-            ServiceClient.InnerChannel.Faulted += InnerChannelOnFaulted;
+            var myChannelFactory = new ChannelFactory<IGinService>(myBinding, myEndpoint);
+
+            ServiceClient = myChannelFactory.CreateChannel();
             var saveFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
                                 @"\g-node\GinWindowsClient";
             if (!Directory.Exists(saveFilePath))
@@ -175,63 +176,7 @@ namespace GinClientApp
 
             Exit(this, EventArgs.Empty);
         }
-
-        void IGinServiceCallback.FileOperationFinished(string filename, string repository, bool success)
-        {
-        }
-
-        void IGinServiceCallback.FileOperationStarted(string filename, string repository)
-        {
-            _trayIcon.BalloonTipTitle = Resources.GinApplicationContext_Repository_Activity;
-            _trayIcon.BalloonTipText =
-                string.Format(Resources.GinApplicationContext_FileOperation_Retrieving, Path.GetFileName(filename),
-                    repository);
-            _trayIcon.ShowBalloonTip(5000);
-        }
-
-        void IGinServiceCallback.FileOperationProgress(string filename, string repository, int progress,
-            string speed, string state)
-        {
-            Console.WriteLine("Filename: {0}, Repo: {1}, Progress: {2}, Speed: {3}, State: {4}", filename, repository,
-                progress, speed, state);
-        }
-
-        void IGinServiceCallback.GinServiceError(string message)
-        {
-            MessageBox.Show(message, Resources.GinApplicationContext_Gin_Service_Error, MessageBoxButtons.OK,
-                MessageBoxIcon.Error);
-            Exit(this, EventArgs.Empty);
-        }
-
-        private void InnerChannelOnFaulted(object sender1, EventArgs eventArgs)
-        {
-            ServiceClient.Abort();
-            ServiceClient = null;
-
-            var myBinding = new WSDualHttpBinding
-            {
-                ClientBaseAddress = new Uri(@"http://localhost:8738/GinService/GinUI/" + Environment.UserName),
-                MaxBufferPoolSize = int.MaxValue,
-                MaxReceivedMessageSize = int.MaxValue,
-                OpenTimeout = TimeSpan.FromMinutes(1.0),
-                CloseTimeout = TimeSpan.FromMinutes(1.0),
-                SendTimeout = TimeSpan.FromHours(1),
-                ReceiveTimeout = TimeSpan.FromHours(1),
-                ReaderQuotas = new XmlDictionaryReaderQuotas
-                {
-                    MaxArrayLength = int.MaxValue,
-                    MaxBytesPerRead = int.MaxValue,
-                    MaxDepth = int.MaxValue,
-                    MaxNameTableCharCount = int.MaxValue,
-                    MaxStringContentLength = int.MaxValue
-                }
-            };
-            var endpointIdentity = EndpointIdentity.CreateDnsIdentity("localhost");
-            var myEndpoint = new EndpointAddress(new Uri("http://localhost:8733/GinService/"), endpointIdentity);
-
-            ServiceClient = new GinServiceClient(new InstanceContext(this), myBinding, myEndpoint);
-        }
-
+        
         private MenuItem[] BuildContextMenu()
         {
             var menuitems = new List<MenuItem>();
@@ -358,9 +303,8 @@ namespace GinClientApp
             if (_trayIcon != null)
                 _trayIcon.Visible = false;
 
-            if (ServiceClient != null && ServiceClient.InnerChannel.State != CommunicationState.Faulted)
-                ServiceClient.EndSession();
-            
+            ServiceClient?.EndSession();
+
             _serviceThread.Abort();
             _serviceThread.Join();
             Environment.Exit(0);

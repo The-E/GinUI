@@ -12,7 +12,7 @@ namespace GinClientApp.GinService {
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="GinService.IGinService", CallbackContract=typeof(GinClientApp.GinService.IGinServiceCallback), SessionMode=System.ServiceModel.SessionMode.Required)]
+    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="GinService.IGinService", SessionMode=System.ServiceModel.SessionMode.Required)]
     public interface IGinService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/AddRepository", ReplyAction="http://tempuri.org/IGinService/AddRepositoryResponse")]
@@ -224,7 +224,7 @@ namespace GinClientApp.GinService {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class GinServiceClient : System.ServiceModel.DuplexClientBase<GinClientApp.GinService.IGinService>, GinClientApp.GinService.IGinService {
+    public partial class GinServiceClient : System.ServiceModel.ClientBase<GinClientApp.GinService.IGinService>, GinClientApp.GinService.IGinService {
         
         public GinServiceClient(System.ServiceModel.InstanceContext callbackInstance) : 
                 base(callbackInstance) {

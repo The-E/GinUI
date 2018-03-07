@@ -32,10 +32,10 @@ namespace GinClientApp.Dialogs
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DeleteDataDlg));
             this.label1 = new System.Windows.Forms.Label();
-            this.chB_keepUserConfig = new MetroCheckBox();
-            this.chB_keepLoginInfo = new MetroCheckBox();
-            this.chB_keepCheckouts = new MetroCheckBox();
-            this.button1 = new MetroButton();
+            this.chB_keepUserConfig = new MetroFramework.Controls.MetroCheckBox();
+            this.chB_keepLoginInfo = new MetroFramework.Controls.MetroCheckBox();
+            this.chB_keepCheckouts = new MetroFramework.Controls.MetroCheckBox();
+            this.button1 = new MetroFramework.Controls.MetroButton();
             this.SuspendLayout();
             // 
             // label1
@@ -51,9 +51,10 @@ namespace GinClientApp.Dialogs
             this.chB_keepUserConfig.AutoSize = true;
             this.chB_keepUserConfig.Location = new System.Drawing.Point(49, 63);
             this.chB_keepUserConfig.Name = "chB_keepUserConfig";
-            this.chB_keepUserConfig.Size = new System.Drawing.Size(113, 17);
+            this.chB_keepUserConfig.Size = new System.Drawing.Size(123, 15);
             this.chB_keepUserConfig.TabIndex = 1;
             this.chB_keepUserConfig.Text = "User Configuration";
+            this.chB_keepUserConfig.UseSelectable = true;
             this.chB_keepUserConfig.CheckedChanged += new System.EventHandler(this.chB_keepUserConfig_CheckedChanged);
             // 
             // chB_keepLoginInfo
@@ -61,9 +62,10 @@ namespace GinClientApp.Dialogs
             this.chB_keepLoginInfo.AutoSize = true;
             this.chB_keepLoginInfo.Location = new System.Drawing.Point(49, 86);
             this.chB_keepLoginInfo.Name = "chB_keepLoginInfo";
-            this.chB_keepLoginInfo.Size = new System.Drawing.Size(131, 17);
+            this.chB_keepLoginInfo.Size = new System.Drawing.Size(145, 15);
             this.chB_keepLoginInfo.TabIndex = 2;
             this.chB_keepLoginInfo.Text = "User Login information";
+            this.chB_keepLoginInfo.UseSelectable = true;
             this.chB_keepLoginInfo.CheckedChanged += new System.EventHandler(this.chB_keepLoginInfo_CheckedChanged);
             // 
             // chB_keepCheckouts
@@ -71,9 +73,10 @@ namespace GinClientApp.Dialogs
             this.chB_keepCheckouts.AutoSize = true;
             this.chB_keepCheckouts.Location = new System.Drawing.Point(49, 109);
             this.chB_keepCheckouts.Name = "chB_keepCheckouts";
-            this.chB_keepCheckouts.Size = new System.Drawing.Size(77, 17);
+            this.chB_keepCheckouts.Size = new System.Drawing.Size(79, 15);
             this.chB_keepCheckouts.TabIndex = 3;
             this.chB_keepCheckouts.Text = "Checkouts";
+            this.chB_keepCheckouts.UseSelectable = true;
             this.chB_keepCheckouts.CheckedChanged += new System.EventHandler(this.chB_keepCheckouts_CheckedChanged);
             // 
             // button1
@@ -84,6 +87,7 @@ namespace GinClientApp.Dialogs
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 4;
             this.button1.Text = "Ok";
+            this.button1.UseSelectable = true;
             // 
             // DeleteDataDlg
             // 
@@ -98,6 +102,7 @@ namespace GinClientApp.Dialogs
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "DeleteDataDlg";
             this.Text = "Please mark any data you wish to keep:";
+            this.TopMost = true;
             this.Load += new System.EventHandler(this.DeleteDataDlg_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

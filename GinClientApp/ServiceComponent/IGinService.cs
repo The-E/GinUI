@@ -6,7 +6,7 @@ using GinClientLibrary;
 
 namespace GinService
 {
-    [ServiceContract(CallbackContract = typeof(IGinClientCallback), SessionMode = SessionMode.Required)]
+    [ServiceContract(SessionMode = SessionMode.Required)]
     public interface IGinService
     {
         /// <summary>
@@ -246,44 +246,5 @@ namespace GinService
         /// <returns>true if it is, wcf error otherwise</returns>
         [OperationContract]
         bool IsAlive();
-    }
-
-    [SuppressMessage("ReSharper", "OperationContractWithoutServiceContract")]
-    public interface IGinClientCallback
-    {
-        /// <summary>
-        ///     Called when a file operation (i.e. download, upload or checkout) is started.
-        /// </summary>
-        /// <param name="filename"></param>
-        /// <param name="repository"></param>
-        [OperationContract(IsOneWay = true)]
-        void FileOperationStarted(string filename, string repository);
-
-        /// <summary>
-        ///     Called when a file operation (i.e. download, upload or checkout) is finished.
-        /// </summary>
-        /// <param name="filename"></param>
-        /// <param name="repository"></param>
-        /// <param name="success"></param>
-        [OperationContract(IsOneWay = true)]
-        void FileOperationFinished(string filename, string repository, bool success);
-
-        /// <summary>
-        ///     Called when a file operation (i.e. download, upload or checkout) progresses.
-        /// </summary>
-        /// <param name="filename"></param>
-        /// <param name="repository"></param>
-        /// <param name="progress"></param>
-        /// <param name="speed"></param>
-        /// <param name="state"></param>
-        [OperationContract(IsOneWay = true)]
-        void FileOperationProgress(string filename, string repository, int progress, string speed, string state);
-
-        /// <summary>
-        ///     Called when the Gin Client service experiences an internal error.
-        /// </summary>
-        /// <param name="message"></param>
-        [OperationContract(IsOneWay = true)]
-        void GinServiceError(string message);
     }
 }
