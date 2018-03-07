@@ -31,7 +31,7 @@ namespace GinShellExtension
             var endpointIdentity = EndpointIdentity.CreateDnsIdentity("localhost");
             var myEndpoint = new EndpointAddress(new Uri("http://localhost:8733/GinService/"), endpointIdentity);
 
-            var myChannelFactory = new DuplexChannelFactory<IGinService>(iContext, myBinding, myEndpoint);
+            var myChannelFactory = new ChannelFactory<IGinService>(myBinding, myEndpoint);
 
             var client = myChannelFactory.CreateChannel();
             return client;

@@ -15,23 +15,10 @@ using GinRepositoryData = GinClientLibrary.GinRepositoryData;
 namespace GinShellExtension
 {
     [ComVisible(true)]
-    public class IconOverlay : SharpIconOverlayHandler, IGinServiceCallback
+    public class IconOverlay : SharpIconOverlayHandler
     {
-        private static string _path;
-        private Dictionary<string, GinRepository.FileStatus> _fstatus;
-
-        //Implementing IGinServiceCallback here, but don't actually do anything with it.
-        public void FileOperationStarted(string filename, string repository)
-        {
-        }
-
-        public void FileOperationFinished(string filename, string repository, bool success)
-        {
-        }
-
-        public void FileOperationProgress(string filename, string repository, int progress, string speed, string state)
-        {
-        }
+        //private static string _path;
+        //private Dictionary<string, GinRepository.FileStatus> _fstatus;
 
         public void GinServiceError(string message)
         {
@@ -47,41 +34,41 @@ namespace GinShellExtension
 
             return false; //Disable this for now!
 
-            _path = path;
+            //_path = path;
 
-            var client = ServiceClient.CreateServiceClient(this, 8743);
+            //var client = ServiceClient.CreateServiceClient(this, 8743);
 
-            try
-            {
-                var repos = JsonConvert.DeserializeObject<GinRepositoryData[]>(client.GetRepositoryList());
-                var result = false;
+            //try
+            //{
+            //    var repos = JsonConvert.DeserializeObject<GinRepositoryData[]>(client.GetRepositoryList());
+            //    var result = false;
 
-                foreach (var repo in repos)
-                {
-                    if (!path.Contains(repo.Mountpoint.FullName)) continue;
-                    result = true;
-                    _fstatus = JsonConvert.DeserializeObject<
-                        Dictionary<string, GinRepository.FileStatus>>(client.GetRepositoryFileInfo(repo.Name));
-                    break;
-                }
+            //    foreach (var repo in repos)
+            //    {
+            //        if (!path.Contains(repo.Mountpoint.FullName)) continue;
+            //        result = true;
+            //        _fstatus = JsonConvert.DeserializeObject<
+            //            Dictionary<string, GinRepository.FileStatus>>(client.GetRepositoryFileInfo(repo.Name));
+            //        break;
+            //    }
 
-                client.EndSession();
-                ((ICommunicationObject) client).Close();
+            //    client.EndSession();
+            //    ((ICommunicationObject) client).Close();
 
-                return result;
-            }
-            catch
-            {
-                ((ICommunicationObject) client).Abort();
-                return false;
-            }
+            //    return result;
+            //}
+            //catch
+            //{
+            //    ((ICommunicationObject) client).Abort();
+            //    return false;
+            //}
         }
 
         protected override Icon GetOverlayIcon()
         {
-            if (_fstatus.ContainsKey(_path) && (_fstatus[_path] == GinRepository.FileStatus.OnDisk ||
-                                                _fstatus[_path] == GinRepository.FileStatus.OnDiskModified))
-                return Resources.gin_icon;
+            //if (_fstatus.ContainsKey(_path) && (_fstatus[_path] == GinRepository.FileStatus.OnDisk ||
+            //                                    _fstatus[_path] == GinRepository.FileStatus.OnDiskModified))
+            //    return Resources.gin_icon;
             return Resources.gin_icon_desaturated;
         }
     }

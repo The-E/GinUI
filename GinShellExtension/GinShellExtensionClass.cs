@@ -14,26 +14,8 @@ namespace GinShellExtension
     [ComVisible(true)]
     [COMServerAssociation(AssociationType.AllFiles)]
     [COMServerAssociation(AssociationType.Directory)]
-    public class GinShellExtensionClass : SharpContextMenu, IGinServiceCallback
+    public class GinShellExtensionClass : SharpContextMenu
     {
-        //Implementing IGinServiceCallback here, but don't actually do anything with it.
-        public void FileOperationStarted(string filename, string repository)
-        {
-        }
-
-        public void FileOperationFinished(string filename, string repository, bool success)
-        {
-        }
-
-        public void FileOperationProgress(string filename, string repository, int progress, string speed, string state)
-        {
-        }
-
-        public void GinServiceError(string message)
-        {
-        }
-
-
         protected override bool CanShowMenu()
         {
             try
@@ -102,35 +84,35 @@ namespace GinShellExtension
             return mItems.ToArray();
         }
 
-        private async void RepoUpdate(object sender, EventArgs eventArgs)
+        private void RepoUpdate(object sender, EventArgs eventArgs)
         {
             var client = ServiceClient.CreateServiceClient(this, 8741);
 
-            await client.UpdateRepositoriesAsync(SelectedItemPaths.ToArray());
+            client.UpdateRepositories(SelectedItemPaths.ToArray());
             ((ICommunicationObject) client).Close();
         }
 
-        private async void RepoUpload(object sender, EventArgs eventArgs)
+        private void RepoUpload(object sender, EventArgs eventArgs)
         {
             var client = ServiceClient.CreateServiceClient(this, 8741);
 
-            await client.UploadRepositoriesAsync(SelectedItemPaths.ToArray());
+            client.UploadRepositories(SelectedItemPaths.ToArray());
             ((ICommunicationObject) client).Close();
         }
 
-        private async void FileDownload(object sender, EventArgs eventArgs)
+        private void FileDownload(object sender, EventArgs eventArgs)
         {
             var client = ServiceClient.CreateServiceClient(this, 8741);
 
-            await client.DownloadFilesAsync(SelectedItemPaths.ToArray());
+            client.DownloadFiles(SelectedItemPaths.ToArray());
             ((ICommunicationObject) client).Close();
         }
 
-        private async void FileRemove(object sender, EventArgs eventArgs)
+        private void FileRemove(object sender, EventArgs eventArgs)
         {
             var client = ServiceClient.CreateServiceClient(this, 8741);
 
-            await client.RemoveLocalContentAsync(SelectedItemPaths.ToArray());
+            client.RemoveLocalContent(SelectedItemPaths.ToArray());
             ((ICommunicationObject)client).Close();
         }
     }

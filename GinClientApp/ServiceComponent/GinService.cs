@@ -17,53 +17,6 @@ namespace GinService
     {
         public GinService()
         {
-            var callback = OperationContext.Current.GetCallbackChannel<IGinClientCallback>();
-
-            RepositoryManager.Instance.FileRetrievalStarted +=
-                (sender, repo, file) =>
-                {
-                    try
-                    {
-                        callback.FileOperationStarted(file, repo.Name);
-                    }
-                    catch
-                    {
-                    }
-                };
-            RepositoryManager.Instance.FileRetrievalCompleted +=
-                (sender, repo, file, success) =>
-                {
-                    try
-                    {
-                        callback.FileOperationFinished(file, repo.Name, success);
-                    }
-                    catch
-                    {
-                    }
-                };
-            RepositoryManager.Instance.FileOperationProgress +=
-                (filename, repo, progress, speed, state) =>
-                {
-                    try
-                    {
-                        callback.FileOperationProgress(filename, repo.Name, progress, speed, state);
-                    }
-                    catch
-                    {
-                    }
-                };
-            RepositoryManager.Instance.RepositoryOperationError += (sender, message) =>
-            {
-                try
-                {
-                    callback.GinServiceError("Error while performing GIN action on Repository " +
-                                             message.RepositoryName +
-                                             ": " + message.Message);
-                }
-                catch
-                {
-                }
-            };
         }
 
 
@@ -120,25 +73,18 @@ namespace GinService
             RepositoryManager.Instance.Logout();
         }
 
-        bool IGinService.RetrieveFile(string repoName, string filepath)
+        void IGinService.RetrieveFile(string repoName, string filepath)
         {
             var repo = RepositoryManager.Instance.GetRepoByName(repoName);
 
-            return repo.RetrieveFile(filepath);
+            repo.RetrieveFile(filepath);
         }
 
-        bool IGinService.StashFile(string repoName, string filepath)
+        void IGinService.UploadFile(string repoName, string filepath)
         {
             var repo = RepositoryManager.Instance.GetRepoByName(repoName);
 
-            return repo.RemoveFile(filepath);
-        }
-
-        bool IGinService.UploadFile(string repoName, string filepath)
-        {
-            var repo = RepositoryManager.Instance.GetRepoByName(repoName);
-
-            return repo.UploadFile(filepath);
+            repo.UploadFile(filepath);
         }
 
         bool IGinService.UnmmountAllRepositories()

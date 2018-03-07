@@ -6,7 +6,7 @@ using GinClientLibrary;
 
 namespace GinService
 {
-    [ServiceContract(CallbackContract = typeof(IGinClientCallback), SessionMode = SessionMode.Required)]
+    [ServiceContract(SessionMode = SessionMode.Required)]
     public interface IGinService
     {
         /// <summary>
@@ -108,8 +108,8 @@ namespace GinService
         /// <param name="repoName">The repository in which the file resides</param>
         /// <param name="filepath">The path to the file</param>
         /// <returns></returns>
-        [OperationContract]
-        bool RetrieveFile(string repoName, string filepath);
+        [OperationContract(IsOneWay = true)]
+        void RetrieveFile(string repoName, string filepath);
 
         /// <summary>
         ///     Upload a file to the remote GIN repository
@@ -118,16 +118,7 @@ namespace GinService
         /// <param name="filepath">Path to the file</param>
         /// <returns></returns>
         [OperationContract]
-        bool UploadFile(string repoName, string filepath);
-
-        /// <summary>
-        ///     Removes all local content of a file. Equivalent to gin remove-content.
-        /// </summary>
-        /// <param name="repoName">Name of the repository</param>
-        /// <param name="filepath">Path to the file</param>
-        /// <returns></returns>
-        [OperationContract]
-        bool StashFile(string repoName, string filepath);
+        void UploadFile(string repoName, string filepath);
 
         /// <summary>
         ///     Updates the repository to the current version on the remote server.
@@ -187,28 +178,28 @@ namespace GinService
         ///     Performs a gin download on all specified repositories
         /// </summary>
         /// <param name="filePaths"></param>
-        [OperationContract]
+        [OperationContract(IsOneWay = true)]
         void UpdateRepositories(IEnumerable<string> filePaths);
 
         /// <summary>
         ///     Upload all non-synced files in the specified Repos
         /// </summary>
         /// <param name="filePaths"></param>
-        [OperationContract]
+        [OperationContract(IsOneWay = true)]
         void UploadRepositories(IEnumerable<string> filePaths);
 
         /// <summary>
         ///     Retrieves the specified files from their repositories
         /// </summary>
         /// <param name="filePaths"></param>
-        [OperationContract]
+        [OperationContract(IsOneWay = true)]
         void DownloadFiles(IEnumerable<string> filePaths);
 
         /// <summary>
         ///     Remove all local content of the files indicated
         /// </summary>
         /// <param name="filePaths"></param>
-        [OperationContract]
+        [OperationContract(IsOneWay = true)]
         void RemoveLocalContent(IEnumerable<string> filePaths);
 
         /// <summary>
@@ -246,44 +237,5 @@ namespace GinService
         /// <returns>true if it is, wcf error otherwise</returns>
         [OperationContract]
         bool IsAlive();
-    }
-
-    [SuppressMessage("ReSharper", "OperationContractWithoutServiceContract")]
-    public interface IGinClientCallback
-    {
-        /// <summary>
-        ///     Called when a file operation (i.e. download, upload or checkout) is started.
-        /// </summary>
-        /// <param name="filename"></param>
-        /// <param name="repository"></param>
-        [OperationContract(IsOneWay = true)]
-        void FileOperationStarted(string filename, string repository);
-
-        /// <summary>
-        ///     Called when a file operation (i.e. download, upload or checkout) is finished.
-        /// </summary>
-        /// <param name="filename"></param>
-        /// <param name="repository"></param>
-        /// <param name="success"></param>
-        [OperationContract(IsOneWay = true)]
-        void FileOperationFinished(string filename, string repository, bool success);
-
-        /// <summary>
-        ///     Called when a file operation (i.e. download, upload or checkout) progresses.
-        /// </summary>
-        /// <param name="filename"></param>
-        /// <param name="repository"></param>
-        /// <param name="progress"></param>
-        /// <param name="speed"></param>
-        /// <param name="state"></param>
-        [OperationContract(IsOneWay = true)]
-        void FileOperationProgress(string filename, string repository, int progress, string speed, string state);
-
-        /// <summary>
-        ///     Called when the Gin Client service experiences an internal error.
-        /// </summary>
-        /// <param name="message"></param>
-        [OperationContract(IsOneWay = true)]
-        void GinServiceError(string message);
     }
 }

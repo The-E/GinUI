@@ -5,8 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Windows.Forms;
 using DokanNet;
 using GinClientLibrary.Extensions;
+using MetroFramework;
 using Newtonsoft.Json;
 using static System.String;
 
@@ -17,6 +19,8 @@ namespace GinClientLibrary
     /// </summary>
     public class RepositoryManager
     {
+        public NotifyIcon AppIcon;
+
         public delegate void FileOperationProgressHandler(string filename, GinRepositoryData repository, int progress,
             string speed, string state);
 
@@ -267,6 +271,7 @@ namespace GinClientLibrary
         {
             Dokan.RemoveMountPoint(repo.Mountpoint.FullName.Trim('\\'));
             repo.Mounted = false;
+            Directory.Delete(repo.Mountpoint.FullName);
         }
 
         public void DeleteRepository(GinRepository repo)
@@ -332,17 +337,18 @@ namespace GinClientLibrary
                 var progress = JsonConvert.DeserializeObject<fileOpProgress>(message);
                 FileOperationProgress?.Invoke(progress.filename, (GinRepository) sender, progress.GetProgress(),
                     progress.rate, progress.state);
+                
+                AppIcon.BalloonTipText = progress.state + " " + progress.filename + " at " + progress.rate + ", " + progress.progress + " completed";
+                AppIcon.Text = progress.state + ", " + progress.progress + " completed";
             }
             catch 
             {
             }
         }
-
-        public event FileRetrievalStartedHandler FileRetrievalStarted;
-
+        
         private void OnFileRetrievalStarted(DokanInterface.FileOperationEventArgs e, GinRepository sender)
         {
-            FileRetrievalStarted?.Invoke(this, sender, e.File);
+            AppIcon.ShowBalloonTip(2500, "GIN activity in progress", "Repository " + sender.Name + " operating on " + e.File, ToolTipIcon.Info);
         }
 
         public event FileRetrievalCompletedHandler FileRetrievalCompleted;
@@ -350,6 +356,13 @@ namespace GinClientLibrary
         private void OnFileRetrievalCompleted(DokanInterface.FileOperationEventArgs e, GinRepository sender)
         {
             FileRetrievalCompleted?.Invoke(this, sender, e.File, e.Success);
+            try
+            {
+                AppIcon.Text = "";
+            }
+            catch
+            {
+            }
         }
 
         private void Repo_FileOperationCompleted(object sender, DokanInterface.FileOperationEventArgs e)
@@ -361,13 +374,12 @@ namespace GinClientLibrary
         {
             OnFileRetrievalStarted(e, (GinRepository) sender);
         }
-
-        public event RepositoryOperationErrorHandler RepositoryOperationError;
-
+        
         private void OnRepositoryOperationError(GinRepository sender,
             GinRepository.FileOperationErrorEventArgs message)
         {
-            RepositoryOperationError?.Invoke(sender, message);
+            MessageBox.Show("Gin Error! Error message is: " + message.Message, "GIN Service Error",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         public string GetRemoteRepoList()

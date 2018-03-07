@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Windows.Forms;
+using GinService;
 
 namespace GinClientApp
 {
@@ -14,10 +15,13 @@ namespace GinClientApp
         [STAThread]
         private static void Main(string[] args)
         {
-            if (args.Length > 0 && args[0] == "-uninstall")
+            if (args.Length > 0)
             {
-                Installer.DoUninstall();
-                return;
+                if ( args[0] == "-uninstall")
+                {
+                    Installer.DoUninstall();
+                    return;
+                }
             }
             if (!Mutex.WaitOne(TimeSpan.Zero, true)) return;
 
