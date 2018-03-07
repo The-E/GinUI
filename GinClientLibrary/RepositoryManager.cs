@@ -8,6 +8,7 @@ using System.Threading;
 using System.Windows.Forms;
 using DokanNet;
 using GinClientLibrary.Extensions;
+using MetroFramework;
 using Newtonsoft.Json;
 using static System.String;
 
@@ -380,7 +381,8 @@ namespace GinClientLibrary
         private void OnRepositoryOperationError(GinRepository sender,
             GinRepository.FileOperationErrorEventArgs message)
         {
-            RepositoryOperationError?.Invoke(sender, message);
+            MetroMessageBox.Show(null, "Gin Error! Error message is: " + message, "GIN Service Error",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         public string GetRemoteRepoList()

@@ -73,25 +73,18 @@ namespace GinService
             RepositoryManager.Instance.Logout();
         }
 
-        bool IGinService.RetrieveFile(string repoName, string filepath)
+        void IGinService.RetrieveFile(string repoName, string filepath)
         {
             var repo = RepositoryManager.Instance.GetRepoByName(repoName);
 
-            return repo.RetrieveFile(filepath);
+            repo.RetrieveFile(filepath);
         }
 
-        bool IGinService.StashFile(string repoName, string filepath)
+        void IGinService.UploadFile(string repoName, string filepath)
         {
             var repo = RepositoryManager.Instance.GetRepoByName(repoName);
 
-            return repo.RemoveFile(filepath);
-        }
-
-        bool IGinService.UploadFile(string repoName, string filepath)
-        {
-            var repo = RepositoryManager.Instance.GetRepoByName(repoName);
-
-            return repo.UploadFile(filepath);
+            repo.UploadFile(filepath);
         }
 
         bool IGinService.UnmmountAllRepositories()

@@ -87,23 +87,17 @@ namespace GinClientApp.GinService {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UpdateRepository", ReplyAction="http://tempuri.org/IGinService/UpdateRepositoryResponse")]
         System.Threading.Tasks.Task<bool> UpdateRepositoryAsync(string repoName, GinClientLibrary.GinRepositoryData data);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/RetrieveFile", ReplyAction="http://tempuri.org/IGinService/RetrieveFileResponse")]
-        bool RetrieveFile(string repoName, string filepath);
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IGinService/RetrieveFile")]
+        void RetrieveFile(string repoName, string filepath);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/RetrieveFile", ReplyAction="http://tempuri.org/IGinService/RetrieveFileResponse")]
-        System.Threading.Tasks.Task<bool> RetrieveFileAsync(string repoName, string filepath);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UploadFile", ReplyAction="http://tempuri.org/IGinService/UploadFileResponse")]
-        bool UploadFile(string repoName, string filepath);
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IGinService/RetrieveFile")]
+        System.Threading.Tasks.Task RetrieveFileAsync(string repoName, string filepath);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UploadFile", ReplyAction="http://tempuri.org/IGinService/UploadFileResponse")]
-        System.Threading.Tasks.Task<bool> UploadFileAsync(string repoName, string filepath);
+        void UploadFile(string repoName, string filepath);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/StashFile", ReplyAction="http://tempuri.org/IGinService/StashFileResponse")]
-        bool StashFile(string repoName, string filepath);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/StashFile", ReplyAction="http://tempuri.org/IGinService/StashFileResponse")]
-        System.Threading.Tasks.Task<bool> StashFileAsync(string repoName, string filepath);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UploadFile", ReplyAction="http://tempuri.org/IGinService/UploadFileResponse")]
+        System.Threading.Tasks.Task UploadFileAsync(string repoName, string filepath);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/DownloadUpdateInfo", ReplyAction="http://tempuri.org/IGinService/DownloadUpdateInfoResponse")]
         void DownloadUpdateInfo(string repoName);
@@ -147,28 +141,28 @@ namespace GinClientApp.GinService {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/IsBasePath", ReplyAction="http://tempuri.org/IGinService/IsBasePathResponse")]
         System.Threading.Tasks.Task<bool> IsBasePathAsync(string filePath);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UpdateRepositories", ReplyAction="http://tempuri.org/IGinService/UpdateRepositoriesResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IGinService/UpdateRepositories")]
         void UpdateRepositories(string[] filePaths);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UpdateRepositories", ReplyAction="http://tempuri.org/IGinService/UpdateRepositoriesResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IGinService/UpdateRepositories")]
         System.Threading.Tasks.Task UpdateRepositoriesAsync(string[] filePaths);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UploadRepositories", ReplyAction="http://tempuri.org/IGinService/UploadRepositoriesResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IGinService/UploadRepositories")]
         void UploadRepositories(string[] filePaths);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/UploadRepositories", ReplyAction="http://tempuri.org/IGinService/UploadRepositoriesResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IGinService/UploadRepositories")]
         System.Threading.Tasks.Task UploadRepositoriesAsync(string[] filePaths);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/DownloadFiles", ReplyAction="http://tempuri.org/IGinService/DownloadFilesResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IGinService/DownloadFiles")]
         void DownloadFiles(string[] filePaths);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/DownloadFiles", ReplyAction="http://tempuri.org/IGinService/DownloadFilesResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IGinService/DownloadFiles")]
         System.Threading.Tasks.Task DownloadFilesAsync(string[] filePaths);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/RemoveLocalContent", ReplyAction="http://tempuri.org/IGinService/RemoveLocalContentResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IGinService/RemoveLocalContent")]
         void RemoveLocalContent(string[] filePaths);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/RemoveLocalContent", ReplyAction="http://tempuri.org/IGinService/RemoveLocalContentResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IGinService/RemoveLocalContent")]
         System.Threading.Tasks.Task RemoveLocalContentAsync(string[] filePaths);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IGinService/GetGinCliVersion", ReplyAction="http://tempuri.org/IGinService/GetGinCliVersionResponse")]
@@ -325,28 +319,20 @@ namespace GinClientApp.GinService {
             return base.Channel.UpdateRepositoryAsync(repoName, data);
         }
         
-        public bool RetrieveFile(string repoName, string filepath) {
-            return base.Channel.RetrieveFile(repoName, filepath);
+        public void RetrieveFile(string repoName, string filepath) {
+            base.Channel.RetrieveFile(repoName, filepath);
         }
         
-        public System.Threading.Tasks.Task<bool> RetrieveFileAsync(string repoName, string filepath) {
+        public System.Threading.Tasks.Task RetrieveFileAsync(string repoName, string filepath) {
             return base.Channel.RetrieveFileAsync(repoName, filepath);
         }
         
-        public bool UploadFile(string repoName, string filepath) {
-            return base.Channel.UploadFile(repoName, filepath);
+        public void UploadFile(string repoName, string filepath) {
+            base.Channel.UploadFile(repoName, filepath);
         }
         
-        public System.Threading.Tasks.Task<bool> UploadFileAsync(string repoName, string filepath) {
+        public System.Threading.Tasks.Task UploadFileAsync(string repoName, string filepath) {
             return base.Channel.UploadFileAsync(repoName, filepath);
-        }
-        
-        public bool StashFile(string repoName, string filepath) {
-            return base.Channel.StashFile(repoName, filepath);
-        }
-        
-        public System.Threading.Tasks.Task<bool> StashFileAsync(string repoName, string filepath) {
-            return base.Channel.StashFileAsync(repoName, filepath);
         }
         
         public void DownloadUpdateInfo(string repoName) {
