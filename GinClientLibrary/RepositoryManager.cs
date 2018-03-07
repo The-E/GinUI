@@ -329,8 +329,6 @@ namespace GinClientLibrary
 
         public event FileOperationProgressHandler FileOperationProgress;
 
-        delegate void UpdateAppIconTextDelegate(string state, string filename);
-
         private void Repo_FileOperationProgress(object sender, string message)
         {
             try
@@ -340,7 +338,7 @@ namespace GinClientLibrary
                     progress.rate, progress.state);
                 
                 AppIcon.BalloonTipText = progress.state + " " + progress.filename + " at " + progress.rate + ", " + progress.progress + " completed";
-                AppIcon.Text = progress.state + " " + progress.filename + " at " + progress.rate + ", " + progress.progress + " completed";
+                AppIcon.Text = progress.state + ", " + progress.progress + " completed";
             }
             catch 
             {
