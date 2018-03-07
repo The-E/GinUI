@@ -84,35 +84,35 @@ namespace GinShellExtension
             return mItems.ToArray();
         }
 
-        private async void RepoUpdate(object sender, EventArgs eventArgs)
+        private void RepoUpdate(object sender, EventArgs eventArgs)
         {
             var client = ServiceClient.CreateServiceClient(this, 8741);
 
-            await client.UpdateRepositoriesAsync(SelectedItemPaths.ToArray());
+            client.UpdateRepositories(SelectedItemPaths.ToArray());
             ((ICommunicationObject) client).Close();
         }
 
-        private async void RepoUpload(object sender, EventArgs eventArgs)
+        private void RepoUpload(object sender, EventArgs eventArgs)
         {
             var client = ServiceClient.CreateServiceClient(this, 8741);
 
-            await client.UploadRepositoriesAsync(SelectedItemPaths.ToArray());
+            client.UploadRepositories(SelectedItemPaths.ToArray());
             ((ICommunicationObject) client).Close();
         }
 
-        private async void FileDownload(object sender, EventArgs eventArgs)
+        private void FileDownload(object sender, EventArgs eventArgs)
         {
             var client = ServiceClient.CreateServiceClient(this, 8741);
 
-            await client.DownloadFilesAsync(SelectedItemPaths.ToArray());
+            client.DownloadFiles(SelectedItemPaths.ToArray());
             ((ICommunicationObject) client).Close();
         }
 
-        private async void FileRemove(object sender, EventArgs eventArgs)
+        private void FileRemove(object sender, EventArgs eventArgs)
         {
             var client = ServiceClient.CreateServiceClient(this, 8741);
 
-            await client.RemoveLocalContentAsync(SelectedItemPaths.ToArray());
+            client.RemoveLocalContent(SelectedItemPaths.ToArray());
             ((ICommunicationObject)client).Close();
         }
     }
