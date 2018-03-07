@@ -271,6 +271,7 @@ namespace GinClientLibrary
         {
             Dokan.RemoveMountPoint(repo.Mountpoint.FullName.Trim('\\'));
             repo.Mounted = false;
+            Directory.Delete(repo.Mountpoint.FullName);
         }
 
         public void DeleteRepository(GinRepository repo)
@@ -373,9 +374,7 @@ namespace GinClientLibrary
         {
             OnFileRetrievalStarted(e, (GinRepository) sender);
         }
-
-        public event RepositoryOperationErrorHandler RepositoryOperationError;
-
+        
         private void OnRepositoryOperationError(GinRepository sender,
             GinRepository.FileOperationErrorEventArgs message)
         {
