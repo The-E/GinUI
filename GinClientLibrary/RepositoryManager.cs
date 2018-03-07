@@ -379,7 +379,7 @@ namespace GinClientLibrary
         private void OnRepositoryOperationError(GinRepository sender,
             GinRepository.FileOperationErrorEventArgs message)
         {
-            MessageBox.Show("Gin Error! Error message is: " + message, "GIN Service Error",
+            MessageBox.Show("Gin Error! Error message is: " + message.Message, "GIN Service Error",
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
