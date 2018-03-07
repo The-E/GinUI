@@ -338,8 +338,8 @@ namespace GinClientLibrary
                 FileOperationProgress?.Invoke(progress.filename, (GinRepository) sender, progress.GetProgress(),
                     progress.rate, progress.state);
                 
-                AppIcon.BalloonTipText = progress.state + " " + progress.filename;
-                AppIcon.Text = progress.state + " " + progress.filename;
+                AppIcon.BalloonTipText = progress.state + " " + progress.filename + " at " + progress.rate + ", " + progress.progress + " completed";
+                AppIcon.Text = progress.state + " " + progress.filename + " at " + progress.rate + ", " + progress.progress + " completed";
             }
             catch 
             {
