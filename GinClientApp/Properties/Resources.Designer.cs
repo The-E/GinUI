@@ -253,7 +253,7 @@ namespace GinClientApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Upload local files.
+        ///   Looks up a localized string similar to Upload changes.
         /// </summary>
         internal static string GinApplicationContext_Upload {
             get {

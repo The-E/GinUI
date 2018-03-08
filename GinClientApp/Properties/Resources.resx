@@ -151,7 +151,7 @@
     <value>Gin Service Error</value>
   </data>
   <data name="GinApplicationContext_Upload" xml:space="preserve">
-    <value>Upload local files</value>
+    <value>Upload changes</value>
   </data>
   <data name="GetUserCredentials_Login_Unsuccessful" xml:space="preserve">
     <value>Login unsuccessful. Username or password are incorrect</value>
