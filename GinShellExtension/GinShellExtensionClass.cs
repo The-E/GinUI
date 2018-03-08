@@ -129,8 +129,14 @@ namespace GinShellExtension
 
         private void FileUpload(object sender, EventArgs e)
         {
+            if (_client == null)
+                _client = ServiceClient.CreateServiceClient(this, 8741);
+
             foreach (var file in SelectedItemPaths)
                 _client.UploadFile("%EMPTYSTRING%", file);
+
+            ((ICommunicationObject)_client).Close();
+            _client = null;
         }
 
         private ToolStripItem[] GetBaseDirectoryMenu()
@@ -146,22 +152,46 @@ namespace GinShellExtension
 
         private void RepoUpdate(object sender, EventArgs eventArgs)
         {
+            if (_client == null)
+                _client = ServiceClient.CreateServiceClient(this, 8741);
+
             _client.UpdateRepositories(SelectedItemPaths.ToArray());
+
+            ((ICommunicationObject)_client).Close();
+            _client = null;
         }
 
         private void RepoUpload(object sender, EventArgs eventArgs)
         {
+            if (_client == null)
+                _client = ServiceClient.CreateServiceClient(this, 8741);
+
             _client.UploadRepositories(SelectedItemPaths.ToArray());
+
+            ((ICommunicationObject)_client).Close();
+            _client = null;
         }
 
         private void FileDownload(object sender, EventArgs eventArgs)
         {
+            if (_client == null)
+                _client = ServiceClient.CreateServiceClient(this, 8741);
+
             _client.DownloadFiles(SelectedItemPaths.ToArray());
+
+            ((ICommunicationObject)_client).Close();
+            _client = null;
         }
 
         private void FileRemove(object sender, EventArgs eventArgs)
         {
+            if (_client == null)
+                _client = ServiceClient.CreateServiceClient(this, 8741);
+
             _client.RemoveLocalContent(SelectedItemPaths.ToArray());
+
+            ((ICommunicationObject)_client).Close();
+            _client = null;
         }
     }
 }
