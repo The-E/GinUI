@@ -228,7 +228,7 @@ namespace GinClientLibrary
 
             lock (this)
             {
-                OnFileOperationStarted(new FileOperationEventArgs {File = filePath});
+                OnFileOperationStarted(new FileOperationEventArgs {File = filename});
                 GetCommandLineOutputEvent("cmd.exe", "/C gin.exe upload --json " + filename, directoryName,
                     out var error);
 
