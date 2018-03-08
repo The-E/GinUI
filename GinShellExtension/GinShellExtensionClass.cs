@@ -21,17 +21,17 @@ namespace GinShellExtension
     {
 
         private Dictionary<string, GinRepository.FileStatus> _fileStatus = new Dictionary<string, FileStatus>();
+        private IGinService _client = null;
 
         protected override bool CanShowMenu()
         {
             try
             {
-                var client = ServiceClient.CreateServiceClient(this, 8741);
-                if (!client.IsAlive())
+                _client = ServiceClient.CreateServiceClient(this, 8741);
+                if (!_client.IsAlive())
                     return false;
 
-                var result = client.IsManagedPath(SelectedItemPaths.First());
-                ((ICommunicationObject) client).Close();
+                var result = _client.IsManagedPath(SelectedItemPaths.First());
 
                 return result;
             }
@@ -47,12 +47,13 @@ namespace GinShellExtension
 
             var baseItem = new ToolStripMenuItem("Gin Repository");
 
-            var client = ServiceClient.CreateServiceClient(this, 8741);
+            if (_client == null)
+                _client = ServiceClient.CreateServiceClient(this, 8741);
             _fileStatus.Clear();
 
             foreach (var file in SelectedItemPaths)
             {
-                var fstatusstr = client.GetFileInfo(file);
+                var fstatusstr = _client.GetFileInfo(file);
                 if (Enum.TryParse(fstatusstr, out FileStatus status))
                 {
                     _fileStatus.Add(file, status);
@@ -61,16 +62,18 @@ namespace GinShellExtension
 
             try
             {
-                baseItem.DropDownItems.AddRange(client.IsBasePath(SelectedItemPaths.First())
+                baseItem.DropDownItems.AddRange(_client.IsBasePath(SelectedItemPaths.First())
                     ? GetBaseDirectoryMenu()
                     : GetFileMenu());
 
-                ((ICommunicationObject) client).Close();
+                ((ICommunicationObject)_client).Close();
             }
             catch
             {
-                ((ICommunicationObject) client).Abort();
+                ((ICommunicationObject)_client).Abort();
             }
+
+            _client = null;
 
             menu.Items.Add(new ToolStripSeparator());
             menu.Items.Add(baseItem);
@@ -126,11 +129,8 @@ namespace GinShellExtension
 
         private void FileUpload(object sender, EventArgs e)
         {
-            var client = ServiceClient.CreateServiceClient(this, 8741);
-
-            foreach (var file in SelectedItemPaths) 
-                client.UploadFile("%EMPTYSTRING%", file);
-            ((ICommunicationObject)client).Close();
+            foreach (var file in SelectedItemPaths)
+                _client.UploadFile("%EMPTYSTRING%", file);
         }
 
         private ToolStripItem[] GetBaseDirectoryMenu()
@@ -146,34 +146,22 @@ namespace GinShellExtension
 
         private void RepoUpdate(object sender, EventArgs eventArgs)
         {
-            var client = ServiceClient.CreateServiceClient(this, 8741);
-
-            client.UpdateRepositories(SelectedItemPaths.ToArray());
-            ((ICommunicationObject) client).Close();
+            _client.UpdateRepositories(SelectedItemPaths.ToArray());
         }
 
         private void RepoUpload(object sender, EventArgs eventArgs)
         {
-            var client = ServiceClient.CreateServiceClient(this, 8741);
-
-            client.UploadRepositories(SelectedItemPaths.ToArray());
-            ((ICommunicationObject) client).Close();
+            _client.UploadRepositories(SelectedItemPaths.ToArray());
         }
 
         private void FileDownload(object sender, EventArgs eventArgs)
         {
-            var client = ServiceClient.CreateServiceClient(this, 8741);
-
-            client.DownloadFiles(SelectedItemPaths.ToArray());
-            ((ICommunicationObject) client).Close();
+            _client.DownloadFiles(SelectedItemPaths.ToArray());
         }
 
         private void FileRemove(object sender, EventArgs eventArgs)
         {
-            var client = ServiceClient.CreateServiceClient(this, 8741);
-
-            client.RemoveLocalContent(SelectedItemPaths.ToArray());
-            ((ICommunicationObject)client).Close();
+            _client.RemoveLocalContent(SelectedItemPaths.ToArray());
         }
     }
 }

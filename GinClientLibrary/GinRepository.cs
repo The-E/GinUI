@@ -36,6 +36,7 @@ namespace GinClientLibrary
 
 
         private Dictionary<string, FileStatus> _scache;
+        private Dictionary<string, string[]> _translatedFileNameCache = new Dictionary<string, string[]>();
 
         public GinRepository(DirectoryInfo physicalDirectory, DirectoryInfo mountpoint, string name, string address,
             bool createNew) : base(physicalDirectory, mountpoint, name, address, createNew)
@@ -159,30 +160,21 @@ namespace GinClientLibrary
 
         public FileStatus GetFileStatus(string filePath)
         {
-            lock (this)
-            {
-                if (Directory.Exists(filePath))
-                    return FileStatus.Directory;
+            if (Directory.Exists(filePath))
+                return FileStatus.Directory;
 
-                if (!File.Exists(filePath))
-                    return FileStatus.Unknown;
-
-                //Need to normalize the path here
-                GetActualFilename(filePath, out var directoryName, out var filename);
-
-                filePath = directoryName + Path.DirectorySeparatorChar + filename;
-
-                if (StatusCache.ContainsKey(filePath.ToLowerInvariant()))
-                    return StatusCache[filePath.ToLowerInvariant()];
-
-
-                //Windows will sometimes try to inspect the contents of a zip file; we need to catch this here and return the filestatus of the zip
-                var parentDirectory = Directory.GetParent(filePath).FullName;
-                if (parentDirectory.ToLower().Contains(".zip"))
-                    return GetFileStatus(parentDirectory);
-
+            if (!File.Exists(filePath))
                 return FileStatus.Unknown;
-            }
+
+            if (StatusCache.ContainsKey(filePath.ToLowerInvariant()))
+                return StatusCache[filePath.ToLowerInvariant()];
+
+            //Windows will sometimes try to inspect the contents of a zip file; we need to catch this here and return the filestatus of the zip
+            var parentDirectory = Directory.GetParent(filePath).FullName;
+            if (parentDirectory.ToLower().Contains(".zip"))
+                return GetFileStatus(parentDirectory);
+
+            return FileStatus.Unknown;
         }
 
         /// <summary>
@@ -279,7 +271,7 @@ namespace GinClientLibrary
             GetActualFilename(filePath, out var directoryName, out var filename);
 
             var fstatus = GetFileStatus(directoryName + "\\" + filename);
-            if (fstatus == FileStatus.InAnnex || fstatus == FileStatus.InAnnexModified)
+            if (fstatus == FileStatus.InAnnex || fstatus == FileStatus.InAnnexModified || fstatus == FileStatus.Unknown)
                 return true;
             
             lock (this)
@@ -439,8 +431,23 @@ namespace GinClientLibrary
 
         #region Helpers
 
-        private void GetActualFilename(string filePath, out string directoryName, out string filename)
+        private void normalizeFileName(string filePath, out string directoryName, out string filename)
         {
+            directoryName = Directory.GetParent(filePath).FullName;
+            filename = Directory.GetFiles(directoryName)
+                .Single(s => string.CompareOrdinal(s.ToUpperInvariant(), filePath.ToUpperInvariant()) == 0);
+            filename = Path.GetFileName(filename);
+        }
+
+        public void GetActualFilename(string filePath, out string directoryName, out string filename)
+        {
+            if (_translatedFileNameCache.ContainsKey(filePath))
+            {
+                directoryName = _translatedFileNameCache[filePath][0];
+                filename = _translatedFileNameCache[filePath][1];
+                return;
+            }
+
             if (filePath.Contains(Mountpoint.FullName))
             {
                 filePath = filePath.Replace(Mountpoint.FullName, PhysicalDirectory.FullName);
@@ -454,14 +461,22 @@ namespace GinClientLibrary
             {
                 if (!filePath.EndsWith("\\"))
                     filePath += "\\";
-                    
-                filename = Path.GetDirectoryName(filePath);
+
+                filename = new DirectoryInfo(filePath).Name;
             }
             else
             {
                 filename = Directory.GetFiles(directoryName)
                     .Single(s => string.CompareOrdinal(s.ToUpperInvariant(), filePath.ToUpperInvariant()) == 0);
                 filename = Path.GetFileName(filename);
+            }
+
+            lock (this)
+            {
+                if (!_translatedFileNameCache.ContainsKey(filePath))
+                    _translatedFileNameCache.Add(filePath, new[] {directoryName, filename});
+                else
+                    _translatedFileNameCache[filePath] = new[] {directoryName, filename};
             }
         }
 
