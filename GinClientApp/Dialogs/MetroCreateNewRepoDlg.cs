@@ -17,6 +17,7 @@ namespace GinClientApp.Dialogs
     public partial class MetroCreateNewRepoDlg : MetroForm
     {
         private readonly GinApplicationContext _appContext;
+        private bool _createNew;
 
         public MetroCreateNewRepoDlg(GinRepositoryData data, GinApplicationContext appContext)
         {
@@ -29,6 +30,7 @@ namespace GinClientApp.Dialogs
             mTxBRepoCheckoutDir.Text = data.PhysicalDirectory.FullName;
             mTxBRepoMountpoint.Text = data.Mountpoint.FullName;
             mTxBRepoAddress.WaterMark = Resources.Options__username___repository_;
+            _createNew = data.CreateNew;
 
             createNewRepoToolTip.SetToolTip(mBtnRepoBrowser, Resources.CreateNewRepoDlg_Open_the_repository_browser);
             createNewRepoToolTip.SetToolTip(mBtnPickRepoCheckoutDir,
@@ -51,9 +53,16 @@ namespace GinClientApp.Dialogs
             {
                 //Before we give up, check if this is a public, but unlisted repo
                 var repoInfoStr = _appContext.ServiceClient.GetRemoteRepositoryInfo(mTxBRepoAddress.Text);
-                if (repoInfoStr.StartsWith("Error"))
+                if (repoInfoStr.StartsWith("Error") && !_createNew)
                 {
                     MetroMessageBox.Show(this, Resources.Options_CheckSanity_No_private_or_shared_repos,
+                        Resources.GinClientApp_Gin_Client_Warning, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+
+                if (_createNew && !repoInfoStr.StartsWith("Error"))
+                {
+                    MetroMessageBox.Show(this, Resources.Options_CheckSanity_A_repository_with_this_name_exists,
                         Resources.GinClientApp_Gin_Client_Warning, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }

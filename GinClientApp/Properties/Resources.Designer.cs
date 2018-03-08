@@ -320,6 +320,15 @@ namespace GinClientApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A Repository with that address already exists.
+        /// </summary>
+        internal static string Options_CheckSanity_A_repository_with_this_name_exists {
+            get {
+                return ResourceManager.GetString("Options_CheckSanity_A_repository_with_this_name_exists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not retrieve repository info for this repository. Are you sure the name is spelt correctly?.
         /// </summary>
         internal static string Options_CheckSanity_Could_not_retrieve_repo_info {
