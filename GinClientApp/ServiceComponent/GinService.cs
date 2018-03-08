@@ -82,9 +82,9 @@ namespace GinService
 
         void IGinService.UploadFile(string repoName, string filepath)
         {
-            var repo = RepositoryManager.Instance.GetRepoByName(repoName);
-
-            repo.UploadFile(filepath);
+            var repo = string.Compare(repoName, "%EMPTYSTRING%", StringComparison.Ordinal) == 0 ? RepositoryManager.Instance.GetRepoByPath(filepath) : RepositoryManager.Instance.GetRepoByName(repoName);
+            
+            repo?.UploadFile(filepath);
         }
 
         bool IGinService.UnmmountAllRepositories()
