@@ -8,7 +8,6 @@ using System.Threading;
 using System.Windows.Forms;
 using DokanNet;
 using GinClientLibrary.Extensions;
-using MetroFramework;
 using Newtonsoft.Json;
 using static System.String;
 
@@ -19,8 +18,6 @@ namespace GinClientLibrary
     /// </summary>
     public class RepositoryManager
     {
-        public NotifyIcon AppIcon;
-
         public delegate void FileOperationProgressHandler(string filename, GinRepositoryData repository, int progress,
             string speed, string state);
 
@@ -38,6 +35,7 @@ namespace GinClientLibrary
         private readonly object _thisLock = new object();
 
         private List<GinRepository> _repositories;
+        public NotifyIcon AppIcon;
 
         private RepositoryManager()
         {
@@ -337,18 +335,20 @@ namespace GinClientLibrary
                 var progress = JsonConvert.DeserializeObject<fileOpProgress>(message);
                 FileOperationProgress?.Invoke(progress.filename, (GinRepository) sender, progress.GetProgress(),
                     progress.rate, progress.state);
-                
-                AppIcon.BalloonTipText = progress.state + " " + progress.filename + " at " + progress.rate + ", " + progress.progress + " completed";
+
+                AppIcon.BalloonTipText = progress.state + " " + progress.filename + " at " + progress.rate + ", " +
+                                         progress.progress + " completed";
                 AppIcon.Text = progress.state + ", " + progress.progress + " completed";
             }
-            catch 
+            catch
             {
             }
         }
-        
+
         private void OnFileRetrievalStarted(DokanInterface.FileOperationEventArgs e, GinRepository sender)
         {
-            AppIcon.ShowBalloonTip(2500, "GIN activity in progress", "Repository " + sender.Name + " operating on " + e.File, ToolTipIcon.Info);
+            AppIcon.ShowBalloonTip(2500, "GIN activity in progress",
+                "Repository " + sender.Name + " operating on " + e.File, ToolTipIcon.Info);
         }
 
         public event FileRetrievalCompletedHandler FileRetrievalCompleted;
@@ -374,7 +374,7 @@ namespace GinClientLibrary
         {
             OnFileRetrievalStarted(e, (GinRepository) sender);
         }
-        
+
         private void OnRepositoryOperationError(GinRepository sender,
             GinRepository.FileOperationErrorEventArgs message)
         {
@@ -398,13 +398,13 @@ namespace GinClientLibrary
                     UseShellExecute = false
                 }
             };
-            StringBuilder output = new StringBuilder();
+            var output = new StringBuilder();
             process.OutputDataReceived += (sender, args) => { output.AppendLine(args.Data); };
-            
+
             process.Start();
             process.BeginOutputReadLine();
             process.WaitForExit();
-            
+
             return output.ToString();
         }
 
@@ -425,7 +425,7 @@ namespace GinClientLibrary
                     UseShellExecute = false
                 }
             };
-            StringBuilder output = new StringBuilder();
+            var output = new StringBuilder();
             process.OutputDataReceived += (sender, args) => { output.AppendLine(args.Data); };
 
             process.Start();

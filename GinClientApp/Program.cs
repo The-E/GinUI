@@ -6,16 +6,22 @@ using System.Net;
 using System.Reflection;
 using System.Threading;
 using System.Windows;
-using GinService;
+using Newtonsoft.Json;
 using Application = System.Windows.Forms.Application;
 
 namespace GinClientApp
 {
     internal static class Program
     {
-        static readonly Mutex Mutex = new Mutex(true, "{AC8AB48D-C289-445D-B1EB-ABCFF24443ED}" + Environment.UserName);
-        private static readonly DirectoryInfo UpdaterBaseDirectory = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\g-node\GinWindowsClient\Updates\");
+        private static readonly Mutex Mutex = new Mutex(true,
+            "{AC8AB48D-C289-445D-B1EB-ABCFF24443ED}" + Environment.UserName);
+
+        private static readonly DirectoryInfo UpdaterBaseDirectory = new DirectoryInfo(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) +
+            @"\g-node\GinWindowsClient\Updates\");
+
         private static readonly string AppVeyorProjectUrl = "https://ci.appveyor.com/api/projects/achilleas-k/GinUI";
+
         /// <summary>
         ///     The main entry point for the application.
         /// </summary>
@@ -23,22 +29,20 @@ namespace GinClientApp
         private static void Main(string[] args)
         {
             if (args.Length > 0)
-            {
-                if ( args[0] == "-uninstall")
+                if (args[0] == "-uninstall")
                 {
                     Installer.DoUninstall();
                     return;
                 }
-            }
 
             var wb = new WebClient();
 
             var response = wb.DownloadString(new Uri(AppVeyorProjectUrl));
-            var rootObject = Newtonsoft.Json.JsonConvert.DeserializeObject<RootObject>(response);
+            var rootObject = JsonConvert.DeserializeObject<RootObject>(response);
             var fileDate = File.GetCreationTime(Assembly.GetExecutingAssembly().Location);
             if (fileDate < rootObject.build.finished)
             {
-                var result = System.Windows.MessageBox.Show(
+                var result = MessageBox.Show(
                     "A new version of the Gin client is available. Do you want to update now?",
                     "Gin Windows Client", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
@@ -191,5 +195,4 @@ namespace GinClientApp
         public Project project { get; set; }
         public Build build { get; set; }
     }
-
 }

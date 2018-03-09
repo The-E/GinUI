@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.ServiceModel;
-using System.ServiceProcess;
 using System.Windows.Forms;
-using GinClientLibrary;
 using GinShellExtension.GinService;
-using Newtonsoft.Json;
 using SharpShell.Attributes;
 using SharpShell.SharpContextMenu;
 using static GinClientLibrary.GinRepository;
@@ -19,9 +16,9 @@ namespace GinShellExtension
     [COMServerAssociation(AssociationType.Directory)]
     public class GinShellExtensionClass : SharpContextMenu
     {
+        private IGinService _client;
 
-        private Dictionary<string, GinRepository.FileStatus> _fileStatus = new Dictionary<string, FileStatus>();
-        private IGinService _client = null;
+        private readonly Dictionary<string, FileStatus> _fileStatus = new Dictionary<string, FileStatus>();
 
         protected override bool CanShowMenu()
         {
@@ -55,9 +52,7 @@ namespace GinShellExtension
             {
                 var fstatusstr = _client.GetFileInfo(file);
                 if (Enum.TryParse(fstatusstr, out FileStatus status))
-                {
                     _fileStatus.Add(file, status);
-                }
             }
 
             try
@@ -66,11 +61,11 @@ namespace GinShellExtension
                     ? GetBaseDirectoryMenu()
                     : GetFileMenu());
 
-                ((ICommunicationObject)_client).Close();
+                ((ICommunicationObject) _client).Close();
             }
             catch
             {
-                ((ICommunicationObject)_client).Abort();
+                ((ICommunicationObject) _client).Abort();
             }
 
             _client = null;
@@ -107,19 +102,13 @@ namespace GinShellExtension
                 }
 
                 if (_fileStatus[file] == FileStatus.InAnnex || _fileStatus[file] == FileStatus.InAnnexModified)
-                {
                     mItems.Add(new ToolStripMenuItem("Download File", null, FileDownload));
-                }
 
                 if (_fileStatus[file] == FileStatus.OnDiskModified || _fileStatus[file] == FileStatus.Unknown)
-                {
                     mItems.Add(new ToolStripMenuItem("Upload file", null, FileUpload));
-                }
 
                 if (_fileStatus[file] == FileStatus.OnDisk)
-                {
                     mItems.Add(new ToolStripMenuItem("Remove local content", null, FileRemove));
-                }
 
                 return mItems.ToArray();
             }
@@ -135,7 +124,7 @@ namespace GinShellExtension
             foreach (var file in SelectedItemPaths)
                 _client.UploadFile("%EMPTYSTRING%", file);
 
-            ((ICommunicationObject)_client).Close();
+            ((ICommunicationObject) _client).Close();
             _client = null;
         }
 
@@ -157,7 +146,7 @@ namespace GinShellExtension
 
             _client.UpdateRepositories(SelectedItemPaths.ToArray());
 
-            ((ICommunicationObject)_client).Close();
+            ((ICommunicationObject) _client).Close();
             _client = null;
         }
 
@@ -168,7 +157,7 @@ namespace GinShellExtension
 
             _client.UploadRepositories(SelectedItemPaths.ToArray());
 
-            ((ICommunicationObject)_client).Close();
+            ((ICommunicationObject) _client).Close();
             _client = null;
         }
 
@@ -179,7 +168,7 @@ namespace GinShellExtension
 
             _client.DownloadFiles(SelectedItemPaths.ToArray());
 
-            ((ICommunicationObject)_client).Close();
+            ((ICommunicationObject) _client).Close();
             _client = null;
         }
 
@@ -190,7 +179,7 @@ namespace GinShellExtension
 
             _client.RemoveLocalContent(SelectedItemPaths.ToArray());
 
-            ((ICommunicationObject)_client).Close();
+            ((ICommunicationObject) _client).Close();
             _client = null;
         }
     }

@@ -12,7 +12,8 @@ namespace GinShellExtension
             var iContext = new InstanceContext(context);
             var myBinding = new WSDualHttpBinding
             {
-                ClientBaseAddress = new Uri(@"http://localhost:8738/GinService/ShellExtension/" + Environment.UserName + "/" + port),
+                ClientBaseAddress =
+                    new Uri(@"http://localhost:8738/GinService/ShellExtension/" + Environment.UserName + "/" + port),
                 MaxBufferPoolSize = int.MaxValue,
                 MaxReceivedMessageSize = int.MaxValue,
                 OpenTimeout = TimeSpan.FromMinutes(1.0),

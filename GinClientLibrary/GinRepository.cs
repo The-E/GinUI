@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Threading;
 using DokanNet;
 using GinClientLibrary.Extensions;
 using Newtonsoft.Json;
@@ -36,7 +35,7 @@ namespace GinClientLibrary
 
 
         private Dictionary<string, FileStatus> _scache;
-        private Dictionary<string, string[]> _translatedFileNameCache = new Dictionary<string, string[]>();
+        private readonly Dictionary<string, string[]> _translatedFileNameCache = new Dictionary<string, string[]>();
 
         public GinRepository(DirectoryInfo physicalDirectory, DirectoryInfo mountpoint, string name, string address,
             bool createNew) : base(physicalDirectory, mountpoint, name, address, createNew)
@@ -273,7 +272,7 @@ namespace GinClientLibrary
             var fstatus = GetFileStatus(directoryName + "\\" + filename);
             if (fstatus == FileStatus.InAnnex || fstatus == FileStatus.InAnnexModified || fstatus == FileStatus.Unknown)
                 return true;
-            
+
             lock (this)
             {
                 GetCommandLineOutput("cmd.exe", "/C gin.exe remove-content \"" + filename + "\"" /*+ " -json"*/,
@@ -302,7 +301,8 @@ namespace GinClientLibrary
             }
             catch (Exception e)
             {
-                OnFileOperationError("Could not create checkout directory. Exception: " + e.Message + "\n InnerException: " + e.InnerException);
+                OnFileOperationError("Could not create checkout directory. Exception: " + e.Message +
+                                     "\n InnerException: " + e.InnerException);
                 return false;
             }
 
@@ -313,7 +313,8 @@ namespace GinClientLibrary
             }
             catch (Exception e)
             {
-                OnFileOperationError("Could not create mountpoint directory. Exception: " + e.Message + "\n InnerException: " + e.InnerException);
+                OnFileOperationError("Could not create mountpoint directory. Exception: " + e.Message +
+                                     "\n InnerException: " + e.InnerException);
                 return false;
             }
 
@@ -327,7 +328,9 @@ namespace GinClientLibrary
                 var result = string.IsNullOrEmpty(error);
 
                 if (result)
+                {
                     OnFileOperationCompleted(new FileOperationEventArgs {File = Address, Success = true});
+                }
                 else
                 {
                     OnFileOperationError(error);
@@ -345,7 +348,9 @@ namespace GinClientLibrary
                 var result = string.IsNullOrEmpty(error);
 
                 if (result)
+                {
                     OnFileOperationCompleted(new FileOperationEventArgs {File = Address, Success = true});
+                }
                 else
                 {
                     OnFileOperationError(error);
@@ -449,9 +454,7 @@ namespace GinClientLibrary
             }
 
             if (filePath.Contains(Mountpoint.FullName))
-            {
                 filePath = filePath.Replace(Mountpoint.FullName, PhysicalDirectory.FullName);
-            }
 
             var isDirectory = (File.GetAttributes(filePath) & FileAttributes.Directory) == FileAttributes.Directory;
 
@@ -533,9 +536,7 @@ namespace GinClientLibrary
                 Output.Clear();
 
                 if (process.ExitCode != 0 && string.IsNullOrEmpty(error))
-                {
                     error = "gin-cli returned error code " + process.ExitCode;
-                }
 
                 return output;
             }
@@ -569,9 +570,7 @@ namespace GinClientLibrary
                 process.WaitForExit();
 
                 if (process.ExitCode != 0 && string.IsNullOrEmpty(error))
-                {
                     error = "gin-cli returned error code " + process.ExitCode;
-                }
             }
         }
 

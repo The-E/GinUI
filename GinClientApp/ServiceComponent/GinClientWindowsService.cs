@@ -1,10 +1,5 @@
-﻿using System;
-using System.Diagnostics;
-using System.Reflection;
-using System.ServiceModel;
-using System.Threading;
+﻿using System.ServiceModel;
 using System.Windows.Forms;
-using GinClientApp;
 using GinClientLibrary;
 
 namespace GinService
@@ -34,6 +29,5 @@ namespace GinService
             // listening for messages.
             _serviceHost.Open();
         }
-        
     }
 }

@@ -1,16 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
+﻿using System.Drawing;
 using System.Runtime.InteropServices;
-using System.ServiceModel;
-using System.ServiceProcess;
-using GinClientLibrary;
-using GinShellExtension.GinService;
 using GinShellExtension.Properties;
-using Newtonsoft.Json;
 using SharpShell.Interop;
 using SharpShell.SharpIconOverlayHandler;
-using GinRepositoryData = GinClientLibrary.GinRepositoryData;
 
 namespace GinShellExtension
 {
@@ -31,7 +23,6 @@ namespace GinShellExtension
 
         protected override bool CanShowOverlay(string path, FILE_ATTRIBUTE attributes)
         {
-
             return false; //Disable this for now!
 
             //_path = path;

@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
 using System.ServiceModel;
 using GinClientLibrary;
 
@@ -48,7 +46,7 @@ namespace GinService
         ///     Completely deletes a repository and all data associated with it
         /// </summary>
         /// <param name="repoName"></param>
-        [OperationContract()]
+        [OperationContract]
         void DeleteRepository(string repoName);
 
         /// <summary>

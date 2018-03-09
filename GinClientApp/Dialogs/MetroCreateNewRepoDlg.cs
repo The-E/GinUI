@@ -79,10 +79,13 @@ namespace GinClientApp.Dialogs
                 return result == DialogResult.Yes;
             }
 
-            if (Directory.Exists(RepositoryData.PhysicalDirectory.FullName) && Directory.EnumerateFileSystemEntries(RepositoryData.PhysicalDirectory.FullName).Any())
+            if (Directory.Exists(RepositoryData.PhysicalDirectory.FullName) &&
+                Directory.EnumerateFileSystemEntries(RepositoryData.PhysicalDirectory.FullName).Any())
             {
-                MetroMessageBox.Show(this, string.Format(Resources.Options_CheckSanity_The_checkout_address_is_not_empty,
-                    RepositoryData.PhysicalDirectory.FullName), Resources.GinClientApp_Gin_Client_Warning, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MetroMessageBox.Show(this, string.Format(
+                        Resources.Options_CheckSanity_The_checkout_address_is_not_empty,
+                        RepositoryData.PhysicalDirectory.FullName), Resources.GinClientApp_Gin_Client_Warning,
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 

@@ -60,7 +60,6 @@ namespace GinClientApp.Dialogs
 
         private void MetroUploadFilesDlg_Load(object sender, EventArgs e)
         {
-           
         }
     }
 }

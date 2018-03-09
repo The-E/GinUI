@@ -1,21 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using MetroFramework.Forms;
 
 namespace GinClientApp.Dialogs
 {
     public partial class DeleteDataDlg : MetroForm
     {
-        public bool KeepCheckout { get; set; }
-        public bool KeepUserConfig { get; set; }
-        public bool KeepUserLogin { get; set; } 
-
         public DeleteDataDlg()
         {
             InitializeComponent();
@@ -25,9 +14,12 @@ namespace GinClientApp.Dialogs
             chB_keepUserConfig.Checked = KeepUserConfig;
         }
 
+        public bool KeepCheckout { get; set; }
+        public bool KeepUserConfig { get; set; }
+        public bool KeepUserLogin { get; set; }
+
         private void DeleteDataDlg_Load(object sender, EventArgs e)
         {
-
         }
 
         private void chB_keepUserConfig_CheckedChanged(object sender, EventArgs e)

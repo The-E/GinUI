@@ -19,15 +19,10 @@ namespace GinClientApp.Dialogs
             Repositories,
             About
         }
-        public event EventHandler RepoListingChanged;
+
         private readonly GinApplicationContext _parentContext;
         private readonly UserCredentials _storedCredentials;
         private readonly GlobalOptions _storedOptions;
-
-        protected virtual void OnRepoListingChanged()
-        {
-            RepoListingChanged?.Invoke(this, EventArgs.Empty);
-        }
 
         public MetroOptionsDlg(GinApplicationContext parentContext, Page startPage)
         {
@@ -77,6 +72,13 @@ namespace GinClientApp.Dialogs
 
             _storedOptions = (GlobalOptions) GlobalOptions.Instance.Clone();
             _storedCredentials = (UserCredentials) UserCredentials.Instance.Clone();
+        }
+
+        public event EventHandler RepoListingChanged;
+
+        protected virtual void OnRepoListingChanged()
+        {
+            RepoListingChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public void SetTab(Page page)

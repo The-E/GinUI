@@ -7,12 +7,9 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
-using System.ServiceProcess;
+using System.Security.Principal;
 using System.Text;
 using System.Threading;
-using System.Windows.Forms;
-using Microsoft.Win32;
-using Shell32;
 using IWshRuntimeLibrary;
 using Newtonsoft.Json;
 using File = System.IO.File;
@@ -69,8 +66,8 @@ namespace InstallerLibrary
                     path.FullName + @"\gin-cli\");
 
                 //Give the client the ability to register a URL to communicate with the service
-                var everyone = new System.Security.Principal.SecurityIdentifier(
-                    "S-1-1-0").Translate(typeof(System.Security.Principal.NTAccount)).ToString();
+                var everyone = new SecurityIdentifier(
+                    "S-1-1-0").Translate(typeof(NTAccount)).ToString();
                 var procStartInfo = new ProcessStartInfo("cmd.exe",
                     "/C netsh http add urlacl url=http://+:8738/GinService/ user=\\" + everyone + " delegate=yes")
                 {

@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Runtime.Remoting.Contexts;
-using System.Text;
-using System.Threading.Tasks;
 using GinClientApp.Dialogs;
-using DirectoryInfoExtension = GinClientLibrary.Extensions.DirectoryInfoExtension;
+using GinClientLibrary.Extensions;
 
 namespace GinClientApp
 {
@@ -40,30 +34,25 @@ namespace GinClientApp
 
             deleteDlg.ShowDialog();
 
-            var configDataPath = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
-                                 @"\g-node\GinWindowsClient\");
+            var configDataPath = new DirectoryInfo(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
+                @"\g-node\GinWindowsClient\");
 
             if (!deleteDlg.KeepCheckout)
-            {
                 if (Directory.Exists(configDataPath.FullName + @"\Repositories\"))
                 {
                     var dInfo = new DirectoryInfo(configDataPath.FullName + @"\Repositories\");
                     DirectoryInfoExtension.Empty(dInfo);
                     Directory.Delete(dInfo.FullName, true);
                 }
-            }
 
             if (!deleteDlg.KeepUserConfig)
-            {
                 if (File.Exists(configDataPath.FullName + @"\GlobalOptionsDlg.json"))
                     File.Delete(configDataPath.FullName + @"\GlobalOptionsDlg.json");
-            }
 
             if (!deleteDlg.KeepUserLogin)
-            {
                 if (File.Exists(configDataPath.FullName + @"\UserCredentials.json"))
                     File.Delete(configDataPath.FullName + @"\UserCredentials.json");
-            }
         }
     }
 }

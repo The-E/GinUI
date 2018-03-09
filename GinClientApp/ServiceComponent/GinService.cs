@@ -15,11 +15,6 @@ namespace GinService
     [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Multiple, InstanceContextMode = InstanceContextMode.PerSession)]
     public class GinService : IGinService
     {
-        public GinService()
-        {
-        }
-
-
         bool IGinService.AddRepository(string physicalDirectory, string mountpoint, string name, string commandline,
             bool performFullCheckout, bool createNew)
         {
@@ -82,8 +77,10 @@ namespace GinService
 
         void IGinService.UploadFile(string repoName, string filepath)
         {
-            var repo = string.Compare(repoName, "%EMPTYSTRING%", StringComparison.Ordinal) == 0 ? RepositoryManager.Instance.GetRepoByPath(filepath) : RepositoryManager.Instance.GetRepoByName(repoName);
-            
+            var repo = string.Compare(repoName, "%EMPTYSTRING%", StringComparison.Ordinal) == 0
+                ? RepositoryManager.Instance.GetRepoByPath(filepath)
+                : RepositoryManager.Instance.GetRepoByName(repoName);
+
             repo?.UploadFile(filepath);
         }
 
@@ -120,7 +117,7 @@ namespace GinService
         string IGinService.GetFileInfo(string path)
         {
             var repo = RepositoryManager.Instance.GetRepoByPath(path);
-            
+
             repo.GetActualFilename(path, out var directoryName, out var filename);
             path = directoryName + Path.DirectorySeparatorChar + filename;
 
@@ -188,9 +185,7 @@ namespace GinService
             var repo = RepositoryManager.Instance.GetRepoByPath(files.First());
 
             foreach (var file in files)
-            {
                 repo.RemoveFile(file);
-            }
         }
 
         string IGinService.GetGinCliVersion()

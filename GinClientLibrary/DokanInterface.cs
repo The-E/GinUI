@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -80,7 +79,6 @@ namespace GinClientLibrary
                 var extraParameters = parameters != null && parameters.Length > 0
                     ? ", " + string.Join(", ", parameters.Select(x => string.Format(DefaultFormatProvider, "{0}", x)))
                     : string.Empty;
-
             }
             return result;
         }
