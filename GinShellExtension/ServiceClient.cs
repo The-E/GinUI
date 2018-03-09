@@ -17,8 +17,8 @@ namespace GinShellExtension
                 MaxReceivedMessageSize = int.MaxValue,
                 OpenTimeout = TimeSpan.FromMinutes(1.0),
                 CloseTimeout = TimeSpan.FromMinutes(1.0),
-                SendTimeout = TimeSpan.FromHours(1),
-                ReceiveTimeout = TimeSpan.FromHours(1),
+                SendTimeout = TimeSpan.FromSeconds(1),
+                ReceiveTimeout = TimeSpan.FromSeconds(1),
                 ReaderQuotas = new XmlDictionaryReaderQuotas
                 {
                     MaxArrayLength = int.MaxValue,

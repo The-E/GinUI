@@ -13,6 +13,8 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstallerLibrary", "InstallerLibrary\InstallerLibrary.csproj", "{9415981D-6687-42F7-86A6-2E1259DAF0F1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "Updater\Updater.csproj", "{922930DF-491B-4958-8ED6-8CD3E838CA2E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,14 @@ Global
 		{9415981D-6687-42F7-86A6-2E1259DAF0F1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9415981D-6687-42F7-86A6-2E1259DAF0F1}.Release|x86.ActiveCfg = Release|Any CPU
 		{9415981D-6687-42F7-86A6-2E1259DAF0F1}.Release|x86.Build.0 = Release|Any CPU
+		{922930DF-491B-4958-8ED6-8CD3E838CA2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{922930DF-491B-4958-8ED6-8CD3E838CA2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{922930DF-491B-4958-8ED6-8CD3E838CA2E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{922930DF-491B-4958-8ED6-8CD3E838CA2E}.Debug|x86.Build.0 = Debug|Any CPU
+		{922930DF-491B-4958-8ED6-8CD3E838CA2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{922930DF-491B-4958-8ED6-8CD3E838CA2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{922930DF-491B-4958-8ED6-8CD3E838CA2E}.Release|x86.ActiveCfg = Release|Any CPU
+		{922930DF-491B-4958-8ED6-8CD3E838CA2E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

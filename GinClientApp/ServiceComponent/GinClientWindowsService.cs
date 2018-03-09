@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Configuration.Install;
 using System.Diagnostics;
 using System.Reflection;
 using System.ServiceModel;
-using System.ServiceProcess;
 using System.Threading;
 using System.Windows.Forms;
 using GinClientApp;
