@@ -23,7 +23,7 @@ namespace Updater
         
         public static void DoUpdate()
         {         
-            if (!UninstallProgram("Gin Windows Client")) return;
+            if (!UninstallProgram()) return;
             var wb = new WebClient();
             wb.DownloadFile(new Uri(UpdatedMsi), UpdaterBaseDirectory + @"\setup.msi");
             var procstartinfo = new ProcessStartInfo();
@@ -34,7 +34,7 @@ namespace Updater
             process.WaitForExit();
         }
 
-        private static bool UninstallProgram(string ProgramName)
+        private static bool UninstallProgram()
         {
             try
             {
